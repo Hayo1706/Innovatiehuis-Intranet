@@ -23,8 +23,8 @@ export default {
   },
   methods: {
       handeClick(yes) {
-        if (yes) this.message = "Ja dat klopt"
-        else this.message = "Nee dat is niet waar"
+        if (yes) this.message = "Ja dat klopt."
+        else this.message = "Nee dat is niet waar."
         this.showText = true
       }
   }
