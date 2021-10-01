@@ -1,8 +1,10 @@
 <template>
-<button>
-  <span @click="handeClick">hoi</span>
-</button>
-<h2 v-show="showText">Pieter is een hond</h2>
+<div>
+  <button>
+    <span @click="handeClick">hoi</span>
+  </button>
+  <h2 v-show="showText">Pieter is een hond</h2>
+</div>
 </template>
 
 <script>
