@@ -1,8 +1,15 @@
 <template>
+<h2>Wie is een hond?</h2>
 <button>
-  <span @click="handeClick">hoi</span>
+  <span @click="handeClick(true)">Hayo</span>
 </button>
-<h2 v-show="showText">Pieter is een hond</h2>
+<button>
+  <span @click="handeClick(false)">Pieter</span>
+</button>
+<button>
+  <span @click="handeClick(true)">Joppe</span>
+</button>
+<p v-show="showText">{{ this.message }}</p>
 </template>
 
 <script>
@@ -10,15 +17,17 @@ export default {
   name: 'App',
   data(){
     return {
-      showText: false
+      showText: false,
+      message: ""
     }
   },
   methods: {
-      handeClick() {
-        this.showText = !this.showText
+      handeClick(yes) {
+        if (yes) this.message = "Ja dat klopt"
+        else this.message = "Nee dat is niet waar"
+        this.showText = true
       }
   }
-  
 }
 </script>
 
