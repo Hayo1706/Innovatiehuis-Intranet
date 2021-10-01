@@ -1,16 +1,24 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<button>
+  <span @click="handeClick">hoi</span>
+</button>
+<h2 v-show="showText">Pieter is een hond</h2>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data(){
+    return {
+      showText: false
+    }
+  },
+  methods: {
+      handeClick() {
+        this.showText = !this.showText
+      }
   }
+  
 }
 </script>
 
