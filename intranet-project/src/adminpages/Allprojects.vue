@@ -13,10 +13,12 @@
     </div>
     <div id="projectlist" v-for="project of projects" :key="project.name">
       <projectlisting
+        v-bind:id="project.projectid"
         v-bind:name="project.name"
         v-bind:created="project.createdat"
         v-bind:lastModified="project.lastupdated"
         v-bind:isArchived="project.isarchived"
+        v-on:reload="reload()"
       ></projectlisting>
       <br />
     </div>
@@ -32,17 +34,20 @@ export default {
   data: function () {
     return { projects: [] };
   },
-  methods: {},
+  methods: {
+    reload() {
+      axios
+        .get("http://94.212.125.203:5000/api/projects")
+        .then((response) => {
+          this.projects = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
   created() {
-    axios
-      .get("http://94.212.125.203:5000/api/projects")
-      .then((response) => {
-        this.projects = response.data;
-        console.log(this.projects);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    this.reload();
   },
 };
 </script>

@@ -9,22 +9,29 @@
     <span>
       <img src="..\adminpages\images\people.png" />
       <img
+        @click="archive(this.id)"
         v-if="isArchived"
         src="https://cdn-icons-png.flaticon.com/512/60/60723.png"
       /><img
+        @click="archive(this.id)"
         v-else
         src="https://www.pngkey.com/png/full/876-8761970_download-button-comments-icon-png-archive-icon.png"
       />
 
-      <img src="https://www.pngrepo.com/png/320601/512/crossed-pistols.png" />
+      <img
+        @click="delete_project(this.id)"
+        src="https://www.pngrepo.com/png/320601/512/crossed-pistols.png"
+      />
     </span>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Projectlisting",
   props: [
+    "id",
     "name",
     "created",
     "lastModified",
@@ -35,7 +42,30 @@ export default {
   data: function () {
     return {};
   },
-  methods: {},
+  methods: {
+    archive(id) {
+      axios
+        .put("http://94.212.125.203:5000/api/project/" + id)
+        .then(() => {
+          this.$emit("reload");
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Something went wrong!");
+        });
+    },
+    delete_project(id) {
+      axios
+        .delete("http://94.212.125.203:5000/api/project/" + id)
+        .then(() => {
+          this.$emit("reload");
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Something went wrong!");
+        });
+    },
+  },
 };
 </script>
 
@@ -58,5 +88,6 @@ span {
 img {
   height: 5vh;
   padding-right: 20px;
+  cursor: pointer;
 }
 </style>
