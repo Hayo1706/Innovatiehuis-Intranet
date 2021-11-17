@@ -1,58 +1,58 @@
 <template>
-<h2>Wie is een hond?</h2>
-<button id=hayo_button @click="handleClick(true, 'hayo', $event)" :class="{ selected: selected_button == 'hayo' }">
-  <span>Hayo</span>
-</button>
-<button id=pieter_button @click="handleClick(false, 'pieter', $event)" :class="{ selected: selected_button == 'pieter' }">
-  <span>Pieter</span>
-</button>
-<button id=joppe_button @click="handleClick(true, 'joppe', $event)" :class="{ selected: selected_button == 'joppe_button' }">
-  <span>Joppe</span>
-</button>
-<p v-show="showText">{{ this.message }}</p>
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Intranet</title>
+    </head>
+    <body>
+      <header>
+        <p id="header_title_text">{{ header_title }}</p>
+      </header>
+      <allprojects></allprojects>
+    </body>
+  </html>
 </template>
 
 <script>
+import Allprojects from "./adminpages/Allprojects.vue";
 export default {
-  name: 'App',
-  data(){
+  components: { Allprojects },
+  name: "App",
+  data: function () {
     return {
-      showText: false,
-      message: '',
-      toggle: false,
-      selected_button: null,
-      styleObject: {
-        color: 'red'
-      }
-    }
+      header_title: "Projecten - Overzicht",
+    };
   },
   methods: {
-      handleClick(yes, name, event) {
-        this.selected_button = event.target.id
-        if (yes) this.message = 'Ja dat klopt.'
-        else this.message = 'Nee dat is niet waar.'
-        this.showText = true
-        this.toggle = !this.toggle
-      }
-  }
-}
+    setHeaderTitle(header_title) {
+      this.header_title = header_title;
+    },
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap");
+header {
+  width: 100%;
+  height: 10vh;
+  background-color: #28418a;
+}
+#header_title_text {
+  color: white;
+  font-size: calc(2vw + 2vh);
+  height: 100%;
+  margin: 0;
   text-align: center;
-  color: #1b1616;
-  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Montserrat", sans-serif;
 }
-.selected {
-  background-color: #41B883;
-  color: red;
-}
-button {
-  color: red;
-  font-style: italic;
+body {
+  margin: 0;
 }
 </style>
