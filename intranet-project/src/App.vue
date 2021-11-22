@@ -11,19 +11,18 @@
       <header>
         <p id="header_title_text">{{ header_title }}</p>
       </header>
-      <allprojects></allprojects>
+      <router-view @loaded="setHeaderTitle"></router-view>
     </body>
   </html>
 </template>
 
 <script>
-import Allprojects from "./adminpages/Allprojects.vue";
 export default {
-  components: { Allprojects },
+  components: {},
   name: "App",
   data: function () {
     return {
-      header_title: "Projecten - Overzicht",
+      header_title: "",
     };
   },
   methods: {

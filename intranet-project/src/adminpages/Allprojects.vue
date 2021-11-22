@@ -48,6 +48,7 @@ export default {
   },
   created() {
     this.reload();
+    this.$emit('loaded', "Projecten - Overzicht")  
   },
 };
 </script>
