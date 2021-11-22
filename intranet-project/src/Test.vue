@@ -8,7 +8,6 @@ export default {
   name: "Test",
   data: function () {
     return {
-      header_title: "Projecten - Overzicht",
     };
   },
  created(){
