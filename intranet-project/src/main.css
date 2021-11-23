@@ -1,0 +1,12 @@
+@font-face {
+    font-family: Montserrat;
+    src: url(/src/fonts/Montserrat-ExtraBold.ttf);
+  }
+  @font-face {
+    font-family: addeleThin;
+    src: url(/src/fonts/AdelleSansEXT-Thin.ttf);
+  }
+  @font-face {
+    font-family: addeleSemiBold;
+    src: url(/src/fonts/AdelleSansEXT-Semibold.ttf);
+  }

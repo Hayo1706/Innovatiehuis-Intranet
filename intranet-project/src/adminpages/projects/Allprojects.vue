@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="descriptionbar">
+    <div id="descriptionbar" class="d-none d-lg-flex">
       <span>Project</span>
       <span>Aangemaakt</span>
       <span>Laatste Update</span
@@ -54,10 +54,6 @@ export default {
 </script>
 
 <style>
-@font-face {
-  font-family: addeleSemiBold;
-  src: url(/src/fonts/AdelleSansEXT-Semibold.ttf);
-}
 #descriptionbar {
   width: 100%;
   box-sizing: border-box;
@@ -76,10 +72,7 @@ export default {
   gap: 60px;
   font-family: addeleSemiBold;
 }
-@font-face {
-  font-family: addeleThin;
-  src: url(/src/fonts/AdelleSansEXT-Thin.ttf);
-}
+
 #projectlist {
   width: 100%;
   box-sizing: border-box;
