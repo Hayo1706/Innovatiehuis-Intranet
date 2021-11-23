@@ -7,7 +7,7 @@
     <span>{{ subprojectCount }}</span>
 
     <span>
-      <img src="..\adminpages\images\people.png" />
+      <img src=".\images\people.png" />
       <img
         @click="archive(this.id)"
         v-if="isArchived"

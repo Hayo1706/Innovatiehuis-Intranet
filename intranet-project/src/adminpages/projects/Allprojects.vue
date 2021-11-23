@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Projectlisting from "./Projectlisting.vue";
+import Projectlisting from "../projects/Projectlisting.vue";
 import axios from "axios";
 export default {
   components: { Projectlisting },
@@ -48,7 +48,7 @@ export default {
   },
   created() {
     this.reload();
-    this.$emit('loaded', "Projecten - Overzicht")  
+    this.$emit("loaded", "Projecten - Overzicht");
   },
 };
 </script>
@@ -56,7 +56,7 @@ export default {
 <style>
 @font-face {
   font-family: addeleSemiBold;
-  src: url(AdelleSansEXT-Semibold.ttf);
+  src: url(/src/fonts/AdelleSansEXT-Semibold.ttf);
 }
 #descriptionbar {
   width: 100%;
@@ -78,7 +78,7 @@ export default {
 }
 @font-face {
   font-family: addeleThin;
-  src: url(AdelleSansEXT-Thin.ttf);
+  src: url(/src/fonts/AdelleSansEXT-Thin.ttf);
 }
 #projectlist {
   width: 100%;

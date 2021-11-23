@@ -34,7 +34,10 @@ export default {
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap");
+@font-face {
+  font-family: Montserrat;
+  src: url(/src/fonts/Montserrat-ExtraBold.ttf);
+}
 header {
   width: 100%;
   height: 10vh;
