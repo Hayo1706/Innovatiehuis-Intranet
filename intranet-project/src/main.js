@@ -4,7 +4,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Allprojects from './adminpages/projects/Allprojects.vue'
 import Test from './pages/test/Test.vue'
-
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
 
 const routes = [
   { path: '/', component: Allprojects },
