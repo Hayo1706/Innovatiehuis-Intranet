@@ -70,7 +70,7 @@ export default {
   justify-content: space-between;
   flex-basis: 100%;
   gap: 60px;
-  font-family: addeleSemiBold;
+  font-family: AddeleSemiBold;
 }
 
 #projectlist {
@@ -81,7 +81,7 @@ export default {
   color: white;
   font-size: calc(1vw + 1vh);
   padding: 1vw;
-  font-family: addeleThin;
+  font-family: AddeleThin;
 }
 
 span {
