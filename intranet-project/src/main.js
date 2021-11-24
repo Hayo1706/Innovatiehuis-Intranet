@@ -15,12 +15,11 @@ import ProjectMembersPage from './pages/project/members/Main.vue';
 import ProjectSettingsPage from './pages/project/settings/Main.vue';
 import UserPage from './pages/user/Main.vue';
 import HomePage from './pages/home/Main.vue';
-import Test from './pages/test/Main.vue';
 import LoginPage from './pages/login/Main.vue';
-
-
+import NotFoundPage from './pages/notfound/Main.vue';
 
 const routes = [
+  { path: '', redirect: '/home' },
   { path: '/manage/projects', component: ProjectsPage },
   { path: '/manage/projects/create', component: ProjectsCreatePage },
   { path: '/manage/users', component: UsersPage },
@@ -30,8 +29,8 @@ const routes = [
   { path: '/project/:id/members', component: ProjectMembersPage },
   { path: '/user/:id', component: UserPage },
   { path: '/home', component: HomePage },
-  { path: '/test', component: Test },
-  { path: '/login', component: LoginPage }
+  { path: '/login', component: LoginPage },
+  { path: '/:catchAll(.*)', component: NotFoundPage }
 ]
 const router = createRouter({
   history: createWebHistory(),

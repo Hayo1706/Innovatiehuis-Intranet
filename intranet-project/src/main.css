@@ -11,3 +11,6 @@
     src: url(./fonts/AdelleSansEXT-Thin.ttf);
   }
   
+  body {
+    margin: 0;
+  }

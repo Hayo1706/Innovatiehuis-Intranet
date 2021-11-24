@@ -1,32 +1,22 @@
 <template>
-    <div>
-      <app-header>
-        <p id="header_title_text">{{ header_title }}</p>
-      </app-header>
-    </div>
+  <header>
+    <p id="header_title_text">{{ header_title }}</p>
+  </header>
 </template>
 
 <script>
 export default {
   name: "AppHeader",
-  props: [
-
-  ],
+  props: ["header_title"],
   data: function () {
     return {};
   },
-  methods: {
-    setHeaderTitle(header_title) {
-      this.header_title = header_title;
-      document.title = header_title;
-    },
-  },
-}
+};
 </script>
 
 
-<style scoped>
-app-header {
+<style>
+header {
   width: 100%;
   height: 10vh;
   background-color: #28418a;
