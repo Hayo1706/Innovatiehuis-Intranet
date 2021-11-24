@@ -1,13 +1,13 @@
 <template>
-  <div id="projectlisting">
+  <div id="userlisting">
     <span>{{ name }}</span>
     <span>{{ created }}</span>
     <span>{{ lastModified }}</span>
-    <span>{{ parentProject }}</span>
-    <span>{{ subprojectCount }}</span>
+    <span>{{ parentUser }}</span>
+    <span>{{ subuserCount }}</span>
 
     <span>
-      <img src=".\images\people.png" />
+      <img src=".\..\..\..\assets\images\users_icon.png" />
       <img
         @click="archive(this.id)"
         v-if="isArchived"
@@ -19,7 +19,7 @@
       />
 
       <img
-        @click="delete_project(this.id)"
+        @click="delete_user(this.id)"
         src="https://www.pngrepo.com/png/320601/512/crossed-pistols.png"
       />
     </span>
@@ -29,23 +29,25 @@
 <script>
 import axios from "axios";
 export default {
-  name: "Projectlisting",
+  name: "UserListing",
   props: [
     "id",
     "name",
     "created",
     "lastModified",
-    "parentProject",
-    "subprojectCount",
-    "isArchived",
+    "role",
+    "projects",
+    "screening",
   ],
   data: function () {
-    return {};
+    return {
+      
+    };
   },
   methods: {
     archive(id) {
       axios
-        .put("http://94.212.125.203:5000/api/project/" + id)
+        .put("http://94.212.125.203:5000/api/user/" + id)
         .then(() => {
           this.$emit("reload");
         })
@@ -54,9 +56,9 @@ export default {
           alert("Something went wrong!");
         });
     },
-    delete_project(id) {
+    delete_user(id) {
       axios
-        .delete("http://94.212.125.203:5000/api/project/" + id)
+        .delete("http://94.212.125.203:5000/api/user/" + id)
         .then(() => {
           this.$emit("reload");
         })
@@ -70,7 +72,7 @@ export default {
 </script>
 
 <style>
-#projectlisting {
+#userlisting {
   display: flex;
   align-items: center;
   justify-content: space-between;

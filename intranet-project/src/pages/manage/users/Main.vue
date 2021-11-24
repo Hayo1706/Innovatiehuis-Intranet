@@ -1,46 +1,45 @@
 <template>
   <div>
     <div id="descriptionbar" class="d-none d-lg-flex">
-      <span>Project</span>
-      <span>Aangemaakt</span>
-      <span>Laatste Update</span
-      ><span
-        >Overkoepelend<br />
-        project</span
-      >
-      <span>Sub-projecten</span>
-      <span></span>
+      <span>Gebruiker</span>
+      <span>Geregistreerd</span>
+      <span>Laatst gezien</span>
+      <span>Rol</span>
+      <span>Projecten</span>
+      <span>Screening</span>
     </div>
-    <div id="projectlist" v-for="project of projects" :key="project.name">
-      <projectlisting
-        v-bind:id="project.projectid"
-        v-bind:name="project.name"
-        v-bind:created="project.createdat"
-        v-bind:lastModified="project.lastupdated"
-        v-bind:isArchived="project.isarchived"
+    <div id="userlist" v-for="user of users" :key="user.name">
+      <UserListing
+        v-bind:id="user.userid"
+        v-bind:name="user.name"
+        v-bind:created="user.registrationdate"
+        v-bind:lastModified="user.lastseen"
+        v-bind:role="user.role"
+        v-bind:projects="user.projects"
+        v-bind:screening="user.screening"
         v-on:reload="reload()"
       />
       <br />
     </div>
-    <router-link to="/test">Go to test page</router-link>
   </div>
 </template>
 
 <script>
-import Projectlisting from "../projects/Projectlisting.vue";
 import axios from "axios";
+import UserListing from './UserListing.vue';
+
 export default {
-  components: { Projectlisting },
-  name: "Allprojects",
+  components: { UserListing },
+  name: "UsersPage",
   data: function () {
-    return { projects: [] };
+    return { users: [] };
   },
   methods: {
     reload() {
       axios
-        .get("http://94.212.125.203:5000/api/projects")
+        .get("http://94.212.125.203:5000/api/users")
         .then((response) => {
-          this.projects = response.data;
+          this.users = response.data;
         })
         .catch((error) => {
           console.log(error);
@@ -49,7 +48,7 @@ export default {
   },
   created() {
     this.reload();
-    this.$emit("loaded", "Projecten - Overzicht");
+    this.$emit("loaded", "Gebruikers - Overzicht");
   },
 };
 </script>
@@ -74,7 +73,7 @@ export default {
   font-family: AddeleSemiBold;
 }
 
-#projectlist {
+#userlist {
   width: 100%;
   box-sizing: border-box;
   border-left: white 5px solid;
