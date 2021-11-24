@@ -19,6 +19,7 @@ export default {
   methods: {
     setHeaderTitle(header_title) {
       this.header_title = header_title;
+      document.title = header_title;
     },
   },
 };
