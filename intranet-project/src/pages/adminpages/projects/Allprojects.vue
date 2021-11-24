@@ -19,9 +19,10 @@
         v-bind:lastModified="project.lastupdated"
         v-bind:isArchived="project.isarchived"
         v-on:reload="reload()"
-      ></projectlisting>
+      />
       <br />
     </div>
+    <router-link to="/test">Go to test page</router-link>
   </div>
 </template>
 

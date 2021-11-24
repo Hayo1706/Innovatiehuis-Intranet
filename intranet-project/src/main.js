@@ -6,7 +6,7 @@ import "./main.css"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 
-import Allprojects from './adminpages/projects/Allprojects.vue'
+import Allprojects from './pages/adminpages/projects/Allprojects.vue'
 import Test from './pages/test/Test.vue'
 
 
