@@ -1,8 +1,5 @@
 <template>
-  <div>
-    Sorry! We can't seem to find the resource you're looking for. Please check
-    that the Web site address is spelled correctly.
-  </div>
+  <div>Sorry! De pagina waar je naar zoekt kan niet gevonden worden!</div>
 </template>
 
 <script>

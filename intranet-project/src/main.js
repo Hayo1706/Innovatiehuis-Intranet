@@ -15,7 +15,6 @@ import ProjectMembersPage from './pages/project/members/Main.vue';
 import ProjectSettingsPage from './pages/project/settings/Main.vue';
 import UserPage from './pages/user/Main.vue';
 import HomePage from './pages/home/Main.vue';
-import Test from './pages/test/Main.vue';
 import NotFoundPage from './pages/notfound/Main.vue'
 
 const routes = [
@@ -28,7 +27,6 @@ const routes = [
   { path: '/project/:id/members', component: ProjectMembersPage },
   { path: '/user/:id', component: UserPage },
   { path: '/home', component: HomePage },
-  { path: '/test', component: Test },
   { path: '/:catchAll(.*)', component: NotFoundPage }
 ]
 const router = createRouter({
