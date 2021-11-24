@@ -16,6 +16,8 @@ import ProjectSettingsPage from './pages/project/settings/Main.vue';
 import UserPage from './pages/user/Main.vue';
 import HomePage from './pages/home/Main.vue';
 import Test from './pages/test/Main.vue';
+import LoginPage from './pages/login/Main.vue';
+
 
 
 const routes = [
@@ -28,7 +30,8 @@ const routes = [
   { path: '/project/:id/members', component: ProjectMembersPage },
   { path: '/user/:id', component: UserPage },
   { path: '/home', component: HomePage },
-  { path: '/test', component: Test }
+  { path: '/test', component: Test },
+  { path: '/login', component: LoginPage }
 ]
 const router = createRouter({
   history: createWebHistory(),
