@@ -1,19 +1,10 @@
 <template>
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Intranet</title>
-    </head>
-    <body>
+    <div>
       <header>
         <p id="header_title_text">{{ header_title }}</p>
       </header>
       <router-view @loaded="setHeaderTitle"></router-view>
-    </body>
-  </html>
+    </div>
 </template>
 
 <script>
