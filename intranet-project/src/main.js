@@ -18,6 +18,7 @@ import HomePage from './pages/home/Main.vue';
 import NotFoundPage from './pages/notfound/Main.vue'
 
 const routes = [
+  { path: '', redirect: '/home' },
   { path: '/manage/projects', component: ProjectsPage },
   { path: '/manage/projects/create', component: ProjectsCreatePage },
   { path: '/manage/users', component: UsersPage },
