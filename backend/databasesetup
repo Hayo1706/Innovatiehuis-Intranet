@@ -1,2 +1,0 @@
-CREATE TABLE projects ( projectid INT NOT NULL AUTO_INCREMENT,name varchar(50) NOT NULL,isarchived BOOLEAN NOT NULL default 0,createdat DATETIME DEFAULT CURRENT_TIMESTAMP,lastupdated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,PRIMARY KEY (projectid))
-INSERT INTO innovatieplatform.projects (name) VALUES ('Intranet');
