@@ -40,9 +40,7 @@ export default {
     "screening",
   ],
   data: function () {
-    return {
-      
-    };
+    return {};
   },
   methods: {
     archive(id) {
@@ -71,7 +69,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #userlisting {
   display: flex;
   align-items: center;

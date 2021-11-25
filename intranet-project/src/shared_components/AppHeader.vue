@@ -1,10 +1,17 @@
 <template>
   <header>
     <p id="header_title_text">
-      <img src=".\..\assets\images\logo\square.png" style="position:absolute;left:20px;" />
+      <img
+        src=".\..\assets\images\logo\square.png"
+        style="position: absolute; left: 20px"
+      />
       {{ header_title }}
-      <img @click="onClick()" src=".\..\assets\images\profile_icon.png" style="position:absolute;right:20px;" />
-      </p>
+      <img
+        @click="onClick()"
+        src=".\..\assets\images\profile_icon.png"
+        style="position: absolute; right: 20px"
+      />
+    </p>
   </header>
 </template>
 
@@ -17,14 +24,19 @@ export default {
   },
   methods: {
     onClick() {
-      this.$router.push('/user/1');
-    }
-  }
+      this.$router.push("/user/1");
+    },
+  },
 };
 </script>
 
 
-<style>
+<style scoped>
+img {
+  height: 5vh;
+  padding-right: 20px;
+  cursor: pointer;
+}
 header {
   width: 100%;
   height: 10vh;
