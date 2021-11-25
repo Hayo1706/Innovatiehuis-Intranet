@@ -1,14 +1,12 @@
 <template>
     <div>
       <p>Projects Window</p>
-      <div id="projectlist" v-for="project of projects" :key="project.id">
-        <ProjectButton
+        <ProjectButton v-for="project of projects" :key="project.id"
           v-bind:projectId="project.id"
           v-bind:projectName="project.name"
           v-bind:recentUpdate="project.recentUpdate"
           v-on:reload="reload()"
         />
-      </div>
     </div>
 </template>
 

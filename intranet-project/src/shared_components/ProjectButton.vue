@@ -9,13 +9,13 @@
 export default {
   name: "AnnouncementWindow",
   props: [
-
+      "projectId",
+      "projectName",
+      "recentUpdate",
   ],
   data: function () {
     return {
-        projectId:1,
-        projectName:"Testproject",
-        recentUpdate:true
+
     };
   },
   methods: {
