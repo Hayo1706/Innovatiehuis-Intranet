@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import AnnouncementWindow from './../../shared_components/AnnouncementWindow.vue';
-import ProjectsWindow from './../../shared_components/ProjectsWindow.vue';
+import AnnouncementWindow from '../../shared_components/AnnouncementWindow.vue';
+import ProjectsWindow from '../../shared_components/ProjectsWindow.vue';
 
 export default {
   components: { AnnouncementWindow, ProjectsWindow },

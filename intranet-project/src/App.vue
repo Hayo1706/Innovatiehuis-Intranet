@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-header v-bind:header_title="this.header_title"></app-header>
+    <AppHeader v-bind:header_title="this.header_title" />
     <router-view @loaded="setHeaderTitle"></router-view>
   </div>
 </template>

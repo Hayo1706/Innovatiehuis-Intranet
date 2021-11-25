@@ -6,17 +6,17 @@ import "./main.css"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 
-import ProjectsPage from './pages/manage/projects/Main.vue';
-import ProjectsCreatePage from './pages/manage/projects/create/Main.vue';
-import UsersCreatePage from './pages/manage/users/create/Main.vue';
-import UsersPage from './pages/manage/users/Main.vue';
-import ProjectPage from './pages/project/Main.vue';
-import ProjectMembersPage from './pages/project/members/Main.vue';
-import ProjectSettingsPage from './pages/project/settings/Main.vue';
-import UserPage from './pages/user/Main.vue';
-import HomePage from './pages/home/Main.vue';
-import LoginPage from './pages/login/Main.vue';
-import NotFoundPage from './pages/notfound/Main.vue';
+import ProjectsPage from './pages/manage/projects/ProjectsPage.vue';
+import ProjectsCreatePage from './pages/manage/projects/create/ProjectsCreatePage.vue';
+import UsersCreatePage from './pages/manage/users/create/UsersCreatePage.vue';
+import UsersPage from './pages/manage/users/UsersPage.vue';
+import ProjectPage from './pages/project/ProjectPage.vue';
+import ProjectMembersPage from './pages/project/members/ProjectMembersPage.vue';
+import ProjectSettingsPage from './pages/project/settings/ProjectSettingsPage.vue';
+import UserPage from './pages/user/UserPage.vue';
+import HomePage from './pages/home/HomePage.vue';
+import LoginPage from './pages/login/LoginPage.vue';
+import NotFoundPage from './pages/notfound/NotFoundPage.vue';
 
 const routes = [
   { path: '', redirect: '/home' },

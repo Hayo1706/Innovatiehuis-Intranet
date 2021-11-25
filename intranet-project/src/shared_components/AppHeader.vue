@@ -1,6 +1,10 @@
 <template>
   <header>
-    <p id="header_title_text">{{ header_title }}</p>
+    <p id="header_title_text">
+      <img src=".\..\assets\images\logo\square.png" style="position:absolute;left:20px;" />
+      {{ header_title }}
+      <img @click="onClick()" src=".\..\assets\images\profile_icon.png" style="position:absolute;right:20px;" />
+      </p>
   </header>
 </template>
 
@@ -11,6 +15,11 @@ export default {
   data: function () {
     return {};
   },
+  methods: {
+    onClick() {
+      this.$router.push('/user/1');
+    }
+  }
 };
 </script>
 

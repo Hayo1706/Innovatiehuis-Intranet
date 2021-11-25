@@ -2,17 +2,17 @@
     <div>
       <FoldersView />
       <FilesView />
-      <ProjectsWindow />
+      <AnnouncementWindow />
     </div>
 </template>
 
 <script>
 import FilesView from './FilesView.vue';
 import FoldersView from './FoldersView.vue';
-import ProjectsWindow from './../../shared_components/ProjectsWindow.vue';
+import AnnouncementWindow from '../../shared_components/AnnouncementWindow.vue';
 
 export default {
-  components: { FilesView, FoldersView, ProjectsWindow },
+  components: { FilesView, FoldersView, AnnouncementWindow },
   name: "ProjectPage",
   data: function () {
     return {

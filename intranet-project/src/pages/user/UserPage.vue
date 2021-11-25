@@ -7,7 +7,7 @@
 
 <script>
 import PersonalDetails from './PersonalDetails.vue';
-import ProjectsWindow from './../../shared_components/ProjectsWindow.vue';
+import ProjectsWindow from '../../shared_components/ProjectsWindow.vue';
 
 export default {
   components: { PersonalDetails, ProjectsWindow },
