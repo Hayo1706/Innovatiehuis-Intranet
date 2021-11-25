@@ -1,8 +1,9 @@
 <template>
   <div>
     <ProjectsHeader></ProjectsHeader>
-    <ProjectListing></ProjectListing>
-    <ProjectListing></ProjectListing>
+    <div v-for="project of projects" :key="project.name">
+      <ProjectListing v-bind:project="project"></ProjectListing>
+    </div>
   </div>
 </template>
 
@@ -13,7 +14,7 @@ export default {
   components: { ProjectListing, ProjectsHeader },
   name: "ProjectsPage",
   data: function () {
-    return { projects: [] };
+    return { projects: [{ name: "Blockchain", isArchived: true }] };
   },
   methods: {},
   created() {

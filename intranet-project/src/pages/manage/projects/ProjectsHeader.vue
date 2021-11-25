@@ -28,8 +28,7 @@ export default {
   box-sizing: border-box;
   min-height: 10vh;
   background-color: #28418a;
-  border: white 5px solid;
-  margin-top: 1vh;
+  border-top: white 2px solid;
   color: white;
   font-size: calc(1vw + 1vh);
   padding: 20px;
