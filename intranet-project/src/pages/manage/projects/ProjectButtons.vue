@@ -31,8 +31,8 @@ export default {
 </script>
 <style scoped>
 img {
-  height: 7vh;
-  padding-right: 20px;
+  max-width: 70px;
+  margin-right: 10px;
   cursor: pointer;
 }
 </style>
