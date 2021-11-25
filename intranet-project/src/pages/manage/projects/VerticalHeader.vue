@@ -3,7 +3,10 @@
     <div class="headerText">Project:</div>
     <div class="headerText">Aangemaakt:</div>
     <div class="headerText">Laatste Update:</div>
-    <div class="headerText">Overkoepelend project:</div>
+    <div class="headerText">
+      Overkoepelend <br />
+      project:
+    </div>
     <div class="headerText">Sub-projecten:</div>
   </div>
 </template>

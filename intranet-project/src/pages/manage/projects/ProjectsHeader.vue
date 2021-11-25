@@ -8,7 +8,6 @@
       <div class="col">Sub-projecten</div>
       <div class="col"></div>
     </div>
-    <br />
   </div>
 </template>
 
@@ -24,6 +23,16 @@ export default {
 
 <style scoped>
 #projectsHeader {
+  font-family: AddeleSemiBold;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 10vh;
+  background-color: #28418a;
+  border: white 5px solid;
+  margin-top: 1vh;
+  color: white;
+  font-size: calc(1vw + 1vh);
+  padding: 20px;
   font-family: AddeleSemiBold;
 }
 </style>
