@@ -1,15 +1,20 @@
 <template>
   <div class="col">
-    <img src="@/assets/images/users_icon.png" />
+    <img src="@/assets/images/users_icon.png" class="d-block d-lg-inline" />
     <img
       v-if="project.isArchived"
       src="https://cdn-icons-png.flaticon.com/512/60/60723.png"
+      class="d-block d-lg-inline"
     />
     <img
       v-else
       src="https://www.pngkey.com/png/full/876-8761970_download-button-comments-icon-png-archive-icon.png"
+      class="d-block d-lg-inline"
     />
-    <img src="https://www.pngrepo.com/png/320601/512/crossed-pistols.png" />
+    <img
+      src="https://www.pngrepo.com/png/320601/512/crossed-pistols.png"
+      class="d-block d-lg-inline"
+    />
   </div>
 </template>
 
@@ -26,7 +31,7 @@ export default {
 </script>
 <style scoped>
 img {
-  height: 5vh;
+  height: 7vh;
   padding-right: 20px;
   cursor: pointer;
 }
