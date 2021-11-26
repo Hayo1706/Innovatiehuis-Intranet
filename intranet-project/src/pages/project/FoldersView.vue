@@ -1,11 +1,13 @@
 <template>
-    <div>
+    <div class='folderview'>
       <p>Folders View</p>
-      <table>
-        <tr v-for="folder in folders" :key="folder.name">
+        <table>
+          <tr>
+          <span v-for="folder in folders" :key="folder.name">
           <td v-if="folder.shared == 'no'"><img src=".\..\..\assets\images\folder.png"/> {{folder.name}}</td>
           <td v-if="folder.shared == 'yes'"><img src=".\..\..\assets\images\shared_folder.png"/> {{folder.name}}</td>
-        </tr>
+          </span>
+          </tr>
       </table>
     </div>
 </template>
@@ -35,41 +37,27 @@ export default {
 
 <style scoped>
 p {
+    background-color: #28418a;
+}
+.folderview {
   color: white;
   font-size: calc(1vw + 1vh);
+  font-family: AddeleSemiBold;
   height: 100%;
   width: 68vw;
-  margin: 0;
+  margin: calc(1vw + 1vh);
   text-align: center;
-  background-color: #747579;
-  border-style: outset;
-  }
-.project-folder {
-  font-size: 16pt;
-  font-weight: bold;
-  background-color: #c6992f;
-  color: #28418a;
-  width: 300px;
-  height: 60px;
-  border-style: outset;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  border-radius: 8px;
 }
 img {
-  height: 5vh;
-  padding-right: 20px;
-  cursor: pointer;
+  height: 7vh;
+  padding-right: 1vw;
+  padding-bottom: 0.5vh;
 }
-tr {
-  display: inline-block;
+table{
+  width: 100%;
+  color: black;
 }
-td {
-  width: 17vw;
-}
-table {
-  width: 68vw;
+td{
+  width: calc(68vw / 4);
 }
 </style>
