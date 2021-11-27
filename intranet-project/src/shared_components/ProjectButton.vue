@@ -3,7 +3,10 @@
     <img
       v-if="recentUpdate"
       src=".\..\assets\images\logo\square.png"
-      style="position: absolute; left: 15px"
+    />
+    <img
+      v-if="!recentUpdate"
+      src=".\..\assets\images\logo\square_dark.png"
     />
     {{ this.projectName }}
   </button>
@@ -29,20 +32,18 @@ export default {
 #project-button {
   font-size: 16pt;
   font-weight: bold;
-  background-color: #c6992f;
-  color: #28418a;
+  background-color: var(--gold2);
+  color: var(--blue1);
   width: 300px;
   height: 60px;
   border-style: outset;
-  text-align: center;
-  justify-content: center;
   align-items: center;
   display: flex;
   border-radius: 8px;
 }
 img {
   height: 5vh;
-  padding-right: 20px;
+  padding-right: 8px;
   cursor: pointer;
 }
 </style>

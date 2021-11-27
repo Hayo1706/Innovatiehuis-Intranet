@@ -1,6 +1,7 @@
 <template>
-    <div>
-      <p>Projects Window</p>
+  <div class="container">
+    <div id=window>
+      <h1 id=title>Projects Window</h1>
         <ProjectButton v-for="project of projects" :key="project.id"
           v-bind:projectId="project.id"
           v-bind:projectName="project.name"
@@ -8,6 +9,7 @@
           v-on:reload="reload()"
         />
     </div>
+  </div>
 </template>
 
 <script>
@@ -31,14 +33,14 @@ export default {
 
 
 <style scoped>
-p {
+#window {
+    border-style: outset;
+}
+#title {
   color: white;
   font-size: calc(2vw + 2vh);
-  height: 100%;
-  width: 500px;
   margin: 0;
   text-align: center;
-  background-color: #747579;
-  border-style: outset;
+  background-color: var(--blue4);
   }
 </style>

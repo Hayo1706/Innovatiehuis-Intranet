@@ -11,6 +11,13 @@
     src: url(./fonts/AdelleSansEXT-Thin.ttf);
   }
   
-  body {
-    margin: 0;
-  }
+:root {
+  --blue1: #28418a;
+  --blue2: #515c99;
+  --blue3: #7579ac;
+  --blue4: #9a9bc2;
+  --gold1: #c6992f;
+  --gold2: #cfa852;
+  --gold3: #d9bb7b;
+  --gold4: #e4cfa2;
+}

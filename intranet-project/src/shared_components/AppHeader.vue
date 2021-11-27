@@ -2,12 +2,13 @@
   <header>
     <p id="header_title_text">
       <img
+        @click="logoClick()"
         src=".\..\assets\images\logo\square.png"
         style="position: absolute; left: 20px"
       />
       {{ header_title }}
       <img
-        @click="onClick()"
+        @click="userClick()"
         src=".\..\assets\images\profile_icon.png"
         style="position: absolute; right: 20px"
       />
@@ -23,7 +24,10 @@ export default {
     return {};
   },
   methods: {
-    onClick() {
+    logoClick() {
+      this.$router.push("/home");
+    },
+    userClick() {
       this.$router.push("/user/1");
     },
   },
@@ -40,7 +44,7 @@ img {
 header {
   width: 100%;
   height: 10vh;
-  background-color: #28418a;
+  background-color: var(--blue1);
 }
 #header_title_text {
   color: white;

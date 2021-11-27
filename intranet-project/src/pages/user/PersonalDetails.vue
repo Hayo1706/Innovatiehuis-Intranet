@@ -25,7 +25,7 @@ p {
   width: 500px;
   margin: 0;
   text-align: center;
-  background-color: #747579;
+  background-color: var(--blue4);
   border-style: outset;
   }
 </style>

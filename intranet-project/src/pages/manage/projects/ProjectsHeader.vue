@@ -27,7 +27,7 @@ export default {
   width: 100%;
   box-sizing: border-box;
   min-height: 10vh;
-  background-color: #28418a;
+  background-color: var(--blue1);
   border-top: white 2px solid;
   color: white;
   font-size: calc(1vw + 1vh);

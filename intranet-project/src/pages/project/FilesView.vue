@@ -35,7 +35,7 @@ export default {
 
 <style scoped>
 p {
-    background-color: #28418a;
+    background-color: var(--blue1);
 }
 .filesview {
   color: white;

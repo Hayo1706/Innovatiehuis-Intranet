@@ -58,7 +58,7 @@ export default {
   width: 100%;
   box-sizing: border-box;
   min-height: 10vh;
-  background-color: #28418a;
+  background-color: var(--blue1);
   border: white 5px solid;
   margin-top: 1vh;
   color: white;

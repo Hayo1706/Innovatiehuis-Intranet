@@ -37,7 +37,7 @@ export default {
 
 <style scoped>
 p {
-    background-color: #28418a;
+    background-color: var(--blue1);
 }
 .folderview {
   color: white;
