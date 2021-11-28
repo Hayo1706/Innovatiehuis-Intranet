@@ -5,20 +5,28 @@
       v-if="project.isArchived"
       src="https://cdn-icons-png.flaticon.com/512/60/60723.png"
       class="d-block d-lg-inline"
+      @click="handleArchiveProject(project)"
     />
     <img
       v-else
       src="https://www.pngkey.com/png/full/876-8761970_download-button-comments-icon-png-archive-icon.png"
       class="d-block d-lg-inline"
+      @click="handleArchiveProject(project)"
     />
     <img
       src="https://www.pngrepo.com/png/320601/512/crossed-pistols.png"
       class="d-block d-lg-inline"
+      @click="deleteProject(project.id)"
     />
   </div>
 </template>
 
 <script>
+import {
+  deleteProject,
+  updateProject,
+} from "@/networkservice/networkservice.js";
+
 export default {
   props: ["project"],
   components: {},
@@ -26,7 +34,14 @@ export default {
   data: function () {
     return {};
   },
-  methods: {},
+  methods: {
+    deleteProject,
+    handleArchiveProject(project) {
+      let projectCopy = JSON.parse(JSON.stringify(project));
+      projectCopy.isArchived = !projectCopy.isArchived;
+      updateProject(projectCopy);
+    },
+  },
 };
 </script>
 <style scoped>
