@@ -1,14 +1,14 @@
 <template>
     <div class='folderview'>
       <p>Folders View</p>
-        <table>
-          <tr>
-          <span v-for="folder in folders" :key="folder.name">
-          <td v-if="folder.shared == 'no'"><img src=".\..\..\assets\images\folder.png"/> {{folder.name}}</td>
-          <td v-if="folder.shared == 'yes'"><img src=".\..\..\assets\images\shared_folder.png"/> {{folder.name}}</td>
-          </span>
-          </tr>
-      </table>
+      <div class="container-fluid">
+        <div class="row">
+          <div v-for="folder in folders" :key="folder.name" class="col-sm-3" >
+            <img v-if="folder.shared == 'no'" src=".\..\..\assets\images\folder.png"/> 
+            <img v-if="folder.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
+            {{folder.name}}</div>
+        </div>
+      </div>
     </div>
 </template>
 
@@ -53,11 +53,11 @@ img {
   padding-right: 1vw;
   padding-bottom: 0.5vh;
 }
-table{
-  width: 100%;
+.container-fluid{
   color: black;
 }
-td{
-  width: calc(68vw / 4);
+.row{
+  font-size: calc(0.7vw + 0.7vh);
+  text-align: left;
 }
 </style>

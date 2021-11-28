@@ -1,13 +1,12 @@
 <template>
     <div class='filesview'>
        <p>Files View</p>
-        <table>
-          <tr>
-          <span v-for="file in files" :key="file.name">
-          <td>{{file.name}}</td>
-          </span>
-          </tr>
-      </table>
+        <div class="container-fluid">
+        <div class="row">
+          <div v-for="file in files" :key="file.name" class="col-sm-2" >
+            {{file.name}}</div>
+        </div>
+      </div>
     </div>
 </template>
 
@@ -46,18 +45,11 @@ p {
   margin: calc(1vw + 1vh);
   text-align: center;
 }
-img {
-  height: width;
-  padding-right: 1vw;
-  padding-bottom: 0.5vh;
-}
-table{
-  width: 100%;
+.container-fluid{
   color: black;
-  font-size: calc(0.75vw + 0.75vh);;
 }
-td{
-  width: calc(68vw / 8);
-  height: calc(68vw / 8);
+.row{
+  font-size: calc(0.7vw + 0.7vh);
+  text-align: left;
 }
 </style>
