@@ -1,7 +1,7 @@
 <template>
     <div class='filesview'>
-       <p>Files View</p>
-        <div class="container-fluid">
+      <p>Files View</p>
+      <div class="container-fluid">
         <div class="row">
           <div v-for="file in files" :key="file.name" class="col-sm-2" >
             {{file.name}}</div>

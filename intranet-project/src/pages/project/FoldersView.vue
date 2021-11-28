@@ -3,7 +3,7 @@
       <p>Folders View</p>
       <div class="container-fluid">
         <div class="row">
-          <div v-for="folder in folders" :key="folder.name" class="col-sm-3" >
+          <div v-for="folder in folders" :key="folder.name" class="col-sm-3">
             <img v-if="folder.shared == 'no'" src=".\..\..\assets\images\folder.png"/> 
             <img v-if="folder.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
             {{folder.name}}</div>

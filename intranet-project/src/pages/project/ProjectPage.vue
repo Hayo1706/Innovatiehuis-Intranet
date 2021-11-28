@@ -1,8 +1,26 @@
 <template>
     <div>
-      <FoldersView />
-      <FilesView />
-      <AnnouncementWindow />
+      <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-sm">
+                    <FoldersView />
+                  </div>
+                </div>
+                 <div class="row">
+                  <div class="col-sm">
+                    <FilesView />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm">
+              <AnnouncementWindow />
+            </div>
+          </div>
+      </div>
     </div>
 </template>
 
