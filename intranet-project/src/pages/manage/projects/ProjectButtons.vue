@@ -36,10 +36,16 @@ export default {
   },
   methods: {
     deleteProject,
-    handleArchiveProject(project) {
+    async handleArchiveProject(project) {
       let projectCopy = JSON.parse(JSON.stringify(project));
       projectCopy.isArchived = !projectCopy.isArchived;
-      updateProject(projectCopy);
+      let result = updateProject(projectCopy);
+      if (result["succes"] == true) {
+        //update frontend
+        project.isArchived = !project.isArchived;
+      } else {
+        alert("A problem ocurred while trying to archive. Try again later.");
+      }
     },
   },
 };
