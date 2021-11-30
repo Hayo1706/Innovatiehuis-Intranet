@@ -2,7 +2,10 @@
   <div>
     <ProjectsHeader></ProjectsHeader>
     <div v-for="project of projects" :key="project.name">
-      <ProjectListing v-bind:project="project"></ProjectListing>
+      <ProjectListing
+        @removeProject="this.removeProject"
+        v-bind:project="project"
+      ></ProjectListing>
     </div>
   </div>
 </template>
@@ -15,12 +18,25 @@ export default {
   components: { ProjectListing, ProjectsHeader },
   name: "ProjectsPage",
   data: function () {
-    return { projects: [{ name: "Blockchain", isArchived: true }] };
+    return { projects: [] };
   },
-  methods: {},
+  methods: {
+    removeProject(id) {
+      this.projects = this.projects.filter(function (item) {
+        return item.projectid !== id;
+      });
+    },
+  },
   async created() {
     this.$emit("loaded", "Projecten - Overzicht");
-    this.projects = getProjects();
+    getProjects()
+      .then((response) => {
+        this.projects = response;
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Network error! Connection timed out!");
+      });
   },
 };
 </script>

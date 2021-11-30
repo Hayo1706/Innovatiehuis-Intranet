@@ -48,4 +48,4 @@ def index3(projectid):
     return jsonify({"success": True})
 
 
-app.run(host='192.168.0.123', port=5000, debug=False)
+app.run(host='127.0.0.1', port=5000, debug=False)

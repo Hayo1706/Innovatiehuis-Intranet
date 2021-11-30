@@ -1,45 +1,19 @@
 import axios from 'axios';
 //replace with correct url
 const axiosClient = axios.create({
-    baseURL: 'http://192.167.2.15:8080/'
+    baseURL: 'http://127.0.0.1:5000/api'
 });
 export async function getProjects() {
-    try {
-        const { data } = await axiosClient.get('/projects', { timeout: 2000 });
-        return [null, data]
-    } catch (error) {
-        if (!error.status) {
-            // network error
-            alert('Network error! Connection timed out!')
-        }
-        return [error]
-
-    }
+    const { data } = await axiosClient.get('/projects', { timeout: 2000 });
+    return data;
 }
 export async function deleteProject(id) {
-    try {
-        const { data } = await axiosClient.get(`/project/${id}`, { timeout: 2000 });
-        return [null, data]
-    } catch (error) {
-        if (!error.status) {
-            // network error
-            alert('Network error! Connection timed out!')
-        }
-        return [error]
-
-    }
+    const { data } = await axiosClient.delete(`/project/${id}`, { timeout: 2000 });
+    return data;
 }
 
 export async function updateProject(project) {
-    try {
-        const { data } = await axiosClient.put(`/project/${project.id}`, { project }, { timeout: 2000 });
-        return [null, data]
-    } catch (error) {
-        if (!error.status) {
-            // network error
-            alert('Network error! Connection timed out!')
-        }
-        return [error]
 
-    }
+    const { data } = await axiosClient.put(`/project/${project.projectid}`, { project }, { timeout: 2000 });
+    return data;
 }

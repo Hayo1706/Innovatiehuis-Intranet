@@ -16,7 +16,7 @@
     <img
       src="https://www.pngrepo.com/png/320601/512/crossed-pistols.png"
       class="d-block d-lg-inline"
-      @click="deleteProject(project.id)"
+      @click="handleDeleteProject(project)"
     />
   </div>
 </template>
@@ -35,17 +35,31 @@ export default {
     return {};
   },
   methods: {
-    deleteProject,
+    async handleDeleteProject(project) {
+      let answer = confirm(
+        "Wil je het project " + project.name + " echt verwijderen?"
+      );
+      if (answer) {
+        deleteProject(project.projectid)
+          .then(() => {
+            //remove the project from the view
+            this.$emit("removeProject", project.projectid);
+          })
+          .catch((err) => {
+            alert(err);
+          });
+      }
+    },
     async handleArchiveProject(project) {
       let projectCopy = JSON.parse(JSON.stringify(project));
       projectCopy.isArchived = !projectCopy.isArchived;
-      let result = updateProject(projectCopy);
-      if (result["succes"] == true) {
-        //update frontend
-        project.isArchived = !project.isArchived;
-      } else {
-        alert("A problem ocurred while trying to archive. Try again later.");
-      }
+      updateProject(projectCopy)
+        .then(() => {
+          project.isArchived = !project.isArchived;
+        })
+        .catch((err) => {
+          alert(err);
+        });
     },
   },
 };

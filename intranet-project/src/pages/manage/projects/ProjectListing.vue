@@ -8,7 +8,10 @@
         <div class="col">{{ project.lastupdated }}</div>
         <div class="col"></div>
         <div class="col"></div>
-        <ProjectButtons v-bind:project="project"></ProjectButtons>
+        <ProjectButtons
+          @removeProject="this.removeProject"
+          v-bind:project="project"
+        ></ProjectButtons>
       </div>
       <hr />
     </div>
@@ -26,7 +29,10 @@
         </div>
 
         <div class="col">
-          <ProjectButtons v-bind:project="project"></ProjectButtons>
+          <ProjectButtons
+            @removeProject="this.removeProject"
+            v-bind:project="project"
+          ></ProjectButtons>
         </div>
       </div>
       <hr />
@@ -44,7 +50,11 @@ export default {
   data: function () {
     return {};
   },
-  methods: {},
+  methods: {
+    removeProject(id) {
+      this.$emit("removeProject", id);
+    },
+  },
 };
 </script>
 
