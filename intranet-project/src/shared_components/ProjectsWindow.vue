@@ -3,9 +3,9 @@
     <div id=window>
       <h1 id=title>Projects Window</h1>
         <ProjectButton v-for="project of projects" :key="project.id"
-          v-bind:projectId="project.id"
+          v-bind:projectId="project.projectid"
           v-bind:projectName="project.name"
-          v-bind:recentUpdate="project.recentUpdate"
+          v-bind:lastUpdated="project.lastupdated"
           v-on:reload="reload()"
         />
     </div>
@@ -14,19 +14,27 @@
 
 <script>
 import ProjectButton from './ProjectButton.vue';
+import Axios from 'axios';
 
 export default {
   components: { ProjectButton },
   name: "ProjectsWindow",
   props: [
-
+    
   ],
   data: function () {
-    return { projects: [
-      {id: 1, name: "Eerste Project", recentUpdate: true},
-      {id: 2, name: "Tweede Project", recentUpdate: true},
-      {id: 3, name: "Derde Project", recentUpdate: false}
-      ]};
+    return { projects: []};
+  },
+  created: function() {
+    Axios
+      .get("http://127.0.0.1:5000/api/projects") // TODO: use network service
+      .then((response) => {
+        console.log('Received data from api/projects');
+        this.projects = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 }
 </script>
