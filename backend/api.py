@@ -26,6 +26,22 @@ def index2(projectid):
     return jsonify({"success": True})
 
 
+@app.route('/api/user/<userid>/projects', methods=['GET'])
+def index4(userid):
+    cur.execute(
+        "SELECT * FROM user_has_projects INNER JOIN projects ON user_has_projects.projectid=projects.projectid WHERE userid = " + userid+" AND projects.isarchived = 0")
+    # serialize results into JSON
+    row_headers = [x[0] for x in cur.description]
+    rv = cur.fetchall()
+    json_data = []
+    for result in rv:
+        json_data.append(dict(zip(row_headers, result)))
+
+    # return the results!
+    print(json_data)
+    return json.dumps(json_data, indent=4, sort_keys=True, default=str)
+
+
 @app.route('/api/projects', methods=['GET'])
 def index():
     cur.execute("select * from projects")

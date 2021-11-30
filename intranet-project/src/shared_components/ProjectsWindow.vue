@@ -27,7 +27,7 @@ export default {
   },
   created: function() {
     Axios
-      .get("http://127.0.0.1:5000/api/projects") // TODO: use network service
+      .get("http://127.0.0.1:5000/api/user/1/projects") // TODO: use network service
       .then((response) => {
         console.log('Received data from api/projects');
         this.projects = response.data;
