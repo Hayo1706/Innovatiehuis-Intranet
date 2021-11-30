@@ -2,7 +2,7 @@
   <div class="col">
     <img src="@/assets/images/users_icon.png" class="d-block d-lg-inline" />
     <img
-      v-if="project.isArchived"
+      v-if="project.isarchived"
       src="https://cdn-icons-png.flaticon.com/512/60/60723.png"
       class="d-block d-lg-inline"
       @click="handleArchiveProject(project)"
@@ -58,10 +58,10 @@ export default {
     },
     async handleArchiveProject(project) {
       let projectCopy = JSON.parse(JSON.stringify(project));
-      projectCopy.isArchived = !projectCopy.isArchived;
+      projectCopy.isarchived = !projectCopy.isarchived;
       updateProject(projectCopy)
         .then(() => {
-          project.isArchived = !project.isArchived;
+          project.isarchived = !project.isarchived;
         })
         .catch((err) => {
           //invalid operation on server
