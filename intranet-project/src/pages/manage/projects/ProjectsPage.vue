@@ -35,7 +35,9 @@ export default {
       })
       .catch((err) => {
         console.log(err);
-        alert("Network error! Connection timed out!");
+        if (!err.response) {
+          alert("Network error! Connection timed out!");
+        }
       });
   },
 };

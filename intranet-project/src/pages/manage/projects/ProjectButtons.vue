@@ -46,7 +46,13 @@ export default {
             this.$emit("removeProject", project.projectid);
           })
           .catch((err) => {
-            alert(err);
+            //invalid operation on server
+            if (err.response) {
+              console.log(err.response.status);
+              alert(err);
+            } else {
+              alert("Network error! Connection timed out!");
+            }
           });
       }
     },
@@ -58,7 +64,13 @@ export default {
           project.isArchived = !project.isArchived;
         })
         .catch((err) => {
-          alert(err);
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+            alert(err);
+          } else {
+            alert("Network error! Connection timed out!");
+          }
         });
     },
   },
