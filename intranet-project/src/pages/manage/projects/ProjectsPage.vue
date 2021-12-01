@@ -1,6 +1,13 @@
 <template>
   <div>
     <ProjectsHeader @searchBarChanged="setSearchTerm"></ProjectsHeader>
+    <div class="container-fluid d-sm-block d-lg-none">
+      <ProjectsSearchBar
+        id="searchBar"
+        @searchBarChanged="setSearchTerm"
+      ></ProjectsSearchBar>
+    </div>
+
     <div v-for="project of projects" :key="project.name">
       <ProjectListing
         v-if="shouldShow(project)"
@@ -15,8 +22,9 @@
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
 import { getProjects } from "@/services/ProjectService.js";
+import ProjectsSearchBar from "./ProjectsSearchBar.vue";
 export default {
-  components: { ProjectListing, ProjectsHeader },
+  components: { ProjectListing, ProjectsHeader, ProjectsSearchBar },
   name: "ProjectsPage",
   data: function () {
     return { projects: [], searchTerm: "" };
@@ -57,4 +65,8 @@ export default {
 </script>
 
 <style scoped>
+#searchBar {
+  margin-top: 5px;
+  width: 50%;
+}
 </style>

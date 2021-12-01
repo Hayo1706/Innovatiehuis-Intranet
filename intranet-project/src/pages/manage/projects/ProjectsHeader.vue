@@ -7,41 +7,25 @@
       <div class="col">Overkoepelend project</div>
       <div class="col">Sub-projecten</div>
       <div class="col">
-        <div class="input-group">
-          <input
-            id="search-input"
-            type="search"
-            class="form-control"
-            placeholder="Zoeken"
-            v-model="searchTerm"
-            v-on:keyup.enter="search"
-          />
-          <button @click="search">Ga</button>
-        </div>
+        <ProjectsSearchBar
+          @searchBarChanged="
+            (searchTerm) => $emit('searchBarChanged', searchTerm)
+          "
+        ></ProjectsSearchBar>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import ProjectsSearchBar from "./ProjectsSearchBar.vue";
 export default {
+  components: { ProjectsSearchBar },
   name: "ProjectsHeader",
   data: function () {
-    return { searchTerm: "" };
+    return {};
   },
-  methods: {
-    search() {
-      this.$emit("searchBarChanged", this.searchTerm);
-    },
-  },
-  watch: {
-    searchTerm: function (val) {
-      //do something when the data changes.
-      if (!val) {
-        this.$emit("searchBarChanged", null);
-      }
-    },
-  },
+  methods: {},
 };
 </script>
 
