@@ -13,7 +13,7 @@
 <script>
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
-import { getProjects } from "@/networkservice/networkservice.js";
+import { getProjects } from "@/services/NetworkService.js";
 export default {
   components: { ProjectListing, ProjectsHeader },
   name: "ProjectsPage",

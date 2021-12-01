@@ -25,7 +25,7 @@
 import {
   deleteProject,
   updateProject,
-} from "@/networkservice/networkservice.js";
+} from "@/services/NetworkService.js";
 
 export default {
   props: ["project"],
