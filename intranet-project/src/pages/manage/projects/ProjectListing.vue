@@ -1,42 +1,32 @@
 <template>
   <div>
-    <!-- for larger screens-->
-    <div id="projectListing" class="container-fluid d-none d-lg-block">
-      <div class="row">
-        <div class="col">{{ project.name }}</div>
-        <div class="col">{{ project.createdat }}</div>
-        <div class="col">{{ project.lastupdated }}</div>
-        <div class="col"></div>
-        <div class="col"></div>
+    <div class="row">
+      <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
+      <!-- small screens-->
+      <div class="col d-block d-lg-none">
+        <div>{{ project.name }}</div>
+        <div>{{ project.createdat }}</div>
+        <div>{{ project.lastupdated }}</div>
+        <div><br /></div>
+        <div></div>
+      </div>
+
+      <!-- large screens-->
+      <div class="col d-none d-lg-block">{{ project.name }}</div>
+      <div class="col d-none d-lg-block">{{ project.createdat }}</div>
+      <div class="col d-none d-lg-block">{{ project.lastupdated }}</div>
+      <div class="col d-none d-lg-block"><br /></div>
+      <div class="col d-none d-lg-block"></div>
+
+      <div class="col">
         <ProjectButtons
-          @removeProject="this.removeProject"
+          @removeProject="(id) => $emit('removeProject', id)"
+          @archiveProject="(_project) => $emit('archiveProject', _project)"
           v-bind:project="project"
         ></ProjectButtons>
       </div>
-      <hr />
     </div>
-
-    <!-- for smaller screens-->
-    <div id="projectListing" class="container-fluid d-sm-block d-lg-none">
-      <div class="row">
-        <VerticalHeader></VerticalHeader>
-        <div class="col">
-          <div>{{ project.name }}</div>
-          <div>{{ project.createdat }}</div>
-          <div>{{ project.lastupdated }}</div>
-          <div><br /></div>
-          <div></div>
-        </div>
-
-        <div class="col">
-          <ProjectButtons
-            @removeProject="this.removeProject"
-            v-bind:project="project"
-          ></ProjectButtons>
-        </div>
-      </div>
-      <hr />
-    </div>
+    <hr />
   </div>
 </template>
 
@@ -50,11 +40,7 @@ export default {
   data: function () {
     return {};
   },
-  methods: {
-    removeProject(id) {
-      this.$emit("removeProject", id);
-    },
-  },
+  methods: {},
 };
 </script>
 

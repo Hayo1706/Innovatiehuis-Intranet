@@ -22,8 +22,6 @@
 </template>
 
 <script>
-import { deleteProject, updateProject } from "@/services/ProjectService.js";
-
 export default {
   props: ["project"],
   components: {},
@@ -37,20 +35,7 @@ export default {
         'Wil je het project "' + project.name + '" echt verwijderen?'
       );
       if (answer) {
-        deleteProject(project.projectid)
-          .then(() => {
-            //remove the project from the view
-            this.$emit("removeProject", project.projectid);
-          })
-          .catch((err) => {
-            //invalid operation on server
-            if (err.response) {
-              console.log(err.response.status);
-              alert(err);
-            } else {
-              alert("Network error! Connection timed out!");
-            }
-          });
+        this.$emit("removeProject", project.projectid);
       }
     },
     async handleArchiveProject(project) {
@@ -62,21 +47,7 @@ export default {
         'Wil je het project "' + project.name + '" echt ' + action + "?"
       );
       if (answer) {
-        let projectCopy = JSON.parse(JSON.stringify(project));
-        projectCopy.isarchived = !projectCopy.isarchived;
-        updateProject(projectCopy)
-          .then(() => {
-            project.isarchived = !project.isarchived;
-          })
-          .catch((err) => {
-            //invalid operation on server
-            if (err.response) {
-              console.log(err.response.status);
-              alert(err);
-            } else {
-              alert("Network error! Connection timed out!");
-            }
-          });
+        this.$emit("archiveProject", project);
       }
     },
   },
@@ -86,6 +57,7 @@ export default {
 img {
   max-width: 70px;
   margin-right: 10px;
+  margin-top: 10px;
   cursor: pointer;
 }
 </style>
