@@ -1,8 +1,9 @@
 <template>
   <div>
-    <ProjectsHeader></ProjectsHeader>
+    <ProjectsHeader @searchBarChanged="setSearchTerm"></ProjectsHeader>
     <div v-for="project of projects" :key="project.name">
       <ProjectListing
+        v-if="shouldShow(project)"
         @removeProject="this.removeProject"
         v-bind:project="project"
       ></ProjectListing>
@@ -18,9 +19,21 @@ export default {
   components: { ProjectListing, ProjectsHeader },
   name: "ProjectsPage",
   data: function () {
-    return { projects: [] };
+    return { projects: [], searchTerm: "" };
   },
   methods: {
+    setSearchTerm(value) {
+      this.searchTerm = value;
+    },
+    shouldShow(project) {
+      if (this.searchTerm == null) {
+        return true;
+      } else {
+        return project.name
+          .toLowerCase()
+          .includes(this.searchTerm.toLowerCase());
+      }
+    },
     removeProject(id) {
       this.projects = this.projects.filter(function (item) {
         return item.projectid !== id;
