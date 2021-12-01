@@ -14,7 +14,7 @@
 
 <script>
 import ProjectButton from './ProjectButton.vue';
-import { getProjectsForUser} from '@/services/NetworkService.js';
+import { getProjectsForUser} from "@/services/ProjectService.js";
 
 export default {
   components: { ProjectButton },
