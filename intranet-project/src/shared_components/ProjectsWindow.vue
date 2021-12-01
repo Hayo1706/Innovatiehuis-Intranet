@@ -14,7 +14,7 @@
 
 <script>
 import ProjectButton from './ProjectButton.vue';
-import Axios from 'axios';
+import { getProjectsForUser} from '@/networkservice/networkservice.js';
 
 export default {
   components: { ProjectButton },
@@ -25,15 +25,16 @@ export default {
   data: function () {
     return { projects: []};
   },
-  created: function() {
-    Axios
-      .get("http://127.0.0.1:5000/api/user/1/projects") // TODO: use network service
+  async created() {
+    getProjectsForUser(1) //TODO: get user id from session data/JWT
       .then((response) => {
-        console.log('Received data from api/projects');
-        this.projects = response.data;
+        this.projects = response;
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.log(err);
+        if (!err.response) {
+          alert("Network error! Connection timed out!");
+        }
       });
   },
 }

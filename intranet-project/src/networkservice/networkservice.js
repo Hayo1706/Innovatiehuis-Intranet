@@ -13,7 +13,16 @@ export async function deleteProject(id) {
 }
 
 export async function updateProject(project) {
-
     const { data } = await axiosClient.put(`/project/${project.projectid}`, { project }, { timeout: 2000 });
+    return data;
+}
+
+export async function getProjectsForUser(userid) {
+    const { data } = await axiosClient.get(`/user/${userid}/projects`, { timeout: 2000 });
+    return data;
+}
+
+export async function getAnnouncements(projectid) {
+    const { data } = await axiosClient.get(`/project/${projectid}/announcements`, { timeout: 2000 });
     return data;
 }
