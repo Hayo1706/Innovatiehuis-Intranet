@@ -6,7 +6,7 @@
       <div class="col">Laatste Update</div>
       <div class="col">Overkoepelend project</div>
       <div class="col">Sub-projecten</div>
-      <div class="col"></div>
+      <div class="col">Zoeken</div>
     </div>
   </div>
 </template>

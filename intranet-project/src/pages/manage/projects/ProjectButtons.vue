@@ -22,10 +22,7 @@
 </template>
 
 <script>
-import {
-  deleteProject,
-  updateProject,
-} from "@/services/ProjectService.js";
+import { deleteProject, updateProject } from "@/services/ProjectService.js";
 
 export default {
   props: ["project"],
@@ -37,7 +34,7 @@ export default {
   methods: {
     async handleDeleteProject(project) {
       let answer = confirm(
-        "Wil je het project " + project.name + " echt verwijderen?"
+        'Wil je het project "' + project.name + '" echt verwijderen?'
       );
       if (answer) {
         deleteProject(project.projectid)
@@ -57,21 +54,30 @@ export default {
       }
     },
     async handleArchiveProject(project) {
-      let projectCopy = JSON.parse(JSON.stringify(project));
-      projectCopy.isarchived = !projectCopy.isarchived;
-      updateProject(projectCopy)
-        .then(() => {
-          project.isarchived = !project.isarchived;
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-            alert(err);
-          } else {
-            alert("Network error! Connection timed out!");
-          }
-        });
+      let action = "archiveren";
+      if (project.isarchived) {
+        action = "zichtbaar maken";
+      }
+      let answer = confirm(
+        'Wil je het project "' + project.name + '" echt ' + action + "?"
+      );
+      if (answer) {
+        let projectCopy = JSON.parse(JSON.stringify(project));
+        projectCopy.isarchived = !projectCopy.isarchived;
+        updateProject(projectCopy)
+          .then(() => {
+            project.isarchived = !project.isarchived;
+          })
+          .catch((err) => {
+            //invalid operation on server
+            if (err.response) {
+              console.log(err.response.status);
+              alert(err);
+            } else {
+              alert("Network error! Connection timed out!");
+            }
+          });
+      }
     },
   },
 };
