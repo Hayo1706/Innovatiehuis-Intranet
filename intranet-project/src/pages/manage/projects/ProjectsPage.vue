@@ -28,6 +28,7 @@
           @showArchivedOnly="setShowArchived"
           v-bind:showArchivedOnly="this.showArchivedOnly"
         ></ProjectsShowArchivedOnlyBox>
+        <hr />
       </div>
     </div>
     <div class="container-fluid">
@@ -160,7 +161,8 @@ export default {
 <style scoped>
 #searchBarMobile {
   margin-top: 5px;
-  width: 40%;
+  margin-bottom: 5px;
+  width: 100%;
 }
 #noresults {
   margin-top: 10px;
@@ -170,6 +172,8 @@ export default {
   bottom: 0;
   left: 0;
   margin: 20px;
+  background-color: var(--gold1);
+  border-color: var(--blue1);
 }
 #littleSpace {
   height: 60px;
