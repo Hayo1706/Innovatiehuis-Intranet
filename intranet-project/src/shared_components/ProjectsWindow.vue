@@ -31,10 +31,10 @@ export default {
         this.projects = response;
       })
       .catch((err) => {
-        console.log(err);
-        if (!err.response) {
-          alert("Network error! Connection timed out!");
+        if (err.response) {
+          console.log(err.response.status);
         }
+        alert(err);
       });
   },
 }

@@ -87,10 +87,8 @@ export default {
           //invalid operation on server
           if (err.response) {
             console.log(err.response.status);
-            alert(err);
-          } else {
-            alert("Network error! Connection timed out!");
           }
+          alert(err);
         });
     },
     archiveProject(project) {
@@ -101,13 +99,10 @@ export default {
           project.isarchived = !project.isarchived;
         })
         .catch((err) => {
-          //invalid operation on server
           if (err.response) {
             console.log(err.response.status);
-            alert(err);
-          } else {
-            alert("Network error! Connection timed out!");
           }
+          alert(err);
         });
     },
     shouldShow(item) {
@@ -149,10 +144,10 @@ export default {
         this.projects = response;
       })
       .catch((err) => {
-        console.log(err);
-        if (!err.response) {
-          alert("Network error! Connection timed out!");
+        if (err.response) {
+          console.log(err.response.status);
         }
+        alert(err);
       });
   },
 };
