@@ -55,4 +55,10 @@ export default {
 #search-input {
   margin-right: 4px;
 }
+img {
+  width: calc(2vw + 3vh);
+  padding-bottom: 10px;
+  padding-left: 10px;
+  cursor: pointer;
+}
 </style>
