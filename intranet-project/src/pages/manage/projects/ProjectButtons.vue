@@ -1,6 +1,10 @@
 <template>
   <div class="col">
-    <img src="@/assets/images/users_icon.png" class="d-block d-lg-inline" />
+    <img
+      src="@/assets/images/users_icon.png"
+      class="d-block d-lg-inline"
+      @click="gotoMembers()"
+    />
     <img
       v-if="project.isarchived"
       src="https://cdn-icons-png.flaticon.com/512/60/60723.png"
@@ -30,6 +34,9 @@ export default {
     return {};
   },
   methods: {
+    gotoMembers() {
+      this.$router.push({ path: `/project/${this.project.projectid}/members` });
+    },
     async handleDeleteProject(project) {
       let answer = confirm(
         'Wil je het project "' + project.name + '" echt verwijderen?'
