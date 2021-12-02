@@ -23,6 +23,12 @@ export default {
       if (!val) {
         this.$emit("searchBarChanged", null);
       } else {
+        //prohibit searching for whitespace only
+        if (val.trim().length == 0) {
+          this.searchTermField = "";
+          return;
+        }
+
         this.$emit("searchBarChanged", this.searchTermField);
       }
     },
