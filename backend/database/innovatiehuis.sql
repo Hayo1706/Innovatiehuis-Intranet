@@ -26,21 +26,22 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   `projectid` int(11) DEFAULT NULL,
   `content` text NOT NULL,
   `title` tinytext NOT NULL DEFAULT 'title',
+  `timestamp` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`announcementid`),
   KEY `projectid_announcements` (`projectid`),
   KEY `userid2_announcements` (`userid`),
   CONSTRAINT `projectid_announcements` FOREIGN KEY (`projectid`) REFERENCES `projects` (`projectid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `userid2_announcements` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table innovatieplatform.announcements: ~4 rows (approximately)
 DELETE FROM `announcements`;
 /*!40000 ALTER TABLE `announcements` DISABLE KEYS */;
-INSERT INTO `announcements` (`announcementid`, `userid`, `projectid`, `content`, `title`) VALUES
-	(1, 5, NULL, 'Hallo iedereen, vergeten jullie niet kerst met ons te vieren?\r\nGroeten de politie.', 'Kerst bij de Politie!'),
-	(2, 5, NULL, 'Hoe verwijder ik Announcements? Dat zou toch een feature zijn?', 'Bug report'),
-	(3, 5, 10, 'Haha mooi systeempje hoor jongens, lekker secure. :)', 'Lekker bezig'),
-	(4, 6, 10, 'muhahahahha ik heb mezelf admin privileges gegeven', 'title');
+INSERT INTO `announcements` (`announcementid`, `userid`, `projectid`, `content`, `title`, `timestamp`) VALUES
+	(1, 5, NULL, 'Hallo iedereen, vergeten jullie niet kerst met ons te vieren?\r\nGroeten de politie.', 'Kerst bij de Politie!', '2021-12-02 17:01:59'),
+	(2, 5, NULL, 'Hoe verwijder ik Announcements? Dat zou toch een feature zijn?', 'Bug report', '2021-12-03 17:01:59'),
+	(3, 5, 10, 'Haha mooi systeempje hoor jongens, lekker secure. :)', 'Lekker bezig', '2021-12-01 11:01:59'),
+	(4, 6, 10, 'muhahahahha ik heb mezelf admin privileges gegeven', 'title', '1995-03-07 17:01:59');
 /*!40000 ALTER TABLE `announcements` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.announcement_replies
@@ -178,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `firstname` varchar(40) NOT NULL,
   `lastname` varchar(40) NOT NULL,
   `email` tinytext NOT NULL,
-  `password` tinytext NOT NULL,
+  `hash` tinytext NOT NULL,
   `roleid` int(11) NOT NULL DEFAULT 0,
   `statusvog` tinyint(1) NOT NULL DEFAULT 0,
   `statusgeheimhouding` tinyint(1) NOT NULL DEFAULT 0,
@@ -188,19 +189,20 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`userid`),
   KEY `role` (`roleid`),
   CONSTRAINT `role` FOREIGN KEY (`roleid`) REFERENCES `roles` (`roleid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table innovatieplatform.users: ~7 rows (approximately)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`userid`, `firstname`, `lastname`, `email`, `password`, `roleid`, `statusvog`, `statusgeheimhouding`, `createdat`, `lastwrongpassword`, `wrongpasswordcount`) VALUES
+INSERT INTO `users` (`userid`, `firstname`, `lastname`, `email`, `hash`, `roleid`, `statusvog`, `statusgeheimhouding`, `createdat`, `lastwrongpassword`, `wrongpasswordcount`) VALUES
 	(1, 'Hayo', 'Riem', 'hayoriem@mail.com', '123', 1, 0, 0, '2021-11-30 17:47:09', '2021-11-30 17:47:09', 0),
 	(2, 'Peter', 'Beens', 'peterbeens@mail.com', '123', 2, 0, 0, '2021-11-30 17:47:41', '2021-11-30 17:47:41', 0),
 	(3, 'Singh', 'van Offeren', 'singhvano@mail.com', '123', 2, 0, 0, '2021-11-30 17:48:24', '2021-11-30 17:48:24', 0),
 	(4, 'Jochem', 'Hoekstra', 'joja@mail.com', '123', 2, 0, 0, '2021-11-30 17:48:47', '2021-11-30 17:48:47', 0),
 	(5, 'Niels', 'Doornbos', 'nielsprikkelbos@mail.com', '123', 4, 0, 0, '2021-11-30 17:49:09', '2021-11-30 17:49:09', 0),
 	(6, 'Jan', 'Baljé', 'janbal@mail.com', '123', 1, 0, 0, '2021-11-30 17:49:49', '2021-11-30 17:49:49', 0),
-	(7, 'Tim', 'Dronebos', 'tim@mail.com', '123', 3, 0, 0, '2021-11-30 17:51:50', '2021-11-30 17:51:50', 0);
+	(7, 'Tim', 'Dronebos', 'tim@mail.com', '123', 3, 0, 0, '2021-11-30 17:51:50', '2021-11-30 17:51:50', 0),
+	(8, 'pieter', 'van rosmalen', 'pvr@mail.com', '123458', 3, 0, 0, '2021-12-02 19:09:21', '2021-12-02 19:09:21', 0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.user_has_projects

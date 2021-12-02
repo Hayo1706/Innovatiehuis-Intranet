@@ -63,7 +63,7 @@ def deleteProject(projectid):
 
 @app.route('/api/project/<projectid>/announcements', methods=['GET'])
 def getAnnouncements(projectid):
-    cur.execute("SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.firstname, users.lastname, announcements.title, announcements.content FROM announcements JOIN users ON announcements.userid = users.userid WHERE announcements.projectid = " + projectid)
+    cur.execute("SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.firstname, users.lastname, announcements.title, announcements.content FROM announcements JOIN users ON announcements.userid = users.userid WHERE announcements.projectid = " + projectid + " ORDER BY announcements.timestamp DESC")
     # serialize results into JSON
     row_headers = [x[0] for x in cur.description]
     rv = cur.fetchall()
@@ -78,7 +78,7 @@ def getAnnouncements(projectid):
 
 @app.route('/api/project/<projectid>/announcements', methods=['POST'])
 def postAnnouncement(projectid):
-    cur.execute("INSERT INTO announcements (userid, projectid, title, content) VALUES (1, " + projectid + ", 'nieuwe mededeling', 'lorem ipsum etc.')")
+    cur.execute("INSERT INTO announcements (userid, projectid, title, content) VALUES (1, " + projectid + ", 'nieuwe mededeling', 'AAAAAAAAAAAAA.')")
     connection.commit()
     return jsonify({"success": True})
 
