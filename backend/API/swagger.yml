@@ -96,6 +96,7 @@ paths:
           description: Succesfully posted announcement to project
         404:
           description: Specified project not found
+  /announcements/{id}:
     delete:
       operationId: routes.announcements.delete
       tags:
