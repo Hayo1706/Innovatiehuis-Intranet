@@ -4,7 +4,7 @@
       id="showarchivedonlybox"
       type="checkbox"
       name="showarchivedonlybox"
-      v-model="showArchivedOnly"
+      v-model="showArchivedOnlyField"
     />
     <label for="showarchivedonlybox">Toon alleen gearchiveerde projecten</label>
   </div>
@@ -12,18 +12,22 @@
 <script>
 export default {
   name: "ProjectsShowArchivedOnlyBox",
+  props: ["showArchivedOnly"],
   data: function () {
-    return { showArchivedOnly: false };
+    return { showArchivedOnlyField: false };
   },
   methods: {},
   watch: {
-    showArchivedOnly: function (val) {
+    showArchivedOnlyField: function (val) {
       //do something when the data changes.
       if (!val) {
         this.$emit("showArchivedOnly", false);
       } else {
         this.$emit("showArchivedOnly", true);
       }
+    },
+    showArchivedOnly: function (val) {
+      this.showArchivedOnlyField = val;
     },
   },
 };

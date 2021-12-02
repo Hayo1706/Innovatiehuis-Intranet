@@ -4,6 +4,7 @@
       @searchBarChanged="setSearchTerm"
       @showArchivedOnly="setShowArchived"
       v-bind:searchTerm="this.searchTerm"
+      v-bind:showArchivedOnly="this.showArchivedOnly"
     ></ProjectsHeader>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
@@ -17,6 +18,7 @@
           id="showarchivedonlyboxMobile"
           class="col"
           @showArchivedOnly="setShowArchived"
+          v-bind:showArchivedOnly="this.showArchivedOnly"
         ></ProjectsShowArchivedOnlyBox>
       </div>
     </div>
