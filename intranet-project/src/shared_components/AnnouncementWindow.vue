@@ -28,17 +28,17 @@
         <form>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Titel:</label>
-            <input type="text" class="form-control" id="title-text">
+            <input type="text" class="form-control" id="title-text" :value="this.tempTitle">
           </div>
           <div class="mb-3">
             <label for="message-text" class="col-form-label">Inhoud:</label>
-            <textarea class="form-control" id="message-text" style="height: 400px"></textarea>
+            <textarea class="form-control" id="message-text" style="height: 400px" :value="this.tempContent"></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-        <button type="button" class="btn btn-primary">Bevestigen</button>
+        <button type="button" class="btn btn-primary" @onclick="addAnnouncement()">Bevestigen</button>
       </div>
     </div>
   </div>
@@ -49,6 +49,7 @@
 
 <script>
 import Announcement from "./Announcement.vue"
+import { getAnnouncements } from "@/services/ProjectService.js"
 
 export default {
   components: { Announcement },
@@ -71,9 +72,9 @@ export default {
     }
   },
   async created() {
-    getAnnouncements(1) //TODO: get user id from session data/JWT
+    getAnnouncements(10) //TODO: get project id dynamically
       .then((response) => {
-        this.projects = response;
+        this.announcements = response;
       })
       .catch((err) => {
         console.log(err);
@@ -81,6 +82,7 @@ export default {
           alert("Network error! Connection timed out!");
         }
       });
+  }
 }
 </script>
 

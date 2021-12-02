@@ -65,7 +65,7 @@ def index3(projectid):
 
 @app.route('/api/project/<projectid>/announcements', methods=['GET'])
 def index69(projectid):
-    cur.execute("SELECT FROM announcements WHERE projectid = " + projectid)
+    cur.execute("SELECT * FROM announcements WHERE projectid = " + projectid)
     connection.commit()
     return jsonify({"success": True})
 
