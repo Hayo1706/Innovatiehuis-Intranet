@@ -14,7 +14,7 @@
 
 <script>
 import ProjectButton from './ProjectButton.vue';
-import { getProjectsForUser } from "@/services/ProjectService.js";
+import { getProjectsByUser } from "@/services/ProjectService.js";
 
 export default {
   components: { ProjectButton },
@@ -26,7 +26,7 @@ export default {
     return { projects: []};
   },
   async created() {
-    getProjectsForUser(1) //TODO: get user id from session data/JWT
+    getProjectsByUser(1) //TODO: get user id from session data/JWT
       .then((response) => {
         this.projects = response;
       })

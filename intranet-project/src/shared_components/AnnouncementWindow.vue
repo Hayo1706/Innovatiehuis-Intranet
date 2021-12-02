@@ -5,12 +5,12 @@
       <button id="add-button" data-bs-toggle="modal" data-bs-target="#announcementModal"></button>
     </div>
 
-    <div class="accordion" v-for="announcement in announcements" :key="announcement.id">
+    <div class="accordion" v-for="announcement in this.announcements" :key="announcement.id">
       <Announcement 
-        v-bind:id="announcement.id" 
-        v-bind:date="announcement.date" 
+        v-bind:id="announcement.announcementid" 
+        v-bind:date="announcement.timestamp" 
         v-bind:userid="announcement.userid" 
-        v-bind:username="announcement.username" 
+        v-bind:username="announcement.firstname + ' ' + announcement.lastname" 
         v-bind:title="announcement.title" 
         v-bind:content="announcement.content" 
         v-on:reload="reload()"
@@ -28,11 +28,11 @@
         <form>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Titel:</label>
-            <input type="text" class="form-control" id="title-text" :value="this.tempTitle">
+            <input type="text" class="form-control" id="title-text" :value="this.newAnnouncement.title">
           </div>
           <div class="mb-3">
             <label for="message-text" class="col-form-label">Inhoud:</label>
-            <textarea class="form-control" id="message-text" style="height: 400px" :value="this.tempContent"></textarea>
+            <textarea class="form-control" id="message-text" style="height: 400px" :value="this.newAnnouncement.content"></textarea>
           </div>
         </form>
       </div>
@@ -49,7 +49,8 @@
 
 <script>
 import Announcement from "./Announcement.vue"
-import { getAnnouncements } from "@/services/ProjectService.js"
+import { getAnnouncementsByProject } from "@/services/ProjectService.js"
+import { postAnnouncement } from "@/services/ProjectService.js"
 
 export default {
   components: { Announcement },
@@ -58,7 +59,9 @@ export default {
 
   ],
   data: function () {
-    return { announcements: [
+    return { newAnnouncement: { title: "", content: "" },
+      announcements: [],
+      testAnnouncements: [
       {id:5, date:new Date('December 17, 2021 13:24:00'), userid:1, username:"Niels Doornbos", title:"Politiebijeenkomst Kerst", content:"Hallo iedereen, vergeten jullie niet kerst met ons te vieren?\n\nGroeten de politie."},
       {id:4, date:new Date('December 07, 2021 15:14:00'), userid:1, username:"Niels Doornbos", title:"Sprintdemo #4", content:"Jongens ik heb aan jullie getwijfeld, maar wat een geweldige presentatie hebben jullie vandaag gegeven! Wij hebben er als team weer het volste vertrouwen in. Vooral de Batman-meme was een goede vondst!\n\nRecht zo die gaat,\nNiels."},
       {id:3, date:new Date('December 04, 2021 10:52:00'), userid:1, username:"Niels Doornbos", title:"Announcements verwijderen", content:"Hoe verwijder ik Announcements? Dat zou toch een feature zijn?"},
@@ -68,13 +71,16 @@ export default {
   },
   methods: {
     addAnnouncement() {
-      
+      postAnnouncement(10, this.newAnnouncement); //TODO: get project id dynamically
+      this.newAnnouncement.title = "";
+      this.newAnnouncement.content = "";
     }
   },
   async created() {
-    getAnnouncements(10) //TODO: get project id dynamically
+    getAnnouncementsByProject(10) //TODO: get project id dynamically
       .then((response) => {
         this.announcements = response;
+        console.log(this.announcements);
       })
       .catch((err) => {
         console.log(err);
