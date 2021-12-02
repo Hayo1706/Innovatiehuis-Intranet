@@ -1,7 +1,10 @@
 <template>
-  <div id="announcementDiv">
-    <h1 id="title">Announcement Window</h1>
-    
+  <div id="announcement-window">
+    <div id="title">
+      <label>Mededelingen</label>
+      <button id="add-button" data-bs-toggle="modal" data-bs-target="#announcementModal"></button>
+    </div>
+
     <div class="accordion" v-for="announcement in announcements" :key="announcement.id">
       <Announcement 
         v-bind:id="announcement.id" 
@@ -13,6 +16,34 @@
         v-on:reload="reload()"
         />
     </div>
+
+<div class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="announcementModalLabel">Nieuwe mededeling</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Titel:</label>
+            <input type="text" class="form-control" id="title-text">
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Inhoud:</label>
+            <textarea class="form-control" id="message-text" style="height: 400px"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+        <button type="button" class="btn btn-primary">Bevestigen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   </div>
 </template>
 
@@ -34,6 +65,22 @@ export default {
       {id:1, date:new Date('December 04, 2021 10:37:00'), userid:69, username:"1337haxx0r", title:"Ik ben een hacker", content:"Haha mooi systeempje hoor jongens, lekker secure. :)"}
       ]};
   },
+  methods: {
+    addAnnouncement() {
+      
+    }
+  },
+  async created() {
+    getAnnouncements(1) //TODO: get user id from session data/JWT
+      .then((response) => {
+        this.projects = response;
+      })
+      .catch((err) => {
+        console.log(err);
+        if (!err.response) {
+          alert("Network error! Connection timed out!");
+        }
+      });
 }
 </script>
 
@@ -43,11 +90,27 @@ export default {
   color: white;
   font-size: calc(1vw + 1vh);
   margin: 0;
-  text-align: center;
-  background-color: var(--blue4);
+  padding: 2px;
+  padding-left: 10px;
+  background-color: var(--blue1);
   border-style: outset;
+  width: auto;
   }
-#announcementDiv {
-  
+#announcement-window {
+  overflow: auto;
+  height: 90vh;
+}
+#add-button {
+  height: 44px;
+  width: 44px;
+  background-image: url("./../assets/images/plus.png");
+  background-size: cover;
+  float: right;
+}
+.btn-secondary {
+  background-color: var(--blue4);
+}
+.btn-primary {
+  background-color: var(--blue1);
 }
 </style>

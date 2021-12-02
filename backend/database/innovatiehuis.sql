@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   CONSTRAINT `userid2_announcements` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.announcements: ~3 rows (approximately)
+-- Dumping data for table innovatieplatform.announcements: ~4 rows (approximately)
 DELETE FROM `announcements`;
 /*!40000 ALTER TABLE `announcements` DISABLE KEYS */;
 INSERT INTO `announcements` (`announcementid`, `userid`, `projectid`, `content`, `title`) VALUES
@@ -69,22 +69,22 @@ INSERT INTO `announcement_replies` (`announcement_replies_id`, `announcementid`,
 -- Dumping structure for table innovatieplatform.chat_messages
 DROP TABLE IF EXISTS `chat_messages`;
 CREATE TABLE IF NOT EXISTS `chat_messages` (
-  `meesageid` int(11) NOT NULL AUTO_INCREMENT,
+  `messageid` int(11) NOT NULL AUTO_INCREMENT,
   `userid` int(11) NOT NULL,
   `projectid` int(11) NOT NULL,
   `timestamp` datetime NOT NULL DEFAULT current_timestamp(),
   `content` text NOT NULL,
-  PRIMARY KEY (`meesageid`),
+  PRIMARY KEY (`messageid`) USING BTREE,
   KEY `projectid_chat` (`projectid`),
   KEY `userid_chat` (`userid`),
   CONSTRAINT `projectid_chat` FOREIGN KEY (`projectid`) REFERENCES `projects` (`projectid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `userid_chat` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.chat_messages: ~6 rows (approximately)
+-- Dumping data for table innovatieplatform.chat_messages: ~7 rows (approximately)
 DELETE FROM `chat_messages`;
 /*!40000 ALTER TABLE `chat_messages` DISABLE KEYS */;
-INSERT INTO `chat_messages` (`meesageid`, `userid`, `projectid`, `timestamp`, `content`) VALUES
+INSERT INTO `chat_messages` (`messageid`, `userid`, `projectid`, `timestamp`, `content`) VALUES
 	(1, 1, 10, '2021-11-30 18:00:23', 'peter gaan we portal 2 doen?'),
 	(2, 1, 10, '2021-11-30 18:00:23', 'peter gaan we portal 2 doen?'),
 	(3, 1, 10, '2021-11-30 18:00:23', 'peter gaan we portal 2 doen?'),
@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `user_has_projects` (
   CONSTRAINT `userid_user_has_projects` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.user_has_projects: ~15 rows (approximately)
+-- Dumping data for table innovatieplatform.user_has_projects: ~14 rows (approximately)
 DELETE FROM `user_has_projects`;
 /*!40000 ALTER TABLE `user_has_projects` DISABLE KEYS */;
 INSERT INTO `user_has_projects` (`userid`, `projectid`, `lastseen`) VALUES
