@@ -12,7 +12,7 @@ servers:
 paths:
   /projects:
     get:
-      operationId: routes.project.read_all
+      operationId: routes.projects.read_all
       tags:
         - Project
       summary: Read the entire list of projects
@@ -25,7 +25,7 @@ paths:
                 $ref: '#/components/schemas/Project'
   /projects/{id}:
     get:
-      operationId: routes.project.read_one
+      operationId: routes.projects.read_one
       tags:
         - Project
       summary: Read the entire list of projects
@@ -41,7 +41,7 @@ paths:
         404:
           description: Project with id not found
     put:
-      operationId: routes.project.update
+      operationId: routes.projects.update
       tags:
         - Project
       summary: Update a value of project
@@ -58,7 +58,7 @@ paths:
         404:
           description: Project with id not found
     delete:
-      operationId: routes.project.delete
+      operationId: routes.projects.delete
       tags:
         - Project
       summary: Deletes the specified project
@@ -112,7 +112,7 @@ paths:
 
   /users:
     get:
-      operationId: routes.user.read_all
+      operationId: routes.users.read_all
       tags:
         - Users
       summary: Get projects of specified user
@@ -123,7 +123,7 @@ paths:
           description: Succesfully read user projects
   /users/{id}:
     get:
-      operationId: routes.user.read_one
+      operationId: routes.users.read_one
       tags:
         - Users
       summary: Get projects of specified user
@@ -134,7 +134,7 @@ paths:
           description: Succesfully read user projects
   /users/{id}/projects:
     get:
-      operationId: routes.user.read_user_projects
+      operationId: routes.users.read_user_projects
       tags:
         - Users
       summary: Get projects of specified user
