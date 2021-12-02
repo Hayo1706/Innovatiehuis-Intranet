@@ -1,5 +1,13 @@
 <template>
   <div>
+    <button
+      @click="gotoCreateProject()"
+      id="actionButton"
+      class="btn pmd-btn-fab pmd-ripple-effect btn-primary"
+      type="button"
+    >
+      <i class="material-icons pmd-sm">Project toevoegen</i>
+    </button>
     <ProjectsHeader
       @searchBarChanged="setSearchTerm"
       @showArchivedOnly="setShowArchived"
@@ -34,6 +42,7 @@
         Geen resultaten.
       </div>
     </div>
+    <div id="littleSpace"></div>
   </div>
 </template>
 
@@ -56,6 +65,9 @@ export default {
     return { projects: [], searchTerm: null, showArchivedOnly: false };
   },
   methods: {
+    gotoCreateProject() {
+      this.$router.push({ path: "/manage/projects/create" });
+    },
     setSearchTerm(value) {
       this.searchTerm = value;
     },
@@ -152,5 +164,15 @@ export default {
 }
 #noresults {
   margin-top: 10px;
+}
+#actionButton {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 20px;
+}
+#littleSpace {
+  height: 60px;
+  width: 100%;
 }
 </style>
