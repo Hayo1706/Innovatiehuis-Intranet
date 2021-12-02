@@ -101,7 +101,7 @@ paths:
       operationId: routes.announcements.delete
       tags:
         - Announcements
-      summary: Deletes announcement from project
+      summary: Deletes announcement with id
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
@@ -110,8 +110,28 @@ paths:
         404:
           description: Specified announcement not found
 
-
-
+  /users:
+    get:
+      operationId: routes.user.read_all
+      tags:
+        - Users
+      summary: Get projects of specified user
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Succesfully read user projects
+  /users/{id}:
+    get:
+      operationId: routes.user.read_one
+      tags:
+        - Users
+      summary: Get projects of specified user
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Succesfully read user projects
   /users/{id}/projects:
     get:
       operationId: routes.user.read_user_projects
