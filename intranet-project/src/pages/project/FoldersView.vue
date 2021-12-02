@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     onClick() {
-      this.$router.push("/project/" + this.projectId + "/path");
+      this.$router.push("/projects/" + this.projectId + "/path");
     },
   },
 }
