@@ -179,4 +179,7 @@ export default {
   height: 60px;
   width: 100%;
 }
+#showarchivedonlyboxMobile {
+  margin-top: 10px;
+}
 </style>
