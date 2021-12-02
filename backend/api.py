@@ -63,5 +63,18 @@ def index3(projectid):
     # return the results!
     return jsonify({"success": True})
 
+@app.route('/api/project/<projectid>/announcements', methods=['GET'])
+def index69(projectid):
+    cur.execute("SELECT * FROM announcements WHERE projectid = " + projectid)
+    connection.commit()
+    return jsonify({"success": True})
+
+@app.route('/api/project/<projectid>/announcements', methods=['POST'])
+def index1337(projectid):
+    cur.execute("INSERT INTO announcements (userid, projectid, title, content) VALUES (1, " + projectid + ", 'nieuwe mededeling', 'lorem ipsum etc.'")
+    connection.commit()
+    return jsonify({"success": True})
+
+
 
 app.run(host='127.0.0.1', port=5000, debug=False)

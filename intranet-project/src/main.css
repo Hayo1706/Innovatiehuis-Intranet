@@ -11,6 +11,29 @@
     src: url(./fonts/AdelleSansEXT-Thin.ttf);
   }
   
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px white; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--blue2); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blue1); 
+}
+
 :root {
   --blue1: #28418a;
   --blue2: #515c99;

@@ -2,9 +2,9 @@
     <div class="row">
       <div class= "col-8">
         <ProjectsWindow />
-        <router-link to="/manage/users" id="golden button">Gebruikersoverzicht</router-link>
+        <router-link to="/manage/users">Gebruikersoverzicht</router-link>
         <br>
-        <router-link to="/manage/projects" id="golden button">Projectenoverzicht</router-link>
+        <router-link to="/manage/projects">Projectenoverzicht</router-link>
       </div>
       <div class= "col-4">
         <AnnouncementWindow />
