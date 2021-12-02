@@ -28,11 +28,11 @@
         <form>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Titel:</label>
-            <input type="text" class="form-control" id="title-text" :value="this.newAnnouncement.title">
+            <input type="text" class="form-control" id="title-text" v-model="this.newAnnouncement.title">
           </div>
           <div class="mb-3">
             <label for="message-text" class="col-form-label">Inhoud:</label>
-            <textarea class="form-control" id="message-text" style="height: 400px" :value="this.newAnnouncement.content"></textarea>
+            <textarea class="form-control" id="message-text" style="height: 400px" v-model="this.newAnnouncement.content"></textarea>
           </div>
         </form>
       </div>
@@ -74,6 +74,7 @@ export default {
       postAnnouncement(10, this.newAnnouncement); //TODO: get project id dynamically
       this.newAnnouncement.title = "";
       this.newAnnouncement.content = "";
+      this.reload();
     }
   },
   async created() {

@@ -75,6 +75,19 @@ def getAnnouncements(projectid):
     print(json_data)
     return json.dumps(json_data, indent=4, sort_keys=True, default=str)
 
+@app.route('/api/test', methods=['GET'])
+def test():
+    cur.execute("SELECT * FROM announcement_replies WHERE announcement_replies_id = 3")
+    # serialize results into JSON
+    row_headers = [x[0] for x in cur.description]
+    rv = cur.fetchall()
+    json_data = []
+    for result in rv:
+        json_data.append(dict(zip(row_headers, result)))
+
+    # return the results!
+    print(json_data)
+    return json.dumps(json_data, indent=4, sort_keys=True, default=str)
 
 @app.route('/api/project/<projectid>/announcements', methods=['POST'])
 def postAnnouncement(projectid):

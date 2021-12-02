@@ -10,9 +10,7 @@
 //   }
 
 export function sqlToJsDate(sqlDate){
-    console.log(sqlDate);
     sqlDate = String(sqlDate);
-    console.log(sqlDate);
 
     //sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss.ms")
     var sqlDateArr1 = sqlDate.split("-");
