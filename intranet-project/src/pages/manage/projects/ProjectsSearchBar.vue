@@ -6,9 +6,7 @@
       class="form-control"
       placeholder="Zoeken"
       v-model="searchTerm"
-      v-on:keyup.enter="search"
     />
-    <button @click="search">Ga</button>
   </div>
 </template>
 <script>
@@ -17,16 +15,15 @@ export default {
   data: function () {
     return { searchTerm: "" };
   },
-  methods: {
-    search() {
-      this.$emit("searchBarChanged", this.searchTerm);
-    },
-  },
+  methods: {},
   watch: {
     searchTerm: function (val) {
+      console.log(val);
       //do something when the data changes.
       if (!val) {
         this.$emit("searchBarChanged", null);
+      } else {
+        this.$emit("searchBarChanged", this.searchTerm);
       }
     },
   },
