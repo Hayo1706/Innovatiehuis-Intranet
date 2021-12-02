@@ -18,7 +18,6 @@ export default {
   methods: {},
   watch: {
     searchTerm: function (val) {
-      console.log(val);
       //do something when the data changes.
       if (!val) {
         this.$emit("searchBarChanged", null);

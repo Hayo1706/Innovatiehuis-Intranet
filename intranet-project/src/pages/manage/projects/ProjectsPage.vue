@@ -8,14 +8,14 @@
       ></ProjectsSearchBar>
     </div>
     <div class="container-fluid">
-      <div v-for="project of projects" :key="project.name">
+      <div v-for="project of filteredProjects" :key="project.name">
         <ProjectListing
-          v-if="shouldShow(project)"
           @removeProject="this.removeProject"
           @archiveProject="this.archiveProject"
           v-bind:project="project"
         ></ProjectListing>
       </div>
+      <div v-if="filteredProjects.length == 0">Geen resultaten.</div>
     </div>
   </div>
 </template>
@@ -30,20 +30,11 @@ export default {
   components: { ProjectListing, ProjectsHeader, ProjectsSearchBar },
   name: "ProjectsPage",
   data: function () {
-    return { projects: [], searchTerm: "" };
+    return { projects: [], searchTerm: null, showArchivedOnly: false };
   },
   methods: {
     setSearchTerm(value) {
       this.searchTerm = value;
-    },
-    shouldShow(project) {
-      if (this.searchTerm == null) {
-        return true;
-      } else {
-        return project.name
-          .toLowerCase()
-          .includes(this.searchTerm.toLowerCase());
-      }
     },
     removeProject(id) {
       deleteProject(id)
@@ -80,8 +71,38 @@ export default {
           }
         });
     },
+    shouldShow(item) {
+      let shouldShow = false;
+      shouldShow = this.matchesSearchTermWhenShould(item);
+      if (shouldShow) {
+        shouldShow = this.showArchivedWhenShould(item);
+      }
+
+      return shouldShow;
+    },
+    matchesSearchTermWhenShould(item) {
+      if (this.searchTerm == null) {
+        return true;
+      } else {
+        return item.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+      }
+    },
+    showArchivedWhenShould(item) {
+      if (!this.showArchivedOnly) {
+        return true;
+      } else {
+        return item.isarchived;
+      }
+    },
   },
 
+  computed: {
+    filteredProjects() {
+      return this.projects.filter((item) => {
+        return this.shouldShow(item);
+      });
+    },
+  },
   async created() {
     this.$emit("loaded", "Projecten - Overzicht");
     getProjects()
