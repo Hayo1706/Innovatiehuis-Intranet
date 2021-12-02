@@ -5,25 +5,29 @@
       type="search"
       class="form-control"
       placeholder="Zoeken"
-      v-model="searchTerm"
+      v-model="searchTermField"
     />
   </div>
 </template>
 <script>
 export default {
   name: "ProjectsSearchBar",
+  props: ["searchTerm"],
   data: function () {
-    return { searchTerm: "", showArchivedOnly: false };
+    return { searchTermField: null };
   },
   methods: {},
   watch: {
-    searchTerm: function (val) {
+    searchTermField: function (val) {
       //do something when the data changes.
       if (!val) {
         this.$emit("searchBarChanged", null);
       } else {
-        this.$emit("searchBarChanged", this.searchTerm);
+        this.$emit("searchBarChanged", this.searchTermField);
       }
+    },
+    searchTerm: function (val) {
+      this.searchTermField = val;
     },
   },
 };

@@ -11,6 +11,7 @@
           @searchBarChanged="
             (searchTerm) => $emit('searchBarChanged', searchTerm)
           "
+          v-bind:searchTerm="this.searchTerm"
         ></ProjectsSearchBar>
         <ProjectsShowArchivedOnlyBox
           @showArchivedOnly="(value) => $emit('showArchivedOnly', value)"
@@ -26,6 +27,7 @@ import ProjectsShowArchivedOnlyBox from "./ProjectsShowArchivedOnlyBox.vue";
 export default {
   components: { ProjectsSearchBar, ProjectsShowArchivedOnlyBox },
   name: "ProjectsHeader",
+  props: ["searchTerm"],
   data: function () {
     return {};
   },
