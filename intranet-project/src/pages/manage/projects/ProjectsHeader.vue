@@ -12,6 +12,9 @@
             (searchTerm) => $emit('searchBarChanged', searchTerm)
           "
         ></ProjectsSearchBar>
+        <ProjectsShowArchivedOnlyBox
+          @showArchivedOnly="(value) => $emit('showArchivedOnly', value)"
+        ></ProjectsShowArchivedOnlyBox>
       </div>
     </div>
   </div>
@@ -19,8 +22,9 @@
 
 <script>
 import ProjectsSearchBar from "./ProjectsSearchBar.vue";
+import ProjectsShowArchivedOnlyBox from "./ProjectsShowArchivedOnlyBox.vue";
 export default {
-  components: { ProjectsSearchBar },
+  components: { ProjectsSearchBar, ProjectsShowArchivedOnlyBox },
   name: "ProjectsHeader",
   data: function () {
     return {};

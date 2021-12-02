@@ -13,7 +13,7 @@
 export default {
   name: "ProjectsSearchBar",
   data: function () {
-    return { searchTerm: "" };
+    return { searchTerm: "", showArchivedOnly: false };
   },
   methods: {},
   watch: {

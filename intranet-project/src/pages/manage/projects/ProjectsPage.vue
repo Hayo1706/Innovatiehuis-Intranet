@@ -1,11 +1,22 @@
 <template>
   <div>
-    <ProjectsHeader @searchBarChanged="setSearchTerm"></ProjectsHeader>
+    <ProjectsHeader
+      @searchBarChanged="setSearchTerm"
+      @showArchivedOnly="setShowArchived"
+    ></ProjectsHeader>
     <div class="container-fluid d-sm-block d-lg-none">
-      <ProjectsSearchBar
-        id="searchBar"
-        @searchBarChanged="setSearchTerm"
-      ></ProjectsSearchBar>
+      <div class="row">
+        <ProjectsSearchBar
+          class="col"
+          id="searchBarMobile"
+          @searchBarChanged="setSearchTerm"
+        ></ProjectsSearchBar>
+        <ProjectsShowArchivedOnlyBox
+          id="showarchivedonlyboxMobile"
+          class="col"
+          @showArchivedOnly="setShowArchived"
+        ></ProjectsShowArchivedOnlyBox>
+      </div>
     </div>
     <div class="container-fluid">
       <div v-for="project of filteredProjects" :key="project.name">
@@ -15,7 +26,9 @@
           v-bind:project="project"
         ></ProjectListing>
       </div>
-      <div v-if="filteredProjects.length == 0">Geen resultaten.</div>
+      <div id="noresults" v-if="filteredProjects.length == 0">
+        Geen resultaten.
+      </div>
     </div>
   </div>
 </template>
@@ -26,8 +39,14 @@ import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
 import { getProjects } from "@/services/ProjectService.js";
 import ProjectsSearchBar from "./ProjectsSearchBar.vue";
+import ProjectsShowArchivedOnlyBox from "./ProjectsShowArchivedOnlyBox.vue";
 export default {
-  components: { ProjectListing, ProjectsHeader, ProjectsSearchBar },
+  components: {
+    ProjectListing,
+    ProjectsHeader,
+    ProjectsSearchBar,
+    ProjectsShowArchivedOnlyBox,
+  },
   name: "ProjectsPage",
   data: function () {
     return { projects: [], searchTerm: null, showArchivedOnly: false };
@@ -35,6 +54,9 @@ export default {
   methods: {
     setSearchTerm(value) {
       this.searchTerm = value;
+    },
+    setShowArchived(value) {
+      this.showArchivedOnly = value;
     },
     removeProject(id) {
       deleteProject(id)
@@ -120,8 +142,11 @@ export default {
 </script>
 
 <style scoped>
-#searchBar {
+#searchBarMobile {
   margin-top: 5px;
-  width: 50%;
+  width: 40%;
+}
+#noresults {
+  margin-top: 10px;
 }
 </style>
