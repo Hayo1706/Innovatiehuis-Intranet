@@ -42,18 +42,7 @@ def index4(userid):
     return json.dumps(json_data, indent=4, sort_keys=True, default=str)
 
 
-@app.route('/api/projects', methods=['GET'])
-def index():
-    cur.execute("select * from projects")
-    # serialize results into JSON
-    row_headers = [x[0] for x in cur.description]
-    rv = cur.fetchall()
-    json_data = []
-    for result in rv:
-        json_data.append(dict(zip(row_headers, result)))
 
-    # return the results!
-    return json.dumps(json_data, indent=4, sort_keys=True, default=str)
 
 
 @app.route('/api/project/<projectid>', methods=['DELETE'])
