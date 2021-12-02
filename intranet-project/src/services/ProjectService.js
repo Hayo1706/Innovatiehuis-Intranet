@@ -35,3 +35,15 @@ export async function postAnnouncement(projectid, announcement) {
     const { data } = await axiosClient.post(`/project/${projectid}/announcements`, { announcement }, { timeout: 2000 });
     return data;
 }
+
+export async function deleteAnnouncement(announcementid) {
+    console.log("deleted announcement " + announcementid);
+}
+
+export async function editAnnouncement(announcementid, content) {
+    console.log("announcement " + announcementid + " now reads: " + content);
+}
+
+export async function addComment(announcementid, content) {
+    console.log("added comment to announcement " + announcementid + ", reading: " + content);
+}
