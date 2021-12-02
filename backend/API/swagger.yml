@@ -23,18 +23,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-  /projects/{projectid}:
+  /projects/{id}:
     get:
       operationId: routes.project.read_one
       tags:
         - Project
       summary: Read the entire list of projects
       parameters:
-        - in: path
-          name: projectid
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/id'
       responses:
         200:
           description: Successfully read project operation
@@ -50,11 +46,7 @@ paths:
         - Project
       summary: Update a value of project
       parameters:
-        - in: path
-          name: projectid
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/id'
         - in: query
           name: isarchived
           required: true
@@ -71,11 +63,7 @@ paths:
         - Project
       summary: Deletes the specified project
       parameters:
-        - in: path
-          name: projectid
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/id'
       responses:
         200:
           description: Project deleted
@@ -83,18 +71,14 @@ paths:
           description: Project with id not found
 
 
-  /projects/{projectid}/announcements:
+  /projects/{id}/announcements:
     get:
       operationId: routes.announcements.read_all
       tags:
         - Announcements
       summary: Get all announcements from project
       parameters:
-        - in: path
-          name: projectid
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/id'
       responses:
         200:
           description: Succesfully retrieved announcements from project
@@ -106,30 +90,35 @@ paths:
         - Announcements
       summary: Post announcements in project
       parameters:
-        - in: path
-          name: projectid
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/id'
       responses:
         200:
           description: Succesfully posted announcement to project
         404:
           description: Specified project not found
+    delete:
+      operationId: routes.announcements.delete
+      tags:
+        - Announcements
+      summary: Deletes announcement from project
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Succesfully removed announcement
+        404:
+          description: Specified announcement not found
 
 
-  /users/{userid}/projects:
+
+  /users/{id}/projects:
     get:
       operationId: routes.user.read_user_projects
       tags:
         - Users
       summary: Get projects of specified user
       parameters:
-        - in: path
-          name: userid
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/id'
       responses:
         200:
           description: Succesfully read user projects
@@ -141,6 +130,15 @@ paths:
           description: Specified user not found
 
 components:
+  parameters:
+    id:
+      in: path
+      name: id
+      required: true
+      description: The id of the object
+      schema:
+        type: string
+
   schemas:
     Project:
       type: object

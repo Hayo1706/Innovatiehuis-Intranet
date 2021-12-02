@@ -1,25 +1,23 @@
-from backend.API.db import cur, connection
+from API.helper_functions import *
 from flask import make_response, abort
 
 
-def project_exists(projectid):
-    cur.execute("SELECT * FROM projects where projectid=" + projectid)
-    rv = cur.fetchall()
-    if len(rv) > 0:
-        return True
-    if project_exists(projectid):
-        abort(404, "Could not find specified projects")
+def read_all(id):
+    project_exists(id)
+    return query("SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.firstname, users.lastname, announcements.title, announcements.content FROM announcements JOIN users "
+                 "ON announcements.userid = users.userid "
+                 "WHERE announcements.projectid = " + id +
+                 " ORDER BY announcements.timestamp DESC")
 
 
-def read_all(projectid):
-    project_exists(projectid)
-    cur.execute("SELECT * FROM announcements JOIN users ON announcements.userid = users.userid WHERE announcements.projectid = " + projectid + " ORDER BY announcements.timestamp DESC")
-    row_headers = [x[0] for x in cur.description]
-    rv = cur.fetchall()
-    return [dict(zip(row_headers, result)) for result in rv]
+#TODO fix dit
+def post(id):
+    project_exists(id)
+    query_update("INSERT INTO announcements (userid, projectid, title, content) VALUES (1, " + id + ", 'nieuwe mededeling', 'AAAAAAAAAAAAA.')")
+    return make_response("Announcement in project={projectid} successfully posted".format(projectid=id), 200)
 
-def post(projectid):
-    project_exists(projectid)
-    cur.execute("INSERT INTO announcements (userid, projectid, title, content) VALUES (1, " + projectid + ", 'nieuwe mededeling', 'AAAAAAAAAAAAA.')")
-    connection.commit()
-    return make_response("Announcement in project={projectid} successfully posted".format(projectid=projectid), 200)
+
+def delete(id):
+    announcement_exists(id)
+    query_update("DELETE FROM announcements WHERE announcementid = " + id)
+    return make_response("{announcement} successfully deleted".format(announcement=id), 200)
