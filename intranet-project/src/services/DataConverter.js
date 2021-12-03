@@ -3,21 +3,19 @@
 //       if (typeof json[value] === 'object') {
 //         return convertDates(json[value]);
 //       }
-//       json[value] sqlToJsDate(json[value])
+//       json[value] jsonToJsDate(json[value])
 //     });
     
 //     return o;
 //   }
 
-export function sqlToJsDate(sqlDate){
-    sqlDate = String(sqlDate);
-
-    //sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss.ms")
+export function jsonToJsDate(sqlDate){
+    //sqlDate in SQL DATETIME format ("yyyy-mm-ddThh:mm:ss.msZ")
     var sqlDateArr1 = sqlDate.split("-");
     //format of sqlDateArr1[] = ['yyyy','mm','dd hh:mm:ms']
     var sYear = sqlDateArr1[0];
     var sMonth = (Number(sqlDateArr1[1]) - 1).toString();
-    var sqlDateArr2 = sqlDateArr1[2].split(" ");
+    var sqlDateArr2 = sqlDateArr1[2].split("T");
     //format of sqlDateArr2[] = ['dd', 'hh:mm:ss.ms']
     var sDay = sqlDateArr2[0];
     var sqlDateArr3 = sqlDateArr2[1].split(":");
