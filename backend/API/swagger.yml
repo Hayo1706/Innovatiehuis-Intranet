@@ -115,23 +115,23 @@ paths:
       operationId: routes.users.read_all
       tags:
         - Users
-      summary: Get projects of specified user
-      parameters:
-        - $ref: '#/components/parameters/id'
+      summary: Gets all users
       responses:
         200:
-          description: Succesfully read user projects
+          description: Succesfully read all users
   /users/{id}:
     get:
       operationId: routes.users.read_one
       tags:
         - Users
-      summary: Get projects of specified user
+      summary: Get specified user
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully read user projects
+          description: Succesfully read user
+        404:
+          description: Specified user not found
   /users/{id}/projects:
     get:
       operationId: routes.users.read_user_projects
@@ -158,7 +158,7 @@ components:
       required: true
       description: The id of the object
       schema:
-        type: string
+        type: integer
 
   schemas:
     Project:

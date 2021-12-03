@@ -1,7 +1,4 @@
 import connexion
-import flask
-# create the flask app
-# Create the application instance
 from flask_cors import CORS
 
 app = connexion.App(__name__, specification_dir="./")

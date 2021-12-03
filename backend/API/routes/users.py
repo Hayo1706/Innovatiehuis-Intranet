@@ -6,11 +6,11 @@ def read_all():
 
 
 def read_one(id):
-    return query("select * from users where userid="+id)
+    return query("select * from users where userid="+str(id))
 
 
 def read_user_projects(id):
     user_exists(id)
     return query("SELECT * FROM user_has_projects INNER JOIN projects ON "
                 "user_has_projects.projectid=projects.projectid"
-                " WHERE userid = " + id + " AND projects.isarchived = 0")
+                " WHERE userid = " + str(id) + " AND projects.isarchived = 0")
