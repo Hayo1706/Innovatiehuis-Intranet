@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { sqlToJsDate } from './DataConverter';
+import { jsonToJsDate } from './DataConverter';
 
 const axiosClient = axios.create({
     baseURL: 'http://127.0.0.1:5000/api'
@@ -21,13 +21,13 @@ export async function updateProject(project) {
 
 export async function getProjectsByUser(userid) {
     const { data } = await axiosClient.get(`/users/${userid}/projects`, { timeout: 2000 });
-    data.forEach(project => { project.lastupdated = sqlToJsDate(project.lastupdated) });
+    data.forEach(project => { project.lastupdated = jsonToJsDate(project.lastupdated) });
     return data;
 }
 
 export async function getAnnouncementsByProject(projectid) {
     const { data } = await axiosClient.get(`/projects/${projectid}/announcements`, { timeout: 2000 });
-    data.forEach(announcement => { announcement.timestamp = sqlToJsDate(announcement.timestamp) });
+    data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
     return data;
 }
 
