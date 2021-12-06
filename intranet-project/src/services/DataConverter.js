@@ -31,3 +31,17 @@ export function jsonToJsDate(sqlDate){
 
     return date;
 }
+
+export function getPathArguments(path) {
+    var pathArray = path.split('/');
+    var pathArgs = { path: path };
+    var isNumericRegEx = /^\d+$/;
+    
+    pathArray.forEach((element, index) => { 
+        if(isNumericRegEx.test(element)) { 
+            pathArgs[pathArray[index - 1]] = element 
+        }
+    });
+
+    return pathArgs;
+}
