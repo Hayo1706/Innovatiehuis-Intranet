@@ -1,11 +1,11 @@
 <template>
-    <div class='folderview'>
-      <p>Folders View</p>
+    <div>
+      <ProjectFolderHeader/>
       <div class="container-fluid">
         <div class="row">
-          <div v-for="folder in folders" :key="folder.name" class="col-sm-3">
-            <img v-if="folder.shared == 'no'" src=".\..\..\assets\images\folder.png"/> 
-            <img v-if="folder.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
+          <div v-for="folder in folders" :key="folder.name" class="col-sm-3" @click="goToDirectory(folder.path)">
+            <img class="foldersImage" v-if="folder.shared == 'no'" src=".\..\..\assets\images\folder.png"/> 
+            <img class="foldersImage" v-if="folder.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
             {{folder.name}}</div>
         </div>
       </div>
@@ -13,48 +13,37 @@
 </template>
 
 <script>
+import ProjectFolderHeader from "./ProjectFolderHeader.vue";
 export default {
+  components: {
+    ProjectFolderHeader,
+  },
   name: "FoldersView",
   props: [
 
   ],
   data: function () {
     return { folders: [
-      {name:"New Folder", path:"./New_folder", shared:"no"},
-      {name:"New Folder", path:"./New_folder", shared:"no"},
-      {name:"New Folder", path:"./New_folder", shared:"no"},
-      {name:"Gedeelde Folder", path:"./New_folder", shared:"yes"},
+      {name:"Requirements", path:"./Requirements", shared:"no"},
+      {name:"Architectuur", path:"./Architectuur", shared:"no"},
+      {name:"Classified", path:"./Classified", shared:"no"},
+      {name:"Gedeelde Folder", path:"./Gedeelde Folder", shared:"yes"},
       ]};
   },
   methods: {
-    onClick() {
-      this.$router.push("/projects/" + this.projectId + "/path");
-    },
+    goToDirectory(path) {
+       this.$router.push(this.$route.params.id + "/" + path);
+    }
   },
 }
 </script>
 
 
 <style scoped>
-p {
-    background-color: var(--blue1);
-}
-.folderview {
-  color: white;
-  font-size: calc(1vw + 1vh);
-  font-family: AddeleSemiBold;
-  height: 100%;
-  width: 68vw;
-  margin: calc(1vw + 1vh);
-  text-align: center;
-}
-img {
-  height: 7vh;
+.foldersImage {
+  height: calc(2vw + 5vh);
   padding-right: 1vw;
   padding-bottom: 0.5vh;
-}
-.container-fluid{
-  color: black;
 }
 .row{
   font-size: calc(0.7vw + 0.7vh);
