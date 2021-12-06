@@ -3,24 +3,25 @@
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
-      <div class="col d-block d-lg-none mobileRow">
+      <div class="col d-block d-lg-none">
         <div class="projectButton mobileRow" @click="onClick()">
           {{ project.name }}
         </div>
         <div class="mobileRow">{{ project.createdat }}</div>
-        <div>{{ project.lastupdated }}</div>
+        <div class="mobileRow">{{ project.lastupdated }}</div>
         <div class="mobileRow"><br /></div>
-        <br />
         <div class="mobileRow"></div>
       </div>
 
       <!-- large screens-->
-      <div class="projectButton col d-none d-lg-block" @click="onClick()">
-        {{ project.name }}
+      <div class="col d-none d-lg-block" @click="onClick()">
+        <div class="projectButton">
+          {{ project.name }}
+        </div>
       </div>
       <div class="col d-none d-lg-block">{{ project.createdat }}</div>
       <div class="col d-none d-lg-block">{{ project.lastupdated }}</div>
-      <div class="col d-none d-lg-block"><br /></div>
+      <div class="col d-none d-lg-block"></div>
       <div class="col d-none d-lg-block"></div>
 
       <div class="col">
@@ -67,11 +68,13 @@ export default {
   border-style: outset;
   border-radius: 8px;
   padding-left: 10px;
+  padding-right: 10px;
   height: fit-content;
   box-sizing: border-box;
   cursor: pointer;
+  width: fit-content;
 }
 .mobileRow {
-  height: 40px;
+  height: 50px;
 }
 </style>
