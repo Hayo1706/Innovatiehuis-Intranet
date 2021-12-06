@@ -40,8 +40,13 @@ var ProjectService = function () {
         }
     }
     async function postAnnouncement(projectid, announcement) {
-        const { data } = await axiosClient.post(`/projects/${projectid}/announcements`, { announcement }, { timeout: 2000 });
-        return data;
+        if (typeof projectid == 'undefined') {
+            const { data } = await axiosClient.post(`/announcements`, { announcement }, { timeout: 2000 });
+            return data;
+        } else {
+            const { data } = await axiosClient.post(`/projects/${projectid}/announcements`, { announcement }, { timeout: 2000 });
+            return data;
+        }
     }
     async function deleteAnnouncement(announcementid) {
         const { data } = await axiosClient.delete(`/announcements/${announcementid}`, { timeout: 2000 });

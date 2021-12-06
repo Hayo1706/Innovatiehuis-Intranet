@@ -39,7 +39,7 @@
           <p>{{ this.contentData }}</p>
           <button @click="remove()">Verwijderen</button>
           <button @click="edit()">Aanpassen</button>
-          <button data-bs-toggle="modal" data-bs-target="#repliesModal">
+          <button data-bs-toggle="modal" :data-bs-target="'#repliesModal' + this.id">
             Reacties ({{ this.replies.length }})
           </button>
         </div>
@@ -48,7 +48,7 @@
 
     <div
       class="modal fade"
-      id="repliesModal"
+      :id="'repliesModal' + this.id"
       tabindex="-1"
       aria-labelledby="repliesModalLabel"
       aria-hidden="true"
@@ -67,35 +67,38 @@
             ></button>
           </div>
           <div class="modal-body">
-            <p>{{ this.content }}</p>
+            <div class="announcement-in-modal">{{ this.content }}</div>
+            <p>{{ this.username }} ({{ this.timestamp.toLocaleDateString("nl-NL") }})</p>
+
 
             <div v-for="reply in this.replies" :key="reply.replyid">
               <Reply
                 :id="reply.replyid"
                 :announcementid="reply.announcementid"
                 :userid="reply.userid"
-                :username="reply.username"
+                :username="reply.firstname + ' ' + reply.lastname"
                 :timestamp="reply.timestamp"
                 :content="reply.content"
+                v-on:reload="reload()"
               />
+            </div>
 
-              <form>
-                <div class="mb-3">
-                  <label for="message-text" class="col-form-label">Inhoud:</label>
-                  <textarea
-                  class="form-control"
-                  id="message-text"
-                  style="height: 100px"
-                  v-model="this.newReply.content"
-                  />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" @click="addReply()">
-              Reageer
-              </button>
-            </div>
+            <form>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Inhoud:</label>
+                <textarea
+                class="form-control"
+                id="message-text"
+                style="height: 100px"
+                v-model="this.newReply.content"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" @click="addReply()">
+            Reageer
+            </button>
           </div>
         </div>
       </div>
@@ -105,8 +108,11 @@
 
 <script>
 import ProjectService from "@/services/ProjectService.js";
+import Reply from "@/shared_components/Reply.vue";
+
 export default {
   name: "Announcement",
+  components: { Reply },
   props: {
     id: { type: Number, required: true },
     timestamp: { type: Date, required: true },
@@ -140,6 +146,7 @@ export default {
   methods: {
     remove() {
       ProjectService.deleteAnnouncement(this.id);
+      alert("Mededeling is verwijderd! Herlaad om het resultaat te zien.");
       this.$emit("reload");
     },
     edit() {
@@ -180,5 +187,10 @@ export default {
 .accordion-button {
   background-color: var(--blue2);
   color: white;
+}
+.announcement-in-modal {
+  background-color: var(--blue3);
+  border-style: outset;
+  padding: 4px;
 }
 </style>

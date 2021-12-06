@@ -1,7 +1,9 @@
 <template>
-  <div id="comment">
-    <p>{{ this.content }}</p>
-    <p>{{ this.username }} ({{ this.timestamp.toLocaleDateString() }})
+  <div>
+    <div class="reply">
+      <p>{{ this.content }}</p>
+    </div>
+    <p style="text-align: right;">{{ this.username }} ({{ this.timestamp.toLocaleDateString() }})</p>
   </div>
 </template>
 
@@ -43,8 +45,11 @@ export default {
 </script>
 
 <style scoped>
-#reply {
+.reply {
   width: 100%;
+  text-align: right;
   background-color: var(--gold3);
+  border-style: inset;
+  padding: 4px;
 }
 </style>
