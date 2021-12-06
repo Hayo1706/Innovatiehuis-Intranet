@@ -7,8 +7,27 @@
         <div class="projectButton mobileRow" @click="onClick()">
           {{ project.name }}
         </div>
-        <div class="mobileRow">{{ project.createdat }}</div>
-        <div class="mobileRow">{{ project.lastupdated }}</div>
+        <div class="mobileRow">
+          {{
+            project.createdat.toLocaleString("nl-NL", {
+              day: "numeric",
+              month: "numeric",
+              year: "numeric",
+            })
+          }}
+        </div>
+        <div class="mobileRow">
+          {{
+            project.lastupdated.toLocaleString("nl-NL", {
+              day: "numeric",
+              month: "numeric",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+            })
+          }}
+        </div>
         <div class="mobileRow"><br /></div>
         <div class="mobileRow"></div>
       </div>
@@ -19,8 +38,27 @@
           {{ project.name }}
         </div>
       </div>
-      <div class="col d-none d-lg-block">{{ project.createdat }}</div>
-      <div class="col d-none d-lg-block">{{ project.lastupdated }}</div>
+      <div class="col d-none d-lg-block">
+        {{
+          project.createdat.toLocaleString("nl-NL", {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+          })
+        }}
+      </div>
+      <div class="col d-none d-lg-block">
+        {{
+          project.lastupdated.toLocaleString("nl-NL", {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+          })
+        }}
+      </div>
       <div class="col d-none d-lg-block"></div>
       <div class="col d-none d-lg-block"></div>
 
