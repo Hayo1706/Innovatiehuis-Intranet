@@ -48,10 +48,9 @@
 </template>
 
 <script>
-import { deleteProject, updateProject } from "@/services/ProjectService.js";
+import ProjectService from "@/services/ProjectService.js";
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
-import { getProjects } from "@/services/ProjectService.js";
 import ProjectsSearchBar from "./ProjectsSearchBar.vue";
 import ProjectsShowArchivedOnlyBox from "./ProjectsShowArchivedOnlyBox.vue";
 export default {
@@ -80,7 +79,7 @@ export default {
       this.showArchivedOnly = value;
     },
     removeProject(id) {
-      deleteProject(id)
+      ProjectService.deleteProject(id)
         .then(() => {
           //remove the project from the view
           this.projects = this.projects.filter(function (item) {
@@ -98,7 +97,7 @@ export default {
     archiveProject(project) {
       let projectCopy = JSON.parse(JSON.stringify(project));
       projectCopy.isarchived = !projectCopy.isarchived;
-      updateProject(projectCopy)
+      ProjectService.updateProject(projectCopy)
         .then(() => {
           project.isarchived = !project.isarchived;
         })
@@ -143,7 +142,7 @@ export default {
   },
   async created() {
     this.$emit("loaded", "Projecten - Overzicht");
-    getProjects()
+    ProjectService.getProjects()
       .then((response) => {
         this.projects = response;
       })
