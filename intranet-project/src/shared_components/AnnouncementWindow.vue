@@ -1,6 +1,6 @@
 <template>
   <div id="announcement-window">
-    <div id="title">
+    <div id="title-bar">
       <label>Mededelingen</label>
       <button
         id="add-button"
@@ -93,8 +93,10 @@
 </template>
 
 <script>
+import Announcement from "./Announcement.vue"
+import { getPathArguments } from "@/services/DataConverter.js"
 import ProjectService from "@/services/ProjectService.js";
-import Announcement from "./Announcement.vue";
+
 export default {
   components: { Announcement },
   name: "AnnouncementWindow",
@@ -103,63 +105,19 @@ export default {
     return {
       newAnnouncement: { title: "", content: "" },
       announcements: [],
-      testAnnouncements: [
-        {
-          id: 5,
-          date: new Date("December 17, 2021 13:24:00"),
-          userid: 1,
-          username: "Niels Doornbos",
-          title: "Politiebijeenkomst Kerst",
-          content:
-            "Hallo iedereen, vergeten jullie niet kerst met ons te vieren?\n\nGroeten de politie.",
-        },
-        {
-          id: 4,
-          date: new Date("December 07, 2021 15:14:00"),
-          userid: 1,
-          username: "Niels Doornbos",
-          title: "Sprintdemo #4",
-          content:
-            "Jongens ik heb aan jullie getwijfeld, maar wat een geweldige presentatie hebben jullie vandaag gegeven! Wij hebben er als team weer het volste vertrouwen in. Vooral de Batman-meme was een goede vondst!\n\nRecht zo die gaat,\nNiels.",
-        },
-        {
-          id: 3,
-          date: new Date("December 04, 2021 10:52:00"),
-          userid: 1,
-          username: "Niels Doornbos",
-          title: "Announcements verwijderen",
-          content:
-            "Hoe verwijder ik Announcements? Dat zou toch een feature zijn?",
-        },
-        {
-          id: 2,
-          date: new Date("December 04, 2021 10:37:00"),
-          userid: 1,
-          username: "Niels Doornbos",
-          title: "Test",
-          content: "Test test 123.",
-        },
-        {
-          id: 1,
-          date: new Date("December 04, 2021 10:37:00"),
-          userid: 69,
-          username: "1337haxx0r",
-          title: "Ik ben een hacker",
-          content: "Haha mooi systeempje hoor jongens, lekker secure. :)",
-        },
-      ],
-    };
+      pathArgs: getPathArguments(this.$route.path)
+      };
   },
   methods: {
     addAnnouncement() {
-      ProjectService.postAnnouncement(10, this.newAnnouncement); //TODO: get project id dynamically
+      ProjectService.postAnnouncement(this.pathArgs.project, this.newAnnouncement);
       this.newAnnouncement.title = "";
       this.newAnnouncement.content = "";
       this.reload();
     },
   },
   async created() {
-    ProjectService.getAnnouncementsByProject(10) //TODO: get project id dynamically
+    ProjectService.getAnnouncementsByProject(this.pathArgs.project)
       .then((response) => {
         this.announcements = response;
         console.log(this.announcements);
@@ -176,16 +134,18 @@ export default {
 
 
 <style scoped>
-#title {
+#title-bar {
   color: white;
   font-size: calc(1vw + 1vh);
   margin: 0;
-  padding: 2px;
   padding-left: 10px;
   background-color: var(--blue1);
   border-style: outset;
-  width: auto;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
 }
+
 #announcement-window {
   overflow: auto;
   height: 90vh;
