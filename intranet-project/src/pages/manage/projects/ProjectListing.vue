@@ -3,16 +3,21 @@
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
-      <div class="col d-block d-lg-none">
-        <div>{{ project.name }}</div>
-        <div>{{ project.createdat }}</div>
+      <div class="col d-block d-lg-none mobileRow">
+        <div class="projectButton mobileRow" @click="onClick()">
+          {{ project.name }}
+        </div>
+        <div class="mobileRow">{{ project.createdat }}</div>
         <div>{{ project.lastupdated }}</div>
-        <div><br /></div>
-        <div></div>
+        <div class="mobileRow"><br /></div>
+        <br />
+        <div class="mobileRow"></div>
       </div>
 
       <!-- large screens-->
-      <div class="col d-none d-lg-block">{{ project.name }}</div>
+      <div class="projectButton col d-none d-lg-block" @click="onClick()">
+        {{ project.name }}
+      </div>
       <div class="col d-none d-lg-block">{{ project.createdat }}</div>
       <div class="col d-none d-lg-block">{{ project.lastupdated }}</div>
       <div class="col d-none d-lg-block"><br /></div>
@@ -40,7 +45,11 @@ export default {
   data: function () {
     return {};
   },
-  methods: {},
+  methods: {
+    onClick() {
+      this.$router.push("/project/" + this.project.projectid);
+    },
+  },
 };
 </script>
 
@@ -50,5 +59,19 @@ export default {
 }
 .row {
   padding-top: 12px;
+}
+.projectButton {
+  font-weight: bold;
+  background-color: var(--gold2);
+  color: var(--blue1);
+  border-style: outset;
+  border-radius: 8px;
+  padding-left: 10px;
+  height: fit-content;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.mobileRow {
+  height: 40px;
 }
 </style>

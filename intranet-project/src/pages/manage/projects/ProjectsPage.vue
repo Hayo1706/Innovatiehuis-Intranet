@@ -63,7 +63,13 @@ export default {
   },
   name: "ProjectsPage",
   data: function () {
-    return { projects: [], searchTerm: null, showArchivedOnly: false };
+    return {
+      projects: [
+        { id: 1, name: "Je moeder", isarchived: true, createdat: "maart" },
+      ],
+      searchTerm: null,
+      showArchivedOnly: false,
+    };
   },
   methods: {
     gotoCreateProject() {

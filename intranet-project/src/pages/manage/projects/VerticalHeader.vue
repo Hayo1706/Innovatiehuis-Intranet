@@ -7,6 +7,7 @@
       Overkoepelend <br />
       project:
     </div>
+    <br />
     <div class="headerText">Sub-projecten:</div>
   </div>
 </template>
@@ -27,5 +28,6 @@ export default {
 }
 .headerText {
   font-family: AddeleSemiBold;
+  height: 40px;
 }
 </style>
