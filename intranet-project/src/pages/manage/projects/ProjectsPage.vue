@@ -64,9 +64,7 @@ export default {
   name: "ProjectsPage",
   data: function () {
     return {
-      projects: [
-        { id: 1, name: "Je moeder", isarchived: true, createdat: "maart" },
-      ],
+      projects: [],
       searchTerm: null,
       showArchivedOnly: false,
     };
