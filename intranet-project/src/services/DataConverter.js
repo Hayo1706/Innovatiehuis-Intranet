@@ -22,11 +22,11 @@ export function jsonToJsDate(sqlDate){
     //format of sqlDateArr3[] = ['hh','mm','ss.ms']
     var sHour = sqlDateArr3[0];
     var sMinute = sqlDateArr3[1];
-    var sqlDateArr4 = sqlDateArr3[2].split(".");
+    var sqlDateArr4 = sqlDateArr3[2].split("Z");
     //format of sqlDateArr4[] = ['ss','ms']
     var sSecond = sqlDateArr4[0];
     var sMillisecond = '000';
-    
+
     var date = new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond,sMillisecond);
 
     return date;
