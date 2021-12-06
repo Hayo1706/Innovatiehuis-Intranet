@@ -170,7 +170,47 @@ paths:
       responses:
         200:
           description: Successfully retrieved replies to announcements
+    post:
+      operationId: src.routes.replies.post
+      tags:
+        - Replies
+      summary: Post reply to announcement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                title:
+                  type: string
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully posted reply to announcement
   /replies/{id}:
+    put:
+      operationId: src.routes.replies.edit
+      tags:
+        - Replies
+      summary: Edit reply message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully edited reply content
     delete:
       operationId: src.routes.replies.delete
       tags:
@@ -180,7 +220,7 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Successfully delete user
+          description: Successfully deleted reply
 
   /users:
     get:

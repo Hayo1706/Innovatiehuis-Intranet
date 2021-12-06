@@ -1,18 +1,23 @@
 <template>
   <div class="accordion-item">
     <h2 class="accordion-header" :id="'heading' + this.id">
-      <button
-        class="accordion-button"
-        type="button"
-        data-bs-toggle="collapse"
-        :data-bs-target="'#collapse' + this.id"
-        aria-expanded="false"
-        aria-controls="panelsStayOpen-collapseOne"
-      >
-        {{
-          this.timestamp.toLocaleString("nl-NL", { day: "numeric", month: "long" })
-        }}: {{ this.title }}
-      </button>
+      <div v-if="this.editing">
+        <input v-model="this.editData.title">
+      </div>
+      <div v-else>
+        <button
+          class="accordion-button"
+          type="button"
+          data-bs-toggle="collapse"
+          :data-bs-target="'#collapse' + this.id"
+          aria-expanded="false"
+          aria-controls="panelsStayOpen-collapseOne"
+        >
+          {{
+            this.timestamp.toLocaleString("nl-NL", { day: "numeric", month: "long" })
+          }}: {{ this.title }}
+        </button>
+      </div>
     </h2>
     <div
       :id="'collapse' + this.id"
@@ -30,15 +35,16 @@
         <div v-if="this.editing">
           <textarea
             class="form-control"
-            v-model="this.contentData"
+            v-model="this.editData.content"
             style="height: 80px"
           />
-          <button @click="saveEdit()">Opslaan</button>
+          <button @click="toggleEdit()">Annuleren</button>
+          <button @click="saveEdits()">Opslaan</button>
         </div>
         <div v-else>
-          <p>{{ this.contentData }}</p>
+          <p>{{ this.content }}</p>
           <button @click="remove()">Verwijderen</button>
-          <button @click="edit()">Aanpassen</button>
+          <button @click="toggleEdit()">Aanpassen</button>
           <button data-bs-toggle="modal" :data-bs-target="'#repliesModal' + this.id">
             Reacties ({{ this.replies.length }})
           </button>
@@ -85,7 +91,7 @@
 
             <form>
               <div class="mb-3">
-                <label for="message-text" class="col-form-label">Inhoud:</label>
+                <label for="message-text" class="col-form-label">Laat een reactie achter:</label>
                 <textarea
                 class="form-control"
                 id="message-text"
@@ -97,7 +103,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" @click="addReply()">
-            Reageer
+            Plaats reactie
             </button>
           </div>
         </div>
@@ -123,8 +129,7 @@ export default {
   },
   data: function () {
     return {
-      titleData: this.title + "",
-      contentData: this.content + "",
+      editData: { title: this.title + "", content: this.content + "" },
       editing: false,
       replies: [],
       newReply: { userid: 1, content: ""} //TODO: get userid dynamically from JWT/Session
@@ -149,11 +154,11 @@ export default {
       alert("Mededeling is verwijderd! Herlaad om het resultaat te zien.");
       this.$emit("reload");
     },
-    edit() {
-      this.editing = true;
+    toggleEdit() {
+      this.editing = !this.editing;
     },
-    saveEdit() {
-      ProjectService.editAnnouncement(this.id, this.contentData)
+    saveEdits() {
+      ProjectService.editAnnouncement(this.id, this.editData)
             .then((response) => {
         console.log(response);
       })
@@ -168,7 +173,7 @@ export default {
       this.$emit("reload");
     },
     addReply() {
-      ProjectService.addReply(this.id, this.newReply)
+      ProjectService.addReply(this.id, this.newReply) // TODO: get userid dynamically from JWT/Session
       .then((response) => {
         console.log(response);
       })

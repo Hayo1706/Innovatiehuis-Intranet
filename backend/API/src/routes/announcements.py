@@ -27,7 +27,7 @@ def post_global():
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) VALUES (5, NULL, %(title)s, %(content)s)",
         {'content': body['content'], 'title': body['title']})
-    return make_response("Announcement successfully posted".format(projectid=str(id)), 200)
+    return make_response("Global Announcement successfully posted".format(projectid=str(id)), 200)
 
 
 # TODO fix dit zodat correcte user wordt ingeschreven
@@ -52,4 +52,4 @@ def edit(id):
     query_update(
         "UPDATE announcements SET title=%(title)s, content=%(content)s WHERE announcementid=%(id)s",
         {'id': id, 'content': body['content'], 'title': body['title']})
-    return make_response("Announcement in project={projectid} successfully posted".format(projectid=str(id)), 200)
+    return make_response("Announcement in project={projectid} successfully edited".format(projectid=str(id)), 200)
