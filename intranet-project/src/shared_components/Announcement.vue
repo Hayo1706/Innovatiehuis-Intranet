@@ -10,7 +10,7 @@
         aria-controls="panelsStayOpen-collapseOne"
       >
         {{
-          this.date.toLocaleString("nl-NL", { day: "numeric", month: "long" })
+          this.timestamp.toLocaleString("nl-NL", { day: "numeric", month: "long" })
         }}: {{ this.title }}
       </button>
     </h2>
@@ -25,7 +25,7 @@
             this.username
           }}</router-link></strong
         >
-        ({{ this.date.toLocaleDateString() }}) <br />
+        ({{ this.timestamp.toLocaleDateString("nl-NL") }}) <br />
 
         <div v-if="this.editing">
           <textarea
@@ -39,8 +39,8 @@
           <p>{{ this.contentData }}</p>
           <button @click="remove()">Verwijderen</button>
           <button @click="edit()">Aanpassen</button>
-          <button data-bs-toggle="modal" data-bs-target="#commentsModal">
-            Reacties
+          <button data-bs-toggle="modal" data-bs-target="#repliesModal">
+            Reacties ({{ this.replies.size() }})
           </button>
         </div>
       </div>
@@ -48,15 +48,15 @@
 
     <div
       class="modal fade"
-      id="commentsModal"
+      id="repliesModal"
       tabindex="-1"
-      aria-labelledby="commentsModalLabel"
+      aria-labelledby="repliesModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog" ref="modal">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="commentsModalLabel">
+            <h5 class="modal-title" id="repliesModalLabel">
               {{ this.title }}
             </h5>
             <button
@@ -68,22 +68,34 @@
           </div>
           <div class="modal-body">
             <p>{{ this.content }}</p>
-            <form>
-              <div class="mb-3">
-                <label for="message-text" class="col-form-label">Inhoud:</label>
-                <textarea
+
+            <div v-for="reply in this.replies" :key="reply.replyid">
+              <Reply
+                :id="reply.replyid"
+                :announcementid="reply.announcementid"
+                :userid="reply.userid"
+                :username="reply.username"
+                :timestamp="reply.timestamp"
+                :content="reply.content"
+              />
+
+              <form>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Inhoud:</label>
+                  <textarea
                   class="form-control"
                   id="message-text"
                   style="height: 100px"
-                  v-model="this.newComment"
-                ></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" @click="addComment()">
+                  v-model="this.newReply.content"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" @click="addReply()">
               Reageer
-            </button>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -97,7 +109,7 @@ export default {
   name: "Announcement",
   props: {
     id: { type: Number, required: true },
-    date: { type: Date, required: true },
+    timestamp: { type: Date, required: true },
     userid: { type: Number, required: true },
     username: { type: String, required: true },
     title: { type: String, required: true },
@@ -108,9 +120,22 @@ export default {
       titleData: this.title + "",
       contentData: this.content + "",
       editing: false,
-      newComment: "",
+      replies: [],
+      newReply: { userid: 1, content: ""} //TODO: get userid dynamically from JWT/Session
     };
   },
+  // async created() {
+  //   ProjectService.getRepliesByAnnouncement(this.id)
+  //     .then((response) => {
+  //       this.replies = response;
+  //     })
+  //     .catch((err) => {
+  //       if (err.response) {
+  //         console.log(err.response.status);
+  //       }
+  //       alert(err);
+  //   });
+  // },
   methods: {
     remove() {
       ProjectService.deleteAnnouncement(this.id);
@@ -120,12 +145,31 @@ export default {
       this.editing = true;
     },
     saveEdit() {
-      ProjectService.editAnnouncement(this.id, this.contentData);
+      ProjectService.editAnnouncement(this.id, this.contentData)
+            .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+      });
+
       this.editing = false;
       this.$emit("reload");
     },
-    addComment() {
-      ProjectService.addComment(this.id, this.newComment); //TODO: add user id
+    addReply() {
+      ProjectService.addReply(this.id, this.newReply)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+      });
     },
   },
 };

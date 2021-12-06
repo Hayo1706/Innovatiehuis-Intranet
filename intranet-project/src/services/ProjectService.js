@@ -27,24 +27,41 @@ var ProjectService = function () {
         return data;
     }
     async function getAnnouncementsByProject(projectid) {
-        const { data } = await axiosClient.get(`/projects/${projectid}/announcements`, { timeout: 2000 });
-        data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
-        return data;
+        if (typeof projectid == 'undefined') {
+            const { data } = await axiosClient.get(`/announcements`, { timeout: 2000 });
+            data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
+            return data;
+        } else {
+            const { data } = await axiosClient.get(`/projects/${projectid}/announcements`, { timeout: 2000 });
+            data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
+            return data;
+        }
     }
     async function postAnnouncement(projectid, announcement) {
         const { data } = await axiosClient.post(`/projects/${projectid}/announcements`, { announcement }, { timeout: 2000 });
         return data;
     }
     async function deleteAnnouncement(announcementid) {
+        const { data } = await axiosClient.delete(`/announcements/${announcementid}`, { timeout: 2000 });
         console.log("deleted announcement " + announcementid);
+        return data;
     }
 
-    async function editAnnouncement(announcementid, content) {
-        console.log("announcement " + announcementid + " now reads: " + content);
+    async function editAnnouncement(announcementid, announcement) {
+        const { data } = await axiosClient.put(`/announcements/${announcementid}`, { announcement }, { timeout: 2000 });
+        return data;
     }
 
-    async function addComment(announcementid, content) {
-        console.log("added comment to announcement " + announcementid + ", reading: " + content);
+    async function getRepliesByAnnouncement(announcementid) {
+        const { data } = await axiosClient.get(`/announcements/${announcementid}/replies`, { timeout: 2000 });
+        data.forEach(reply => { reply.timestamp = jsonToJsDate(reply.timestamp) });
+        return data;
+    }
+
+    async function addReply(announcementid, Reply) {
+        const { data } = await axiosClient.post(`/announcements/${announcementid}/Replys`, { Reply }, { timeout: 2000 });
+        console.log("added Reply to announcement " + announcementid + ", reading: " + Reply.content);
+        return data;
     }
 
 
@@ -57,7 +74,8 @@ var ProjectService = function () {
         postAnnouncement,
         deleteAnnouncement,
         editAnnouncement,
-        addComment
+        getRepliesByAnnouncement,
+        addReply
     }
 
 }
