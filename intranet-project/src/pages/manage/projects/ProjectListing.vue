@@ -9,8 +9,8 @@
         </div>
         <div class="mobileRow">{{ project.createdat }}</div>
         <div class="mobileRow">{{ project.lastupdated }}</div>
-        <div class="mobileRow"><br />dwda</div>
-        <div class="mobileRow">adwadw</div>
+        <div class="mobileRow"><br /></div>
+        <div class="mobileRow"></div>
       </div>
 
       <!-- large screens-->
