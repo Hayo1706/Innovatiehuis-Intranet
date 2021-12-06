@@ -3,7 +3,7 @@ from ..services.helper_functions import *
 
 
 def read_all():
-    return query("select * from projects", None)
+    return query("select * from projects")
 
 
 def read_one(id):

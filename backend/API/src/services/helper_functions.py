@@ -4,13 +4,13 @@ from flask import make_response, abort
 import re
 
 
-def query(query, param):
+def query(query, param=None):
     with engine.connect() as connection:
         result = connection.exec_driver_sql(query, param)
         return [dict(zip(result.keys(), value)) for value in result]
 
 
-def query_update(query, param):
+def query_update(query, param=None):
     with engine.connect() as connection:
         connection.exec_driver_sql(query, param)
 
