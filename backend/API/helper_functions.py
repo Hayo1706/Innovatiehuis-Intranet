@@ -43,8 +43,6 @@ def exists(query):
             cur = connection.cursor()
             cur.execute(query)
             rv = cur.fetchall()
-
-
     except Error as e:
         print(e)
         abort(404, "Error while connecting to database")
