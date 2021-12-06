@@ -3,15 +3,14 @@
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
-      <div class="col d-block d-lg-none mobileRow">
+      <div class="col d-block d-lg-none">
         <div class="projectButton mobileRow" @click="onClick()">
           {{ project.name }}
         </div>
         <div class="mobileRow">{{ project.createdat }}</div>
-        <div>{{ project.lastupdated }}</div>
-        <div class="mobileRow"><br /></div>
-        <br />
-        <div class="mobileRow"></div>
+        <div class="mobileRow">{{ project.lastupdated }}</div>
+        <div class="mobileRow"><br />dwda</div>
+        <div class="mobileRow">adwadw</div>
       </div>
 
       <!-- large screens-->
@@ -20,7 +19,7 @@
       </div>
       <div class="col d-none d-lg-block">{{ project.createdat }}</div>
       <div class="col d-none d-lg-block">{{ project.lastupdated }}</div>
-      <div class="col d-none d-lg-block"><br /></div>
+      <div class="col d-none d-lg-block"></div>
       <div class="col d-none d-lg-block"></div>
 
       <div class="col">
@@ -72,6 +71,6 @@ export default {
   cursor: pointer;
 }
 .mobileRow {
-  height: 40px;
+  height: 50px;
 }
 </style>
