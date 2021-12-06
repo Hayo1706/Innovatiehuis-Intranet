@@ -33,7 +33,7 @@ def post_global():
 # TODO fix dit zodat correcte user wordt ingeschreven
 def post(id):
     is_int(id)
-    body = connexion.request.json
+    body = connexion.request.json['announcement']
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) VALUES (5, %(id)s, %(title)s, %(content)s)",
         {'id': id, 'content': body['content'], 'title': body['title']})
@@ -44,3 +44,12 @@ def delete(id):
     is_int(id)
     query_update("DELETE FROM announcements WHERE announcementid = %(id)s", {'id': id})
     return make_response("{announcement} successfully deleted".format(announcement=str(id)), 200)
+
+
+def edit(id):
+    is_int(id)
+    body = connexion.request.json['announcement']
+    query_update(
+        "UPDATE announcements SET title=%(title)s, content=%(content)s WHERE announcementid=%(id)s",
+        {'id': id, 'content': body['content'], 'title': body['title']})
+    return make_response("Announcement in project={projectid} successfully posted".format(projectid=str(id)), 200)
