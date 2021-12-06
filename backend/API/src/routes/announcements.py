@@ -22,7 +22,7 @@ def read_all(id):
 
 
 def post_global():
-    body = connexion.request.json
+    body = connexion.request.json['announcement']
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) VALUES (5, NULL, %(content)s, %(title)s)",
         {'content': body['content'], 'title': body['title']})
