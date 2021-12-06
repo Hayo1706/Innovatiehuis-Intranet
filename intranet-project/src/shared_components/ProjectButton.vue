@@ -18,13 +18,13 @@ export default {
   props: ["projectId", "projectName", "lastUpdated"],
   data: function () {
     return {
-      lastVisit: new Date()
+      lastVisit: new Date(),
     };
   },
   methods: {
     onClick() {
       this.$router.push("/project/" + this.projectId);
-    }
+    },
   },
 };
 </script>

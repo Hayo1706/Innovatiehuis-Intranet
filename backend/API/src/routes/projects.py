@@ -18,5 +18,5 @@ def update(id, isarchived):
 
 def delete(id):
     project_exists(id)
-    query_update("DELETE FROM projects WHERE projectid = " + id)
+    query_update("DELETE FROM projects WHERE projectid = " + str(id))
     return make_response("{id} successfully deleted".format(id=str(id)), 200)
