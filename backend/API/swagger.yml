@@ -81,7 +81,7 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully retrieved announcements from project
+          description: Successfully retrieved announcements from project
         404:
           description: Specified project not found
     post:
@@ -93,9 +93,18 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully posted announcement to project
+          description: Successfully posted announcement to project
         404:
           description: Specified project not found
+  /announcements:
+    get:
+      operationId: src.routes.announcements.read_global_announcements
+      tags:
+        - Announcements
+      summary: Reads all global announcements (=those not tied to a project)
+      responses:
+        200:
+          description: Successfully retreieved global announcements
   /announcements/{id}:
     delete:
       operationId: src.routes.announcements.delete
@@ -106,7 +115,21 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully removed announcement
+          description: Successfully removed announcement
+        404:
+          description: Specified announcement not found
+
+  /announcements/{id}/replies:
+    get:
+      operationId: src.routes.replies.read_all
+      tags:
+        - Replies
+      summary: Get all replies to an announcement
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully retrieved replies to announcements
         404:
           description: Specified announcement not found
 
@@ -118,7 +141,7 @@ paths:
       summary: Gets all users
       responses:
         200:
-          description: Succesfully read all users
+          description: Successfully read all users
   /users/{id}:
     get:
       operationId: src.routes.users.read_one
@@ -129,7 +152,7 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully read user
+          description: Successfully read user
         404:
           description: Specified user not found
   /users/{id}/projects:
@@ -142,7 +165,7 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully read user projects
+          description: Successfully read user projects
           content:
             application/json:
               schema:

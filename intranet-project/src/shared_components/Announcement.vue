@@ -40,7 +40,7 @@
           <button @click="remove()">Verwijderen</button>
           <button @click="edit()">Aanpassen</button>
           <button data-bs-toggle="modal" data-bs-target="#repliesModal">
-            Reacties ({{ this.replies.size() }})
+            Reacties ({{ this.replies.length }})
           </button>
         </div>
       </div>
@@ -124,18 +124,19 @@ export default {
       newReply: { userid: 1, content: ""} //TODO: get userid dynamically from JWT/Session
     };
   },
-  // async created() {
-  //   ProjectService.getRepliesByAnnouncement(this.id)
-  //     .then((response) => {
-  //       this.replies = response;
-  //     })
-  //     .catch((err) => {
-  //       if (err.response) {
-  //         console.log(err.response.status);
-  //       }
-  //       alert(err);
-  //   });
-  // },
+  async created() {
+    console.log("load replies for announcement " + this.id)
+    ProjectService.getRepliesByAnnouncement(this.id)
+      .then((response) => {
+        this.replies = response;
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+    });
+  },
   methods: {
     remove() {
       ProjectService.deleteAnnouncement(this.id);
