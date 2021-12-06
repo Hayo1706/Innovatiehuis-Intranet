@@ -1,6 +1,5 @@
-from API.helper_functions import *
-from flask import make_response, abort
-
+from flask import make_response
+from ..services.helper_functions import *
 
 def read_all():
     return query("select * from projects")

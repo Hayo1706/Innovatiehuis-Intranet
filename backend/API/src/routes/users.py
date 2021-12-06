@@ -1,5 +1,4 @@
-from API.helper_functions import *
-
+from ..services.helper_functions import *
 
 def read_all():
     return query("select * from users")
