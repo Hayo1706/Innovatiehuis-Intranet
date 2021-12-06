@@ -22,12 +22,11 @@ def is_int(value):
 
 def is_boolean(value):
     try:
-        if not (int(value) == 0 or int(value) == 1):
+        if int(value) == 0 or int(value) == 1:
             return
-        raise
-        print(111)
     except:
-        incorrect_input()
+        print()
+    incorrect_input()
 
 
 def incorrect_input():
