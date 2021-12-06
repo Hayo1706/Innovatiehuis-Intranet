@@ -49,15 +49,15 @@ var ProjectService = function () {
 
 
     return {
-        getProjects: getProjects,
-        deleteProject: deleteProject,
-        updateProject: updateProject,
-        getProjectsByUser: getProjectsByUser,
-        getAnnouncementsByProject: getAnnouncementsByProject,
-        postAnnouncement: postAnnouncement,
-        deleteAnnouncement: deleteAnnouncement,
-        editAnnouncement: editAnnouncement,
-        addComment: addComment
+        getProjects,
+        deleteProject,
+        updateProject,
+        getProjectsByUser,
+        getAnnouncementsByProject,
+        postAnnouncement,
+        deleteAnnouncement,
+        editAnnouncement,
+        addComment
     }
 
 }
