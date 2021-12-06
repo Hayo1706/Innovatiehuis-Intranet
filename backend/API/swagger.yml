@@ -28,7 +28,7 @@ paths:
       operationId: src.routes.projects.read_one
       tags:
         - Project
-      summary: Read the entire list of projects
+      summary: Read one project
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
@@ -158,7 +158,7 @@ components:
       required: true
       description: The id of the object
       schema:
-        type: integer
+        type: string
 
   schemas:
     Project:
