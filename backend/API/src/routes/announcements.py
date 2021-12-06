@@ -21,12 +21,13 @@ def read_all(id):
         " ORDER BY announcements.timestamp DESC", {'id': id})
 
 
+# TODO fix dit zodat correcte user wordt ingeschreven
 def post_global():
     body = connexion.request.json['announcement']
     query_update(
-        "INSERT INTO announcements (userid, projectid, title, content) VALUES (5, NULL, %(content)s, %(title)s)",
+        "INSERT INTO announcements (userid, projectid, title, content) VALUES (5, NULL, %(title)s, %(content)s)",
         {'content': body['content'], 'title': body['title']})
-    return make_response("Announcement in project={projectid} successfully posted".format(projectid=str(id)), 200)
+    return make_response("Announcement successfully posted".format(projectid=str(id)), 200)
 
 
 # TODO fix dit zodat correcte user wordt ingeschreven
@@ -34,7 +35,7 @@ def post(id):
     is_int(id)
     body = connexion.request.json
     query_update(
-        "INSERT INTO announcements (userid, projectid, title, content) VALUES (5, %(id)s, %(content)s, %(title)s)",
+        "INSERT INTO announcements (userid, projectid, title, content) VALUES (5, %(id)s, %(title)s, %(content)s)",
         {'id': id, 'content': body['content'], 'title': body['title']})
     return make_response("Announcement in project={projectid} successfully posted".format(projectid=str(id)), 200)
 
