@@ -9,3 +9,9 @@ def read_all(id):
         "ON replies.userid = users.userid "
         "WHERE replies.announcementid = %(id)s "
         "ORDER BY replies.timestamp ASC", {'id': id})
+
+
+def delete(id):
+    is_int(id)
+    query_update("DELETE FROM replies WHERE replyid =%(id)s", {'id': id})
+    return make_response("{id} successfully deleted".format(id=str(id)), 200)

@@ -38,8 +38,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-        404:
-          description: Project with id not found
     put:
       operationId: src.routes.projects.update
       tags:
@@ -55,8 +53,6 @@ paths:
       responses:
         200:
           description: Project updated
-        404:
-          description: Project with id not found
     delete:
       operationId: src.routes.projects.delete
       tags:
@@ -67,8 +63,6 @@ paths:
       responses:
         200:
           description: Project deleted
-        404:
-          description: Project with id not found
 
 
   /projects/{id}/announcements:
@@ -89,22 +83,50 @@ paths:
       tags:
         - Announcements
       summary: Post announcements in project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  content:
+                    type: string
+                  title:
+                    type: string
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         200:
           description: Successfully posted announcement to project
-        404:
-          description: Specified project not found
   /announcements:
     get:
       operationId: src.routes.announcements.read_global_announcements
       tags:
-        - Announcements
+        - Global Announcements
       summary: Reads all global announcements (=those not tied to a project)
       responses:
         200:
           description: Successfully retreieved global announcements
+    post:
+      operationId: src.routes.announcements.post_global
+      tags:
+        - Global Announcements
+      summary: Post announcements in global
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                title:
+                  type: string
+      responses:
+        200:
+          description: Successfully posted announcement to project
   /announcements/{id}:
     delete:
       operationId: src.routes.announcements.delete
@@ -116,8 +138,6 @@ paths:
       responses:
         200:
           description: Successfully removed announcement
-        404:
-          description: Specified announcement not found
 
   /announcements/{id}/replies:
     get:
@@ -130,8 +150,17 @@ paths:
       responses:
         200:
           description: Successfully retrieved replies to announcements
-        404:
-          description: Specified announcement not found
+  /replies/{id}:
+    delete:
+      operationId: src.routes.replies.delete
+      tags:
+        - Replies
+      summary: Delete reply
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully delete user
 
   /users:
     get:
@@ -153,8 +182,17 @@ paths:
       responses:
         200:
           description: Successfully read user
-        404:
-          description: Specified user not found
+    delete:
+      operationId: src.routes.users.delete
+      tags:
+        - Users
+      summary: Delete specified user
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully delete user
+
   /users/{id}/projects:
     get:
       operationId: src.routes.users.read_user_projects
