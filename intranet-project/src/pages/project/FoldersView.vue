@@ -1,6 +1,7 @@
 <template>
     <div>
-      <ProjectFolderHeader/>
+      <ProjectFolderHeader
+      @newFolderAdded="addFolder"/>
       <div class="container-fluid">
         <div class="row">
           <div v-for="folder in folders" :key="folder.name" class="col-sm-3" @click="goToDirectory(folder.path)">
@@ -28,11 +29,19 @@ export default {
       {name:"Architectuur", path:"./Architectuur", shared:"no"},
       {name:"Classified", path:"./Classified", shared:"no"},
       {name:"Gedeelde Folder", path:"./Gedeelde Folder", shared:"yes"},
-      ]};
+      ],
+      path: null};
   },
   methods: {
     goToDirectory(path) {
        this.$router.push(this.$route.params.id + "/" + path);
+    },
+    addFolder(val){
+      
+      if(this.path != null){
+         this.folders.append({name: val, path: this.$route.params.id + "/" + this.path + "/" + val, shared: "no"});
+      }
+      this.folders.append({name: val, path: this.$route.params.id + "/" + val, shared: "no"});
     }
   },
 }

@@ -25,13 +25,13 @@
       <div class="modal-body">
         <form>
           <div class="mb-9">
-            <input class="form-control" id="message-text" placeholder="Nieuwe Map">
+            <input v-model="newFolderName" class="form-control" id="message-text" placeholder="Nieuwe Map">
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Toevoegen</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="addNewFolder()">Annuleren</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="addNewFolder(newFolderName)">Toevoegen</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
       </div>
     </div>
   </div>
@@ -47,12 +47,22 @@ export default {
   name: "ProjectFolderHeader",
   data: function () {
     return {
-        searchTermField: null
+        searchTermField: null,
+        newFolderName: null,
     };
   },
   methods: {
-    addNewFolder() {
-        this.$emit("addNewFolder", null);
+    addNewFolder(val) {
+      if(val == null){
+        this.newFolderName = "Nieuwe Map";
+      }
+      else{
+        this.newFolderName = val;
+      }
+      this.$emit("newFolderAdded", this.newFolderName);
+    },
+    searchTerm: function (val) {
+      this.searchTermField = val;
     },
   },
   watch: {
@@ -66,7 +76,6 @@ export default {
           this.searchTermField = "";
           return;
         }
-
         this.$emit("searchBarChanged", this.searchTermField);
       }
     },
