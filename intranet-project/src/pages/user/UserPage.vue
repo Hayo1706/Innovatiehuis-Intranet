@@ -17,7 +17,7 @@ export default {
     };
   },
  created(){
-    this.$emit('loaded', 'Profiel: NAAM VAN USER #' + this.$route.params.id)
+    this.$emit('newHeaderTitle', 'Profiel: NAAM VAN USER #' + this.$route.params.id)
  }
 };
 </script>

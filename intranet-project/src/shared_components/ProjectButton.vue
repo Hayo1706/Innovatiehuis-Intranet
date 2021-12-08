@@ -43,6 +43,7 @@ export default {
   align-items: center;
   display: flex;
   border-radius: 8px;
+  cursor: pointer;
 }
 img {
   height: 5vh;

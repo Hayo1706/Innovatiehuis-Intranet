@@ -26,7 +26,7 @@ export default {
     };
   },
  created(){
-     this.$emit('loaded', 'Hoofdpagina')
+     this.$emit('newHeaderTitle', 'Hoofdpagina')
  }
 };
 </script>

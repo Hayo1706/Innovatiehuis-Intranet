@@ -2,7 +2,7 @@
   <div class="component-container">
     <div class="component-header">
       <slot></slot>
-      <router-link class="component-header-button" to="/manage/projects">Projectenoverzicht</router-link>
+      <div class="full-button" @click="toProjectsPage()">Alle Projecten</div>
     </div>
     
     <div id="project-window" class="component-body">
@@ -40,6 +40,11 @@ export default {
         alert(err);
       });
   },
+  methods: {
+    toProjectsPage() {
+      this.$router.push("/manage/projects");
+    }
+  }
 };
 </script>
 
@@ -47,5 +52,20 @@ export default {
 <style scoped>
 #project-window {
 
+}
+.full-button {
+  margin: auto;
+  padding: 5px;
+  font-size: 16pt;
+  font-weight: bold;
+  background-color: var(--gold2);
+  color: var(--blue1);
+  height: 5vh;
+  border-style: outset;
+  align-items: center;
+  display: flex;
+  border-radius: 8px;
+  cursor: pointer;
+  float: right;
 }
 </style>

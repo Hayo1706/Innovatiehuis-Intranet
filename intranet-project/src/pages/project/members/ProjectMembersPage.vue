@@ -11,7 +11,7 @@ export default {
     };
   },
  created(){
-     this.$emit('loaded', 'HAAL PROJECTNAAM UIT API REQUEST: Projectleden')
+     this.$emit('newHeaderTitle', 'HAAL PROJECTNAAM UIT API REQUEST: Projectleden')
  }
 };
 </script>

@@ -11,7 +11,7 @@ export default {
     };
   },
  created(){
-     this.$emit('loaded', 'Nieuw project aanmaken')
+     this.$emit('newHeaderTitle', 'Nieuw project aanmaken')
  }
 };
 </script>

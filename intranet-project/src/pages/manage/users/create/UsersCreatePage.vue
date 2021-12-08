@@ -11,7 +11,7 @@ export default {
     };
   },
  created(){
-     this.$emit('loaded', 'Nieuwe gebruiker toevoegen')
+     this.$emit('newHeaderTitle', 'Nieuwe gebruiker toevoegen')
  }
 };
 </script>

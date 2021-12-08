@@ -141,7 +141,7 @@ export default {
     },
   },
   async created() {
-    this.$emit("loaded", "Projecten - Overzicht");
+    this.$emit("newHeaderTitle", "Projecten - Overzicht");
     ProjectService.getProjects()
       .then((response) => {
         this.projects = response;

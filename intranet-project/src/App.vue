@@ -1,7 +1,7 @@
 <template>
   <div>
-    <AppHeader v-bind:header_title="this.header_title" />
-    <router-view @loaded="setHeaderTitle"></router-view>
+    <AppHeader>{{ this.header_title }}</AppHeader>
+    <router-view @newHeaderTitle="setHeaderTitle"></router-view>
   </div>
 </template>
 

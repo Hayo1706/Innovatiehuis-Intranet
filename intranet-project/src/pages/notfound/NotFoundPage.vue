@@ -15,7 +15,7 @@ export default {
     return {};
   },
   created() {
-    this.$emit("loaded", "404 - Page not found");
+    this.$emit("newHeaderTitle", "404 - Page not found");
   },
 };
 </script>

@@ -6,7 +6,7 @@
         src=".\..\assets\images\logo\square.png"
         style="position: absolute; left: 20px; height: 8vh;"
       />
-      {{ header_title }}
+      <slot></slot>
       <img
         @click="userClick()"
         src=".\..\assets\images\profile_icon.png"
@@ -45,6 +45,8 @@ header {
   width: 100%;
   height: 10vh;
   background-color: var(--blue1);
+  -webkit-box-shadow: 3px 3px 1px 2p var(--gold1); 
+  box-shadow: 3px 3px 1px 2px var(--gold1);
 }
 #header_title_text {
   color: white;

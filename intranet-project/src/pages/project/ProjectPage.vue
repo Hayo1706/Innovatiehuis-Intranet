@@ -37,7 +37,7 @@ export default {
     };
   },
  created(){
-     this.$emit('loaded', 'Project: NAAM VAN PROJECT #' +  + this.$route.params.id)
+     this.$emit('newHeaderTitle', 'Project: NAAM VAN PROJECT #' +  + this.$route.params.id)
  }
 };
 </script>

@@ -48,7 +48,7 @@ export default {
   },
   created() {
     this.reload();
-    this.$emit("loaded", "Gebruikers - Overzicht");
+    this.$emit("newHeaderTitle", "Gebruikers - Overzicht");
   },
 };
 </script>
