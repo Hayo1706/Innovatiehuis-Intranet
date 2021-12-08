@@ -6,7 +6,9 @@
       name="showarchivedonlybox"
       v-model="showArchivedOnlyField"
     />
-    <label for="showarchivedonlybox">Toon alleen gearchiveerde projecten</label>
+    <label for="showarchivedonlybox"
+      >Toon alleen ongearchiveerde projecten</label
+    >
   </div>
 </template>
 <script>
