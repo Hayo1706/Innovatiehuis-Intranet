@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="project-listing">
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
@@ -70,7 +70,6 @@
         ></ProjectButtons>
       </div>
     </div>
-    <hr />
   </div>
 </template>
 
@@ -93,8 +92,9 @@ export default {
 </script>
 
 <style scoped>
-#projectListing {
-  font-family: AddeleThin;
+.project-listing {
+  background-color: var(--blue3);
+  margin: 3px;
 }
 .row {
   padding-top: 12px;

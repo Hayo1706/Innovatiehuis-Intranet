@@ -4,13 +4,13 @@
       <img
         @click="logoClick()"
         src=".\..\assets\images\logo\square.png"
-        style="position: absolute; left: 20px"
+        style="position: absolute; left: 20px; height: 8vh;"
       />
       {{ header_title }}
       <img
         @click="userClick()"
         src=".\..\assets\images\profile_icon.png"
-        style="position: absolute; right: 20px"
+        style="position: absolute; right: 20px; height: 8vh;"
       />
     </p>
   </header>

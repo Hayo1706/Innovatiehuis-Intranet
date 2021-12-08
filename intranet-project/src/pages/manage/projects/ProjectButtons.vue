@@ -63,8 +63,7 @@ export default {
 <style scoped>
 img {
   max-width: 70px;
-  margin-right: 12px;
-  margin-top: 10px;
+  margin: 4px;
   cursor: pointer;
 }
 </style>

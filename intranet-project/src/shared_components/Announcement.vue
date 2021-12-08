@@ -76,7 +76,6 @@
             <div class="announcement-in-modal">{{ this.content }}</div>
             <p>{{ this.username }} ({{ this.timestamp.toLocaleDateString("nl-NL") }})</p>
 
-
             <div v-for="reply in this.replies" :key="reply.replyid">
               <Reply
                 :id="reply.replyid"

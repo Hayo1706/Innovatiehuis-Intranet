@@ -1,5 +1,5 @@
 <template>
-  <button @click="onClick()" id="project-button">
+  <button @click="onClick()" class="project-button">
     <img
       v-if="lastUpdated >= lastVisit"
       src=".\..\assets\images\logo\square.png"
@@ -31,7 +31,8 @@ export default {
 
 
 <style scoped>
-#project-button {
+.project-button {
+  margin: 4px;
   font-size: 16pt;
   font-weight: bold;
   background-color: var(--gold2);

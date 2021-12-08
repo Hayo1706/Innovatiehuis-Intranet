@@ -1,7 +1,11 @@
 <template>
-  <div class="container">
-    <div id="window">
-      <h1 id="title">Projects Window</h1>
+  <div class="component-container">
+    <div class="component-header">
+      <slot></slot>
+      <router-link class="component-header-button" to="/manage/projects">Projectenoverzicht</router-link>
+    </div>
+    
+    <div id="project-window" class="component-body">
       <ProjectButton
         v-for="project of projects"
         :key="project.id"
@@ -41,14 +45,7 @@ export default {
 
 
 <style scoped>
-#window {
-  border-style: outset;
-}
-#title {
-  color: white;
-  font-size: calc(2vw + 2vh);
-  margin: 0;
-  text-align: center;
-  background-color: var(--blue4);
+#project-window {
+
 }
 </style>
