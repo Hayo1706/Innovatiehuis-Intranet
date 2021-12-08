@@ -12,6 +12,10 @@ var ProjectService = function () {
         data.forEach(project => { project.lastupdated = jsonToJsDate(project.lastupdated) });
         return data;
     }
+    async function getProjectById(projectid) {
+        const { data } = await axiosClient.get(`/projects/${projectid}`, { timeout: 2000 });
+        return data;
+    }
     async function deleteProject(id) {
         const { data } = await axiosClient.delete(`/projects/${id}`, { timeout: 2000 });
         return data;
@@ -76,6 +80,7 @@ var ProjectService = function () {
 
     return {
         getProjects,
+        getProjectById,
         deleteProject,
         updateProject,
         getProjectsByUser,

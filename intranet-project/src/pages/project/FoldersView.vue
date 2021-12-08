@@ -1,7 +1,7 @@
 <template>
     <div>
       <ProjectFolderHeader
-      @newFolderAdded="addFolder"/>
+      @newFolderAdded="(id) => addFolder(id)"/>
       <div class="container-fluid">
         <div class="row">
           <div v-for="folder in folders" :key="folder.name" class="col-sm-3">
@@ -37,14 +37,13 @@ export default {
       path: null};
   },
   methods: {
-    
     addFolder(val){
-      
       if(this.path != null){
-         this.folders.append({name: val, path: this.$route.params.id + "/" + this.path + "/" + val, shared: "no"});
+              alert(this.newFolderName);
+         this.folders.push({name: val, path: this.path + "/" + val, shared: "no"});
       }
-      this.folders.append({name: val, path: this.$route.params.id + "/" + val, shared: "no"});
-    }
+      this.folders.push({name: val, path: val, shared: "no"});
+    },
   },
 }
 </script>

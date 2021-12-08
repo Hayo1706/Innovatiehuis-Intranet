@@ -28,23 +28,37 @@
 import FilesView from './FilesView.vue';
 import FoldersView from './FoldersView.vue';
 import AnnouncementWindow from '../../shared_components/AnnouncementWindow.vue';
+import ProjectService from "../../services/ProjectService.js";
 
 export default {
   components: { FilesView, FoldersView, AnnouncementWindow },
   name: "ProjectPage",
   data: function () {
     return {
-      announcementWindowKey: 0
+      announcementWindowKey: 0,
+      projectId: this.$route.params.id,
+      projectName: this.$route.params.id,
     };
   },
   methods: {
-    reloadAnnouncementWindow() {
-      this.announcementWindowKey += 1;
+      reloadAnnouncementWindow() {
+        this.announcementWindowKey += 1;
     }
   },
-  created() {
-    this.$emit('newHeaderTitle', 'Project: NAAM VAN PROJECT #' + + this.$route.params.id)
-  }
+  async created() {
+    ProjectService.getProjectById(this.$route.params.id)
+      .then((response) => {
+        this.$emit('newHeaderTitle', 'Project: ' + response[0].name)
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+          this.$emit('newHeaderTitle', 'Project: #' + this.$route.params.id)
+        }
+        alert(err);
+      });
+      
+  },
 };
 </script>
 
