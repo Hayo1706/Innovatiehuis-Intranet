@@ -28,7 +28,7 @@ paths:
       operationId: src.routes.projects.read_one
       tags:
         - Project
-      summary: Read the entire list of projects
+      summary: Read one project
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
@@ -38,8 +38,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-        404:
-          description: Project with id not found
     put:
       operationId: src.routes.projects.update
       tags:
@@ -55,8 +53,6 @@ paths:
       responses:
         200:
           description: Project updated
-        404:
-          description: Project with id not found
     delete:
       operationId: src.routes.projects.delete
       tags:
@@ -67,8 +63,6 @@ paths:
       responses:
         200:
           description: Project deleted
-        404:
-          description: Project with id not found
 
 
   /projects/{id}/announcements:
@@ -81,7 +75,7 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully retrieved announcements from project
+          description: Successfully retrieved announcements from project
         404:
           description: Specified project not found
     post:
@@ -89,13 +83,50 @@ paths:
       tags:
         - Announcements
       summary: Post announcements in project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  content:
+                    type: string
+                  title:
+                    type: string
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully posted announcement to project
-        404:
-          description: Specified project not found
+          description: Successfully posted announcement to project
+  /announcements:
+    get:
+      operationId: src.routes.announcements.read_global_announcements
+      tags:
+        - Global Announcements
+      summary: Reads all global announcements (=those not tied to a project)
+      responses:
+        200:
+          description: Successfully retreieved global announcements
+    post:
+      operationId: src.routes.announcements.post_global
+      tags:
+        - Global Announcements
+      summary: Post announcements in global
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                title:
+                  type: string
+      responses:
+        200:
+          description: Successfully posted announcement to project
   /announcements/{id}:
     delete:
       operationId: src.routes.announcements.delete
@@ -106,9 +137,90 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully removed announcement
-        404:
-          description: Specified announcement not found
+          description: Successfully removed announcement
+    put:
+      operationId: src.routes.announcements.edit
+      tags:
+        - Announcements
+      summary: Update announcements title/content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                title:
+                  type: string
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully posted announcement to project
+  /announcements/{id}/replies:
+    get:
+      operationId: src.routes.replies.read_all
+      tags:
+        - Replies
+      summary: Get all replies to an announcement
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully retrieved replies to announcements
+    post:
+      operationId: src.routes.replies.post
+      tags:
+        - Replies
+      summary: Post reply to announcement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                title:
+                  type: string
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully posted reply to announcement
+  /replies/{id}:
+    put:
+      operationId: src.routes.replies.edit
+      tags:
+        - Replies
+      summary: Edit reply message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully edited reply content
+    delete:
+      operationId: src.routes.replies.delete
+      tags:
+        - Replies
+      summary: Delete reply
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully deleted reply
 
   /users:
     get:
@@ -118,7 +230,7 @@ paths:
       summary: Gets all users
       responses:
         200:
-          description: Succesfully read all users
+          description: Successfully read all users
   /users/{id}:
     get:
       operationId: src.routes.users.read_one
@@ -129,9 +241,18 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully read user
-        404:
-          description: Specified user not found
+          description: Successfully read user
+    delete:
+      operationId: src.routes.users.delete
+      tags:
+        - Users
+      summary: Delete specified user
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully delete user
+
   /users/{id}/projects:
     get:
       operationId: src.routes.users.read_user_projects
@@ -142,7 +263,7 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Succesfully read user projects
+          description: Successfully read user projects
           content:
             application/json:
               schema:
@@ -158,7 +279,7 @@ components:
       required: true
       description: The id of the object
       schema:
-        type: integer
+        type: string
 
   schemas:
     Project:

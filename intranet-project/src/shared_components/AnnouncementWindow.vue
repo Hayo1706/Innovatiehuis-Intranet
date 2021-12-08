@@ -15,12 +15,12 @@
       :key="announcement.id"
     >
       <Announcement
-        v-bind:id="announcement.announcementid"
-        v-bind:date="announcement.timestamp"
-        v-bind:userid="announcement.userid"
-        v-bind:username="announcement.firstname + ' ' + announcement.lastname"
-        v-bind:title="announcement.title"
-        v-bind:content="announcement.content"
+        :id="announcement.announcementid"
+        :timestamp="announcement.timestamp"
+        :userid="announcement.userid"
+        :username="announcement.firstname + ' ' + announcement.lastname"
+        :title="announcement.title"
+        :content="announcement.content"
         v-on:reload="reload()"
       />
     </div>
@@ -110,7 +110,17 @@ export default {
   },
   methods: {
     addAnnouncement() {
-      ProjectService.postAnnouncement(this.pathArgs.project, this.newAnnouncement);
+      ProjectService.postAnnouncement(this.pathArgs.project, this.newAnnouncement)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+      });
+
       this.newAnnouncement.title = "";
       this.newAnnouncement.content = "";
       this.reload();

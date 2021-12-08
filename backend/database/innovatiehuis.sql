@@ -32,40 +32,19 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   KEY `userid2_announcements` (`userid`),
   CONSTRAINT `projectid_announcements` FOREIGN KEY (`projectid`) REFERENCES `projects` (`projectid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `userid2_announcements` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.announcements: ~4 rows (approximately)
+-- Dumping data for table innovatieplatform.announcements: ~5 rows (approximately)
 DELETE FROM `announcements`;
 /*!40000 ALTER TABLE `announcements` DISABLE KEYS */;
 INSERT INTO `announcements` (`announcementid`, `userid`, `projectid`, `content`, `title`, `timestamp`) VALUES
 	(1, 5, NULL, 'Hallo iedereen, vergeten jullie niet kerst met ons te vieren?\r\nGroeten de politie.', 'Kerst bij de Politie!', '2021-12-02 17:01:59'),
 	(2, 5, NULL, 'Hoe verwijder ik Announcements? Dat zou toch een feature zijn?', 'Bug report', '2021-12-03 17:01:59'),
 	(3, 5, 10, 'Haha mooi systeempje hoor jongens, lekker secure. :)', 'Lekker bezig', '2021-12-01 11:01:59'),
-	(4, 6, 10, 'muhahahahha ik heb mezelf admin privileges gegeven', 'title', '1995-03-07 17:01:59');
+	(4, 6, 10, 'muhahahahha ik heb mezelf admin privileges gegeven', 'title', '1995-03-07 17:01:59'),
+	(21, 1, 10, 'AAAAAAAAAAAAA.', 'nieuwe mededeling', '2021-12-02 19:30:49'),
+	(22, 1, 10, 'AAAAAAAAAAAAA.', 'nieuwe mededeling', '2021-12-02 19:33:33');
 /*!40000 ALTER TABLE `announcements` ENABLE KEYS */;
-
--- Dumping structure for table innovatieplatform.announcement_replies
-DROP TABLE IF EXISTS `announcement_replies`;
-CREATE TABLE IF NOT EXISTS `announcement_replies` (
-  `announcement_replies_id` int(11) NOT NULL AUTO_INCREMENT,
-  `announcementid` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `content` text NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`announcement_replies_id`) USING BTREE,
-  KEY `userid_announcement_replies` (`userid`),
-  KEY `announcementid_announcement_replies` (`announcementid`),
-  CONSTRAINT `announcementid_announcement_replies` FOREIGN KEY (`announcementid`) REFERENCES `announcements` (`announcementid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `userid_announcement_replies` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-
--- Dumping data for table innovatieplatform.announcement_replies: ~2 rows (approximately)
-DELETE FROM `announcement_replies`;
-/*!40000 ALTER TABLE `announcement_replies` DISABLE KEYS */;
-INSERT INTO `announcement_replies` (`announcement_replies_id`, `announcementid`, `userid`, `content`, `timestamp`) VALUES
-	(1, 4, 5, 'Neee niet mijn platformpie :^(', '2021-11-30 18:22:43'),
-	(2, 4, 1, 'Boe gemene man, ga weg', '2021-11-30 18:22:59');
-/*!40000 ALTER TABLE `announcement_replies` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.chat_messages
 DROP TABLE IF EXISTS `chat_messages`;
@@ -150,6 +129,30 @@ INSERT INTO `projects_has_parents` (`parentid`, `childid`, `shared_files`) VALUE
 	(10, 14, 'file.txt folder/file.txt');
 /*!40000 ALTER TABLE `projects_has_parents` ENABLE KEYS */;
 
+-- Dumping structure for table innovatieplatform.replies
+DROP TABLE IF EXISTS `replies`;
+CREATE TABLE IF NOT EXISTS `replies` (
+  `replyid` int(11) NOT NULL AUTO_INCREMENT,
+  `announcementid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `timestamp` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`replyid`) USING BTREE,
+  KEY `userid_announcement_replies` (`userid`),
+  KEY `announcementid_announcement_replies` (`announcementid`),
+  CONSTRAINT `announcementid_announcement_replies` FOREIGN KEY (`announcementid`) REFERENCES `announcements` (`announcementid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `userid_announcement_replies` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table innovatieplatform.replies: ~2 rows (approximately)
+DELETE FROM `replies`;
+/*!40000 ALTER TABLE `replies` DISABLE KEYS */;
+INSERT INTO `replies` (`replyid`, `announcementid`, `userid`, `content`, `timestamp`) VALUES
+	(1, 4, 5, 'Neee niet mijn platformpie :^(', '2021-11-30 18:22:43'),
+	(2, 4, 1, 'Boe gemene man, ga weg', '2021-11-30 18:22:59'),
+	(3, 4, 5, 'This is line 1.\r\nThis is line 2.', '2021-12-02 21:09:04');
+/*!40000 ALTER TABLE `replies` ENABLE KEYS */;
+
 -- Dumping structure for table innovatieplatform.roles
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -213,8 +216,8 @@ CREATE TABLE IF NOT EXISTS `user_has_projects` (
   `lastseen` datetime NOT NULL DEFAULT current_timestamp(),
   KEY `userid_user_has_projects` (`userid`),
   KEY `projectid_user_has_projects` (`projectid`),
-  CONSTRAINT `projectid_user_has_projects` FOREIGN KEY (`projectid`) REFERENCES `projects` (`projectid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `userid_user_has_projects` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `projectid_user_has_projects` FOREIGN KEY (`projectid`) REFERENCES `projects` (`projectid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `userid_user_has_projects` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table innovatieplatform.user_has_projects: ~14 rows (approximately)

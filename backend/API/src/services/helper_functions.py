@@ -1,66 +1,33 @@
-from .db import connection_pool
+from .db import engine
 from mysql.connector import Error
 from flask import make_response, abort
+import re
 
 
-def query(query):
+def query(query, param=None):
+    with engine.connect() as connection:
+        result = connection.exec_driver_sql(query, param)
+        return [dict(zip(result.keys(), value)) for value in result]
+
+
+def query_update(query, param=None):
+    with engine.connect() as connection:
+        connection.exec_driver_sql(query, param)
+
+
+def is_int(value):
+    if not re.compile("[0-9]").match(value):
+        incorrect_input()
+
+
+def is_boolean(value):
     try:
-        connection = connection_pool.get_connection()
-        if connection.is_connected():
-            cur = connection.cursor()
-            cur.execute(query)
-            rv = cur.fetchall()
-
-    except Error as e:
-        print(e)
-        abort(404, "Error while connecting to database")
-    finally:
-        row_headers = [x[0] for x in cur.description]
-        cur.close()
-        connection.close()
-        return [dict(zip(row_headers, result)) for result in rv]
+        if int(value) == 0 or int(value) == 1:
+            return
+    except:
+        print()
+    incorrect_input()
 
 
-def query_update(query):
-    try:
-        connection = connection_pool.get_connection()
-        if connection.is_connected():
-            cur = connection.cursor()
-            cur.execute(query)
-    except Error as e:
-        print(e)
-        abort(404, "Error while connecting to database")
-    finally:
-        connection.commit()
-        cur.close()
-        connection.close()
-
-
-def exists(query):
-    try:
-        connection = connection_pool.get_connection()
-        if connection.is_connected():
-            cur = connection.cursor()
-            cur.execute(query)
-            rv = cur.fetchall()
-    except Error as e:
-        print(e)
-        abort(404, "Error while connecting to database")
-    finally:
-        cur.close()
-        connection.close()
-        if len(rv) > 0:
-            return True
-        abort(404, "Could not find specified id")
-
-
-def project_exists(projectid):
-    exists("SELECT * FROM projects where projectid=" + str(projectid))
-
-
-def user_exists(userid):
-    exists("SELECT * FROM users where userid=" + str(userid))
-
-
-def announcement_exists(announcementid):
-    exists("SELECT * FROM announcements where announcementid=" + str(announcementid))
+def incorrect_input():
+    abort(404, "Incorrect input")
