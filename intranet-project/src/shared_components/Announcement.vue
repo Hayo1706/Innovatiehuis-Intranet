@@ -2,7 +2,7 @@
   <div class="accordion-item">
     <h2 class="accordion-header" :id="'heading' + this.id">
       <div v-if="this.editing">
-        <input v-model="this.editData.title">
+        <input v-model="this.editData.title" />
       </div>
       <div v-else>
         <button
@@ -25,19 +25,18 @@
       :aria-labelledby="'heading' + this.id"
     >
       <div class="accordion-body">
-        <strong
-          ><router-link :to="'/user/' + this.id">{{
-            this.username
-          }}</router-link></strong
-        >
-        ({{ this.timestamp.toLocaleDateString("nl-NL") }}) <br />
+        <strong>
+          <router-link :to="'/user/' + this.id">
+            {{
+              this.username
+            }}
+          </router-link>
+        </strong>
+        ({{ this.timestamp.toLocaleDateString("nl-NL") }})
+        <br />
 
         <div v-if="this.editing">
-          <textarea
-            class="form-control"
-            v-model="this.editData.content"
-            style="height: 80px"
-          />
+          <textarea class="form-control" v-model="this.editData.content" style="height: 80px" />
           <button @click="toggleEdit()">Annuleren</button>
           <button @click="saveEdits()">Opslaan</button>
         </div>
@@ -45,9 +44,10 @@
           <p>{{ this.content }}</p>
           <button @click="remove()">Verwijderen</button>
           <button @click="toggleEdit()">Aanpassen</button>
-          <button data-bs-toggle="modal" :data-bs-target="'#repliesModal' + this.id">
-            Reacties ({{ this.replies.length }})
-          </button>
+          <button
+            data-bs-toggle="modal"
+            :data-bs-target="'#repliesModal' + this.id"
+          >Reacties ({{ this.replies.length }})</button>
         </div>
       </div>
     </div>
@@ -59,65 +59,28 @@
       aria-labelledby="repliesModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog" ref="modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="repliesModalLabel">
-              {{ this.title }}
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="announcement-in-modal">{{ this.content }}</div>
-            <p>{{ this.username }} ({{ this.timestamp.toLocaleDateString("nl-NL") }})</p>
-
-            <div v-for="reply in this.replies" :key="reply.replyid">
-              <Reply
-                :id="reply.replyid"
-                :announcementid="reply.announcementid"
-                :userid="reply.userid"
-                :username="reply.firstname + ' ' + reply.lastname"
-                :timestamp="reply.timestamp"
-                :content="reply.content"
-                v-on:reload="reload()"
-              />
-            </div>
-
-            <form>
-              <div class="mb-3">
-                <label for="message-text" class="col-form-label">Laat een reactie achter:</label>
-                <textarea
-                class="form-control"
-                id="message-text"
-                style="height: 100px"
-                v-model="this.newReply.content"
-                />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" @click="addReply()">
-            Plaats reactie
-            </button>
-          </div>
-        </div>
-      </div>
+      <RepliesModal 
+        :key = "this.repliesModalKey"
+        :id = "this.id"
+        :title = "this.title"
+        :content = "this.content"
+        :timestamp = "this.timestamp"
+        :username = "this.username"
+        :userid = "this.userid"
+        :replies = "this.replies"
+        @reload="reload()"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import ProjectService from "@/services/ProjectService.js";
-import Reply from "@/shared_components/Reply.vue";
+import RepliesModal from "@/shared_components/RepliesModal.vue";
 
 export default {
   name: "Announcement",
-  components: { Reply },
+  components: { RepliesModal },
   props: {
     id: { type: Number, required: true },
     timestamp: { type: Date, required: true },
@@ -128,10 +91,11 @@ export default {
   },
   data: function () {
     return {
+      repliesModalKey: 0,
       editData: { title: this.title + "", content: this.content + "" },
       editing: false,
       replies: [],
-      newReply: { userid: 1, content: ""} //TODO: get userid dynamically from JWT/Session
+      newReply: { userid: 1, content: "" } //TODO: get userid dynamically from JWT/Session
     };
   },
   async created() {
@@ -145,44 +109,51 @@ export default {
           console.log(err.response.status);
         }
         alert(err);
-    });
+      });
   },
   methods: {
     remove() {
       ProjectService.deleteAnnouncement(this.id);
-      alert("Mededeling is verwijderd! Herlaad om het resultaat te zien.");
-      this.$emit("reload");
+      alert("Mededeling is verwijderd!");
+      this.$emit('reload');
     },
     toggleEdit() {
       this.editing = !this.editing;
     },
     saveEdits() {
       ProjectService.editAnnouncement(this.id, this.editData)
-            .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
-
-      this.editing = false;
-      this.$emit("reload");
+        .then((response) => {
+          console.log(response);
+          this.editing = false;
+          this.editData.title = "";
+          this.editData.content = "";
+          this.$emit('reload');
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert(err);
+        });
     },
     addReply() {
       ProjectService.addReply(this.id, this.newReply) // TODO: get userid dynamically from JWT/Session
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
+        .then((response) => {
+          console.log(response);
+          this.newReply.content = "";
+          this.$emit('reload');
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert(err);
+        });
     },
+    reload() {
+      console.log("reloaded component RepliesModal");
+      this.repliesModalKey += 1;
+    }
   },
 };
 </script>
@@ -191,10 +162,5 @@ export default {
 .accordion-button {
   background-color: var(--blue2);
   color: white;
-}
-.announcement-in-modal {
-  background-color: var(--blue3);
-  border-style: outset;
-  padding: 4px;
 }
 </style>

@@ -12,7 +12,7 @@
       <div
         class="accordion"
         v-for="announcement in this.announcements"
-        :key="announcement.id"
+        :key="announcement"
       >
         <Announcement
           :id="announcement.announcementid"
@@ -21,7 +21,7 @@
           :username="announcement.firstname + ' ' + announcement.lastname"
           :title="announcement.title"
           :content="announcement.content"
-          v-on:reload="reload()"
+          @reload="reload()"
         />
       </div>
 
@@ -110,25 +110,8 @@ export default {
       };
   },
   methods: {
-    addAnnouncement() {
-      ProjectService.postAnnouncement(this.pathArgs.project, this.newAnnouncement)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
-
-      this.newAnnouncement.title = "";
-      this.newAnnouncement.content = "";
-      this.reload();
-    },
-  },
-  async created() {
-    ProjectService.getAnnouncementsByProject(this.pathArgs.project)
+    queryData() {
+      ProjectService.getAnnouncementsByProject(this.pathArgs.project)
       .then((response) => {
         this.announcements = response;
         console.log(this.announcements);
@@ -139,6 +122,30 @@ export default {
         }
         alert(err);
       });
+    },
+    addAnnouncement() {
+      ProjectService.postAnnouncement(this.pathArgs.project, this.newAnnouncement)
+      .then((response) => {
+        console.log(response);
+        this.newAnnouncement.title = "";
+        this.newAnnouncement.content = "";
+        console.log("about to update key");
+        this.reload();
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+      });
+    },
+    reload() {
+      console.log("updating key");
+      this.$emit('reload');
+    }
+  },
+  async created() {
+    this.queryData();
   },
 };
 </script>

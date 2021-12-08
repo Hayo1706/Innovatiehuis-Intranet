@@ -1,11 +1,11 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class= "col-8">
+      <div class="col-8">
         <ProjectsWindow>Mijn Projecten</ProjectsWindow>
       </div>
-      <div class= "col-4">
-        <AnnouncementWindow>Algemene Mededelingen</AnnouncementWindow>
+      <div class="col-4">
+        <AnnouncementWindow @reload="reloadAnnouncementWindow()" :key="this.announcementWindowKey">Algemene Mededelingen</AnnouncementWindow>
       </div>
     </div>
   </div>
@@ -20,14 +20,19 @@ export default {
   name: "HomePage",
   data: function () {
     return {
+      announcementWindowKey: 0
     };
   },
- created(){
-     this.$emit('newHeaderTitle', 'Hoofdpagina')
- }
+  methods: {
+    reloadAnnouncementWindow() {
+      this.announcementWindowKey += 1;
+    }
+  },
+  created() {
+    this.$emit('newHeaderTitle', 'Hoofdpagina')
+  }
 };
 </script>
 
 <style>
-
 </style>

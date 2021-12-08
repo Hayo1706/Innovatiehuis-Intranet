@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="col-sm">
-          <AnnouncementWindow>Mededelingen</AnnouncementWindow>/>
+          <AnnouncementWindow @reload="reloadAnnouncementWindow()" :key="this.announcementWindowKey">Mededelingen</AnnouncementWindow>/>
         </div>
       </div>
     </div>
@@ -34,7 +34,13 @@ export default {
   name: "ProjectPage",
   data: function () {
     return {
+      announcementWindowKey: 0
     };
+  },
+  methods: {
+    reloadAnnouncementWindow() {
+      this.announcementWindowKey += 1;
+    }
   },
   created() {
     this.$emit('newHeaderTitle', 'Project: NAAM VAN PROJECT #' + + this.$route.params.id)

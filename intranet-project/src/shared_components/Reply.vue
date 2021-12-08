@@ -45,36 +45,32 @@ export default {
       this.editing = !this.editing;
     },
     saveEdits() {
+      this.editing = false;
       ProjectService.editReply(this.id, this.editData)
-      .then((response) => {
-        this.editing = false;
-        this.reload();
-        console.log(response);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
-
-      this.$emit("reload");
+        .then((response) => {
+          console.log("API RESPONDS: " + response);
+          this.$emit("reload");
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert(err);
+        });
     },
     remove() {
       ProjectService.deleteReply(this.id)
-      .then((response) => {
-        alert("Reactie is verwijderd!");
-        // TODO: verwijder reactie uit scherm
-        console.log(response);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
-
-      this.$emit("reload");
+        .then((response) => {
+          alert("Reactie is verwijderd!");
+          console.log("API RESPONDS: " + response);
+          this.$emit("reload"); // TODO: verwijder reactie uit scherm
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert(err);
+        });
     },
   },
 };

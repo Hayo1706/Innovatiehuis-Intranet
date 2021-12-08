@@ -6,7 +6,7 @@
       <div class="full-button" @click="toUsersPage()">Alle Gebruikers</div>
     </div>
     
-    <div id="project-window" class="component-body">
+    <div id="projects-window" class="component-body">
       <ProjectButton
         v-for="project of projects"
         :key="project.id"
@@ -33,6 +33,7 @@ export default {
     ProjectService.getProjectsByUser(1) //TODO: get user id from session data/JWT
       .then((response) => {
         this.projects = response;
+        console.log("API RESPONDS: " + response)
       })
       .catch((err) => {
         if (err.response) {
@@ -53,7 +54,7 @@ export default {
 </script>
 
 <style scoped>
-#project-window {
+#projects-window {
 
 }
 .full-button {

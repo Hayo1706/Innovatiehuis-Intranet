@@ -24,9 +24,9 @@ def edit(id):
     is_int(id)
     body = connexion.request.json['reply']
     query_update(
-        "UPDATE replies SET content=%(content)s WHERE announcementid=%(id)s",
+        "UPDATE replies SET content=%(content)s WHERE replyid=%(id)s",
         {'id': id, 'content': body['content']})
-    return make_response("Reply to announcement={announcementid} successfully edited".format(announcementid=str(id)), 200)
+    return make_response("Reply {id} successfully edited".format(id=str(id)), 200)
 
 
 def delete(id):
