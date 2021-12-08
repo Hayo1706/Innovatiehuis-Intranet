@@ -128,7 +128,7 @@ export default {
       if (!this.showArchivedOnly) {
         return true;
       } else {
-        return item.isarchived;
+        return item.isarchived == false;
       }
     },
   },
