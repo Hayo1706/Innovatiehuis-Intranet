@@ -1,5 +1,5 @@
 <template>
-    <div @click="goToDirectory(this.path)">
+    <div class="projectFolder" @click="goToDirectory(this.path)">
         <img class="foldersImage" v-if="this.shared == 'no'" src=".\..\..\assets\images\folder.png"/> 
         <img class="foldersImage" v-if="this.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
         {{this.naam}}
@@ -35,5 +35,8 @@ export default {
   height: calc(2vw + 5vh);
   padding-right: 1vw;
   padding-bottom: 0.5vh;
+}
+.projectFolder {
+  color: white;
 }
 </style>
