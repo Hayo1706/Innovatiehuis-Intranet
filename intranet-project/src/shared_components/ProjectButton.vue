@@ -32,13 +32,14 @@ export default {
 
 <style scoped>
 .project-button {
-  margin: 4px;
+  padding: 10px;
+  margin: 10px;
   font-size: 16pt;
   font-weight: bold;
   background-color: var(--gold2);
   color: var(--blue1);
-  width: 300px;
-  height: 60px;
+  width: 100%;
+  height: 12vh;
   border-style: outset;
   align-items: center;
   display: flex;

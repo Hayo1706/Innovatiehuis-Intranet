@@ -3,6 +3,7 @@
     <div class="component-header">
       <slot></slot>
       <div class="full-button" @click="toProjectsPage()">Alle Projecten</div>
+      <div class="full-button" @click="toUsersPage()">Alle Gebruikers</div>
     </div>
     
     <div id="project-window" class="component-body">
@@ -43,28 +44,33 @@ export default {
   methods: {
     toProjectsPage() {
       this.$router.push("/manage/projects");
+    },
+    toUsersPage() {
+      this.$router.push("/manage/users");
     }
   }
 };
 </script>
-
 
 <style scoped>
 #project-window {
 
 }
 .full-button {
-  margin: auto;
+  margin-top: 0.8vh;
+  margin-right: 5px;
   padding: 5px;
   font-size: 16pt;
   font-weight: bold;
   background-color: var(--gold2);
   color: var(--blue1);
-  height: 5vh;
+  height: 4.5vh;
   border-style: outset;
+  border-width: 2px;
   align-items: center;
   display: flex;
-  border-radius: 8px;
+  border-top-left-radius: 2vh;
+  border-top-right-radius: 2vh;
   cursor: pointer;
   float: right;
 }
