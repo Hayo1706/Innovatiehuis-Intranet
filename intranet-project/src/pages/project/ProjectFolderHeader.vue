@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div id="projectFolderHeader" class="container">
+    <div id="projectFolderHeader">
       <div class="row">
-        <div class="col-sm-8">Folders View</div>
+        <div class="col-sm-9">Folders View</div>
         <div class="col-sm-2">
           <div class="input-group">
             <input
@@ -13,14 +13,6 @@
               v-model="searchTermField"
             />
           </div>
-        </div>
-        <div class="col-sm-1">
-          <button class="iconButton">
-            <img
-              class="iconImage"
-              src=".\..\..\assets\images\select_icon.png"
-            />
-          </button>
         </div>
         <div class="col-sm-1">
           <button
@@ -141,6 +133,7 @@ export default {
   text-align: center;
   background-color: var(--blue1);
   display: inline-block;
+  width: 68vw;
 }
 .iconButton {
   border: 0;
