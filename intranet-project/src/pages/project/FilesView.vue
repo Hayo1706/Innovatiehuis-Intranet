@@ -53,7 +53,6 @@ p {
   font-size: calc(1vw + 1vh);
   font-family: AddeleSemiBold;
   height: 100%;
-  width: 68vw;
   margin: calc(1vw + 1vh);
   text-align: center;
 }

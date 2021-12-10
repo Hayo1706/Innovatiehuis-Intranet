@@ -132,8 +132,6 @@ export default {
   margin: calc(1vw + 1vh);
   text-align: center;
   background-color: var(--blue1);
-  display: inline-block;
-  width: 68vw;
 }
 .iconButton {
   border: 0;
