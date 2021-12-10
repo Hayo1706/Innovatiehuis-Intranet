@@ -16,10 +16,6 @@ export default {
   },
   data: function () {
     return {
-      name: this.naam,
-      paths: this.path,
-      share: this.shared,
-
     };
   },
   methods: {
