@@ -11,6 +11,21 @@
                     {{message.name}}: {{ message.message }}
                 </div>
             </div>
+            <div>
+                <div class="input-group">
+                    <input
+                    id="search-input"
+                    type="search"
+                    class="form-control"
+                    placeholder="Type je bericht..."
+                    v-model="typeField"
+                    />
+                    <button @click="addMessage(typeField)">
+                    Verzenden
+                    </button>
+                </div>
+                
+            </div>
         </div>
     </div>
 
@@ -31,6 +46,11 @@ export default {
             ],
         };
     },
+    methods: {
+        addMessage(newMessage){
+            this.messages.push({name: "Test", message: newMessage})
+        }
+    }
 }
 </script>
 <style scoped>
