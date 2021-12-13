@@ -28,8 +28,8 @@
             })
           }}
         </div>
-        <div class="mobileRow"><br /></div>
-        <div class="mobileRow"></div>
+        <div class="mobileRow"><br /><span @click="onParrentClick()" class="projectButton" v-if="project.parentname">{{project.parentname }}</span></div>
+        <div class="mobileRow">{{project.amountsubprojects }}</div>
       </div>
 
       <!-- large screens-->
@@ -59,8 +59,8 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-block"></div>
-      <div class="col d-none d-lg-block"></div>
+      <div class="col d-none d-lg-block"><span @click="onParrentClick()" class="projectButton" v-if="project.parentname">{{project.parentname }}</span></div>
+      <div class="col d-none d-lg-block">{{project.amountsubprojects }}</div>
 
       <div class="col">
         <ProjectButtons
@@ -87,6 +87,9 @@ export default {
     onClick() {
       this.$router.push("/project/" + this.project.projectid);
     },
+    onParrentClick(){
+      this.$router.push("/project/" + this.project.parentid);
+    }
   },
 };
 </script>
