@@ -32,9 +32,9 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   KEY `userid2_announcements` (`userid`),
   CONSTRAINT `projectid_announcements` FOREIGN KEY (`projectid`) REFERENCES `projects` (`projectid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `userid2_announcements` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.announcements: ~5 rows (approximately)
+-- Dumping data for table innovatieplatform.announcements: ~9 rows (approximately)
 DELETE FROM `announcements`;
 /*!40000 ALTER TABLE `announcements` DISABLE KEYS */;
 INSERT INTO `announcements` (`announcementid`, `userid`, `projectid`, `content`, `title`, `timestamp`) VALUES
@@ -42,8 +42,11 @@ INSERT INTO `announcements` (`announcementid`, `userid`, `projectid`, `content`,
 	(2, 5, NULL, 'Hoe verwijder ik Announcements? Dat zou toch een feature zijn?', 'Bug report', '2021-12-03 17:01:59'),
 	(3, 5, 10, 'Haha mooi systeempje hoor jongens, lekker secure. :)', 'Lekker bezig', '2021-12-01 11:01:59'),
 	(4, 6, 10, 'muhahahahha ik heb mezelf admin privileges gegeven', 'title', '1995-03-07 17:01:59'),
-	(21, 1, 10, 'AAAAAAAAAAAAA.', 'nieuwe mededeling', '2021-12-02 19:30:49'),
-	(22, 1, 10, 'AAAAAAAAAAAAA.', 'nieuwe mededeling', '2021-12-02 19:33:33');
+	(25, 5, NULL, 'line break\n\nline break', 'gggd', '2021-12-06 20:39:50'),
+	(27, 5, NULL, '"<script>alert("HAHAHAHA");</script>"', '"<script>alert("HAHAHAHA");</script>"', '2021-12-07 14:09:23'),
+	(52, 5, 10, 'Ik kan niets zien :(', 'Jongens het is donker', '2021-12-09 00:11:02'),
+	(53, 5, 15, 'fdbfdbdf', 'fgdf', '2021-12-09 00:27:15'),
+	(55, 5, 15, 'Ker-chunk', 'Pief poef pauw', '2021-12-09 00:43:26');
 /*!40000 ALTER TABLE `announcements` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.chat_messages
@@ -89,8 +92,8 @@ CREATE TABLE IF NOT EXISTS `projects` (
 DELETE FROM `projects`;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
 INSERT INTO `projects` (`projectid`, `name`, `isarchived`, `createdat`, `lastupdated`) VALUES
-	(1, 'Project X', 1, '2021-11-30 18:27:30', '2021-11-30 18:27:39'),
-	(2, 'Project X 2.0', 0, '2021-11-17 15:28:55', '2021-11-30 18:27:33'),
+	(1, 'Project X', 0, '2021-11-30 18:27:30', '2021-12-09 14:07:01'),
+	(2, 'Project X 2.0', 1, '2021-11-17 15:28:55', '2021-12-09 14:06:54'),
 	(4, 'Brievenbusdrone', 0, '2021-11-17 15:32:44', '2021-11-30 17:52:30'),
 	(5, 'Rattenval met 5G', 0, '2021-11-17 15:32:46', '2021-11-30 17:53:22'),
 	(6, 'Talking Crime Scenes', 0, '2021-11-17 15:32:50', '2021-11-30 17:54:50'),
@@ -142,15 +145,19 @@ CREATE TABLE IF NOT EXISTS `replies` (
   KEY `announcementid_announcement_replies` (`announcementid`),
   CONSTRAINT `announcementid_announcement_replies` FOREIGN KEY (`announcementid`) REFERENCES `announcements` (`announcementid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `userid_announcement_replies` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.replies: ~2 rows (approximately)
+-- Dumping data for table innovatieplatform.replies: ~7 rows (approximately)
 DELETE FROM `replies`;
 /*!40000 ALTER TABLE `replies` DISABLE KEYS */;
 INSERT INTO `replies` (`replyid`, `announcementid`, `userid`, `content`, `timestamp`) VALUES
-	(1, 4, 5, 'Neee niet mijn platformpie :^(', '2021-11-30 18:22:43'),
-	(2, 4, 1, 'Boe gemene man, ga weg', '2021-11-30 18:22:59'),
-	(3, 4, 5, 'This is line 1.\r\nThis is line 2.', '2021-12-02 21:09:04');
+	(1, 4, 5, 'hallo\n\nmiauw', '2021-11-30 18:22:43'),
+	(2, 4, 1, 'hallo\n\nmiauw', '2021-11-30 18:22:59'),
+	(4, 4, 1, 'hallo\n\nmiauw', '2021-12-06 22:42:54'),
+	(5, 25, 1, 'hoera line breaks werken, maar niet hier blijkbaar', '2021-12-07 14:02:27'),
+	(7, 25, 1, 'jweouwvwd\n\niwrivobdwds', '2021-12-08 15:14:31'),
+	(15, 27, 1, 'hhhhaaaaddddddd', '2021-12-09 00:01:18'),
+	(16, 1, 1, 'Moeten we kadootjes kopen?', '2021-12-09 15:19:18');
 /*!40000 ALTER TABLE `replies` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.roles
@@ -208,9 +215,9 @@ INSERT INTO `users` (`userid`, `firstname`, `lastname`, `email`, `hash`, `roleid
 	(8, 'pieter', 'van rosmalen', 'pvr@mail.com', '123458', 3, 0, 0, '2021-12-02 19:09:21', '2021-12-02 19:09:21', 0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
--- Dumping structure for table innovatieplatform.user_has_projects
-DROP TABLE IF EXISTS `user_has_projects`;
-CREATE TABLE IF NOT EXISTS `user_has_projects` (
+-- Dumping structure for table innovatieplatform.users_has_projects
+DROP TABLE IF EXISTS `users_has_projects`;
+CREATE TABLE IF NOT EXISTS `users_has_projects` (
   `userid` int(11) NOT NULL,
   `projectid` int(11) NOT NULL,
   `lastseen` datetime NOT NULL DEFAULT current_timestamp(),
@@ -220,10 +227,10 @@ CREATE TABLE IF NOT EXISTS `user_has_projects` (
   CONSTRAINT `userid_user_has_projects` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.user_has_projects: ~14 rows (approximately)
-DELETE FROM `user_has_projects`;
-/*!40000 ALTER TABLE `user_has_projects` DISABLE KEYS */;
-INSERT INTO `user_has_projects` (`userid`, `projectid`, `lastseen`) VALUES
+-- Dumping data for table innovatieplatform.users_has_projects: ~15 rows (approximately)
+DELETE FROM `users_has_projects`;
+/*!40000 ALTER TABLE `users_has_projects` DISABLE KEYS */;
+INSERT INTO `users_has_projects` (`userid`, `projectid`, `lastseen`) VALUES
 	(1, 10, '2021-11-30 17:57:20'),
 	(4, 10, '2021-11-30 17:57:30'),
 	(3, 10, '2021-11-30 17:57:41'),
@@ -237,8 +244,9 @@ INSERT INTO `user_has_projects` (`userid`, `projectid`, `lastseen`) VALUES
 	(7, 7, '2021-11-30 17:58:54'),
 	(7, 15, '2021-11-30 17:58:54'),
 	(7, 11, '2021-11-30 17:58:54'),
-	(5, 15, '2021-11-30 17:58:54');
-/*!40000 ALTER TABLE `user_has_projects` ENABLE KEYS */;
+	(5, 15, '2021-11-30 17:58:54'),
+	(1, 15, '2021-12-09 00:06:46');
+/*!40000 ALTER TABLE `users_has_projects` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
