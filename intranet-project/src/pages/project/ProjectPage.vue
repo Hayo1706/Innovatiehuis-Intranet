@@ -2,7 +2,7 @@
   <div>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-8">
           <div class="container-fluid">
             <div class="row">
               <div class="col-sm">
@@ -16,8 +16,15 @@
             </div>
           </div>
         </div>
-        <div class="col-sm">
-          <AnnouncementWindow @reload="reloadAnnouncementWindow()" :key="this.announcementWindowKey">Mededelingen</AnnouncementWindow>/>
+        <div class="col-sm-4">
+          <div class="container-fluid">
+            <div class="row">
+              <AnnouncementWindow @reload="reloadAnnouncementWindow()" :key="this.announcementWindowKey">Mededelingen</AnnouncementWindow>
+            </div>
+            <div class="row">
+                <ChatWindow></ChatWindow>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -27,11 +34,13 @@
 <script>
 import FilesView from './FilesView.vue';
 import FoldersView from './FoldersView.vue';
+import ChatWindow from './ChatWindow.vue';
 import AnnouncementWindow from '../../shared_components/AnnouncementWindow.vue';
 import ProjectService from "../../services/ProjectService.js";
 
+
 export default {
-  components: { FilesView, FoldersView, AnnouncementWindow },
+  components: { FilesView, FoldersView, AnnouncementWindow, ChatWindow },
   name: "ProjectPage",
   data: function () {
     return {
@@ -63,4 +72,5 @@ export default {
 </script>
 
 <style>
+
 </style>
