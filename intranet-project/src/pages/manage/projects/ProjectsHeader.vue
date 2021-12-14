@@ -14,8 +14,8 @@
           v-bind:searchTerm="this.searchTerm"
         ></ProjectsSearchBar>
         <ProjectsShowArchivedOnlyBox
-          @showArchivedOnly="(value) => $emit('showArchivedOnly', value)"
-          v-bind:showArchivedOnly="this.showArchivedOnly"
+          @showUnArchivedOnly="(value) => $emit('showUnArchivedOnly', value)"
+          v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
         ></ProjectsShowArchivedOnlyBox>
       </div>
     </div>
@@ -28,7 +28,7 @@ import ProjectsShowArchivedOnlyBox from "./ProjectsShowArchivedOnlyBox.vue";
 export default {
   components: { ProjectsSearchBar, ProjectsShowArchivedOnlyBox },
   name: "ProjectsHeader",
-  props: ["searchTerm", "showArchivedOnly"],
+  props: ["searchTerm", "showUnArchivedOnly"],
   data: function () {
     return {};
   },

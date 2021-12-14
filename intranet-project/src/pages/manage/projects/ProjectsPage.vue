@@ -10,9 +10,9 @@
     </button>
     <ProjectsHeader
       @searchBarChanged="setSearchTerm"
-      @showArchivedOnly="setShowArchived"
+      @showUnArchivedOnly="setShowUnArchived"
       v-bind:searchTerm="this.searchTerm"
-      v-bind:showArchivedOnly="this.showArchivedOnly"
+      v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
     ></ProjectsHeader>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
@@ -25,8 +25,8 @@
         <ProjectsShowArchivedOnlyBox
           id="showarchivedonlyboxMobile"
           class="col"
-          @showArchivedOnly="setShowArchived"
-          v-bind:showArchivedOnly="this.showArchivedOnly"
+          @showUnArchivedOnly="setShowUnArchived"
+          v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
         ></ProjectsShowArchivedOnlyBox>
         <hr />
       </div>
@@ -65,7 +65,7 @@ export default {
     return {
       projects: [],
       searchTerm: null,
-      showArchivedOnly: false,
+      showUnArchivedOnly: false,
     };
   },
   methods: {
@@ -75,8 +75,8 @@ export default {
     setSearchTerm(value) {
       this.searchTerm = value;
     },
-    setShowArchived(value) {
-      this.showArchivedOnly = value;
+    setShowUnArchived(value) {
+      this.showUnArchivedOnly = value;
     },
     removeProject(id) {
       ProjectService.deleteProject(id)
@@ -125,7 +125,7 @@ export default {
       }
     },
     showArchivedWhenShould(item) {
-      if (!this.showArchivedOnly) {
+      if (!this.showUnArchivedOnly) {
         return true;
       } else {
         return item.isarchived == false;
@@ -158,6 +158,7 @@ export default {
 
 <style scoped>
 #searchBarMobile {
+  padding-top: 5px;
   margin-top: 5px;
   margin-bottom: 5px;
   width: 100%;
@@ -179,5 +180,6 @@ export default {
 }
 #showarchivedonlyboxMobile {
   margin-top: 10px;
+  color: white;
 }
 </style>
