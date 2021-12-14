@@ -34,6 +34,7 @@
     <div class="container-fluid">
       <div v-for="project of filteredProjects" :key="project.name">
         <ProjectListing
+          class="projectlisting"
           @removeProject="this.removeProject"
           @archiveProject="this.archiveProject"
           v-bind:project="project"
@@ -181,5 +182,8 @@ export default {
 #showarchivedonlyboxMobile {
   margin-top: 10px;
   color: white;
+}
+.projectlisting {
+  padding: 10px;
 }
 </style>
