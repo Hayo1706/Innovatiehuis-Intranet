@@ -48,7 +48,11 @@ export default {
     },
     methods: {
         addMessage(newMessage){
-            this.messages.push({name: "Test", message: newMessage})
+            if(newMessage != null){
+                this.messages.push({name: "Test", message: newMessage})
+            }
+            
+            this.typeField = null;
         }
     }
 }
