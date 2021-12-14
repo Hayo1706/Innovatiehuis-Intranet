@@ -101,6 +101,7 @@ export default {
       ProjectService.updateProject(projectCopy)
         .then(() => {
           project.isarchived = !project.isarchived;
+          project.lastupdated = new Date();
         })
         .catch((err) => {
           if (err.response) {
