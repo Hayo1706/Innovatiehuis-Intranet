@@ -22,12 +22,12 @@
           @searchBarChanged="setSearchTerm"
           v-bind:searchTerm="this.searchTerm"
         ></ProjectsSearchBar>
-        <ProjectsShowArchivedOnlyBox
-          id="showarchivedonlyboxMobile"
+        <ProjectsShowUnArchivedOnlyBox
+          id="showunarchivedonlyboxMobile"
           class="col"
           @showUnArchivedOnly="setShowUnArchived"
           v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
-        ></ProjectsShowArchivedOnlyBox>
+        ></ProjectsShowUnArchivedOnlyBox>
         <hr />
       </div>
     </div>
@@ -53,13 +53,13 @@ import ProjectService from "@/services/ProjectService.js";
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
 import ProjectsSearchBar from "./ProjectsSearchBar.vue";
-import ProjectsShowArchivedOnlyBox from "./ProjectsShowArchivedOnlyBox.vue";
+import ProjectsShowUnArchivedOnlyBox from "./ProjectsShowUnArchivedOnlyBox.vue";
 export default {
   components: {
     ProjectListing,
     ProjectsHeader,
     ProjectsSearchBar,
-    ProjectsShowArchivedOnlyBox,
+    ProjectsShowUnArchivedOnlyBox,
   },
   name: "ProjectsPage",
   data: function () {
@@ -179,7 +179,7 @@ export default {
   height: 60px;
   width: 100%;
 }
-#showarchivedonlyboxMobile {
+#showunarchivedonlyboxMobile {
   margin-top: 10px;
   color: white;
 }

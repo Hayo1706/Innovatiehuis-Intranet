@@ -1,12 +1,12 @@
 <template>
   <div>
     <input
-      id="showarchivedonlybox"
+      id="showunarchivedonlybox"
       type="checkbox"
-      name="showarchivedonlybox"
+      name="showunarchivedonlybox"
       v-model="showUnArchivedOnlyField"
     />
-    <label for="showarchivedonlybox"
+    <label for="showunarchivedonlybox"
       >Toon alleen ongearchiveerde projecten</label
     >
   </div>
@@ -38,7 +38,7 @@ export default {
 label {
   font-size: 15px;
 }
-#showarchivedonlybox {
+#showunarchivedonlybox {
   margin-right: 4px;
 }
 </style>
