@@ -2,6 +2,7 @@ import os
 import json
 
 from flask import Flask, render_template, request, send_file
+from werkzeug.utils import secure_filename
 
 root = '../../../filestorage/root/'
 
@@ -36,14 +37,7 @@ def getRequestedPath(requested_path, type):
 
     return None
 
-def isFilePathValid(requested_path):
-    requested_path = (root + requested_path)
-    if path_exists(requested_path) and not os.path.isdir(requested_path):
-        return True
-    return False
-
 def isDirUnique(new_dir, current_path, count):
-    print(count)
     if count == 0:
         if dir_exists(root + current_path + new_dir):
             return isDirUnique(new_dir, current_path, count + 1)
@@ -78,6 +72,7 @@ if not dir_exists(root):
     if not dir_exists("../../../filestorage/root"):
         os.mkdir("../../../filestorage/root")
 
-deleteDir(root+"1", False)
+
+
 
 #os.path.join("c:\\", "temp", "new folder") Joins zijn Safer nog naar kijken !
