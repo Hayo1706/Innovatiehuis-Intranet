@@ -3,12 +3,14 @@
     <div class="component-header">
       <slot></slot>
 
-        <img class="component-header-button" src="./../assets/images/add_icon.png" data-bs-toggle="modal"
-        data-bs-target="#announcementModal">
-
+      <img
+        class="component-header-button"
+        src="./../assets/images/add_icon.png"
+        data-bs-toggle="modal"
+        data-bs-target="#announcementModal"
+      />
     </div>
     <div class="component-body" id="announcement-window">
-
       <div
         class="accordion"
         v-for="announcement in this.announcements"
@@ -59,7 +61,9 @@
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="message-text" class="col-form-label">Inhoud:</label>
+                  <label for="message-text" class="col-form-label"
+                    >Inhoud:</label
+                  >
                   <textarea
                     class="form-control"
                     id="message-text"
@@ -94,9 +98,9 @@
 </template>
 
 <script>
-import Announcement from "./Announcement.vue"
-import { getPathArguments } from "@/services/DataConverter.js"
-import ProjectService from "@/services/ProjectService.js";
+import Announcement from "./Announcement.vue";
+import { getPathArguments } from "@/services/DataConverter.js";
+import AnnouncementService from "@/services/AnnouncementService.js";
 
 export default {
   components: { Announcement },
@@ -106,43 +110,46 @@ export default {
     return {
       newAnnouncement: { title: "", content: "" },
       announcements: [],
-      pathArgs: getPathArguments(this.$route.path)
-      };
+      pathArgs: getPathArguments(this.$route.path),
+    };
   },
   methods: {
     queryData() {
-      ProjectService.getAnnouncementsByProject(this.pathArgs.project)
-      .then((response) => {
-        this.announcements = response;
-        console.log(this.announcements);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
+      AnnouncementService.getAnnouncementsByProject(this.pathArgs.project)
+        .then((response) => {
+          this.announcements = response;
+          console.log(this.announcements);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert(err);
+        });
     },
     addAnnouncement() {
-      ProjectService.postAnnouncement(this.pathArgs.project, this.newAnnouncement)
-      .then((response) => {
-        console.log(response);
-        this.newAnnouncement.title = "";
-        this.newAnnouncement.content = "";
-        console.log("about to update key");
-        this.reload();
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
+      AnnouncementService.postAnnouncement(
+        this.pathArgs.project,
+        this.newAnnouncement
+      )
+        .then((response) => {
+          console.log(response);
+          this.newAnnouncement.title = "";
+          this.newAnnouncement.content = "";
+          console.log("about to update key");
+          this.reload();
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert(err);
+        });
     },
     reload() {
       console.log("updating key");
-      this.$emit('reload');
-    }
+      this.$emit("reload");
+    },
   },
   async created() {
     this.queryData();

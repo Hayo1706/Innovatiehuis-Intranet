@@ -5,7 +5,7 @@
       <div class="full-button" @click="toProjectsPage()">Alle Projecten</div>
       <div class="full-button" @click="toUsersPage()">Alle Gebruikers</div>
     </div>
-    
+
     <div id="projects-window" class="component-body">
       <ProjectButton
         v-for="project of projects"
@@ -33,7 +33,7 @@ export default {
     ProjectService.getProjectsByUser(1) //TODO: get user id from session data/JWT
       .then((response) => {
         this.projects = response;
-        console.log("API RESPONDS: " + response)
+        console.log("API RESPONDS: " + response);
       })
       .catch((err) => {
         if (err.response) {
@@ -48,14 +48,13 @@ export default {
     },
     toUsersPage() {
       this.$router.push("/manage/users");
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
 #projects-window {
-
 }
 .full-button {
   margin-top: 0.8vh;

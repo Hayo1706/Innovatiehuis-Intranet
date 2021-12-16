@@ -17,12 +17,14 @@
         <button @click="remove()">Verwijderen</button>
       </div>
     </div>
-    <p style="text-align: right;">{{ this.username }} ({{ this.timestamp.toLocaleDateString() }})</p>
+    <p style="text-align: right">
+      {{ this.username }} ({{ this.timestamp.toLocaleDateString() }})
+    </p>
   </div>
 </template>
 
 <script>
-import ProjectService from "@/services/ProjectService.js";
+import AnnouncementService from "@/services/AnnouncementService.js";
 
 export default {
   name: "Reply",
@@ -32,12 +34,12 @@ export default {
     userid: { type: Number, required: true },
     username: { type: String, required: true },
     content: { type: String, required: true },
-    timestamp: { type: Date, required: true }
+    timestamp: { type: Date, required: true },
   },
   data: function () {
     return {
       editData: { content: this.content + "" },
-      editing: false
+      editing: false,
     };
   },
   methods: {
@@ -46,7 +48,7 @@ export default {
     },
     saveEdits() {
       this.editing = false;
-      ProjectService.editReply(this.id, this.editData)
+      AnnouncementService.editReply(this.id, this.editData)
         .then((response) => {
           console.log("API RESPONDS: " + response);
           this.$emit("reload");
@@ -59,7 +61,7 @@ export default {
         });
     },
     remove() {
-      ProjectService.deleteReply(this.id)
+      AnnouncementService.deleteReply(this.id)
         .then((response) => {
           alert("Reactie is verwijderd!");
           console.log("API RESPONDS: " + response);

@@ -1,47 +1,60 @@
 <template>
-    <div class="modal-dialog" ref="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="repliesModalLabel">{{ this.title }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="announcement-in-modal"><p>{{ this.content }}</p></div>
-                <p>{{ this.username }} ({{ this.timestamp.toLocaleDateString("nl-NL") }})</p>
-
-                <div v-for="reply in this.replies" :key="reply">
-                    <Reply
-                        :id="reply.replyid"
-                        :announcementid="reply.announcementid"
-                        :userid="reply.userid"
-                        :username="reply.firstname + ' ' + reply.lastname"
-                        :timestamp="reply.timestamp"
-                        :content="reply.content"
-                        @reload="reload()"
-                    />
-                </div>
-
-                <form>
-                    <div class="mb-3">
-                        <label for="message-text" class="col-form-label">Laat een reactie achter:</label>
-                        <textarea
-                            class="form-control"
-                            id="message-text"
-                            style="height: 100px"
-                            v-model="this.newReply.content"
-                        />
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" @click="addReply()">Plaats reactie</button>
-            </div>
+  <div class="modal-dialog" ref="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="repliesModalLabel">{{ this.title }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="announcement-in-modal">
+          <p>{{ this.content }}</p>
         </div>
+        <p>
+          {{ this.username }} ({{ this.timestamp.toLocaleDateString("nl-NL") }})
+        </p>
+
+        <div v-for="reply in this.replies" :key="reply">
+          <Reply
+            :id="reply.replyid"
+            :announcementid="reply.announcementid"
+            :userid="reply.userid"
+            :username="reply.firstname + ' ' + reply.lastname"
+            :timestamp="reply.timestamp"
+            :content="reply.content"
+            @reload="reload()"
+          />
+        </div>
+
+        <form>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label"
+              >Laat een reactie achter:</label
+            >
+            <textarea
+              class="form-control"
+              id="message-text"
+              style="height: 100px"
+              v-model="this.newReply.content"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" @click="addReply()">
+          Plaats reactie
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-import ProjectService from "@/services/ProjectService.js";
+import AnnouncementService from "@/services/AnnouncementService.js";
 import Reply from "@/shared_components/Reply.vue";
 
 export default {
@@ -58,20 +71,18 @@ export default {
   },
   data: function () {
     return {
-      newReply: { userid: 1, content: "" } //TODO: get userid dynamically from JWT/Session
+      newReply: { userid: 1, content: "" }, //TODO: get userid dynamically from JWT/Session
     };
   },
-  async created() {
-
-  },
+  async created() {},
   methods: {
     addReply() {
-        console.log("current announcement id = " + this.id)
-      ProjectService.addReply(this.id, this.newReply) // TODO: get userid dynamically from JWT/Session
+      console.log("current announcement id = " + this.id);
+      AnnouncementService.addReply(this.id, this.newReply) // TODO: get userid dynamically from JWT/Session
         .then((response) => {
           console.log(response);
           this.newReply.content = "";
-          this.$emit('reload');
+          this.$emit("reload");
         })
         .catch((err) => {
           if (err.response) {
@@ -81,8 +92,8 @@ export default {
         });
     },
     reload() {
-        this.$emit('reload');
-    }
+      this.$emit("reload");
+    },
   },
 };
 </script>
