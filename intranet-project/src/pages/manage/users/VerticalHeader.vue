@@ -1,13 +1,13 @@
 <template>
   <div class="col">
-    <div class="headerText">Project:</div>
-    <div class="headerText">Aangemaakt:</div>
-    <div class="headerText">Laatste Update:</div>
+    <div class="headerText">Gebruiker:</div>
+    <div class="headerText">Geregistreerd:</div>
+    <div class="headerText">Laatst gezien:</div>
     <div class="headerText">
-      Overkoepelend <br />
-      project:
+      Rol: 
     </div>
-    <div class="headerText">Sub-projecten:</div>
+    <div class="headerText">projecten:</div>
+    <div class="headerText">screening:</div>
   </div>
 </template>
 
