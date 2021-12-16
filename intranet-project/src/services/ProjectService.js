@@ -40,17 +40,14 @@ var ProjectService = function () {
         return data;
     }
 
-    async function uploadFile(projectid, current_path, file){
-        const { data } = await axiosClient.post(`/projects/${projectid}/file`, { current_path, file }, { timeout: 2000 })
-        return data
-    }
-
     async function downloadFile(projectid, requested_path){
         const { data } = await axiosClient.get(`/projects/${projectid}/file`, { requested_path }, { timeout: 2000 })
         return data
     }
-
-    
+    async function uploadFile(projectid, current_path, file){
+        const { data } = await axiosClient.post(`/projects/${projectid}/file`, { current_path, file }, { timeout: 2000 })
+        return data
+    }
 
     return {
         getProjects,
@@ -61,7 +58,7 @@ var ProjectService = function () {
         uploadFile,
         downloadFile,
         getFoldersOfProject,
-        getFilesOfProject,
+        getFilesOfProject,        
     }
 
 

@@ -4,11 +4,11 @@
       @newFolderAdded="(id) => addFolder(id)"/>
       <div class="container-fluid">
         <div class="row">
-          <div v-for="folder in folders" :key="folder.name" class="col-sm-3">
+          <div v-for="folder in folders" :key="folder" class="col-sm-3">
             <ProjectFolder
-              :naam="folder.name"
-              :path="folder.path"
-              :shared="folder.shared"
+              :naam="folder"
+              :path="folder"
+              :shared='no'
             />
             </div>
         </div>
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import ProjectService from "@/services/ProjectService.js";
 import ProjectFolderHeader from "./ProjectFolderHeader.vue";
 import ProjectFolder from "./ProjectFolder.vue";
 export default {
@@ -28,22 +29,26 @@ export default {
   props: [
   ],
   data: function () {
-    return { folders: [
-      {name:"Requirements", path:"./Requirements", shared:"no"},
-      {name:"Architectuur", path:"./Architectuur", shared:"no"},
-      {name:"Classified", path:"./Classified", shared:"no"},
-      {name:"Gedeelde Folder", path:"./Gedeelde Folder", shared:"yes"},
-      ],
-      path: null};
+    return { folders: [],
+     };
   },
   methods: {
-    addFolder(val){
-      if(this.path != null){
-              alert(this.newFolderName);
-         this.folders.push({name: val, path: this.path + "/" + val, shared: "no"});
-      }
-      this.folders.push({name: val, path: val, shared: "no"});
+    addFolder(val){ 
+      this.folders.push(val);
     },
+  },
+  async created() {
+    //this.$emit("newHeaderTitle", "NAAM + PAD");
+    ProjectService.getFoldersOfProject(this.$route.params.id)
+      .then((response) => {
+        this.folders = response;
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+      });
   },
 }
 </script>

@@ -76,7 +76,7 @@ def getFilesInPath(id):
     if path_exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)
         for path in paths_in_requested_path:
-            if not os.path.isdir(requested_path + path):
+            if not os.path.isdir(requested_path + "/" + path):
                 list_of_files.append(path)
     return list_of_files
 

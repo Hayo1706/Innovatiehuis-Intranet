@@ -1,6 +1,6 @@
 <template>
     <div class="projectFolder" @click="goToDirectory(this.path)">
-        <img class="foldersImage" v-if="this.shared == 'no'" src=".\..\..\assets\images\folder.png"/> 
+        <img class="foldersImage" v-if="this.shared != 'yes'" src=".\..\..\assets\images\folder.png"/> 
         <img class="foldersImage" v-if="this.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
         {{this.naam}}
     </div>

@@ -1,6 +1,7 @@
 import os
 import json
 
+import connexion
 from flask import Flask, render_template, request, send_file
 from werkzeug.utils import secure_filename
 
@@ -17,6 +18,24 @@ def dir_exists(path):
         return True
     else:
         return False
+
+def getFoldersInPath(id):
+    requested_path = root + id
+    list_of_files = []
+    if path_exists(requested_path):
+        paths_in_requested_path = os.listdir(requested_path)
+        for path in paths_in_requested_path:
+            if os.path.isdir(requested_path + "/" + path):
+                list_of_files.append(path)
+    print(list_of_files)
+    return list_of_files
+
+def checkValidRootProjectFolder(id):
+    print("yes")
+    requested_path = root + id
+    if not dir_exists(requested_path):
+        createDir(id, root)
+    return True
 
 def getRequestedPath(requested_path, type):
     requested_path = (root + requested_path)
@@ -51,6 +70,16 @@ def createDir(new_dir, current_path):
     new_dir_path = isDirUnique(new_dir, current_path, 0)
     os.mkdir(root + new_dir_path)
     return new_dir_path
+
+def createDirFromRequest():
+    projectid = connexion.request.values.get('projectid')
+    path = connexion.request.values.get('path')
+    new_dir_name = connexion.request.values.get('name')
+    new_dir_path = isDirUnique(new_dir_name, projectid, 0)
+    os.mkdir(root + new_dir_path)
+    return new_dir_path
+
+
 
 def deleteDir(dir_path, confirm):
     if dir_exists(dir_path):

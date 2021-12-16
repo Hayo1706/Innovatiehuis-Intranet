@@ -95,6 +95,18 @@ paths:
         200:
           description: Successfully retrieved files at given path
 
+  /projects/{id}/folders:
+    get:
+      operationId: src.routes.folders.getFoldersInPath
+      tags:
+        - Folders
+      summary: Returns folder(s) in directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully retrieved folders at given path
+
   /projects/{id}/announcements:
     get:
       operationId: src.routes.announcements.read_all
