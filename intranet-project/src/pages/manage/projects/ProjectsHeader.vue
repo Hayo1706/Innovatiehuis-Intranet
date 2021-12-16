@@ -38,15 +38,21 @@ export default {
 
 <style scoped>
 #projectsHeader {
-  font-family: AddeleSemiBold;
   width: 100%;
   box-sizing: border-box;
   min-height: 10vh;
   background-color: var(--blue1);
-  border-top: white 2px solid;
+  border: white 5px solid;
+  margin-top: 1vh;
   color: white;
   font-size: calc(1vw + 1vh);
   padding: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-basis: 100%;
+  gap: 60px;
   font-family: AddeleSemiBold;
 }
 .input-group {
