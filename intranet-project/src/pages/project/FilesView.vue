@@ -1,48 +1,60 @@
 <template>
     <div class='filesview'>
       <p>Files View</p>
-      <div class="container-fluid"> 
-        <div class="row">
-          <div v-for="file in files" :key="file.name" class="col-sm-2" > <!--- Determine size of each Column --->
-            <div class="drag-el" draggable> <!--- Make boxex draggable --->
+        <div class="container-fluid"> 
+          <div class="row">
+            <div v-for="file in files" :key="file" class="col-sm-2" > <!--- Determine size of each Column --->
               <div class="box"> <!--- Ensures that height is equal to width --->
                 <div class = "content"> <!--- Position of content is absolute --->
-                  {{file.name}}
+                  {{file}}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+
+      
+       <form
+        action="http://127.0.0.1:5000/api/projects/upload"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+      <input type="file" name="files" multiple="true" />
+      <input type="hidden" name="projectid" :value= this.projectid />
+      <input type="hidden" name="path" value="" />
+      <input type="submit"/>
+    </form>
+   
     </div>
 </template>
 
 <script>
+import ProjectService from "@/services/ProjectService.js";
 export default {
   name: "FilesView",
   props: [
 
   ],
   data: function () {
-    return { files: [
-      {name:"New File", path:"./New_folder", type:"Word"},
-      {name:"New File 1", path:"./New_folder", type:"PDF"},
-      {name:"New File 2", path:"./New_folder", type:"Powerpoint"},
-      {name:"New File 3", path:"./New_folder", type:"Excel"},
-      {name:"New File 4", path:"./New_folder", type:"Word"},
-      {name:"New File 5", path:"./New_folder", type:"PDF"},
-      {name:"New File 6", path:"./New_folder", type:"Powerpoint"},
-      {name:"New File 7", path:"./New_folder", type:"Excel"},
-      ]};
+    return { 
+      files: [],
+      projectid: this.$route.params.id};
   },
-  startDrag (evt, item) {
-        evt.dataTransfer.dropEffect = 'move'
-        evt.dataTransfer.effectAllowed = 'move'
-        evt.dataTransfer.setData('itemID', item.id)
+  async created() {
+    //this.$emit("newHeaderTitle", "NAAM + PAD");
+    ProjectService.getFilesOfProject(this.$route.params.id)
+      .then((response) => {
+        this.files = response;
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+      });
   },
 }
 </script>
-
 
 <style scoped>
 p {
@@ -81,6 +93,7 @@ p {
     left:     0;
     bottom:   0;
     right:    0;
+    font-size: 12px;
 }
 
 </style>

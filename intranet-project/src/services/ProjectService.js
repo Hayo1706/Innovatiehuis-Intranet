@@ -30,13 +30,41 @@ var ProjectService = function () {
         return data;
     }
 
+    async function getFoldersOfProject(projectid){
+        const { data } = await axiosClient.get(`/projects/${projectid}/folders`, { timeout: 2000 });
+        return data;
+    }
+
+    async function getFilesOfProject(projectid){
+        const { data } = await axiosClient.get(`/projects/${projectid}/files`, { timeout: 2000 });
+        return data;
+    }
+
+    async function uploadFile(projectid, current_path, file){
+        const { data } = await axiosClient.post(`/projects/${projectid}/file`, { current_path, file }, { timeout: 2000 })
+        return data
+    }
+
+    async function downloadFile(projectid, requested_path){
+        const { data } = await axiosClient.get(`/projects/${projectid}/file`, { requested_path }, { timeout: 2000 })
+        return data
+    }
+
+    
+
     return {
         getProjects,
         getProjectById,
         deleteProject,
         updateProject,
         getProjectsByUser,
+        uploadFile,
+        downloadFile,
+        getFoldersOfProject,
+        getFilesOfProject,
     }
+
+
 
 }
 export default ProjectService();

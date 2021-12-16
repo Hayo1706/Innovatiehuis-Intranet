@@ -64,6 +64,36 @@ paths:
         200:
           description: Project deleted
 
+  /projects/upload:
+    post:
+      operationId: src.routes.files.uploadFiles
+      tags:
+        - Files
+      summary: Uploads file(s) to filestorage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+      responses:
+        200:
+          description: Successfully uploaded a file
+
+  /projects/{id}/files:
+    get:
+      operationId: src.routes.files.getFilesInPath
+      tags:
+        - Files
+      summary: Returns file(s) in directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully retrieved files at given path
 
   /projects/{id}/announcements:
     get:
@@ -296,3 +326,10 @@ components:
         lastupdated:
           type: string
 
+    Files:
+      type: object
+      required:
+        - files
+      properties:
+        files:
+          type: array
