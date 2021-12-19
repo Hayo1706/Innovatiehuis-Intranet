@@ -5,7 +5,7 @@ import connexion
 from flask import Flask, render_template, request, send_file
 from werkzeug.utils import secure_filename
 
-from backend.API.src.routes.folders import *
+from ..routes.folders import *
 
 root = '../../../filestorage/root/'
 
