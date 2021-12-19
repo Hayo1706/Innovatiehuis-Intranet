@@ -21,6 +21,11 @@ var FilestorageService = function () {
         return data;
     }
 
+    async function deleteFolder(projectid, dir_name, current_path, confirmation) {
+        const { data } = await axiosClient.post(`/folders/${projectid}`, { dir_name, current_path, confirmation }, { timeout: 2000 });
+        return data;
+    }
+
 
 
 
@@ -39,6 +44,7 @@ var FilestorageService = function () {
         getFoldersOfProject,
         getFilesOfProject,
         createFolder,
+        deleteFolder,
     }
 
 

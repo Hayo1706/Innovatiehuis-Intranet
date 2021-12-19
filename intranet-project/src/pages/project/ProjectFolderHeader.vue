@@ -103,6 +103,7 @@ export default {
         ).then((response) => {
           console.log(response);
           this.newFolderName = null;
+          alert(response);
           this.reload();
         })
         .catch((err) => {

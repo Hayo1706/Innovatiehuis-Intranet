@@ -125,8 +125,32 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: Successfully uploaded a file
+          description: Successfully created a folder
 
+
+  /folders/{id}:
+    post:
+      operationId: src.routes.folders.deleteDir
+      tags:
+        - Folders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dir_name:
+                  type: string
+                current_path:
+                  type: string
+                confirmation:
+                  type: boolean
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully deleted the folder
 
   /projects/{id}/announcements:
     get:

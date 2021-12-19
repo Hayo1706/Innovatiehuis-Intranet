@@ -50,26 +50,26 @@ def createDirFromRequest(id):
     new_dir_path = getUniqueDirPath(new_dir_name, current_path, 0)
 
     if current_path == None or new_dir_name == None:
-        return make_response("Failed to create new dir", 400)
+        return make_response("Failed to create new folder", 400)
     print(current_path)
 
     print(new_dir_path)
     os.mkdir(root + new_dir_path)
-    return make_response("Succesfully created new dir", 200)
+    return make_response("Succesfully created new folder", 200)
 
-def deleteDir(dir_path, confirm):
-    if dir_exists(dir_path):
-        if not len(os.listdir(dir_path)) == 0:
-            if confirm == True:
-                os.rmdir(dir_path)
-                return 0
-            else:
-                return 1 #There are files in the directory
-        else:
-            os.rmdir(dir_path)
-            return 0
+def deleteDir(id):
+    current_path = connexion.request.json['current_path']
+    current_path = current_path.split("/project/")[1] + "/"
+    dir_name = connexion.request.json['dir_name']
+    confirmation = connexion.request.json['confirmation']
+
+    if dir_exists(root + current_path + dir_name) and confirmation == True:
+        os.rmdir(root + current_path + dir_name)
+        return make_response("Succesfully deleted folder", 200)
+        print("yes")
+
     else:
-        return -1
+        return make_response("Folder could not be deleted, please refresh.", 400)
 
 def createDir(new_dir, current_path):
     new_dir_path = getUniqueDirPath(new_dir, current_path, 0)
