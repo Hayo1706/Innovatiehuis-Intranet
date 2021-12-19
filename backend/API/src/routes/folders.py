@@ -30,53 +30,32 @@ def getFoldersInPath(id):
     print(list_of_files)
     return list_of_files
 
-def checkValidRootProjectFolder(id):
-    print("yes")
-    requested_path = root + id
-    if not dir_exists(requested_path):
-        createDir(id, root)
-    return True
-
-def getRequestedPath(requested_path, type):
-    requested_path = (root + requested_path)
-    if path_exists(requested_path):
-        paths_in_requested_path = os.listdir(requested_path)
-        list_of_directories = []
-        list_of_files = []
-        for path in paths_in_requested_path:
-            if os.path.isdir(requested_path + path):
-                list_of_directories.append(path)
-            else:
-                list_of_files.append(path)
-
-        if type == "file":
-            return json.dumps(list_of_files)
-        if type == "dir":
-            return json.dumps(list_of_directories)
-
-    return None
-
-def isDirUnique(new_dir, current_path, count):
+def getUniqueDirPath(new_dir, current_path, count):
     if count == 0:
         if dir_exists(root + current_path + new_dir):
-            return isDirUnique(new_dir, current_path, count + 1)
+            return getUniqueDirPath(new_dir, current_path, count + 1)
         return current_path + new_dir
     else:
         if dir_exists(root + current_path + new_dir  + " (" + str(count) + ")"):
-            return isDirUnique(new_dir, current_path, count + 1)
+            return getUniqueDirPath(new_dir, current_path, count + 1)
         return current_path + new_dir + " (" + str(count) + ")"
 
 def createDirFromRequest(id):
     current_path = connexion.request.json['current_path']
     current_path = current_path.split("/project/")[1] + "/"
-    print(current_path)
+
     new_dir_name = connexion.request.json['new_dir_name']
-    new_dir_path = isDirUnique(new_dir_name, current_path, 0)
+    new_dir_name = secureFolderName(new_dir_name)
+
+    new_dir_path = getUniqueDirPath(new_dir_name, current_path, 0)
+
+    if current_path == None or new_dir_name == None:
+        return make_response("Failed to create new dir", 400)
+    print(current_path)
+
     print(new_dir_path)
     os.mkdir(root + new_dir_path)
     return make_response("Succesfully created new dir", 200)
-
-
 
 def deleteDir(dir_path, confirm):
     if dir_exists(dir_path):
@@ -92,18 +71,21 @@ def deleteDir(dir_path, confirm):
     else:
         return -1
 
+def createDir(new_dir, current_path):
+    new_dir_path = getUniqueDirPath(new_dir, current_path, 0)
+    os.mkdir(root + new_dir_path)
+    return new_dir_path
+
+def secureFolderName(file_name):
+    secure_name = secure_filename(file_name)
+    if(len(secure_name) == 0):
+        return "New Folder"
+    return secure_name
+
+# TODO os.path.join("c:\\", "temp", "new folder") Joins zijn Safer nog naar kijken !
 if not dir_exists(root):
     if not dir_exists("../../../filestorage"):
         os.mkdir("../../../filestorage");
     if not dir_exists("../../../filestorage/root"):
         os.mkdir("../../../filestorage/root")
 
-
-def createDir(new_dir, current_path):
-    new_dir_path = isDirUnique(new_dir, current_path, 0)
-    os.mkdir(root + new_dir_path)
-    return new_dir_path
-
-
-
-#os.path.join("c:\\", "temp", "new folder") Joins zijn Safer nog naar kijken !
