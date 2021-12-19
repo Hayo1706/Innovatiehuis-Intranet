@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import ProjectService from "@/services/ProjectService.js";
+import FilestorageService from "@/services/FilestorageService.js";
 export default {
   name: "ProjectFolderHeader",
   data: function () {
@@ -96,7 +96,7 @@ export default {
       if (this.newFolderName == null) {
         this.newFolderName = "Nieuwe Map";
       }
-      ProjectService.createFolder(
+      FilestorageService.createFolder(
         this.$route.params.id, 
         this.newFolderName, 
         this.$route.fullPath
