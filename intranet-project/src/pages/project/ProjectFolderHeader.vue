@@ -50,7 +50,7 @@
             <form>
               <div class="mb-9">
                 <input
-                  v-model="newFolderName"
+                  v-model="this.newFolderName"
                   class="form-control"
                   id="message-text"
                   placeholder="Nieuwe Map"
@@ -63,7 +63,7 @@
               type="button"
               class="btn btn-primary"
               data-bs-dismiss="modal"
-              @click="addNewFolder(newFolderName)"
+              @click="addNewFolder()"
             >
               Toevoegen
             </button>
@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import ProjectService from "@/services/ProjectService.js";
 export default {
   name: "ProjectFolderHeader",
   data: function () {
@@ -91,16 +92,32 @@ export default {
     };
   },
   methods: {
-    addNewFolder(val) {
-      if (val == null) {
+    addNewFolder() {
+      if (this.newFolderName == null) {
         this.newFolderName = "Nieuwe Map";
-      } else {
-        this.newFolderName = val;
       }
-      this.$emit("newFolderAdded", this.newFolderName);
+      ProjectService.createFolder(
+        this.$route.params.id, 
+        this.newFolderName, 
+        this.$route.fullPath
+        ).then((response) => {
+          console.log(response);
+          this.newFolderName = null;
+          this.reload();
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert(err);
+        });
     },
     searchTerm: function (val) {
       this.searchTermField = val;
+    },
+    reload() {
+      console.log("updating key");
+      this.$emit("reload");
     },
   },
   watch: {

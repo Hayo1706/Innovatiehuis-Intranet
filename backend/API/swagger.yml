@@ -106,6 +106,27 @@ paths:
       responses:
         200:
           description: Successfully retrieved folders at given path
+    post:
+      operationId: src.routes.folders.createDirFromRequest
+      tags:
+        - Folders
+      requestBody:
+        required: true
+        content:
+           application/json:
+            schema:
+              type: object
+              properties:
+                current_path:
+                  type: string
+                new_dir_name:
+                  type: string
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully uploaded a file
+
 
   /projects/{id}/announcements:
     get:

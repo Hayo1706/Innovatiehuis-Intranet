@@ -2,7 +2,7 @@ import os
 import json
 
 import connexion
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, make_response
 from werkzeug.utils import secure_filename
 
 root = '../../../filestorage/root/'
@@ -66,18 +66,15 @@ def isDirUnique(new_dir, current_path, count):
             return isDirUnique(new_dir, current_path, count + 1)
         return current_path + new_dir + " (" + str(count) + ")"
 
-def createDir(new_dir, current_path):
-    new_dir_path = isDirUnique(new_dir, current_path, 0)
+def createDirFromRequest(id):
+    current_path = connexion.request.json['current_path']
+    current_path = current_path.split("/project/")[1] + "/"
+    print(current_path)
+    new_dir_name = connexion.request.json['new_dir_name']
+    new_dir_path = isDirUnique(new_dir_name, current_path, 0)
+    print(new_dir_path)
     os.mkdir(root + new_dir_path)
-    return new_dir_path
-
-def createDirFromRequest():
-    projectid = connexion.request.values.get('projectid')
-    path = connexion.request.values.get('path')
-    new_dir_name = connexion.request.values.get('name')
-    new_dir_path = isDirUnique(new_dir_name, projectid, 0)
-    os.mkdir(root + new_dir_path)
-    return new_dir_path
+    return make_response("Succesfully created new dir", 200)
 
 
 
@@ -101,6 +98,11 @@ if not dir_exists(root):
     if not dir_exists("../../../filestorage/root"):
         os.mkdir("../../../filestorage/root")
 
+
+def createDir(new_dir, current_path):
+    new_dir_path = isDirUnique(new_dir, current_path, 0)
+    os.mkdir(root + new_dir_path)
+    return new_dir_path
 
 
 
