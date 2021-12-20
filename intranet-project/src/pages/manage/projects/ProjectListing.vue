@@ -114,7 +114,7 @@ export default {
   margin: 3px;
   padding: 10px;
   box-sizing: border-box;
-  font-family:AddeleThin ;
+  color:var( --blue1); 
 }
 .row {
   padding-top: 12px;
