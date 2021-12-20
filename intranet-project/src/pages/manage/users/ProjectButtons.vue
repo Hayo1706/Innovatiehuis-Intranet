@@ -48,7 +48,7 @@ export default {
     async handleArchiveProject(project) {
       let action = "archiveren";
       if (project.isarchived) {
-        action = "zichtbaar maken";
+        action = "dearchiveren";
       }
       let answer = confirm(
         'Wil je het project "' + project.name + '" echt ' + action + "?"

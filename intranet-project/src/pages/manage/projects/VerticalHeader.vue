@@ -20,11 +20,7 @@ export default {
   methods: {},
 };
 </script>
-
 <style scoped>
-#projectsHeader {
-  font-family: AddeleSemiBold;
-}
 .headerText {
   font-family: AddeleSemiBold;
   height: 53px;

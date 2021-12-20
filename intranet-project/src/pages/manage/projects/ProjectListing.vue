@@ -114,6 +114,7 @@ export default {
   margin: 3px;
   padding: 10px;
   box-sizing: border-box;
+  font-family:AddeleThin ;
 }
 .row {
   padding-top: 12px;
@@ -129,6 +130,7 @@ export default {
   height: fit-content;
   cursor: pointer;
   width: fit-content;
+  font-family:AddeleSemiBold ;
 }
 .mobileRow {
   height: 53px;

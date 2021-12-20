@@ -1,27 +1,21 @@
 <template>
   <div class="col">
-    <img
-      src="@/assets/images/users_icon.png"
-      class="d-block d-lg-inline"
-      @click="gotoMembers()"
-    />
-    <img
+    <a class="link" @click="gotoMembers()">Leden</a>
+    <a
       v-if="project.isarchived"
       src="@/assets/images/upload.png"
-      class="d-block d-lg-inline"
+      class="link"
       @click="handleArchiveProject(project)"
-    />
-    <img
+    >Dearchiveren</a>
+    <a
       v-else
-      src="@/assets/images/archive.png"
-      class="d-block d-lg-inline"
+      class="link"
       @click="handleArchiveProject(project)"
-    />
-    <img
-      src="@/assets/images/blackx.png"
-      class="d-block d-lg-inline"
+    >Archiveren</a>
+    <a
+      class="link"
       @click="handleDeleteProject(project)"
-    />
+    >Verwijderen</a>
   </div>
 </template>
 
@@ -48,7 +42,7 @@ export default {
     async handleArchiveProject(project) {
       let action = "archiveren";
       if (project.isarchived) {
-        action = "zichtbaar maken";
+        action = "dearchiveren maken";
       }
       let answer = confirm(
         'Wil je het project "' + project.name + '" echt ' + action + "?"
@@ -61,9 +55,11 @@ export default {
 };
 </script>
 <style scoped>
-img {
-  max-width: 70px;
-  margin: 4px;
+.link {
   cursor: pointer;
+  color: var(--gold2);
+  display: block;
+  margin-bottom: 10px;
+  text-decoration: none;
 }
 </style>
