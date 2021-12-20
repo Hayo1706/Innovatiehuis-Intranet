@@ -13,12 +13,12 @@
     ></UsersHeader>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
-        <ProjectsSearchBar
+        <SearchBar
           class="col"
           id="searchBarMobile"
           @searchBarChanged="setSearchTerm"
           v-bind:searchTerm="this.searchTerm"
-        ></ProjectsSearchBar>
+        ></SearchBar>
         <hr />
       </div>
     </div>
@@ -37,12 +37,12 @@
 <script>
 import UserService from "@/services/UserService.js";
 import UsersHeader from "./UsersHeader.vue";
-import ProjectsSearchBar from "./ProjectsSearchBar.vue";
+import SearchBar from "@/shared_components/SearchBar.vue";
 import UserListing from "./UserListing.vue";
 export default {
   components: {
     UsersHeader,
-    ProjectsSearchBar,
+    SearchBar,
     UserListing,
   },
   name: "ProjectsPage",

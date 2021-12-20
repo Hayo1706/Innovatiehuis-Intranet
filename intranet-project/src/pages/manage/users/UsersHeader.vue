@@ -8,21 +8,21 @@
       <div class="col">Projecten</div>
       <div class="col">Screening</div>
       <div class="col">
-        <ProjectsSearchBar
+        <SearchBar
           @searchBarChanged="
             (searchTerm) => $emit('searchBarChanged', searchTerm)
           "
           v-bind:searchTerm="this.searchTerm"
-        ></ProjectsSearchBar>
+        ></SearchBar>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ProjectsSearchBar from "./ProjectsSearchBar.vue";
+import SearchBar from "@/shared_components/SearchBar.vue";
 export default {
-  components: { ProjectsSearchBar },
+  components: { SearchBar },
   name: "UsersHeader",
   props: ["searchTerm"],
   data: function () {

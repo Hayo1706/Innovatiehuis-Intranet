@@ -7,12 +7,12 @@
       <div class="col">Overkoepelend project</div>
       <div class="col">Sub-projecten</div>
       <div class="col">
-        <ProjectsSearchBar
+        <SearchBar
           @searchBarChanged="
             (searchTerm) => $emit('searchBarChanged', searchTerm)
           "
           v-bind:searchTerm="this.searchTerm"
-        ></ProjectsSearchBar>
+        ></SearchBar>
         <ProjectsShowUnArchivedOnlyBox
           @showUnArchivedOnly="(value) => $emit('showUnArchivedOnly', value)"
           v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
@@ -23,10 +23,10 @@
 </template>
 
 <script>
-import ProjectsSearchBar from "./ProjectsSearchBar.vue";
+import SearchBar from "@/shared_components/SearchBar.vue";
 import ProjectsShowUnArchivedOnlyBox from "./ProjectsShowUnArchivedOnlyBox.vue";
 export default {
-  components: { ProjectsSearchBar, ProjectsShowUnArchivedOnlyBox },
+  components: { SearchBar, ProjectsShowUnArchivedOnlyBox },
   name: "ProjectsHeader",
   props: ["searchTerm", "showUnArchivedOnly"],
   data: function () {

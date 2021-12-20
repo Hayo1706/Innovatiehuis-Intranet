@@ -4,15 +4,11 @@
       <div class="row">
         <div class="col-sm-9">Folders View</div>
         <div class="col-sm-2">
-          <div class="input-group">
-            <input
-              id="search-input"
-              type="search"
-              class="form-control"
-              placeholder="Zoeken"
-              v-model="searchTermField"
-            />
-          </div>
+        <SearchBar
+          id="searchBar"
+          @searchBarChanged="setSearchTerm"
+          v-bind:searchTerm="this.searchTerm"
+        ></SearchBar>
         </div>
         <div class="col-sm-1">
           <button
@@ -83,12 +79,16 @@
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
+import SearchBar from "@/shared_components/SearchBar.vue";
 export default {
   name: "ProjectFolderHeader",
+    components: {
+    SearchBar,
+  },
   data: function () {
     return {
-      searchTermField: null,
       newFolderName: null,
+      searchTerm: null,
     };
   },
   methods: {
@@ -113,30 +113,12 @@ export default {
           alert(err);
         });
     },
-    searchTerm: function (val) {
-      this.searchTermField = val;
-    },
     reload() {
       console.log("updating key");
       this.$emit("reload");
     },
-  },
-  watch: {
-    searchTermField: function (val) {
-      //do something when the data changes.
-      if (!val) {
-        this.$emit("searchBarChanged", null);
-      } else {
-        //prohibit searching for whitespace only
-        if (val.trim().length == 0) {
-          this.searchTermField = "";
-          return;
-        }
-        this.$emit("searchBarChanged", this.searchTermField);
-      }
-    },
-    searchTerm: function (val) {
-      this.searchTermField = val;
+    setSearchTerm(value) {
+      this.searchTerm = value;
     },
   },
 };
@@ -150,6 +132,7 @@ export default {
   margin: calc(1vw + 1vh);
   text-align: center;
   background-color: var(--blue1);
+  
 }
 .iconButton {
   border: 0;
@@ -163,5 +146,10 @@ export default {
 .input-group {
   margin: 0.225vh auto;
   height: calc(0.5vw + 0.5vw);
+}
+#searchBar{
+   font-size: calc(1vw + 1vh);
+  font-family: AddeleSemiBold;
+
 }
 </style>
