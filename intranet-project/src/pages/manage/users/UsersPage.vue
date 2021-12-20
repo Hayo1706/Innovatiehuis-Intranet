@@ -7,10 +7,10 @@
     >
       <i class="material-icons pmd-sm">Gebruiker toevoegen</i>
     </button>
-    <ProjectsHeader
+    <UsersHeader
       @searchBarChanged="setSearchTerm"
       v-bind:searchTerm="this.searchTerm"
-    ></ProjectsHeader>
+    ></UsersHeader>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
         <ProjectsSearchBar
@@ -23,15 +23,10 @@
       </div>
     </div>
     <div class="container-fluid">
-      <div v-for="project of filteredProjects" :key="project.name">
-        <ProjectListing
-          class="projectlisting"
-          @removeProject="this.removeProject"
-          @archiveProject="this.archiveProject"
-          v-bind:project="project"
-        ></ProjectListing>
+      <div v-for="user of filteredUsers" :key="user.firstname">
+        <UserListing v-bind:user="user"></UserListing>
       </div>
-      <div id="noresults" v-if="filteredProjects.length == 0">
+      <div id="noresults" v-if="filteredUsers.length == 0">
         Geen resultaten.
       </div>
     </div>
@@ -40,42 +35,26 @@
 </template>
 
 <script>
-import ProjectService from "@/services/ProjectService.js";
-import ProjectListing from "./ProjectListing.vue";
-import ProjectsHeader from "./ProjectsHeader.vue";
+import UserService from "@/services/UserService.js";
+import UsersHeader from "./UsersHeader.vue";
 import ProjectsSearchBar from "./ProjectsSearchBar.vue";
+import UserListing from "./UserListing.vue";
 export default {
   components: {
-    ProjectListing,
-    ProjectsHeader,
+    UsersHeader,
     ProjectsSearchBar,
+    UserListing,
   },
   name: "ProjectsPage",
   data: function () {
     return {
-      projects: [],
+      users: [],
       searchTerm: null,
     };
   },
   methods: {
     setSearchTerm(value) {
       this.searchTerm = value;
-    },
-    removeProject(id) {
-      ProjectService.deleteProject(id)
-        .then(() => {
-          //remove the project from the view
-          this.projects = this.projects.filter(function (item) {
-            return item.projectid !== id;
-          });
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert(err);
-        });
     },
     shouldShow(item) {
       let shouldShow = false;
@@ -86,23 +65,25 @@ export default {
       if (this.searchTerm == null) {
         return true;
       } else {
-        return item.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+        return item.firstname
+          .toLowerCase()
+          .includes(this.searchTerm.toLowerCase());
       }
     },
   },
 
   computed: {
-    filteredProjects() {
-      return this.projects.filter((item) => {
+    filteredUsers() {
+      return this.users.filter((item) => {
         return this.shouldShow(item);
       });
     },
   },
   async created() {
     this.$emit("newHeaderTitle", "Gebruikers - Overzicht");
-    ProjectService.getProjects()
+    UserService.getUsers()
       .then((response) => {
-        this.projects = response;
+        this.users = response;
       })
       .catch((err) => {
         if (err.response) {
@@ -135,8 +116,5 @@ export default {
 #littleSpace {
   height: 60px;
   width: 100%;
-}
-.projectlisting {
-  padding: 10px;
 }
 </style>
