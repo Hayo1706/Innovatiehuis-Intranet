@@ -94,6 +94,90 @@ paths:
       responses:
         200:
           description: Successfully retrieved files at given path
+    post:
+      operationId: src.routes.files.uploadFiles
+        tags:
+          - Files
+        summary: Upload file(s) in directory
+        parameters:
+          - $ref: '#/components/parameters/id'
+          - $ref: '#/components/parameters/path'
+        requestBody:
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+        responses:
+          200:
+            description: Succesfully downloaded file
+    put:
+      operationId: src.routes.files.???????
+        tags:
+          - Files
+        summary: Move file to another directory
+        parameters:
+          - $ref: '#/components/parameters/id'
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  from:
+                    type: string
+                  to:
+                    type: string
+        responses:
+          200:
+            description: Successfully moved file
+  /projects/{id}/file:
+    get:
+      operationId: src.routes.files.??????????
+      tags:
+        - Files
+      summary: Download file
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
+      responses:
+        200:
+          description: Downloaded file
+    delete:
+      operationId: src.routes.files.?????
+        tags:
+          - Files
+        summary: Delete file(s) in directory
+        parameters:
+          - $ref: '#/components/parameters/id'
+          - $ref: '#/components/parameters/path'
+        responses:
+          200:
+            description: Succesfully delete file
+    put:
+      operationId: src.routes.files.?????
+        tags:
+          - Files
+        summary: Update file
+        parameters:
+          - $ref: '#/components/parameters/id'
+          - $ref: '#/components/parameters/path'
+        requestBody:
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+        responses:
+          200:
+            description: Successfully updated file
 
   /projects/{id}/folders:
     get:
@@ -106,6 +190,58 @@ paths:
       responses:
         200:
           description: Successfully retrieved folders at given path
+    put:
+      operationId: src.routes.folders.???????
+        tags:
+          - Files
+        summary: Move folder to another directory
+        parameters:
+          - $ref: '#/components/parameters/id'
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  from:
+                    type: string
+                  to:
+                    type: string
+        responses:
+          200:
+            description: Successfully moved folder
+    delete:
+      operationId: src.routes.folders.?????
+        tags:
+          - Files
+        summary: Delete file(s) in directory
+        parameters:
+          - $ref: '#/components/parameters/id'
+          - $ref: '#/components/parameters/path'
+        responses:
+          200:
+            description: Succesfully delete folder
+    post:
+      operationId: src.routes.folders.?????
+        tags:
+          - Files
+        summary: Place new folder directory
+        parameters:
+          - $ref: '#/components/parameters/id'
+          - $ref: '#/components/parameters/path'
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+        responses:
+          200:
+            description: Succesfully add new folder
 
   /projects/{id}/announcements:
     get:
@@ -322,6 +458,12 @@ components:
       description: The id of the object
       schema:
         type: string
+    path:
+      in: query
+        name: path
+        schema:
+          type: string
+        description: The path to be used
 
   schemas:
     Project:
