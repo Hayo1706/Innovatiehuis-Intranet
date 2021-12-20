@@ -14,6 +14,8 @@ var ProjectService = function () {
     }
     async function getProjectById(projectid) {
         const { data } = await axiosClient.get(`/projects/${projectid}`, { timeout: 2000 });
+        data.forEach(project => { project.createdat = jsonToJsDate(project.createdat) });
+        data.forEach(project => { project.lastupdated = jsonToJsDate(project.lastupdated) });
         return data;
     }
     async function deleteProject(id) {
@@ -35,7 +37,7 @@ var ProjectService = function () {
         getProjectById,
         deleteProject,
         updateProject,
-        getProjectsByUser,      
+        getProjectsByUser,
     }
 
 

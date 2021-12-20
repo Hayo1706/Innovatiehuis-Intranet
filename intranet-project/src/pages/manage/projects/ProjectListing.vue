@@ -1,5 +1,5 @@
 <template>
-  <div class="project-listing">
+  <div id="project-listing">
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
@@ -109,9 +109,11 @@ export default {
 </script>
 
 <style scoped>
-.project-listing {
+#project-listing {
   background-color: var(--blue3);
   margin: 3px;
+  padding: 10px;
+  box-sizing: border-box;
 }
 .row {
   padding-top: 12px;
@@ -125,12 +127,10 @@ export default {
   padding-left: 10px;
   padding-right: 10px;
   height: fit-content;
-  margin-bottom: 10px;
-  box-sizing: border-box;
   cursor: pointer;
   width: fit-content;
 }
 .mobileRow {
-  height: 50px;
+  height: 53px;
 }
 </style>

@@ -184,7 +184,5 @@ export default {
   margin-top: 10px;
   color: white;
 }
-.projectlisting {
-  padding: 10px;
-}
+
 </style>

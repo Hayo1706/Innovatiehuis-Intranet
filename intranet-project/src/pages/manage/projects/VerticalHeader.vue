@@ -27,6 +27,6 @@ export default {
 }
 .headerText {
   font-family: AddeleSemiBold;
-  height: 50px;
+  height: 53px;
 }
 </style>

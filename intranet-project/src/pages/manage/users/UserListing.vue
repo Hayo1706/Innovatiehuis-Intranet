@@ -1,11 +1,11 @@
 <template>
-  <div class="user-listing">
+  <div id="user-listing">
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col d-block d-lg-none">
         <div class="userButton mobileRow" @click="onClick()">
-          {{ user.firstname }}
+          {{ user.firstname + " " + user.lastname }}
         </div>
         <div class="mobileRow">
           {{
@@ -19,15 +19,26 @@
             })
           }}
         </div>
+        <div class="mobileRow">
+          {{
+            user.lastseen.toLocaleString("nl-NL", {
+              day: "numeric",
+              month: "numeric",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+            })
+          }}
+        </div>
         <div class="mobileRow"></div>
-        <div class="mobileRow"></div>
-        <div class="mobileRow"></div>
+        <div class="mobileRow">{{ user.amountprojects }}</div>
         <div class="mobileRow"></div>
       </div>
 
       <!-- large screens-->
       <div class="col d-none d-lg-block" @click="onClick()">
-        <div class="userButton">{{ user.firstname }}</div>
+        <div class="userButton">{{ user.firstname + " " + user.lastname }}</div>
       </div>
       <div class="col d-none d-lg-block">
         {{
@@ -41,9 +52,20 @@
           })
         }}
       </div>
+      <div class="col d-none d-lg-block">
+        {{
+          user.lastseen.toLocaleString("nl-NL", {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+          })
+        }}
+      </div>
       <div class="col d-none d-lg-block"></div>
-      <div class="col d-none d-lg-block"></div>
-      <div class="col d-none d-lg-block"></div>
+      <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
       <div class="col d-none d-lg-block"></div>
 
       <div class="col"></div>
@@ -69,10 +91,11 @@ export default {
 </script>
 
 <style scoped>
-.user-listing {
+#user-listing {
   background-color: var(--blue3);
   margin: 3px;
   padding: 10px;
+  box-sizing: border-box;
 }
 .row {
   padding-top: 12px;
@@ -86,12 +109,10 @@ export default {
   padding-left: 10px;
   padding-right: 10px;
   height: fit-content;
-  margin-bottom: 10px;
-  box-sizing: border-box;
   cursor: pointer;
   width: fit-content;
 }
 .mobileRow {
-  height: 50px;
+  height: 53px;
 }
 </style>
