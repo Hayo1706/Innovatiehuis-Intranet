@@ -65,7 +65,7 @@ export default {
       if (this.searchTerm == null) {
         return true;
       } else {
-        return item.firstname
+        return (item.firstname +" "+ item.lastname)
           .toLowerCase()
           .includes(this.searchTerm.toLowerCase());
       }
