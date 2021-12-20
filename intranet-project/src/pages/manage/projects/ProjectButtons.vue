@@ -1,5 +1,6 @@
 <template>
   <div class="col">
+    <div id="archivedText" v-if="project.isarchived">Gearchiveerd</div>
     <a class="link" @click="gotoMembers()">Leden</a>
     <a
       v-if="project.isarchived"
@@ -61,5 +62,9 @@ export default {
   display: block;
   margin-bottom: 10px;
   text-decoration: none;
+}
+#archivedText{
+    margin-bottom: 10px;
+    color:purple;
 }
 </style>
