@@ -17,7 +17,7 @@ var FilestorageService = function () {
     }
 
     async function createFolder(projectid, new_dir_name, current_path) {
-        const { data } = await axiosClient.post(`/projects/${projectid}/folders`, { new_dir_name, current_path }, { timeout: 2000 });
+        const { data } = await axiosClient.delete(`/projects/${projectid}/folders`, { new_dir_name, current_path }, { timeout: 2000 });
         return data;
     }
 

@@ -64,36 +64,36 @@ paths:
         200:
           description: Project deleted
 
-#  /projects/upload:
-#    post:
-#      operationId: src.routes.files.uploadFiles
-#      tags:
-#        - Files
-#      summary: Uploads file(s) to filestorage
-#      requestBody:
-#        required: true
-#        content:
-#          multipart/form-data:
-#            schema:
-#              type: object
-#              properties:
-#                files:
-#                  type: array
-#      responses:
-#        200:
-#          description: Successfully uploaded a file
-#
-#  /projects/{id}/files:
-#    get:
-#      operationId: src.routes.files.getFilesInPath
-#      tags:
-#        - Files
-#      summary: Returns file(s) in directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#      responses:
-#        200:
-#          description: Successfully retrieved files at given path
+  /projects/upload:
+    post:
+      operationId: src.routes.files.uploadFiles
+      tags:
+        - Files
+      summary: Uploads file(s) to filestorage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+      responses:
+        200:
+          description: Successfully uploaded a file
+
+  /projects/{id}/files:
+    get:
+      operationId: src.routes.files.getFilesInPath
+      tags:
+        - Files
+      summary: Returns file(s) in directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully retrieved files at given path
 #    post:
 #      operationId: src.routes.files.?????????
 #      tags:
@@ -179,17 +179,17 @@ paths:
 #        200:
 #          description: Successfully updated file
 #
-#  /projects/{id}/folders:
-#    get:
-#      operationId: src.routes.folders.getFoldersInPath
-#      tags:
-#        - Folders
-#      summary: Returns folder(s) in directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#      responses:
-#        200:
-#          description: Successfully retrieved folders at given path
+  /projects/{id}/folders:
+    get:
+      operationId: src.routes.folders.getFoldersInPath
+      tags:
+        - Folders
+      summary: Returns folder(s) in directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully retrieved folders at given path
 #    put:
 #      operationId: src.routes.folders.???????
 #      tags:
@@ -211,37 +211,37 @@ paths:
 #      responses:
 #        200:
 #          description: Successfully moved folder
-#    delete:
-#      operationId: src.routes.folders.?????
-#      tags:
-#        - Files
-#      summary: Delete file(s) in directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      responses:
-#        200:
-#          description: Succesfully delete folder
-#    post:
-#      operationId: src.routes.folders.?????
-#      tags:
-#        - Files
-#      summary: Place new folder directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              type: object
-#              properties:
-#                name:
-#                  type: string
-#      responses:
-#        200:
-#          description: Succesfully add new folder
+    delete:
+      operationId: src.routes.folders.deleteDir
+      tags:
+        - Folders
+      summary: Delete file(s) in directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
+      responses:
+        200:
+          description: Succesfully delete folder
+    post:
+      operationId: src.routes.folders.createDirFromRequest
+      tags:
+        - Folders
+      summary: Place new folder directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        200:
+          description: Succesfully add new folder
 
   /projects/{id}/announcements:
     get:
