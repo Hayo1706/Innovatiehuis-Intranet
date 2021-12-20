@@ -1,5 +1,5 @@
 import axios from 'axios';
-//import { jsonToJsDate } from './DataConverter';
+import { jsonToJsDate } from './DataConverter';
 
 var UserService = function () {
     const axiosClient = axios.create({
@@ -8,16 +8,24 @@ var UserService = function () {
 
     async function getUsers() {
         const { data } = await axiosClient.get('/users', { timeout: 2000 });
+        data.forEach(user => { user.createdat = jsonToJsDate(user.createdat) });
+        data.forEach(user => {
+            user.lastseen = jsonToJsDate(user.lastseen)
+        });
         return data;
     }
-    async function getUsertById(userid) {
+    async function getUserById(userid) {
         const { data } = await axiosClient.get(`'/users/${userid}`, { timeout: 2000 });
+        data.forEach(user => { user.createdat = jsonToJsDate(user.createdat) });
+        data.forEach(user => {
+            user.lastseen = jsonToJsDate(user.lastseen)
+        });
         return data;
     }
 
     return {
         getUsers,
-        getUsertById
+        getUserById
     }
 
 }

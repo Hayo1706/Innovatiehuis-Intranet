@@ -19,17 +19,17 @@
         method="POST"
         enctype="multipart/form-data"
       >
-      <input type="file" name="files" multiple="true" />
-      <input type="hidden" name="projectid" :value= this.projectid />
-      <input type="hidden" name="path" value="" />
-      <input type="submit"/>
+        <input type="file" name="files" multiple="true" />
+        <input type="hidden" name="projectid" :value= this.projectid />
+        <input type="hidden" name="path" value="" />
+        <input type="submit"/>
     </form>
    
     </div>
 </template>
 
 <script>
-import ProjectService from "@/services/ProjectService.js";
+import FilestorageService from "@/services/FilestorageService.js";
 export default {
   name: "FilesView",
   props: [
@@ -42,7 +42,7 @@ export default {
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");
-    ProjectService.getFilesOfProject(this.$route.params.id)
+    FilestorageService.getFilesOfProject(this.$route.params.id)
       .then((response) => {
         this.files = response;
       })

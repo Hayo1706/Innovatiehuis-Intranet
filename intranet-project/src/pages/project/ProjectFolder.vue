@@ -1,5 +1,5 @@
 <template>
-    <div class="projectFolder" @click="goToDirectory(this.path)">
+    <div class="projectFolder" @click="goToDirectory(this.path)" v-on:click.right="deleteDirectory(true)">
         <img class="foldersImage" v-if="this.shared != 'yes'" src=".\..\..\assets\images\folder.png"/> 
         <img class="foldersImage" v-if="this.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
         {{this.naam}}
@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import FilestorageService from "@/services/FilestorageService.js";
 export default {
   name: "ProjectFolder",
   props: {
@@ -16,12 +17,31 @@ export default {
   },
   data: function () {
     return {
+      
     };
   },
   methods: {
+    deleteDirectory(confirmation){
+      FilestorageService.deleteFolder(
+        this.$route.params.id, 
+        this.naam,
+        this.$route.fullPath,
+        confirmation
+      ).then((response) => {
+          alert(response);
+          console.log(response);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert(err);
+        });
+    },
     goToDirectory(path) {
        this.$router.push(this.$route.params.id + "/" + path);
     },
+
   }
 };
 </script>

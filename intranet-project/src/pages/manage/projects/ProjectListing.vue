@@ -1,5 +1,5 @@
 <template>
-  <div class="project-listing">
+  <div id="project-listing">
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
@@ -28,8 +28,15 @@
             })
           }}
         </div>
-        <div class="mobileRow"><br /><span @click="onParrentClick()" class="projectButton" v-if="project.parentname">{{project.parentname }}</span></div>
-        <div class="mobileRow">{{project.amountsubprojects }}</div>
+        <div class="mobileRow">
+          <br /><span
+            @click="onParrentClick()"
+            class="projectButton"
+            v-if="project.parentname"
+            >{{ project.parentname }}</span
+          >
+        </div>
+        <div class="mobileRow">{{ project.amountsubprojects }}</div>
       </div>
 
       <!-- large screens-->
@@ -59,8 +66,15 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-block"><span @click="onParrentClick()" class="projectButton" v-if="project.parentname">{{project.parentname }}</span></div>
-      <div class="col d-none d-lg-block">{{project.amountsubprojects }}</div>
+      <div class="col d-none d-lg-block">
+        <span
+          @click="onParrentClick()"
+          class="projectButton"
+          v-if="project.parentname"
+          >{{ project.parentname }}</span
+        >
+      </div>
+      <div class="col d-none d-lg-block">{{ project.amountsubprojects }}</div>
 
       <div class="col">
         <ProjectButtons
@@ -87,17 +101,20 @@ export default {
     onClick() {
       this.$router.push("/project/" + this.project.projectid);
     },
-    onParrentClick(){
+    onParrentClick() {
       this.$router.push("/project/" + this.project.parentid);
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
-.project-listing {
+#project-listing {
   background-color: var(--blue3);
   margin: 3px;
+  padding: 10px;
+  box-sizing: border-box;
+  color:var( --blue1); 
 }
 .row {
   padding-top: 12px;
@@ -111,11 +128,11 @@ export default {
   padding-left: 10px;
   padding-right: 10px;
   height: fit-content;
-  box-sizing: border-box;
   cursor: pointer;
   width: fit-content;
+  font-family:AddeleSemiBold ;
 }
 .mobileRow {
-  height: 50px;
+  height: 53px;
 }
 </style>

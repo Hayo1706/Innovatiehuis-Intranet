@@ -3,9 +3,7 @@
     <div class="headerText">Gebruiker:</div>
     <div class="headerText">Geregistreerd:</div>
     <div class="headerText">Laatst gezien:</div>
-    <div class="headerText">
-      Rol: 
-    </div>
+    <div class="headerText">Rol:</div>
     <div class="headerText">projecten:</div>
     <div class="headerText">screening:</div>
   </div>
@@ -27,6 +25,6 @@ export default {
 }
 .headerText {
   font-family: AddeleSemiBold;
-  height: 50px;
+  height: 53px;
 }
 </style>

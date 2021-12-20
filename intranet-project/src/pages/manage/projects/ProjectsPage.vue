@@ -16,12 +16,12 @@
     ></ProjectsHeader>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
-        <ProjectsSearchBar
+        <SearchBar
           class="col"
           id="searchBarMobile"
           @searchBarChanged="setSearchTerm"
           v-bind:searchTerm="this.searchTerm"
-        ></ProjectsSearchBar>
+        ></SearchBar>
         <ProjectsShowUnArchivedOnlyBox
           id="showunarchivedonlyboxMobile"
           class="col"
@@ -52,13 +52,13 @@
 import ProjectService from "@/services/ProjectService.js";
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
-import ProjectsSearchBar from "./ProjectsSearchBar.vue";
+import SearchBar from "@/shared_components/SearchBar.vue";
 import ProjectsShowUnArchivedOnlyBox from "./ProjectsShowUnArchivedOnlyBox.vue";
 export default {
   components: {
     ProjectListing,
     ProjectsHeader,
-    ProjectsSearchBar,
+    SearchBar,
     ProjectsShowUnArchivedOnlyBox,
   },
   name: "ProjectsPage",
@@ -184,7 +184,7 @@ export default {
   margin-top: 10px;
   color: white;
 }
-.projectlisting {
-  padding: 10px;
-}
+
+
+
 </style>

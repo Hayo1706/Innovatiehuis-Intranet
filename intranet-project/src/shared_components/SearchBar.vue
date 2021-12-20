@@ -11,7 +11,7 @@
 </template>
 <script>
 export default {
-  name: "ProjectsSearchBar",
+  name: "SearchBar",
   props: ["searchTerm"],
   data: function () {
     return { searchTermField: null };

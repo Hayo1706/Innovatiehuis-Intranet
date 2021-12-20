@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import ProjectService from "@/services/ProjectService.js";
+import FilestorageService from "@/services/FilestorageService.js";
 import ProjectFolderHeader from "./ProjectFolderHeader.vue";
 import ProjectFolder from "./ProjectFolder.vue";
 export default {
@@ -39,7 +39,7 @@ export default {
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");
-    ProjectService.getFoldersOfProject(this.$route.params.id)
+    FilestorageService.getFoldersOfProject(this.$route.params.id)
       .then((response) => {
         this.folders = response;
       })

@@ -1,24 +1,15 @@
 <template>
-  <div class="project-listing">
+  <div id="user-listing">
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col d-block d-lg-none">
-        <div class="projectButton mobileRow" @click="onClick()">
-          {{ project.name }}
+        <div class="userButton mobileRow" @click="onClick()">
+          {{ user.firstname + " " + user.lastname }}
         </div>
         <div class="mobileRow">
           {{
-            project.createdat.toLocaleString("nl-NL", {
-              day: "numeric",
-              month: "numeric",
-              year: "numeric",
-            })
-          }}
-        </div>
-        <div class="mobileRow">
-          {{
-            project.lastupdated.toLocaleString("nl-NL", {
+            user.createdat.toLocaleString("nl-NL", {
               day: "numeric",
               month: "numeric",
               year: "numeric",
@@ -28,28 +19,30 @@
             })
           }}
         </div>
-        <div class="mobileRow"><br /><span @click="onParrentClick()" class="projectButton" v-if="project.parentname">{{project.parentname }}</span></div>
-        <div class="mobileRow">{{project.amountsubprojects }}</div>
+        <div class="mobileRow">
+          {{
+            user.lastseen.toLocaleString("nl-NL", {
+              day: "numeric",
+              month: "numeric",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+            })
+          }}
+        </div>
+        <div class="mobileRow"></div>
+        <div class="mobileRow">{{ user.amountprojects }}</div>
+        <div class="mobileRow"></div>
       </div>
 
       <!-- large screens-->
       <div class="col d-none d-lg-block" @click="onClick()">
-        <div class="projectButton">
-          {{ project.name }}
-        </div>
+        <div class="userButton">{{ user.firstname + " " + user.lastname }}</div>
       </div>
       <div class="col d-none d-lg-block">
         {{
-          project.createdat.toLocaleString("nl-NL", {
-            day: "numeric",
-            month: "numeric",
-            year: "numeric",
-          })
-        }}
-      </div>
-      <div class="col d-none d-lg-block">
-        {{
-          project.lastupdated.toLocaleString("nl-NL", {
+          user.createdat.toLocaleString("nl-NL", {
             day: "numeric",
             month: "numeric",
             year: "numeric",
@@ -59,50 +52,56 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-block"><span @click="onParrentClick()" class="projectButton" v-if="project.parentname">{{project.parentname }}</span></div>
-      <div class="col d-none d-lg-block">{{project.amountsubprojects }}</div>
-
-      <div class="col">
-        <ProjectButtons
-          @removeProject="(id) => $emit('removeProject', id)"
-          @archiveProject="(_project) => $emit('archiveProject', _project)"
-          v-bind:project="project"
-        ></ProjectButtons>
+      <div class="col d-none d-lg-block">
+        {{
+          user.lastseen.toLocaleString("nl-NL", {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+          })
+        }}
       </div>
+      <div class="col d-none d-lg-block"></div>
+      <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
+      <div class="col d-none d-lg-block"></div>
+
+      <div class="col"></div>
     </div>
   </div>
 </template>
 
 <script>
 import VerticalHeader from "./VerticalHeader.vue";
-import ProjectButtons from "./ProjectButtons.vue";
 export default {
-  props: ["project"],
-  components: { VerticalHeader, ProjectButtons },
-  name: "ProjectListing",
+  props: ["user"],
+  components: { VerticalHeader },
+  name: "UserListing",
   data: function () {
     return {};
   },
   methods: {
     onClick() {
-      this.$router.push("/project/" + this.project.projectid);
+      this.$router.push("/user/" + this.user.userid);
     },
-    onParrentClick(){
-      this.$router.push("/project/" + this.project.parentid);
-    }
   },
 };
 </script>
 
 <style scoped>
-.project-listing {
+#user-listing {
   background-color: var(--blue3);
   margin: 3px;
+  padding: 10px;
+  box-sizing: border-box;
+    color:var( --blue1); 
 }
 .row {
   padding-top: 12px;
 }
-.projectButton {
+.userButton {
   font-weight: bold;
   background-color: var(--gold2);
   color: var(--blue1);
@@ -111,11 +110,11 @@ export default {
   padding-left: 10px;
   padding-right: 10px;
   height: fit-content;
-  box-sizing: border-box;
   cursor: pointer;
   width: fit-content;
+  font-family:AddeleSemiBold ;
 }
 .mobileRow {
-  height: 50px;
+  height: 53px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="projectsHeader" class="container-fluid d-none d-lg-block">
+  <div id="usersHeader" class="container-fluid d-none d-lg-block">
     <div class="row">
       <div class="col">Gebruiker</div>
       <div class="col">Geregistreerd</div>
@@ -8,22 +8,22 @@
       <div class="col">Projecten</div>
       <div class="col">Screening</div>
       <div class="col">
-        <ProjectsSearchBar
+        <SearchBar
           @searchBarChanged="
             (searchTerm) => $emit('searchBarChanged', searchTerm)
           "
           v-bind:searchTerm="this.searchTerm"
-        ></ProjectsSearchBar>
+        ></SearchBar>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ProjectsSearchBar from "./ProjectsSearchBar.vue";
+import SearchBar from "@/shared_components/SearchBar.vue";
 export default {
-  components: { ProjectsSearchBar },
-  name: "ProjectsHeader",
+  components: { SearchBar },
+  name: "UsersHeader",
   props: ["searchTerm"],
   data: function () {
     return {};
@@ -33,7 +33,7 @@ export default {
 </script>
 
 <style scoped>
-#projectsHeader {
+#usersHeader {
   width: 100%;
   box-sizing: border-box;
   min-height: 10vh;
@@ -49,7 +49,7 @@ export default {
   justify-content: space-between;
   flex-basis: 100%;
   gap: 60px;
-  font-family: AddeleSemiBold;
+  font-family: Monserrat;
 }
 .input-group {
   width: 90%;
