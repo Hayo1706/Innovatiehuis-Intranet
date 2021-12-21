@@ -41,34 +41,35 @@ def getUniqueDirPath(new_dir, current_path, count):
         return current_path + new_dir + " (" + str(count) + ")"
 
 def createDirFromRequest(id):
-    current_path = connexion.request.json['current_path']
-    current_path = current_path.split("/project/")[1] + "/"
+    path_in_project = connexion.request.values.get('path')
+    if path_in_project == " ":
+        path_in_project = ""
 
-    new_dir_name = connexion.request.json['new_dir_name']
+    full_path = str(id) + "/" + path_in_project
+
+    new_dir_name = connexion.request.json['name']
     new_dir_name = secureFolderName(new_dir_name)
 
-    new_dir_path = getUniqueDirPath(new_dir_name, current_path, 0)
+    new_dir_path = getUniqueDirPath(new_dir_name, full_path, 0)
 
-    if current_path == None or new_dir_name == None:
+    if full_path == None or new_dir_name == None:
+        print("Failed to create new folder")
         return make_response("Failed to create new folder", 400)
-    print(current_path)
 
-    print(new_dir_path)
     os.mkdir(root + new_dir_path)
+    print("Succesfully created new folder")
     return make_response("Succesfully created new folder", 200)
 
 def deleteDir(id):
-    current_path = connexion.request.json['current_path']
-    current_path = current_path.split("/project/")[1] + "/"
-    dir_name = connexion.request.json['dir_name']
-    confirmation = connexion.request.json['confirmation']
-
-    if dir_exists(root + current_path + dir_name) and confirmation == True:
-        os.rmdir(root + current_path + dir_name)
+    #TODO get root path of project by id
+    root_path_project = str(id) + "/"
+    path_to_delete = connexion.request.values.get('path')
+    if dir_exists(root + root_path_project + path_to_delete):
+        os.rmdir(root + root_path_project + path_to_delete)
+        print("Succesfully deleted folder")
         return make_response("Succesfully deleted folder", 200)
-        print("yes")
-
     else:
+        print("Folder could not be deleted, please refresh.")
         return make_response("Folder could not be deleted, please refresh.", 400)
 
 def createDir(new_dir, current_path):
