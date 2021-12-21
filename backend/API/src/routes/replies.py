@@ -13,19 +13,29 @@ def read_all(id):
 
 
 def post(id):
-    body = connexion.request.json['reply']
+    try:
+        body = connexion.request.json['reply']
+        userid = body['userid']
+        content = body['content']
+    except KeyError:
+        return make_response("Invalid body", 404)
     query_update(
         "INSERT INTO replies (announcementid, userid, content) VALUES (%(id)s, %(userid)s, %(content)s)",
-        {'id': id, 'userid': body['userid'], 'content': body['content']})
+        {'id': id, 'userid': userid, 'content': content})
     return make_response("Reply to announcement={announcementid} successfully posted".format(announcementid=str(id)), 200)
 
 
 def edit(id):
     is_int(id)
-    body = connexion.request.json['reply']
+    try:
+        body = connexion.request.json['reply']
+        content = body['content']
+    except KeyError:
+        return make_response("Invalid body", 404)
+
     query_update(
         "UPDATE replies SET content=%(content)s WHERE replyid=%(id)s",
-        {'id': id, 'content': body['content']})
+        {'id': id, 'content': content})
     return make_response("Reply {id} successfully edited".format(id=str(id)), 200)
 
 

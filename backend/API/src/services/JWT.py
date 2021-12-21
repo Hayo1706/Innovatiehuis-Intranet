@@ -15,8 +15,12 @@ JWT_ALGORITHM = 'HS256'
 
 
 def generate_token():
-    email = connexion.request.json['email']
-    send_password = connexion.request.json['password']
+    try:
+        dict = connexion.request.json['loginAttempt']
+        email = dict['email']
+        send_password = dict['password']
+    except KeyError:
+        return make_response("Invalid body", 404)
 
     id = query("SELECT userid FROM users WHERE email =%(email)s", {'email': email})
     if len(id) == 0:
