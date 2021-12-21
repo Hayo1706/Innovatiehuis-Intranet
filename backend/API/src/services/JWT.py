@@ -4,7 +4,7 @@ import connexion
 import six
 from werkzeug.exceptions import Unauthorized
 from ..services.helper_functions import *
-
+import datetime
 
 from jose import JWTError, jwt
 
@@ -12,6 +12,9 @@ JWT_ISSUER = 'innovatieplatform'
 JWT_SECRET = 'change_this'
 JWT_LIFETIME_SECONDS = 600
 JWT_ALGORITHM = 'HS256'
+
+ATTEMPTS_BEFORE_COOLDOWN = 6
+COOLDOWN_TIME_SECONDS = 60
 
 
 def generate_token():
@@ -25,10 +28,20 @@ def generate_token():
     id = query("SELECT userid FROM users WHERE email =%(email)s", {'email': email})
     if len(id) == 0:
         return make_response("Wrong password or username", 401)
-
     id = id[0]['userid']
+    incorrect = query("SELECT lastwrongpassword,wrongpasswordcount FROM users WHERE userid =%(userid)s", {'userid': id})[0]
+
+    if int(incorrect['wrongpasswordcount']) >= ATTEMPTS_BEFORE_COOLDOWN:
+        if int((datetime.datetime.now() - incorrect['lastwrongpassword']).total_seconds()) > COOLDOWN_TIME_SECONDS:
+            query_update("UPDATE users SET wrongpasswordcount = 0 where userid = %(userid)s", {'userid': id})
+        else:
+            return make_response("Acces Denied, your account is blocked for " +
+                                 str(int((datetime.datetime.now() - incorrect['lastwrongpassword']).total_seconds())-ATTEMPTS_BEFORE_COOLDOWN) +
+                                 " more seconds", 401)
     password = query("SELECT hash FROM users WHERE userid =%(id)s", {'id': id})[0]['hash']
     if not password == send_password:
+        query_update("UPDATE users SET lastwrongpassword = NOW(),wrongpasswordcount = wrongpasswordcount + 1 where "
+                     "userid = %(userid)s", {'userid': id})
         return make_response("Wrong password or username", 401)
 
     timestamp = _current_timestamp()
