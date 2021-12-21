@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   description: This is the openapi file that goes with our server code
   version: "1.0.0"
@@ -6,6 +6,7 @@ info:
 
 servers:
   - url: http://127.0.0.1:5000/api
+
 
 
   # Paths supported by the server application
@@ -450,6 +451,35 @@ paths:
                 $ref: '#/components/schemas/Project'
         404:
           description: Specified user not found
+  /auth:
+    post:
+      operationId: src.services.JWT.generate_token
+      tags:
+        - Authorization
+      summary: User requests token
+      security: [
+        {}
+      ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: JWT token
+          content:
+            'text/plain':
+              schema:
+                type: string
+        401:
+          description: Unauthorized
 
 components:
   parameters:
@@ -481,7 +511,6 @@ components:
           type: string
         lastupdated:
           type: string
-
     Files:
       type: object
       required:
@@ -489,3 +518,21 @@ components:
       properties:
         files:
           type: array
+  securitySchemes:
+    oAuthSecurity: # <---- arbitrary name
+      type: oauth2
+      description: This API uses OAuth 2 with the password grant flow.
+      x-tokenInfoFunc: src.services.JWT.decode_token
+      flows:
+        password: # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+          tokenUrl: /authorize
+          scopes:
+            admin: Admins
+            moderator: Moderators
+            user: Students
+
+
+# Step 2 - apply security globally...
+security:
+  - oAuthSecurity:
+      - admin
