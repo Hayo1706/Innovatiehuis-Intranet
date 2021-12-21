@@ -1,4 +1,5 @@
 import os
+import shutil
 import json
 
 import connexion
@@ -20,7 +21,7 @@ def dir_exists(path):
         return False
 
 def getFoldersInPath(id):
-    requested_path = root + id
+    requested_path = root + getProjectPath(id) + "/"
     list_of_files = []
     if path_exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)
@@ -40,12 +41,71 @@ def getUniqueDirPath(new_dir, current_path, count):
             return getUniqueDirPath(new_dir, current_path, count + 1)
         return current_path + new_dir + " (" + str(count) + ")"
 
+def checkFolderNameValid(path, new_name):
+    if dir_exists(path + "/" + new_name):
+        return False
+    return True
+
+
+
+def checkFolderPutRequest(id):
+    new_name = connexion.request.json['rename'] # can be any string
+    source_path = connexion.request.json['from'] # must be put as /example/example
+
+    source_path = root + getProjectPath(id) + source_path
+
+    if len(new_name) == 0 or new_name == None:
+        target_path = connexion.request.json['to'] # must be put as /example/example
+        target_path = root + getProjectPath(id) + target_path
+        moveDirFromRequest(id, source_path, target_path)
+    else:
+        changeFolderName(new_name, source_path)
+
+
+def changeFolderName(new_name, source_path):
+    new_name = secureFolderName(new_name)
+    if dir_exists(source_path):
+        sub_path = source_path.rsplit("/", 1)[0]
+
+        if checkFolderNameValid(sub_path, new_name):
+            new_path = sub_path + "/" + new_name
+            os.rename(source_path, new_path)
+            return make_response("Succesfully renamed folder", 200)
+
+        return make_response("Failed to rename folder", 400)
+
+    else:
+
+        return make_response("Failed to rename folder", 400)
+
+def moveDirFromRequest(id, source_path, target_path):
+
+    print(source_path)
+    if dir_exists(source_path) and dir_exists(target_path):
+        try:
+            shutil.move(source_path, target_path)
+        except:
+            return make_response("Failed to move folder", 400)
+
+        return make_response("Succesfully move folder", 200)
+
+    return make_response("Failed to moved folder", 400)
+
+
+def getProjectPath(id):
+    return str(id)
+
+
+def isDirMoveValid(from_path, to_path):
+
+    return
+
 def createDirFromRequest(id):
     path_in_project = connexion.request.values.get('path')
-    if path_in_project == " ":
+    if path_in_project == "/":
         path_in_project = ""
 
-    full_path = str(id) + "/" + path_in_project
+    full_path = getProjectPath(id) + "/" + path_in_project
 
     new_dir_name = connexion.request.json['name']
     new_dir_name = secureFolderName(new_dir_name)
@@ -62,7 +122,7 @@ def createDirFromRequest(id):
 
 def deleteDir(id):
     #TODO get root path of project by id
-    root_path_project = str(id) + "/"
+    root_path_project = getProjectPath(id) + "/"
     path_to_delete = connexion.request.values.get('path')
     if dir_exists(root + root_path_project + path_to_delete):
         os.rmdir(root + root_path_project + path_to_delete)

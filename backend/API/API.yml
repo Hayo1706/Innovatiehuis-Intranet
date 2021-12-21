@@ -190,32 +190,34 @@ paths:
       responses:
         200:
           description: Successfully retrieved folders at given path
-#    put:
-#      operationId: src.routes.folders.???????
-#      tags:
-#        - Files
-#      summary: Move folder to another directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              type: object
-#              properties:
-#                from:
-#                  type: string
-#                to:
-#                  type: string
-#      responses:
-#        200:
-#          description: Successfully moved folder
+    put:
+      operationId: src.routes.folders.checkFolderPutRequest
+      tags:
+        - Folders
+      summary: Move folder to another directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+                rename:
+                  type: string
+      responses:
+        200:
+          description: Successfully moved folder
     delete:
       operationId: src.routes.folders.deleteDir
       tags:
         - Folders
-      summary: Delete file(s) in directory
+      summary: Delete folder and file(s) in directory
       parameters:
         - $ref: '#/components/parameters/id'
         - $ref: '#/components/parameters/path'
