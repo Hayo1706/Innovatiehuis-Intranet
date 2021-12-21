@@ -1,10 +1,8 @@
-import axios from 'axios';
+import axiosClient from './AxiosClient';
 import { jsonToJsDate } from './DataConverter';
 
 var AnouncementService = function () {
-    const axiosClient = axios.create({
-        baseURL: 'http://127.0.0.1:5000/api'
-    });
+
 
 
     async function getAnnouncementsByProject(projectid) {

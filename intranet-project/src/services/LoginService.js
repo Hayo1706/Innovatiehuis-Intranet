@@ -1,12 +1,11 @@
-import axios from 'axios';
+import axiosClient from './AxiosClient';
 
 var LoginService = function () {
-    const axiosClient = axios.create({
-        baseURL: 'http://127.0.0.1:5000/api'
-    });
+
 
     async function attemptLogin(loginAttempt) {
         const { data } = await axiosClient.post(`/auth`, { loginAttempt }, { timeout: 2000 });
+        localStorage.setItem("token", data);
         return data;
     }
 

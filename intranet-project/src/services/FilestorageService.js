@@ -1,17 +1,15 @@
-import axios from 'axios';
+import axiosClient from './AxiosClient';
 //import { jsonToJsDate } from './DataConverter';
 
 var FilestorageService = function () {
-    const axiosClient = axios.create({
-        baseURL: 'http://127.0.0.1:5000/api'
-    });
 
-    async function getFoldersOfProject(projectid){
+
+    async function getFoldersOfProject(projectid) {
         const { data } = await axiosClient.get(`/projects/${projectid}/folders`, { timeout: 2000 });
         return data;
     }
 
-    async function getFilesOfProject(projectid){
+    async function getFilesOfProject(projectid) {
         const { data } = await axiosClient.get(`/projects/${projectid}/files`, { timeout: 2000 });
         return data;
     }
@@ -29,11 +27,11 @@ var FilestorageService = function () {
 
 
 
-    async function downloadFile(projectid, requested_path){
+    async function downloadFile(projectid, requested_path) {
         const { data } = await axiosClient.get(`/projects/${projectid}/file`, { requested_path }, { timeout: 2000 })
         return data
     }
-    async function uploadFile(projectid, current_path, file){
+    async function uploadFile(projectid, current_path, file) {
         const { data } = await axiosClient.post(`/projects/${projectid}/file`, { current_path, file }, { timeout: 2000 })
         return data
     }
@@ -50,4 +48,4 @@ var FilestorageService = function () {
 
 
 }
-export default FilestorageService ();
+export default FilestorageService();

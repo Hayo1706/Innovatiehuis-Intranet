@@ -1,10 +1,8 @@
-import axios from 'axios';
+import axiosClient from './AxiosClient';
 import { jsonToJsDate } from './DataConverter';
 
 var ProjectService = function () {
-    const axiosClient = axios.create({
-        baseURL: 'http://127.0.0.1:5000/api'
-    });
+
 
     async function getProjects() {
         const { data } = await axiosClient.get('/projects', { timeout: 2000 });
