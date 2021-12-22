@@ -103,6 +103,7 @@ export default {
         this.newFolderName
       ).then((response) => {
         alert(response)
+        this.$emit('newFolderAdded', this.newFolderName);
         this.newFolderName = null;
       })
       .catch((err) => {

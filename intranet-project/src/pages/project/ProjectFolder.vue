@@ -39,6 +39,7 @@ export default {
     deleteFolder(){
       FilestorageService.deleteFolder(this.projectid, this.path)
       .then((response) => {
+        location.reload();
         alert(response);
       })
       .catch((err) => {

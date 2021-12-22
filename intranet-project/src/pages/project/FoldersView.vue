@@ -53,7 +53,7 @@ export default {
       else{
         return false;
       }
-    }
+    },
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");
