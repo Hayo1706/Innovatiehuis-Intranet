@@ -18,8 +18,9 @@ COOLDOWN_TIME_SECONDS = 60
 
 def generate_token():
     try:
-        email = connexion.request.form['username']
-        send_password = connexion.request.form['password']
+        dict = connexion.request.json['loginAttempt']
+        email = dict['email']
+        send_password = dict['password']
     except KeyError:
         return make_response("Invalid body", 404)
 
