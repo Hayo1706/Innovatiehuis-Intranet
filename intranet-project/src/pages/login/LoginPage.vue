@@ -31,14 +31,14 @@ export default {
   data: function () {
     return {
       enteredWrongPassword: false,
-      loginAttempt: { username: "", password: "" },
+      loginAttempt: { email: "", password: "" },
     };
   },
   methods: {
     submit() {
       LoginService.attemptLogin(
         "username=" +
-          this.loginAttempt.username +
+          this.loginAttempt.email +
           "&password=" +
           this.loginAttempt.password
       )
