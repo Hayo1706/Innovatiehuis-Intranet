@@ -1,0 +1,5 @@
+in: query
+name: path
+schema:
+  type: string
+description: The path to be used

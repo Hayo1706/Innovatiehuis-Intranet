@@ -1,15 +1,10 @@
 openapi: 3.0.3
 info:
   description: This is the openapi file that goes with our server code
-  version: "1.0.0"
-  title: Swagger, Innovatieplatform
-
+  version: 1.0.0
+  title: 'Swagger, Innovatieplatform'
 servers:
-  - url: http://127.0.0.1:5000/api
-
-
-
-  # Paths supported by the server application
+  - url: 'http://127.0.0.1:5000/api'
 paths:
   /projects:
     get:
@@ -18,41 +13,52 @@ paths:
         - Project
       summary: Read the entire list of projects
       responses:
-        200:
+        '200':
           description: Successfully read projects list operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
-  /projects/{id}:
+                type: object
+                properties:
+                  projectid:
+                    type: integer
+                  name:
+                    type: string
+                  isarchived:
+                    type: boolean
+                  createdat:
+                    type: string
+                  lastupdated:
+                    type: string
+  '/projects/{id}':
     get:
       operationId: src.routes.projects.read_one
       tags:
         - Project
       summary: Read one project
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully read project operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
+                $ref: '#/paths/~1projects/get/responses/200/content/application~1json/schema'
     put:
       operationId: src.routes.projects.update
       tags:
         - Project
       summary: Update a value of project
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
         - in: query
           name: isarchived
           required: true
           schema:
             type: boolean
       responses:
-        200:
+        '200':
           description: Project updated
     delete:
       operationId: src.routes.projects.delete
@@ -60,11 +66,10 @@ paths:
         - Project
       summary: Deletes the specified project
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Project deleted
-
   /projects/upload:
     post:
       operationId: src.routes.files.uploadFiles
@@ -81,115 +86,29 @@ paths:
                 files:
                   type: array
       responses:
-        200:
+        '200':
           description: Successfully uploaded a file
-
-  /projects/{id}/files:
+  '/projects/{id}/files':
     get:
       operationId: src.routes.files.getFilesInPath
       tags:
         - Files
       summary: Returns file(s) in directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully retrieved files at given path
-#    post:
-#      operationId: src.routes.files.?????????
-#      tags:
-#        - Files
-#      summary: Upload file(s) in directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      requestBody:
-#        required: true
-#        content:
-#          multipart/form-data:
-#            schema:
-#              type: object
-#              properties:
-#                files:
-#                  type: array
-#      responses:
-#        200:
-#          description: Succesfully downloaded file
-#    put:
-#      operationId: src.routes.files.???????
-#      tags:
-#        - Files
-#      summary: Move file to another directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              type: object
-#              properties:
-#                from:
-#                  type: string
-#                to:
-#                  type: string
-#      responses:
-#        200:
-#          description: Successfully moved file
-#  /projects/{id}/file:
-#    get:
-#      operationId: src.routes.files.??????????
-#      tags:
-#        - Files
-#      summary: Download file
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      responses:
-#        200:
-#          description: Downloaded file
-#    delete:
-#      operationId: src.routes.files.?????
-#      tags:
-#        - Files
-#      summary: Delete file(s) in directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      responses:
-#        200:
-#          description: Succesfully delete file
-#    put:
-#      operationId: src.routes.files.?????
-#      tags:
-#        - Files
-#      summary: Update file
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      requestBody:
-#        required: true
-#        content:
-#          multipart/form-data:
-#            schema:
-#              type: object
-#              properties:
-#                files:
-#                  type: array
-#      responses:
-#        200:
-#          description: Successfully updated file
-#
-  /projects/{id}/folders:
+  '/projects/{id}/folders':
     get:
       operationId: src.routes.folders.getFoldersInPath
       tags:
         - Folders
       summary: Returns folder(s) in directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully retrieved folders at given path
     put:
       operationId: src.routes.folders.checkFolderPutRequest
@@ -197,7 +116,7 @@ paths:
         - Folders
       summary: Move folder to another directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       requestBody:
         required: true
         content:
@@ -212,7 +131,7 @@ paths:
                 rename:
                   type: string
       responses:
-        200:
+        '200':
           description: Successfully moved folder
     delete:
       operationId: src.routes.folders.deleteDir
@@ -220,10 +139,10 @@ paths:
         - Folders
       summary: Delete folder and file(s) in directory
       parameters:
-        - $ref: '#/components/parameters/id'
-        - $ref: '#/components/parameters/path'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
+        - $ref: '#/paths/~1projects~1%7Bid%7D~1folders/post/parameters/1'
       responses:
-        200:
+        '200':
           description: Succesfully delete folder
     post:
       operationId: src.routes.folders.createDirFromRequest
@@ -231,8 +150,12 @@ paths:
         - Folders
       summary: Place new folder directory
       parameters:
-        - $ref: '#/components/parameters/id'
-        - $ref: '#/components/parameters/path'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
+        - in: query
+          name: path
+          schema:
+            type: string
+          description: The path to be used
       requestBody:
         required: true
         content:
@@ -243,21 +166,20 @@ paths:
                 name:
                   type: string
       responses:
-        200:
+        '200':
           description: Succesfully add new folder
-
-  /projects/{id}/announcements:
+  '/projects/{id}/announcements':
     get:
       operationId: src.routes.announcements.read_all
       tags:
         - Announcements
       summary: Get all announcements from project
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully retrieved announcements from project
-        404:
+        '404':
           description: Specified project not found
     post:
       operationId: src.routes.announcements.post
@@ -271,14 +193,14 @@ paths:
             schema:
               type: object
               properties:
-                  content:
-                    type: string
-                  title:
-                    type: string
+                content:
+                  type: string
+                title:
+                  type: string
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully posted announcement to project
   /announcements:
     get:
@@ -287,7 +209,7 @@ paths:
         - Global Announcements
       summary: Reads all global announcements (=those not tied to a project)
       responses:
-        200:
+        '200':
           description: Successfully retreieved global announcements
     post:
       operationId: src.routes.announcements.post_global
@@ -306,18 +228,18 @@ paths:
                 title:
                   type: string
       responses:
-        200:
+        '200':
           description: Successfully posted announcement to project
-  /announcements/{id}:
+  '/announcements/{id}':
     delete:
       operationId: src.routes.announcements.delete
       tags:
         - Announcements
       summary: Deletes announcement with id
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully removed announcement
     put:
       operationId: src.routes.announcements.edit
@@ -336,20 +258,20 @@ paths:
                 title:
                   type: string
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully posted announcement to project
-  /announcements/{id}/replies:
+  '/announcements/{id}/replies':
     get:
       operationId: src.routes.replies.read_all
       tags:
         - Replies
       summary: Get all replies to an announcement
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully retrieved replies to announcements
     post:
       operationId: src.routes.replies.post
@@ -368,11 +290,11 @@ paths:
                 title:
                   type: string
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully posted reply to announcement
-  /replies/{id}:
+  '/replies/{id}':
     put:
       operationId: src.routes.replies.edit
       tags:
@@ -388,9 +310,9 @@ paths:
                 content:
                   type: string
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully edited reply content
     delete:
       operationId: src.routes.replies.delete
@@ -398,11 +320,10 @@ paths:
         - Replies
       summary: Delete reply
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully deleted reply
-
   /users:
     get:
       operationId: src.routes.users.read_all
@@ -410,18 +331,23 @@ paths:
         - Users
       summary: Gets all users
       responses:
-        200:
+        '200':
           description: Successfully read all users
-  /users/{id}:
+  '/users/{id}':
     get:
       operationId: src.routes.users.read_one
       tags:
         - Users
       summary: Get specified user
       parameters:
-        - $ref: '#/components/parameters/id'
+        - in: path
+          name: id
+          required: true
+          description: The id of the object
+          schema:
+            type: string
       responses:
-        200:
+        '200':
           description: Successfully read user
     delete:
       operationId: src.routes.users.delete
@@ -429,27 +355,26 @@ paths:
         - Users
       summary: Delete specified user
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully delete user
-
-  /users/{id}/projects:
+  '/users/{id}/projects':
     get:
       operationId: src.routes.users.read_user_projects
       tags:
         - Users
       summary: Get projects of specified user
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/paths/~1users~1%7Bid%7D/get/parameters/0'
       responses:
-        200:
+        '200':
           description: Successfully read user projects
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
-        404:
+                $ref: '#/paths/~1projects/get/responses/200/content/application~1json/schema'
+        '404':
           description: Specified user not found
   /auth:
     post:
@@ -457,9 +382,8 @@ paths:
       tags:
         - Authorization
       summary: User requests token
-      security: [
-        {}
-      ]
+      security:
+        - {}
       requestBody:
         required: true
         content:
@@ -472,67 +396,27 @@ paths:
                 password:
                   type: string
       responses:
-        200:
+        '200':
           description: JWT token
           content:
-            'application/json':
+            application/json:
               schema:
                 type: string
-        401:
+        '401':
           description: Unauthorized
-
 components:
-  parameters:
-    id:
-      in: path
-      name: id
-      required: true
-      description: The id of the object
-      schema:
-        type: string
-    path:
-      in: query
-      name: path
-      schema:
-        type: string
-      description: The path to be used
-
-  schemas:
-    Project:
-      type: object
-      properties:
-        projectid:
-          type: integer
-        name:
-          type: string
-        isarchived:
-          type: boolean
-        createdat:
-          type: string
-        lastupdated:
-          type: string
-    Files:
-      type: object
-      required:
-        - files
-      properties:
-        files:
-          type: array
   securitySchemes:
-    oAuthSecurity: # <---- arbitrary name
+    oAuthSecurity:
       type: oauth2
       description: This API uses OAuth 2 with the password grant flow.
       x-tokenInfoFunc: src.services.JWT.decode_token
       flows:
-        password: # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+        password:
           tokenUrl: /api/auth
           scopes:
             admin: Admins
             moderator: Moderators
             user: Students
-
-
-# Step 2 - apply security globally...
 security:
   - oAuthSecurity:
       - admin

@@ -1,0 +1,31 @@
+delete:
+  operationId: src.routes.announcements.delete
+  tags:
+    - Announcements
+  summary: Deletes announcement with id
+  parameters:
+    - $ref: ..\components\parameters\id.yaml
+  responses:
+    '200':
+      description: Successfully removed announcement
+put:
+  operationId: src.routes.announcements.edit
+  tags:
+    - Announcements
+  summary: Update announcements title/content
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            content:
+              type: string
+            title:
+              type: string
+  parameters:
+    - $ref: ..\components\parameters\id.yaml
+  responses:
+    '200':
+      description: Successfully posted announcement to project

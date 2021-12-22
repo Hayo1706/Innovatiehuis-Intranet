@@ -1,0 +1,10 @@
+get:
+  operationId: src.routes.files.getFilesInPath
+  tags:
+    - Files
+  summary: Returns file(s) in directory
+  parameters:
+    - $ref: ..\components\parameters\id.yaml
+  responses:
+    '200':
+      description: Successfully retrieved files at given path

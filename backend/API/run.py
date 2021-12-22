@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request
 app = connexion.App(__name__, specification_dir="./")
 
 # Read the API.yml file to configure the endpoints
-app.add_api("API.yml")
+app.add_api("openapi/_build/openapi.yaml")
 app.app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 
 CORS(app.app)
