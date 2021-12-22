@@ -1,6 +1,0 @@
-in: path
-name: id
-required: true
-description: The id of the object
-schema:
-  type: string
