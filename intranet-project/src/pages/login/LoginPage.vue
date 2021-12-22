@@ -36,12 +36,7 @@ export default {
   },
   methods: {
     submit() {
-      LoginService.attemptLogin(
-        "username=" +
-          this.loginAttempt.email +
-          "&password=" +
-          this.loginAttempt.password
-      )
+      LoginService.attemptLogin(this.loginAttempt)
         .then((response) => {
           console.log(response);
           this.$router.push("/home");
