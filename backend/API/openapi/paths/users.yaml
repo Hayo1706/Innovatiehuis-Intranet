@@ -1,0 +1,8 @@
+get:
+  operationId: src.routes.users.read_all
+  tags:
+    - Users
+  summary: Gets all users
+  responses:
+    '200':
+      description: Successfully read all users

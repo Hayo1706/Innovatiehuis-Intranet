@@ -1,0 +1,12 @@
+get:
+  operationId: src.routes.projects.read_all
+  tags:
+    - Project
+  summary: Read the entire list of projects
+  responses:
+    '200':
+      description: Successfully read projects list operation
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\Project.yaml

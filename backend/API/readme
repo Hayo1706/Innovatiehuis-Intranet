@@ -1,0 +1,7 @@
+pip install python-jose[cryptography]
+pip install connexion[swagger]
+
+
+To build the split api yaml's,
+run "npx swagger-cli bundle openapi.yaml --outfile _build/openapi.yaml --type yaml"
+in API/openapi/

@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  description: This is the openapi file that goes with our server code
+  version: 1.0.0
+  title: Swagger, Innovatieplatform
+servers:
+  - url: http://127.0.0.1:5000/api
+paths:
+  /projects:
+    $ref: paths/projects.yaml
+  /projects/{id}:
+    $ref: paths/projects@{id}.yaml
+  /projects/upload:
+    $ref: paths/projects@upload.yaml
+  /projects/{id}/files:
+    $ref: paths/projects@{id}@files.yaml
+  /projects/{id}/folders:
+    $ref: paths/projects@{id}@folders.yaml
+  /projects/{id}/announcements:
+    $ref: paths/projects@{id}@announcements.yaml
+  /announcements:
+    $ref: paths/announcements.yaml
+  /announcements/{id}:
+    $ref: paths/announcements@{id}.yaml
+  /announcements/{id}/replies:
+    $ref: paths/announcements@{id}@replies.yaml
+  /replies/{id}:
+    $ref: paths/replies@{id}.yaml
+  /users:
+    $ref: paths/users.yaml
+  /users/{id}:
+    $ref: paths/users@{id}.yaml
+  /users/{id}/projects:
+    $ref: paths/users@{id}@projects.yaml
+  /auth:
+    $ref: paths/auth.yaml
+components:
+  securitySchemes:
+    oAuthSecurity:
+      type: oauth2
+      description: This API uses OAuth 2 with the password grant flow.
+      x-tokenInfoFunc: src.services.JWT.decode_token
+      flows:
+        password:
+          tokenUrl: /api/auth
+          scopes:
+            admin: Admins
+            moderator: Moderators
+            user: Students
+security:
+  - oAuthSecurity:
+      - admin
