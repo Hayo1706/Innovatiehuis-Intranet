@@ -115,28 +115,28 @@ paths:
 #      responses:
 #        200:
 #          description: Succesfully downloaded file
-#    put:
-#      operationId: src.routes.files.???????
-#      tags:
-#        - Files
-#      summary: Move file to another directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              type: object
-#              properties:
-#                from:
-#                  type: string
-#                to:
-#                  type: string
-#      responses:
-#        200:
-#          description: Successfully moved file
-#  /projects/{id}/file:
+    put:
+      operationId: src.routes.files.moveFile
+      tags:
+        - Files
+      summary: Move file to another directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+      responses:
+        200:
+          description: Successfully moved file
+  /projects/{id}/file:
 #    get:
 #      operationId: src.routes.files.??????????
 #      tags:
@@ -148,17 +148,17 @@ paths:
 #      responses:
 #        200:
 #          description: Downloaded file
-#    delete:
-#      operationId: src.routes.files.?????
-#      tags:
-#        - Files
-#      summary: Delete file(s) in directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      responses:
-#        200:
-#          description: Succesfully delete file
+    delete:
+      operationId: src.routes.files.deleteFile
+      tags:
+        - File
+      summary: Delete file in directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
+      responses:
+        200:
+          description: Succesfully deleted file
 #    put:
 #      operationId: src.routes.files.?????
 #      tags:
@@ -179,7 +179,7 @@ paths:
 #      responses:
 #        200:
 #          description: Successfully updated file
-#
+
   /projects/{id}/folders:
     get:
       operationId: src.routes.folders.getFoldersInPath
