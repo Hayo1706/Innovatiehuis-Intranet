@@ -31,7 +31,13 @@
             })
           }}
         </div>
-        <div class="mobileRow"></div>
+        <div class="mobileRow">
+          <select v-model="selectedRole">
+            <option v-for="role in roles" v-bind:key="role.id">
+              {{ role.rolename }}
+            </option>
+          </select>
+        </div>
         <div class="mobileRow">{{ user.amountprojects }}</div>
         <div class="mobileRow"></div>
       </div>
@@ -64,7 +70,13 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-block"></div>
+      <div class="col d-none d-lg-block">
+        <select v-model="selectedRole">
+          <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
+            {{ role }}
+          </option>
+        </select>
+      </div>
       <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
       <div class="col d-none d-lg-block"></div>
 
@@ -80,7 +92,15 @@ export default {
   components: { VerticalHeader },
   name: "UserListing",
   data: function () {
-    return {};
+    return {
+      selectedRole: this.user.rolename,
+      roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
+    };
+  },
+  watch: {
+    selectedRole: function (val) {
+      console.log(val);
+    },
   },
   methods: {
     onClick() {
@@ -96,7 +116,7 @@ export default {
   margin: 3px;
   padding: 10px;
   box-sizing: border-box;
-    color:var( --blue1); 
+  color: var(--blue1);
 }
 .row {
   padding-top: 12px;
@@ -112,7 +132,7 @@ export default {
   height: fit-content;
   cursor: pointer;
   width: fit-content;
-  font-family:AddeleSemiBold ;
+  font-family: AddeleSemiBold;
 }
 .mobileRow {
   height: 53px;
