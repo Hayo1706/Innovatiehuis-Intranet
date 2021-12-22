@@ -37,12 +37,13 @@ const router = createRouter({
   routes
 })
 
-router.afterEach((from, to) => {
+router.beforeEach((to, from, next) => {
 
   if (localStorage.getItem("token") == null && to.fullPath != "/login") {
     localStorage.setItem("previousRoute", to.fullPath);
-    router.push('/login');
-    return;
+    next({ path: '/login' });
+  } else {
+    next();
   }
 })
 const app = createApp(App);

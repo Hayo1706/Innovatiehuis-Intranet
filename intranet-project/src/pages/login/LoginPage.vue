@@ -37,9 +37,17 @@ export default {
   },
   methods: {
     submit() {
-      LoginService.attemptLogin(this.loginAttempt)
+      LoginService.attemptLogin(
+        "username=" +
+          this.loginAttempt.email +
+          "&password=" +
+          this.loginAttempt.password
+      )
         .then((response) => {
           console.log(response);
+
+          localStorage.setItem("token", response.access_token);
+
           this.$router.push(this.nextLink);
         })
         .catch((err) => {

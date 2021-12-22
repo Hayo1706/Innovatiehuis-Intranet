@@ -5,8 +5,15 @@ var LoginService = function () {
 
     async function attemptLogin(loginAttempt) {
 
-        const { data } = await axiosClient.post(`/auth`, { loginAttempt }, { timeout: 2000 });
-        localStorage.setItem("token", data);
+        const { data } = await axiosClient.post(`/auth`, loginAttempt, { timeout: 2000 }, {
+
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+
+        });
+
+
         return data;
     }
 
