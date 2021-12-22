@@ -63,6 +63,8 @@ def checkFolderPutRequest(id):
 
 
 def changeFolderName(new_name, source_path):
+    print(new_name)
+    print(source_path)
     new_name = secureFolderName(new_name)
     if dir_exists(source_path):
         sub_path = source_path.rsplit("/", 1)[0]

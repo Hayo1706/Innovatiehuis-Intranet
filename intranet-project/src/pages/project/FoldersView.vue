@@ -1,16 +1,21 @@
 <template>
     <div>
       <ProjectFolderHeader
-      @newFolderAdded="(id) => addFolder(id)"/>
+        @newFolderAdded="(id) => addFolder(id)"
+        @searchBarChanged="setSearchTerm"
+      />
       <div class="container-fluid">
         <div class="row">
           <div v-for="folder in folders" :key="folder" class="col-sm-3">
-            <ProjectFolder
-              :naam="folder"
-              :path="folder"
-              :shared='no'
-            />
+            <div v-if="folderNameInSearchTerm(folder)">
+              <ProjectFolder
+                :projectid="this.$route.params.id"
+                :name="folder"
+                :path="'/' + folder"
+                :shared='no'
+              />
             </div>
+          </div>
         </div>
       </div>
     </div>
@@ -29,13 +34,26 @@ export default {
   props: [
   ],
   data: function () {
-    return { folders: [],
+    return { 
+      folders: [],
+      searchTerm: "",
      };
   },
   methods: {
     addFolder(val){ 
       this.folders.push(val);
     },
+    setSearchTerm(value) {
+      this.searchTerm = value;
+    },
+    folderNameInSearchTerm(name){
+      if(name.includes(this.searchTerm) || this.searchTerm == null){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");

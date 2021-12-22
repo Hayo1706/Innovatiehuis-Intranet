@@ -1,9 +1,21 @@
 <template>
-    <div class="projectFolder" @click="goToDirectory(this.path)" v-on:click.right="deleteDirectory(true)">
-        <img class="foldersImage" v-if="this.shared != 'yes'" src=".\..\..\assets\images\folder.png"/> 
-        <img class="foldersImage" v-if="this.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
-        {{this.naam}}
+  <div class="projectFolder" @click.right="viewMenu = true" @mouseleave="viewMenu = false">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3">
+          <img class="foldersImage" v-if="this.shared != 'yes'" src=".\..\..\assets\images\folder.png"/> 
+          <img class="foldersImage" v-if="this.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
+        </div>
+        <div class="col-sm-9" @dblclick="editName = true">
+          <input class="folderName" v-if="this.editName == true" v-model="folderName" @mouseleave="renameFolder()"/>
+          <input class="folderName" disabled v-if="this.editName == false" v-model="folderName"/>
+        </div>
+      </div>
     </div>
+    <div class="container" v-if="viewMenu == true">
+      <div class="row"><button @click="deleteFolder()">Remove</button></div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -11,48 +23,63 @@ import FilestorageService from "@/services/FilestorageService.js";
 export default {
   name: "ProjectFolder",
   props: {
-    naam: { type: String, required: true },
+    projectid: { type: String, required: true},
+    name: { type: String, required: true },
     path: { type: String, required: true },
     shared: { type: String, required: true },
   },
   data: function () {
     return {
-      
+      viewMenu: false,
+      folderName: this.name,
+      editName: false
     };
   },
   methods: {
-    deleteDirectory(confirmation){
-      FilestorageService.deleteFolder(
-        this.$route.params.id, 
-        this.naam,
-        this.$route.fullPath,
-        confirmation
-      ).then((response) => {
-          alert(response);
-          console.log(response);
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert(err);
-        });
+    deleteFolder(){
+      FilestorageService.deleteFolder(this.projectid, this.path)
+      .then((response) => {
+        alert(response);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+      });
     },
-    goToDirectory(path) {
-       this.$router.push(this.$route.params.id + "/" + path);
-    },
-
-  }
+    renameFolder(){
+      FilestorageService.renameFolder(this.projectid, this.path, "", this.folderName)
+      .then(() => {
+         this.editName = false;
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+      });
+    },  
+  },
 };
 </script>
 
 <style scoped>
-.foldersImage {
-  height: calc(2vw + 5vh);
-  padding-right: 1vw;
-  padding-bottom: 0.5vh;
-}
-.projectFolder {
+.projectFolder{
   color: white;
+  width: 100%;
+  min-height: calc(1.5vw + 1.5vh);
+  font-size: calc(0.5vh + 0.5vw)
+}
+.foldersImage{
+  width: calc(1.5vw + 1.5vh);
+}
+.folderName{
+  background-color: transparent;
+  color: white;
+  border: 0px;
+}
+.container{
+  margin-top: 2vh;
 }
 </style>

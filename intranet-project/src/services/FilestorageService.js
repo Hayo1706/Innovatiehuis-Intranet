@@ -14,13 +14,18 @@ var FilestorageService = function () {
         return data;
     }
 
-    async function createFolder(projectid, new_dir_name, current_path) {
-        const { data } = await axiosClient.delete(`/projects/${projectid}/folders`, { new_dir_name, current_path }, { timeout: 2000 });
+    async function createFolder(projectid, path, name) {
+        const { data } = await axiosClient.post(`/projects/${projectid}/folders?path=` + path, { name }, { timeout: 2000 });
         return data;
     }
 
-    async function deleteFolder(projectid, dir_name, current_path, confirmation) {
-        const { data } = await axiosClient.post(`/folders/${projectid}`, { dir_name, current_path, confirmation }, { timeout: 2000 });
+    async function deleteFolder(projectid, path) {
+        const { data } = await axiosClient.delete(`/projects/${projectid}/folders?path=` + path, { timeout: 2000 });
+        return data;
+    }
+
+    async function renameFolder(projectid, from, to, rename) {
+        const { data } = await axiosClient.put(`/projects/${projectid}/folders`, { from, to, rename }, { timeout: 2000 });
         return data;
     }
 
@@ -43,6 +48,7 @@ var FilestorageService = function () {
         getFilesOfProject,
         createFolder,
         deleteFolder,
+        renameFolder,
     }
 
 

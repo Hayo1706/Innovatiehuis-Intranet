@@ -5,8 +5,9 @@
         <div class="col-sm-9">Folders View</div>
         <div class="col-sm-2">
         <SearchBar
-          id="searchBar"
-          @searchBarChanged="setSearchTerm"
+          @searchBarChanged="
+            (searchTerm) => $emit('searchBarChanged', searchTerm)
+          "
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
         </div>
@@ -88,7 +89,6 @@ export default {
   data: function () {
     return {
       newFolderName: null,
-      searchTerm: null,
     };
   },
   methods: {
@@ -96,29 +96,25 @@ export default {
       if (this.newFolderName == null) {
         this.newFolderName = "Nieuwe Map";
       }
+      var path = this.$route.fullPath.split("/project/" + this.$route.params.id)[1]
       FilestorageService.createFolder(
-        this.$route.params.id, 
-        this.newFolderName, 
-        this.$route.fullPath
-        ).then((response) => {
-          console.log(response);
-          this.newFolderName = null;
-          alert(response);
-          this.reload();
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert(err);
-        });
+        this.$route.params.id,
+        path,
+        this.newFolderName
+      ).then((response) => {
+        alert(response)
+        this.newFolderName = null;
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+        alert(err);
+      });
     },
     reload() {
       console.log("updating key");
       this.$emit("reload");
-    },
-    setSearchTerm(value) {
-      this.searchTerm = value;
     },
   },
 };
@@ -144,12 +140,7 @@ export default {
   display: block;
 }
 .input-group {
-  margin: 0.225vh auto;
-  height: calc(0.5vw + 0.5vw);
-}
-#searchBar{
-   font-size: calc(1vw + 1vh);
-  font-family: AddeleSemiBold;
+  margin: 0.5vh auto;
 
 }
 </style>
