@@ -4,4 +4,4 @@ pip install connexion[swagger]
 
 To build the split api yaml's,
 run "npx swagger-cli bundle openapi.yaml --outfile _build/openapi.yaml --type yaml"
-on API/openapi/openapi.yaml
+in API/openapi/
