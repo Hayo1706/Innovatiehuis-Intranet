@@ -37,6 +37,14 @@ const router = createRouter({
   routes
 })
 
+router.afterEach((from, to) => {
+
+  if (localStorage.getItem("token") == null && to.fullPath != "/login") {
+    localStorage.setItem("previousRoute", to.fullPath);
+    router.push('/login');
+    return;
+  }
+})
 const app = createApp(App);
 app.use(router);
 

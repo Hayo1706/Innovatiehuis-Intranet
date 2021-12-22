@@ -32,6 +32,7 @@ export default {
     return {
       enteredWrongPassword: false,
       loginAttempt: { email: "", password: "" },
+      nextLink: "/home",
     };
   },
   methods: {
@@ -39,7 +40,7 @@ export default {
       LoginService.attemptLogin(this.loginAttempt)
         .then((response) => {
           console.log(response);
-          this.$router.push("/home");
+          this.$router.push(this.nextLink);
         })
         .catch((err) => {
           if (err.response) {
@@ -51,6 +52,10 @@ export default {
   },
   created() {
     this.$emit("newHeaderTitle", "Innovatiehuis Intranet");
+    const previousRoute = localStorage.getItem("previousRoute");
+    if (previousRoute) {
+      this.nextLink = previousRoute;
+    }
   },
 };
 </script>
