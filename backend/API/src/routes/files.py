@@ -39,6 +39,7 @@ def uploadFiles():
 
 def isFilePathValid(requested_path):
     requested_path = (root + requested_path)
+
     if path_exists(requested_path) and not os.path.isdir(requested_path):
         return True
     return False
@@ -79,6 +80,34 @@ def getFilesInPath(id):
             if not os.path.isdir(requested_path + "/" + path):
                 list_of_files.append(path)
     return list_of_files
+
+def deleteFile(id):
+    project_path = id
+    sub_file_path = connexion.request.values.get('path')
+    file_path = project_path + sub_file_path
+    print(isFilePathValid(file_path))
+    if isFilePathValid(file_path):
+        os.remove(root + file_path)
+        return make_response("Succesfully deleted file", 200)
+    return make_response("Failed to delete file", 400)
+
+def moveFile(id):
+    source_path = connexion.request.json['from']
+    target_path = connexion.request.json['to']
+
+    source_path = root + getProjectPath(id) + "/" + source_path
+    target_path = root + getProjectPath(id) + "/" + target_path
+
+    if isFilePathValid(getProjectPath(id) + "/" + source_path) and dir_exists(target_path):
+        print(source_path)
+        try:
+            shutil.move(source_path, target_path)
+        except:
+            return make_response("Failed to move file", 400)
+
+        return make_response("Succesfully moved file to target folder", 200)
+
+    return make_response("Failed to move file", 400)
 
 
 

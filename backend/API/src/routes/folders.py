@@ -79,7 +79,6 @@ def changeFolderName(new_name, source_path):
         return make_response("Failed to rename folder", 400)
 
 def moveDirFromRequest(id, source_path, target_path):
-
     print(source_path)
     if dir_exists(source_path) and dir_exists(target_path):
         try:
