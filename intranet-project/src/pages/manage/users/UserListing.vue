@@ -80,13 +80,18 @@
       <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
       <div class="col d-none d-lg-block"></div>
 
-      <div class="col"></div>
+      <div class="col">
+        <a class="link" @click="handleVerwijderGebruiker(this.user)"
+          >Verwijderen</a
+        >
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import VerticalHeader from "./VerticalHeader.vue";
+import UserService from "@/services/UserService.js";
 export default {
   props: ["user"],
   components: { VerticalHeader },
@@ -133,6 +138,26 @@ export default {
     onClick() {
       this.$router.push("/user/" + this.user.userid);
     },
+    async handleVerwijderGebruiker(user) {
+      let answer = confirm(
+        'Wil je het project  de gebruiker "' +
+          user.firstname +
+          " " +
+          user.lastname +
+          " echt verwijderen ?"
+      );
+      if (answer) {
+        UserService.deleteUser(user.userid)
+          .then(() => {
+            this.$emit("removeUser", user.userid);
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      }
+    },
   },
 };
 </script>
@@ -163,5 +188,13 @@ export default {
 }
 .mobileRow {
   height: 53px;
+}
+
+.link {
+  cursor: pointer;
+  color: var(--gold2);
+  display: block;
+  margin-bottom: 10px;
+  text-decoration: none;
 }
 </style>

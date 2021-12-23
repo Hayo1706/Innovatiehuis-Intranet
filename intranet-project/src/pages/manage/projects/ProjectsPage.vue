@@ -106,7 +106,6 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
- 
         });
     },
     shouldShow(item) {
@@ -165,6 +164,7 @@ export default {
 }
 #noresults {
   margin-top: 10px;
+  color: white;
 }
 #actionButton {
   position: fixed;
@@ -182,7 +182,4 @@ export default {
   margin-top: 10px;
   color: white;
 }
-
-
-
 </style>

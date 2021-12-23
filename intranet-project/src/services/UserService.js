@@ -20,10 +20,14 @@ var UserService = function () {
         });
         return data;
     }
-
+    async function deleteUser(userid) {
+        const { data } = await axiosClient.delete(`/users/${userid}`, { timeout: 2000 });
+        return data;
+    }
     return {
         getUsers,
-        getUserById
+        getUserById,
+        deleteUser
     }
 
 }

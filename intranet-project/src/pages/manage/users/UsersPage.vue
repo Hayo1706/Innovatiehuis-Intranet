@@ -24,7 +24,10 @@
     </div>
     <div class="container-fluid">
       <div v-for="user of filteredUsers" :key="user.firstname">
-        <UserListing v-bind:user="user"></UserListing>
+        <UserListing
+          v-bind:user="user"
+          @removeUser="this.removeUser"
+        ></UserListing>
       </div>
       <div id="noresults" v-if="filteredUsers.length == 0">
         Geen resultaten.
@@ -70,6 +73,11 @@ export default {
           .includes(this.searchTerm.toLowerCase());
       }
     },
+    removeUser(userid) {
+      this.users = this.users.filter(function (item) {
+        return item.userid !== userid;
+      });
+    },
   },
 
   computed: {
@@ -103,6 +111,7 @@ export default {
 }
 #noresults {
   margin-top: 10px;
+  color: white;
 }
 #actionButton {
   position: fixed;
