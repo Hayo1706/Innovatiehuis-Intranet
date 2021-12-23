@@ -33,8 +33,8 @@
         </div>
         <div class="mobileRow">
           <select v-model="selectedRole">
-            <option v-for="role in roles" v-bind:key="role.id">
-              {{ role.rolename }}
+            <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
+              {{ role }}
             </option>
           </select>
         </div>
@@ -93,13 +93,40 @@ export default {
   name: "UserListing",
   data: function () {
     return {
+      previousRole: this.user.rolename,
       selectedRole: this.user.rolename,
       roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
     };
   },
   watch: {
     selectedRole: function (val) {
-      console.log(val);
+      if (val != this.previousRole) {
+        let answer = confirm(
+          'Wil je de rol van "' +
+            this.user.firstname +
+            " " +
+            this.user.lastname +
+            '" echt veranderen naar ' +
+            val +
+            "?"
+        );
+        if (answer) {
+          this.previousRole = this.selectedRole;
+
+          const roleid = this.roles[val];
+          console.log(roleid);
+          const updatedOnBackend = true;
+          //TODO update the role on the backend
+
+          if (updatedOnBackend) {
+            return;
+          } else {
+            //display error
+          }
+        }
+        //on failure of updating on backend or cancel by user, undo setting a new role
+        this.selectedRole = this.previousRole;
+      }
     },
   },
   methods: {
