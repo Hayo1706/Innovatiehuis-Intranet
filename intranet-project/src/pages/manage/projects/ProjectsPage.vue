@@ -92,7 +92,6 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
         });
     },
     archiveProject(project) {
@@ -107,7 +106,7 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
+ 
         });
     },
     shouldShow(item) {
@@ -152,7 +151,6 @@ export default {
         if (err.response) {
           console.log(err.response.status);
         }
-        alert(err);
       });
   },
 };

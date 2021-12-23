@@ -65,7 +65,7 @@ export default {
       if (this.searchTerm == null) {
         return true;
       } else {
-        return (item.firstname +" "+ item.lastname)
+        return (item.firstname + " " + item.lastname)
           .toLowerCase()
           .includes(this.searchTerm.toLowerCase());
       }
@@ -89,7 +89,6 @@ export default {
         if (err.response) {
           console.log(err.response.status);
         }
-        alert(err);
       });
   },
 };

@@ -102,7 +102,7 @@ export default {
     selectedRole: function (val) {
       if (val != this.previousRole) {
         let answer = confirm(
-          'Wil je de rol van "' +
+          'Wil je de rol van de gebruiker "' +
             this.user.firstname +
             " " +
             this.user.lastname +
