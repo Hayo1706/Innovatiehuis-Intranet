@@ -7,8 +7,6 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 
 import ProjectsPage from './pages/manage/projects/ProjectsPage.vue';
-import ProjectsCreatePage from './pages/manage/projects/create/ProjectsCreatePage.vue';
-import UsersCreatePage from './pages/manage/users/create/UsersCreatePage.vue';
 import UsersPage from './pages/manage/users/UsersPage.vue';
 import ProjectPage from './pages/project/ProjectPage.vue';
 import ProjectMembersPage from './pages/project/members/ProjectMembersPage.vue';
@@ -21,9 +19,7 @@ import NotFoundPage from './pages/notfound/NotFoundPage.vue';
 const routes = [
   { path: '', redirect: '/home' },
   { path: '/manage/projects', component: ProjectsPage },
-  { path: '/manage/projects/create', component: ProjectsCreatePage },
   { path: '/manage/users', component: UsersPage },
-  { path: '/manage/users/create', component: UsersCreatePage },
   { path: '/project/:id', component: ProjectPage },
   { path: '/project/:id/settings', component: ProjectSettingsPage },
   { path: '/project/:id/members', component: ProjectMembersPage },
