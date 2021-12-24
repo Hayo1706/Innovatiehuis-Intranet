@@ -13,60 +13,7 @@
       @searchBarChanged="setSearchTerm"
       v-bind:searchTerm="this.searchTerm"
     ></UsersHeader>
-    <div
-      class="modal fade"
-      id="createUserModal"
-      tabindex="-1"
-      aria-labelledby="userModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="userModalLabel">
-              Nieuwe gebruiker toevoegen
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-9">
-                <!-- TODO add input here-->
-                <input
-                  v-model="this.newFolderName"
-                  class="form-control"
-                  id="message-text"
-                  placeholder="Nieuwe Map"
-                />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-dismiss="modal"
-              @click="addNewFolder()"
-            >
-              Toevoegen
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Annuleren
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <UserCreateModal></UserCreateModal>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
         <SearchBar
@@ -98,11 +45,13 @@ import UserService from "@/services/UserService.js";
 import UsersHeader from "./UsersHeader.vue";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import UserListing from "./UserListing.vue";
+import UserCreateModal from "./UserCreateModal.vue";
 export default {
   components: {
     UsersHeader,
     SearchBar,
     UserListing,
+    UserCreateModal,
   },
   name: "ProjectsPage",
   data: function () {
