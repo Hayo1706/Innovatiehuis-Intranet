@@ -81,9 +81,7 @@
       <div class="col d-none d-lg-block"></div>
 
       <div class="col">
-        <a class="link" @click="handleVerwijderGebruiker(this.user)"
-          >Verwijderen</a
-        >
+        <a class="link" @click="handleRemoveUser(this.user)">Verwijderen</a>
       </div>
     </div>
   </div>
@@ -138,7 +136,7 @@ export default {
     onClick() {
       this.$router.push("/user/" + this.user.userid);
     },
-    async handleVerwijderGebruiker(user) {
+    async handleRemoveUser(user) {
       let answer = confirm(
         'Wil je het project  de gebruiker "' +
           user.firstname +

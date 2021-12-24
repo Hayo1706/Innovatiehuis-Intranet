@@ -24,10 +24,10 @@
             <div class="mb-9">
               <!-- TODO add input here-->
               <input
-                v-model="this.newFolderName"
+                v-model="this.projectname"
                 class="form-control"
                 id="message-text"
-                placeholder="Nieuwe Map"
+                placeholder="Naam van project"
               />
             </div>
           </form>
@@ -57,9 +57,21 @@
 export default {
   name: "ProjectCreateModal",
   data: function () {
-    return {};
+    return {
+      projectname: "",
+    };
   },
-  methods: {},
+  mounted() {
+    var myModalEl = document.getElementById("createProjectModal");
+    myModalEl.addEventListener("hidden.bs.modal", () => {
+      this.clearForm();
+    });
+  },
+  methods: {
+    clearForm() {
+      this.projectname = "";
+    },
+  },
 };
 </script>
 

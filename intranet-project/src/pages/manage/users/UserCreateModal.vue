@@ -24,11 +24,26 @@
             <div class="mb-9">
               <!-- TODO add input here-->
               <input
-                v-model="this.newFolderName"
+                v-model="this.firstname"
                 class="form-control"
                 id="message-text"
-                placeholder="Nieuwe Map"
+                placeholder="Voornaam"
               />
+              <input
+                v-model="this.lastname"
+                class="form-control"
+                id="message-text"
+                placeholder="Achternaam"
+              />
+              Rol: &nbsp;
+              <select v-model="selectedRole">
+                <option
+                  v-for="role in Object.keys(this.roles)"
+                  v-bind:key="role"
+                >
+                  {{ role }}
+                </option>
+              </select>
             </div>
           </form>
         </div>
@@ -57,9 +72,44 @@
 export default {
   name: "UserCreateModal",
   data: function () {
-    return {};
+    return {
+      roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
+      selectedRole: "student",
+
+      firstname: "",
+      lastname: "",
+      selectedRoleId: 2,
+    };
   },
-  methods: {},
+
+  mounted() {
+    var myModalEl = document.getElementById("createUserModal");
+    myModalEl.addEventListener("hidden.bs.modal", () => {
+      this.clearForm();
+    });
+  },
+
+  watch: {
+    selectedRole: function (val) {
+      this.selectedRoleId = this.roles[val];
+    },
+  },
+  methods: {
+    clearForm() {
+      this.firstname = "";
+      this.lastname = "";
+      this.selectedRole = "student";
+      this.selectedRoleId = 2;
+    },
+  },
 };
 </script>
+<style  scoped>
+input {
+  margin-bottom: 10px;
+}
+select {
+  margin-bottom: 10px;
+}
+</style>
 
