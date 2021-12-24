@@ -132,6 +132,7 @@ input {
 }
 select {
   margin-bottom: 10px;
+  border-radius: 0.25rem;
 }
 </style>
 
