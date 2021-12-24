@@ -280,4 +280,7 @@ img {
   margin-bottom: 10px;
   text-decoration: none;
 }
+select {
+  border-radius: 0.25rem;
+}
 </style>
