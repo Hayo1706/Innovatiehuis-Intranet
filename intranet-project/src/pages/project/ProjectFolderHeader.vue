@@ -136,12 +136,13 @@ export default {
   background-color: transparent;
 }
 .iconImage {
-  height: calc(0.5vw + 0.5vw);
+  height: calc(1vw + 1vh);
   margin: 0 auto;
   display: block;
 }
 .input-group {
   margin: 0.5vh auto;
+  height: 80%;
 
 }
 </style>

@@ -1,36 +1,28 @@
 <template>
-    <div class='filesview'>
-      <p>Files View</p>
-        <div class="container-fluid"> 
-          <div class="row">
-            <div v-for="file in files" :key="file" class="col-sm-2" > <!--- Determine size of each Column --->
-              <div class="box"> <!--- Ensures that height is equal to width --->
-                <div class = "content"> <!--- Position of content is absolute --->
-                  {{file}}
-                </div>
+    <div>
+      <ProjectFilesHeader>
+      </ProjectFilesHeader>  
+      <div class="container-fluid"> 
+        <div class="row">
+          <div v-for="file in files" :key="file" class="col-sm-2" > <!--- Determine size of each Column --->
+            <div class="box"> <!--- Ensures that height is equal to width --->
+              <div class = "content"> <!--- Position of content is absolute --->
+                {{file}}
               </div>
             </div>
           </div>
         </div>
-
-      
-       <form
-        action="http://127.0.0.1:5000/api/projects/upload"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-        <input type="file" name="files" multiple="true" />
-        <input type="hidden" name="projectid" :value= this.projectid />
-        <input type="hidden" name="path" value="" />
-        <input type="submit"/>
-    </form>
-   
+      </div>   
     </div>
 </template>
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
+import ProjectFilesHeader from "./ProjectFilesHeader.vue";
 export default {
+  components: {
+    ProjectFilesHeader
+  },
   name: "FilesView",
   props: [
 
@@ -39,6 +31,8 @@ export default {
     return { 
       files: [],
       projectid: this.$route.params.id};
+  },
+  methods: {
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");

@@ -29,12 +29,14 @@ def secureFileName(filename):
         return "New File" + file_type
     return secure_name + file_type
 
-def uploadFiles():
-    current_path = connexion.request.values.get('projectid')
-    files = connexion.request.files.getlist('files')
+def uploadFiles(id):
+    files = connexion.request.files
+    current_path = root + getProjectPath(id) + "/" + connexion.request.values.get('path')
+    print(current_path)
+    print("yes")
     print(files)
-    for file in files:
-        upload_file(file, current_path)
+    for k, v in files.items():
+        upload_file(v, current_path)
 
 
 def isFilePathValid(requested_path):
@@ -57,19 +59,16 @@ def getUniqueFileName(file_name_type, current_path, count):
             return getUniqueFileName(file_name_type, current_path, count + 1)
         return file_name + " (" + str(count) + ")" + file_type
 
-def upload_file(file, current_path):
+def upload_file(file, path):
     if len(file.filename) > 0:
         file_name = secureFileName(file.filename)
-        new_file_name = getUniqueFileName(file_name, current_path, 0)
-        print(root + current_path)
-        if not dir_exists(root + current_path):
-            print("File upload failed, directory doesn't exist")
-            return None
+        new_file_name = getUniqueFileName(file_name, path, 0)
+        if not dir_exists(path):
+            return make_response("File upload failed, directory doesn't exist", 400)
         else:
-            file.save(os.path.join(root + current_path, new_file_name))  # this will save the file
-            print("File uploaded succesfully")
-            return 'file uploaded successfully'  # Display message after uploading
-    return 'file upload failed, no file was selected'
+            file.save(os.path.join(path, new_file_name))  # this will save the file
+            return make_response('file uploaded successfully', 200)  # Display message after uploading
+    return make_response('file upload failed, no file was selected', 400)
 
 def getFilesInPath(id):
     requested_path = root + id

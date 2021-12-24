@@ -65,24 +65,24 @@ paths:
         200:
           description: Project deleted
 
-  /projects/upload:
-    post:
-      operationId: src.routes.files.uploadFiles
-      tags:
-        - Files
-      summary: Uploads file(s) to filestorage
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                files:
-                  type: array
-      responses:
-        200:
-          description: Successfully uploaded a file
+#  /projects/upload:
+#    post:
+#      operationId: src.routes.files.uploadFiles
+#      tags:
+#        - Files
+#      summary: Uploads file(s) to filestorage
+#      requestBody:
+#        required: true
+#        content:
+#          multipart/form-data:
+#            schema:
+#              type: object
+#              properties:
+#                files:
+#                  type: array
+#      responses:
+#        200:
+#          description: Successfully uploaded a file
 
   /projects/{id}/files:
     get:
@@ -95,26 +95,26 @@ paths:
       responses:
         200:
           description: Successfully retrieved files at given path
-#    post:
-#      operationId: src.routes.files.?????????
-#      tags:
-#        - Files
-#      summary: Upload file(s) in directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      requestBody:
-#        required: true
-#        content:
-#          multipart/form-data:
-#            schema:
-#              type: object
-#              properties:
-#                files:
-#                  type: array
-#      responses:
-#        200:
-#          description: Succesfully downloaded file
+    post:
+      operationId: src.routes.files.uploadFiles
+      tags:
+        - Files
+      summary: Upload file(s) in directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+      responses:
+        200:
+          description: Succesfully uploaded file
 #    put:
 #      operationId: src.routes.files.???????
 #      tags:
