@@ -161,9 +161,9 @@ export default {
             this.user.firstname +
             " " +
             this.user.lastname +
-            '" echt veranderen naar ' +
+            '" echt veranderen naar "' +
             val +
-            "?"
+            '"?'
         );
         if (answer) {
           this.previousScreeningstate = this.screeningstate;
