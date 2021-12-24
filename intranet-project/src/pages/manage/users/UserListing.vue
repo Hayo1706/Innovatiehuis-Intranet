@@ -39,7 +39,29 @@
           </select>
         </div>
         <div class="mobileRow">{{ user.amountprojects }}</div>
-        <div class="mobileRow"></div>
+        <div class="mobileRow">
+          <select v-model="screeningstate">
+            <option
+              v-for="screeningstate in Object.keys(this.screeningstates)"
+              v-bind:key="screeningstate"
+            >
+              {{ screeningstate }}
+            </option>
+          </select>
+          <br />
+          <img
+            src="@\assets\images\exclamation.png"
+            v-if="screeningstate == 'nog niet in behandeling'"
+          />
+          <img
+            src="@\assets\images\waiting.png"
+            v-if="screeningstate == 'in behandeling'"
+          />
+          <img
+            src="@\assets\images\check.png"
+            v-if="screeningstate == 'voltooid'"
+          />
+        </div>
       </div>
 
       <!-- large screens-->
@@ -78,7 +100,29 @@
         </select>
       </div>
       <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
-      <div class="col d-none d-lg-block"></div>
+      <div class="col d-none d-lg-block">
+        <select v-model="screeningstate">
+          <option
+            v-for="screeningstate in Object.keys(this.screeningstates)"
+            v-bind:key="screeningstate"
+          >
+            {{ screeningstate }}
+          </option>
+        </select>
+        <br />
+        <img
+          src="@\assets\images\exclamation.png"
+          v-if="screeningstate == 'nog niet in behandeling'"
+        />
+        <img
+          src="@\assets\images\waiting.png"
+          v-if="screeningstate == 'in behandeling'"
+        />
+        <img
+          src="@\assets\images\check.png"
+          v-if="screeningstate == 'voltooid'"
+        />
+      </div>
 
       <div class="col">
         <a class="link" @click="handleRemoveUser(this.user)">Verwijderen</a>
@@ -99,11 +143,48 @@ export default {
       previousRole: this.user.rolename,
       selectedRole: this.user.rolename,
       roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
+      screeningstates: {
+        "nog niet in behandeling": 0,
+        "in behandeling": 1,
+        voltooid: 2,
+      },
+      //TODO set real initial screeningstate of use
+      previousScreeningstate: "nog niet in behandeling",
+      screeningstate: "nog niet in behandeling",
     };
   },
   watch: {
+    screeningstate: function (val) {
+      if (val != this.previousScreeningstate) {
+        let answer = confirm(
+          'Wil je de screeningstatus van de gebruiker "' +
+            this.user.firstname +
+            " " +
+            this.user.lastname +
+            '" echt veranderen naar ' +
+            val +
+            "?"
+        );
+        if (answer) {
+          this.previousScreeningstate = this.screeningstate;
+
+          const screeningstateId = this.screeningstates[val];
+          console.log(screeningstateId);
+          const updatedOnBackend = true;
+          //TODO update the screeningstate on the backend
+
+          if (updatedOnBackend) {
+            return;
+          } else {
+            //display error
+          }
+        }
+        //on failure of updating on backend or cancel by user, undo setting a new screeningstate
+        this.screeningstate = this.previousScreeningstate;
+      }
+    },
     selectedRole: function (val) {
-      if (val != this.previousRole) {
+      if (val != this.previousScreeningstate) {
         let answer = confirm(
           'Wil je de rol van de gebruiker "' +
             this.user.firstname +
@@ -185,9 +266,13 @@ export default {
   font-family: AddeleSemiBold;
 }
 .mobileRow {
-  height: 53px;
+  min-height: 53px;
 }
-
+img {
+  width: 50px;
+  margin-right: 2px;
+  margin-top: 10px;
+}
 .link {
   cursor: pointer;
   color: var(--gold2);

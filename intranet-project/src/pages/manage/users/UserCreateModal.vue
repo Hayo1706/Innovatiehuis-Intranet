@@ -44,6 +44,16 @@
                   {{ role }}
                 </option>
               </select>
+              <br />
+              Screeningstatus: &nbsp;
+              <select v-model="selectedScreeingstate">
+                <option
+                  v-for="screeningstate in Object.keys(this.screeningstates)"
+                  v-bind:key="screeningstate"
+                >
+                  {{ screeningstate }}
+                </option>
+              </select>
             </div>
           </form>
         </div>
@@ -74,11 +84,18 @@ export default {
   data: function () {
     return {
       roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
+      screeningstates: {
+        "nog niet in behandeling": 0,
+        "in behandeling": 1,
+        voltooid: 2,
+      },
       selectedRole: "student",
+      selectedScreeingstate: "nog niet in behandeling",
 
       firstname: "",
       lastname: "",
       selectedRoleId: 2,
+      selectedScreeingstateId: 0,
     };
   },
 
@@ -93,6 +110,9 @@ export default {
     selectedRole: function (val) {
       this.selectedRoleId = this.roles[val];
     },
+    selectedScreeingstate: function (val) {
+      this.selectedScreeingstateId = this.screeningstates[val];
+    },
   },
   methods: {
     clearForm() {
@@ -100,6 +120,8 @@ export default {
       this.lastname = "";
       this.selectedRole = "student";
       this.selectedRoleId = 2;
+      this.selectedScreeingstate = "nog niet in behandeling";
+      this.selectedScreeingstateId = 0;
     },
   },
 };
