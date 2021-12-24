@@ -118,7 +118,12 @@ def deleteFile(id):
         os.remove(requested_path)
         return make_response("Succesfully deleted file", 200)
 
-    return make_response("Failed to delete file", 400) 
+    return make_response("Failed to delete file", 400)
+
+def editFile(id):
+    requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
+    if isFilePathValid(requested_path):
+        return make_response("This doesn't work yet", 200)
 
 
 

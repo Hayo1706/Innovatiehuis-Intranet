@@ -159,27 +159,27 @@ paths:
       responses:
         200:
           description: Succesfully deleted file
-#    put:
-#      operationId: src.routes.files.?????
-#      tags:
-#        - Files
-#      summary: Update file
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      requestBody:
-#        required: true
-#        content:
-#          multipart/form-data:
-#            schema:
-#              type: object
-#              properties:
-#                files:
-#                  type: array
-#      responses:
-#        200:
-#          description: Successfully updated file
-#
+    put:
+      operationId: src.routes.files.editFile
+      tags:
+        - Files
+      summary: Update file
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+      responses:
+        200:
+          description: Successfully updated file
+
   /projects/{id}/folders:
     get:
       operationId: src.routes.folders.getFoldersInPath

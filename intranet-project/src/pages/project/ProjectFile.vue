@@ -1,7 +1,7 @@
 <template>
   <div class="projectFile" @click.right="viewMenu = true" @mouseleave="viewMenu = false">
     <div class = "box" @mouseleave="editName = false">
-        <div class = "content" @dblclick="editName = true"> <!--- Position of content is absolute --->
+        <div class = "content" @dblclick="editName = true" @mouseleave="renameFile()"> <!--- Position of content is absolute --->
             <input v-if="editName == false" class="fileName" v-model="fileName" disabled/>
             <input v-if="editName == true" class="fileName" v-model="fileName"/>
             .{{this.fileType}}
@@ -58,6 +58,19 @@ export default {
             alert(err);
         });
       },
+      renameFile(){
+        FilestorageService.updateFile(this.projectid, this.path)
+        .then((response) => {
+            this.editName = false;
+            alert(response)
+        })
+        .catch((err) => {
+            if (err.response) {
+            console.log(err.response.status);
+            }
+            alert(err);
+        });
+    },  
   }
 };
 </script>

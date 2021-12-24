@@ -1,13 +1,13 @@
 <template>
   <div class="projectFolder" @click.right="viewMenu = true" @mouseleave="viewMenu = false">
-    <div class="container-fluid">
+    <div class="container-fluid" @mouseleave="renameFolder()">
       <div class="row">
         <div class="col-sm-3">
           <img class="foldersImage" v-if="this.shared != 'yes'" src=".\..\..\assets\images\folder.png"/> 
           <img class="foldersImage" v-if="this.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
         </div>
         <div class="col-sm-9" @dblclick="editName = true">
-          <input class="folderName" v-if="this.editName == true" v-model="folderName" @mouseleave="renameFolder()"/>
+          <input class="folderName" v-if="this.editName == true" v-model="folderName"/>
           <input class="folderName" disabled v-if="this.editName == false" v-model="folderName"/>
         </div>
       </div>
