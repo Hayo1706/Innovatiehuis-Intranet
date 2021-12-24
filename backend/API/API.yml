@@ -136,29 +136,29 @@ paths:
 #      responses:
 #        200:
 #          description: Successfully moved file
-#  /projects/{id}/file:
-#    get:
-#      operationId: src.routes.files.??????????
-#      tags:
-#        - Files
-#      summary: Download file
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      responses:
-#        200:
-#          description: Downloaded file
-#    delete:
-#      operationId: src.routes.files.?????
-#      tags:
-#        - Files
-#      summary: Delete file(s) in directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#        - $ref: '#/components/parameters/path'
-#      responses:
-#        200:
-#          description: Succesfully delete file
+  /projects/{id}/file:
+    get:
+      operationId: src.routes.files.downloadFile
+      tags:
+        - Files
+      summary: Download file
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
+      responses:
+        200:
+          description: Downloaded file
+    delete:
+      operationId: src.routes.files.deleteFile
+      tags:
+        - Files
+      summary: Delete file(s) in directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
+      responses:
+        200:
+          description: Succesfully deleted file
 #    put:
 #      operationId: src.routes.files.?????
 #      tags:

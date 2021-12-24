@@ -32,16 +32,14 @@ def secureFileName(filename):
 def uploadFiles(id):
     files = connexion.request.files
     current_path = root + getProjectPath(id) + "/" + connexion.request.values.get('path')
-    print(current_path)
-    print("yes")
-    print(files)
+
     for k, v in files.items():
         upload_file(v, current_path)
 
+    return make_response('file(s) uploaded successfully', 200)
+
 
 def isFilePathValid(requested_path):
-    requested_path = (root + requested_path)
-
     if path_exists(requested_path) and not os.path.isdir(requested_path):
         return True
     return False
@@ -51,11 +49,11 @@ def getUniqueFileName(file_name_type, current_path, count):
     file_name = file_name_type[0: index_split_name]
     file_type = file_name_type[index_split_name::]
     if count == 0:
-        if file_exists(root + current_path + "/" + file_name + file_type):
+        if file_exists(current_path + "/" + file_name + file_type):
             return getUniqueFileName(file_name_type, current_path, count + 1)
         return file_name + file_type
     else:
-        if file_exists(root + current_path + "/" + file_name  + " (" + str(count) + ")" + file_type):
+        if file_exists(current_path + "/" + file_name  + " (" + str(count) + ")" + file_type):
             return getUniqueFileName(file_name_type, current_path, count + 1)
         return file_name + " (" + str(count) + ")" + file_type
 
@@ -107,6 +105,20 @@ def moveFile(id):
         return make_response("Succesfully moved file to target folder", 200)
 
     return make_response("Failed to move file", 400)
+
+
+def downloadFile(id):
+    requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
+    if isFilePathValid(requested_path):
+        send_file(requested_path, as_attachment=True)
+
+def deleteFile(id):
+    requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
+    if isFilePathValid(requested_path):
+        os.remove(requested_path)
+        return make_response("Succesfully deleted file", 200)
+
+    return make_response("Failed to delete file", 400) 
 
 
 

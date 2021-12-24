@@ -1,7 +1,7 @@
 <template>
     <div>
       <ProjectFolderHeader
-        @newFolderAdded="(id) => addFolder(id)"
+        @newFolderAdded="(id) => reloadFolders()"
         @searchBarChanged="setSearchTerm"
       />
       <div class="container-fluid">
@@ -40,8 +40,8 @@ export default {
      };
   },
   methods: {
-    addFolder(val){ 
-      this.folders.push(val);
+    reloadFolders(){
+      location.reload();
     },
     setSearchTerm(value) {
       this.searchTerm = value;

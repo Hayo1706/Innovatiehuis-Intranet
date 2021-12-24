@@ -1,14 +1,22 @@
 <template>
     <div>
-      <ProjectFilesHeader>
-      </ProjectFilesHeader>  
+      <ProjectFilesHeader 
+        @searchBarChanged="setSearchTerm"
+        @newFilesUploaded="reloadFiles()"
+      />
+         
       <div class="container-fluid"> 
         <div class="row">
           <div v-for="file in files" :key="file" class="col-sm-2" > <!--- Determine size of each Column --->
-            <div class="box"> <!--- Ensures that height is equal to width --->
-              <div class = "content"> <!--- Position of content is absolute --->
-                {{file}}
-              </div>
+            <div v-if="fileNameInSearchterm(file)"> <!--- Ensures that height is equal to width --->
+              <ProjectFile
+                :projectid="this.$route.params.id"
+                :name="file"
+                :type="file.split('.').pop()"
+                :path="'/' + file"
+                :shared='no'
+                @fileDeleted="reloadFiles()"
+              />
             </div>
           </div>
         </div>
@@ -19,9 +27,11 @@
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
 import ProjectFilesHeader from "./ProjectFilesHeader.vue";
+import ProjectFile from "./ProjectFile.vue";
 export default {
   components: {
-    ProjectFilesHeader
+    ProjectFilesHeader,
+    ProjectFile
   },
   name: "FilesView",
   props: [
@@ -30,9 +40,26 @@ export default {
   data: function () {
     return { 
       files: [],
-      projectid: this.$route.params.id};
+      projectid: this.$route.params.id,
+      searchTerm: "",
+      path: this.$route.fullPath.split("/project/" + this.$route.params.id)[1]
+      };
   },
   methods: {
+    fileNameInSearchterm(name){
+      if(name.includes(this.searchTerm) || this.searchTerm == null){
+        return true;
+      }
+      else{
+        return false;
+      }
+    },
+     setSearchTerm(value) {
+      this.searchTerm = value;
+    },
+    reloadFiles(){
+      location.reload();
+    },
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");
@@ -68,26 +95,6 @@ p {
 .row{
   font-size: calc(0.7vw + 0.7vh);
   text-align: left;
-}
-.box {
-    position: relative;
-    width:    100%; /* desired width */
-    background-color: var(--blue2);
-    margin-bottom: calc(1vw + 1vh);
-}
-.box:before {
-    content:     "";
-    display:     block;
-    padding-top: 100%; /* initial ratio of 1:1*/
-}
-
-.content {
-    position: absolute;
-    top:      0;
-    left:     0;
-    bottom:   0;
-    right:    0;
-    font-size: 12px;
 }
 
 </style>

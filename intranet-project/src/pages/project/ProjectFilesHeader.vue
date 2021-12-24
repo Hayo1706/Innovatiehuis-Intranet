@@ -48,13 +48,14 @@ export default {
         }
         FilestorageService.uploadFiles(this.$route.params.id, path, formData)
         .then((response) => {
-            alert(response);
+          this.$emit('newFilesUploaded');
+          alert(response);
         })
         .catch((err) => {
-            if (err.response) {
-            console.log(err.response.status);
-            }
-            alert(err);
+          if (err.response) {
+          console.log(err.response.status);
+          }
+          alert(err);
         });      
       }
   },
