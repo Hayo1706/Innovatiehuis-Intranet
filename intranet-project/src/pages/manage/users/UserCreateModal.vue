@@ -134,11 +134,21 @@ export default {
         roleid: this.selectedRoleId,
         screeningstatus: this.selectedScreeingstateId,
       })
-        .then(() => {})
+        .then(() => {
+          alert(
+            "De gebruiker '" +
+              this.firstname +
+              " " +
+              this.lastname +
+              "' is toegevoegd!"
+          );
+          window.location.reload();
+        })
         .catch((err) => {
           if (err.response) {
             console.log(err.response.status);
           }
+          alert("Er ging iets mis! Probeer later weer");
         });
     },
     clearForm() {
