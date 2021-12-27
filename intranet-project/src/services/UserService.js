@@ -25,8 +25,11 @@ var UserService = function () {
         return data;
     }
     async function addUser(user) {
-        console.log(user);
         const { data } = await axiosClient.post(`/users`, user, { timeout: 2000 });
+        return data;
+    }
+    async function updateUser(user) {
+        const { data } = await axiosClient.put(`/users`, user, { timeout: 2000 });
         return data;
     }
     return {
@@ -34,6 +37,7 @@ var UserService = function () {
         getUserById,
         addUser,
         deleteUser,
+        updateUser
     }
 
 }

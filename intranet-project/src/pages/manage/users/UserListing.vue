@@ -198,8 +198,15 @@ export default {
           this.previousRole = this.selectedRole;
 
           const roleid = this.roles[val];
-          console.log(roleid);
-          const updatedOnBackend = true;
+
+          const updatedOnBackend = this.updateUser({
+            firstname: this.user.firstname,
+            lastname: this.user.lastname,
+            email: this.user.email,
+            roleid: roleid,
+            screeningstatus: this.user.screeningstatus,
+          });
+
           //TODO update the role on the backend
 
           if (updatedOnBackend) {
@@ -224,6 +231,20 @@ export default {
     );
   },
   methods: {
+    updateUser(user) {
+      UserService.updateUser({
+        user,
+      })
+        .then(() => {
+          return true;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+            return false;
+          }
+        });
+    },
     onClick() {
       this.$router.push("/user/" + this.user.userid);
     },
