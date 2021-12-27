@@ -182,11 +182,9 @@ export default {
               this.previousRole = this.selectedRole;
               return;
             })
-            .catch((err) => {
+            .catch(() => {
               this.selectedRole = this.previousRole;
-              if (err.response) {
-                console.log(err.response.status);
-              }
+              alert("Er ging iets mis!");
             });
         }
       }
@@ -219,11 +217,9 @@ export default {
               this.previousRole = this.selectedRole;
               return;
             })
-            .catch((err) => {
+            .catch(() => {
               this.selectedRole = this.previousRole;
-              if (err.response) {
-                console.log(err.response.status);
-              }
+              alert("Er ging iets mis!");
             });
         }
       }
