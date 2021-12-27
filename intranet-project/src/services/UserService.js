@@ -28,8 +28,8 @@ var UserService = function () {
         const { data } = await axiosClient.post(`/users`, user, { timeout: 2000 });
         return data;
     }
-    async function updateUser(user) {
-        const { data } = await axiosClient.put(`/users`, user, { timeout: 2000 });
+    async function updateUser(user, userid) {
+        const { data } = await axiosClient.put(`/users/${userid}`, user, { timeout: 2000 });
         return data;
     }
     return {

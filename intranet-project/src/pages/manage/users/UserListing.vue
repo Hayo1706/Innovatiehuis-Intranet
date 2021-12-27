@@ -169,9 +169,17 @@ export default {
           this.previousScreeningstate = this.screeningstate;
 
           const screeningstateId = this.screeningstates[val];
-          console.log(screeningstateId);
-          const updatedOnBackend = true;
-          //TODO update the screeningstate on the backend
+
+          const updatedOnBackend = this.updateUser(
+            {
+              firstname: this.user.firstname,
+              lastname: this.user.lastname,
+              email: this.user.email,
+              roleid: this.user.roleid,
+              screeningstatus: screeningstateId,
+            },
+            this.user.userid
+          );
 
           if (updatedOnBackend) {
             return;
@@ -199,13 +207,16 @@ export default {
 
           const roleid = this.roles[val];
 
-          const updatedOnBackend = this.updateUser({
-            firstname: this.user.firstname,
-            lastname: this.user.lastname,
-            email: this.user.email,
-            roleid: roleid,
-            screeningstatus: this.user.screeningstatus,
-          });
+          const updatedOnBackend = this.updateUser(
+            {
+              firstname: this.user.firstname,
+              lastname: this.user.lastname,
+              email: this.user.email,
+              roleid: roleid,
+              screeningstatus: this.user.screeningstatus,
+            },
+            this.user.userid
+          );
 
           //TODO update the role on the backend
 
@@ -231,10 +242,8 @@ export default {
     );
   },
   methods: {
-    updateUser(user) {
-      UserService.updateUser({
-        user,
-      })
+    updateUser(user, userid) {
+      UserService.updateUser(user, userid)
         .then(() => {
           return true;
         })
