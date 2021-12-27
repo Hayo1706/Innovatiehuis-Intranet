@@ -412,6 +412,31 @@ paths:
       responses:
         200:
           description: Successfully read all users
+    post:
+      operationId: src.routes.users.post
+      tags:
+        - Users
+      summary: Add user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                roleid:
+                  type: string
+                screeningstatus:
+                  type: string
+      responses:
+        200:
+          description: Successfully posted announcement to project
   /users/{id}:
     get:
       operationId: src.routes.users.read_one
