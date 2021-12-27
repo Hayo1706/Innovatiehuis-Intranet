@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   KEY `userid2_announcements` (`userid`),
   CONSTRAINT `projectid_announcements` FOREIGN KEY (`projectid`) REFERENCES `projects` (`projectid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `userid2_announcements` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table innovatieplatform.announcements: ~9 rows (approximately)
 DELETE FROM `announcements`;
@@ -93,20 +93,20 @@ CREATE TABLE IF NOT EXISTS `projects` (
 DELETE FROM `projects`;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
 INSERT INTO `projects` (`projectid`, `project_name`, `is_archived`, `created`, `last_updated`, `description`) VALUES
-	(1, 'Project X', 0, '2021-11-30 18:27:30', '2021-12-09 14:07:01', ''),
-	(2, 'Project X 2.0', 1, '2021-11-17 15:28:55', '2021-12-09 14:06:54', ''),
-	(4, 'Brievenbusdrone', 0, '2021-11-17 15:32:44', '2021-11-30 17:52:30', ''),
-	(5, 'Rattenval met 5G', 0, '2021-11-17 15:32:46', '2021-11-30 17:53:22', ''),
-	(6, 'Talking Crime Scenes', 0, '2021-11-17 15:32:50', '2021-11-30 17:54:50', ''),
-	(7, 'Slim Vest', 0, '2021-11-17 15:32:52', '2021-11-30 17:55:17', ''),
-	(8, 'Briljant Vest', 0, '2021-11-30 18:28:23', '2021-11-30 18:28:23', ''),
-	(9, 'Slimme Muts', 0, '2021-11-30 18:28:42', '2021-11-30 18:28:42', ''),
-	(10, 'Intranet Platform', 0, '2021-11-17 17:02:08', '2021-11-30 19:14:26', ''),
-	(11, 'Diplomaregister', 0, '2021-11-17 15:32:52', '2021-11-30 17:55:33', ''),
-	(12, 'Sociale Robot', 1, '2021-11-17 15:32:52', '2021-11-30 17:55:39', ''),
-	(13, 'Briljante Muts', 0, '2021-11-30 18:29:00', '2021-11-30 18:29:00', ''),
-	(14, 'Intranet Git', 0, '2021-11-30 18:30:13', '2021-11-30 18:30:14', ''),
-	(15, 'AR Schietbaan', 0, '2021-11-25 12:47:44', '2021-11-30 17:55:45', '');
+	(1, 'Project X', 0, '2021-11-30 18:27:30', '2021-12-27 23:02:51', 'Een supergeheim onderzoek naar massapsychologie, met onder meer live experimenten in Haren.'),
+	(2, 'Project X 2.0', 1, '2021-11-17 15:28:55', '2021-12-27 22:51:18', 'Een nieuwe manier om het onderzoek van 1.0 voort te zetten aan de hand van computersimulaties.'),
+	(4, 'Brievenbusdrone', 0, '2021-11-17 15:32:44', '2021-12-27 23:01:31', 'Een futuristische oplossing om een huiszoeking te doen, maar niet futuristisch genoeg voor het moment dat de maatschappij zich realiseert dat brievenbussen inmiddels overbodig zijn.'),
+	(5, 'Rattenval met 5G', 0, '2021-11-17 15:32:46', '2021-12-27 22:58:31', 'Als je ratten kunt doden met 5G, is het dan veilig voor mensen?'),
+	(6, 'Talking Crime Scenes', 0, '2021-11-17 15:32:50', '2021-12-27 22:57:49', 'YEEAAAAAAAAHHHHHHHHHHHHHHH'),
+	(7, 'Slim Vest', 0, '2021-11-17 15:32:52', '2021-12-27 22:57:13', '"Looking smart as always, Mr. Bond."'),
+	(8, 'Briljant Vest', 0, '2021-11-30 18:28:23', '2021-12-27 22:53:37', 'Zo eentje met een vakje voor je monocle.'),
+	(9, 'Slimme Muts', 0, '2021-11-30 18:28:42', '2021-12-27 22:53:14', 'Het kan als compliment bedoeld zijn, maar het is nog steeds vrouwonvriendelijk.'),
+	(10, 'Intranet Platform', 0, '2021-11-17 17:02:08', '2021-12-27 23:03:21', 'Innovatiehuis heeft een platform nodig voor projecten, en het platform heeft projecten nodig, dus bij deze!'),
+	(11, 'Diplomaregister', 0, '2021-11-17 15:32:52', '2021-12-27 22:56:27', 'Handige plek voor je zwemdiploma, veterstrikdiploma, en zwarte pieten-diploma.'),
+	(12, 'Sociale Robot', 1, '2021-11-17 15:32:52', '2021-12-27 23:02:15', 'Een giant leap op weg naar ons einddoel: de Asociale Robot.'),
+	(13, 'Briljante Muts', 0, '2021-11-30 18:29:00', '2021-12-27 22:52:51', 'Slimme Muts was een succes, maar het kan slimmer!'),
+	(14, 'Intranet Git', 0, '2021-11-30 18:30:13', '2021-12-27 22:52:34', 'Uitbreiding op het Intranet Platform die het hosten van bestanden uitbesteed.'),
+	(15, 'AR Schietbaan', 0, '2021-11-25 12:47:44', '2021-12-27 22:55:07', 'Niet te verwarren met de aankomende Piraten-DLC "Arrrrrr Schietbaan"');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.projects_have_parents
@@ -166,6 +166,7 @@ DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
   `roleid` int(11) NOT NULL AUTO_INCREMENT,
   `role_name` varchar(50) NOT NULL,
+  `is_protected` tinyint(1) NOT NULL DEFAULT 1,
   `may_create_projects` tinyint(1) NOT NULL DEFAULT 0,
   `may_read_all_projects` tinyint(1) NOT NULL DEFAULT 0,
   `may_read_assigned_projects` tinyint(1) NOT NULL DEFAULT 0,
@@ -181,6 +182,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `may_create_replies_in_assigned_projects` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_all_replies` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_own_content` tinyint(1) NOT NULL DEFAULT 0,
+  `may_create_users` tinyint(1) NOT NULL DEFAULT 0,
   `may_read_all_users` tinyint(1) NOT NULL DEFAULT 0,
   `may_read_users_in_assigned_projects` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_all_user_passwords` tinyint(1) NOT NULL DEFAULT 0,
@@ -188,10 +190,11 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `may_update_all_user_details` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_own_details` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_all_user_roles` tinyint(1) NOT NULL DEFAULT 0,
+  `may_elevate_to_protected_roles` tinyint(1) unsigned zerofill NOT NULL DEFAULT 0,
   `may_crud_roles` tinyint(1) NOT NULL DEFAULT 0,
   `may_create_chat_messages_everywhere` tinyint(1) NOT NULL DEFAULT 0,
   `may_create_chat_messages_in_assigned_projects` tinyint(1) NOT NULL DEFAULT 0,
-  `may_update_chat_messages` tinyint(1) NOT NULL DEFAULT 0,
+  `may_update_all_chat_messages` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_own_chat_messages` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`roleid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
@@ -199,11 +202,11 @@ CREATE TABLE IF NOT EXISTS `roles` (
 -- Dumping data for table innovatieplatform.roles: ~4 rows (approximately)
 DELETE FROM `roles`;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` (`roleid`, `role_name`, `may_create_projects`, `may_read_all_projects`, `may_read_assigned_projects`, `may_update_all_projects`, `may_update_assigned_projects`, `may_delete_all_projects`, `may_update_all_files`, `may_update_files_in_assigned_projects`, `may_create_announcements_everywhere`, `may_create_announcements_in_assigned_projects`, `may_update_all_announcements`, `may_create_replies_everywhere`, `may_create_replies_in_assigned_projects`, `may_update_all_replies`, `may_update_own_content`, `may_read_all_users`, `may_read_users_in_assigned_projects`, `may_update_all_user_passwords`, `may_update_own_password`, `may_update_all_user_details`, `may_update_own_details`, `may_update_all_user_roles`, `may_crud_roles`, `may_create_chat_messages_everywhere`, `may_create_chat_messages_in_assigned_projects`, `may_update_chat_messages`, `may_update_own_chat_messages`) VALUES
-	(1, 'observer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	(2, 'student', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	(3, 'moderator', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	(4, 'admin', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `roles` (`roleid`, `role_name`, `is_protected`, `may_create_projects`, `may_read_all_projects`, `may_read_assigned_projects`, `may_update_all_projects`, `may_update_assigned_projects`, `may_delete_all_projects`, `may_update_all_files`, `may_update_files_in_assigned_projects`, `may_create_announcements_everywhere`, `may_create_announcements_in_assigned_projects`, `may_update_all_announcements`, `may_create_replies_everywhere`, `may_create_replies_in_assigned_projects`, `may_update_all_replies`, `may_update_own_content`, `may_create_users`, `may_read_all_users`, `may_read_users_in_assigned_projects`, `may_update_all_user_passwords`, `may_update_own_password`, `may_update_all_user_details`, `may_update_own_details`, `may_update_all_user_roles`, `may_elevate_to_protected_roles`, `may_crud_roles`, `may_create_chat_messages_everywhere`, `may_create_chat_messages_in_assigned_projects`, `may_update_all_chat_messages`, `may_update_own_chat_messages`) VALUES
+	(1, 'observer', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1),
+	(2, 'student', 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1),
+	(3, 'moderator', 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1),
+	(4, 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.users
