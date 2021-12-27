@@ -166,8 +166,6 @@ export default {
             '"?'
         );
         if (answer) {
-          this.previousScreeningstate = this.screeningstate;
-
           const screeningstateId = this.screeningstates[val];
 
           const updatedOnBackend = this.updateUser(
@@ -182,13 +180,14 @@ export default {
           );
 
           if (updatedOnBackend) {
+            this.previousScreeningstate = this.screeningstate;
             return;
           } else {
             //display error
           }
+          //on failure of updating on backend or cancel by user, undo setting a new screeningstate
+          this.screeningstate = this.previousScreeningstate;
         }
-        //on failure of updating on backend or cancel by user, undo setting a new screeningstate
-        this.screeningstate = this.previousScreeningstate;
       }
     },
     selectedRole: function (val) {
@@ -203,8 +202,6 @@ export default {
             "?"
         );
         if (answer) {
-          this.previousRole = this.selectedRole;
-
           const roleid = this.roles[val];
 
           const updatedOnBackend = this.updateUser(
@@ -221,13 +218,14 @@ export default {
           //TODO update the role on the backend
 
           if (updatedOnBackend) {
+            this.previousRole = this.selectedRole;
             return;
           } else {
             //display error
           }
+          //on failure of updating on backend or cancel by user, undo setting a new role
+          this.selectedRole = this.previousRole;
         }
-        //on failure of updating on backend or cancel by user, undo setting a new role
-        this.selectedRole = this.previousRole;
       }
     },
   },

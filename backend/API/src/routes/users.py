@@ -64,7 +64,7 @@ def put(id):
         return make_response("Invalid body", 404)
 
     query_update(
-        "UPDATE users SET firstname=%(firstname)s, lastname=%(lastname)s, email=%(email)s, roleid=%(roleid)s, screeningstatus=%(screeningstatus)s) WHERE userid=%(id)s",
+        "UPDATE users SET firstname=%(firstname)s, lastname=%(lastname)s, email=%(email)s, roleid=%(roleid)s, screeningstatus=%(screeningstatus)s WHERE userid=%(id)s",
         {'firstname': firstname, 'lastname': lastname, 'email': email, 'roleid': roleid,
          'screeningstatus': screeningstatus, "userid": id})
     return make_response("User successfully updated", 200)
