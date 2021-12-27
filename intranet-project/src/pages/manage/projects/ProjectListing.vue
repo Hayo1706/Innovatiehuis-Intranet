@@ -29,14 +29,11 @@
           }}
         </div>
         <div class="mobileRow">
-          <br /><span
-            @click="onParrentClick()"
-            class="projectButton"
-            v-if="project.parentname"
-            >{{ project.parentname }}</span
-          >
+          <span @click="onParrentClick()" class="projectButton">Open</span>
         </div>
-        <div class="mobileRow">{{ project.amountsubprojects }}</div>
+        <div class="mobileRow">
+          <span @click="onParrentClick()" class="projectButton">Open</span>
+        </div>
       </div>
 
       <!-- large screens-->
@@ -67,14 +64,11 @@
         }}
       </div>
       <div class="col d-none d-lg-block">
-        <span
-          @click="onParrentClick()"
-          class="projectButton"
-          v-if="project.parentname"
-          >{{ project.parentname }}</span
-        >
+        <span @click="onParrentClick()" class="projectButton">Open</span>
       </div>
-      <div class="col d-none d-lg-block">{{ project.amountsubprojects }}</div>
+      <div class="col d-none d-lg-block">
+        <span @click="onParrentClick()" class="projectButton">Open</span>
+      </div>
 
       <div class="col">
         <ProjectButtons
@@ -101,9 +95,10 @@ export default {
     onClick() {
       this.$router.push("/project/" + this.project.projectid);
     },
-    onParrentClick() {
+    loadParentsModal() {
       this.$router.push("/project/" + this.project.parentid);
     },
+    loadChildrenModal() {},
   },
 };
 </script>
@@ -114,7 +109,7 @@ export default {
   margin: 3px;
   padding: 10px;
   box-sizing: border-box;
-  color:var( --blue1); 
+  color: var(--blue1);
 }
 .row {
   padding-top: 12px;
@@ -130,9 +125,9 @@ export default {
   height: fit-content;
   cursor: pointer;
   width: fit-content;
-  font-family:AddeleSemiBold ;
+  font-family: AddeleSemiBold;
 }
 .mobileRow {
-  height: 53px;
+  height: 54px;
 }
 </style>

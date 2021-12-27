@@ -4,7 +4,7 @@
       <div class="col">Project</div>
       <div class="col">Aangemaakt</div>
       <div class="col">Laatste Update</div>
-      <div class="col">Overkoepelend project</div>
+      <div class="col">Hoofdprojecten</div>
       <div class="col">Sub-projecten</div>
       <div class="col">
         <SearchBar

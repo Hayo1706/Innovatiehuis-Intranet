@@ -35,6 +35,12 @@
                 id="message-text"
                 placeholder="Achternaam"
               />
+              <input
+                v-model="this.email"
+                class="form-control"
+                id="message-text"
+                placeholder="Email"
+              />
               Rol: &nbsp;
               <select v-model="selectedRole">
                 <option
@@ -94,6 +100,7 @@ export default {
 
       firstname: "",
       lastname: "",
+      email: "",
       selectedRoleId: 2,
       selectedScreeingstateId: 0,
     };
@@ -118,6 +125,7 @@ export default {
     clearForm() {
       this.firstname = "";
       this.lastname = "";
+      this.email = "";
       this.selectedRole = "student";
       this.selectedRoleId = 2;
       this.selectedScreeingstate = "nog niet in behandeling";

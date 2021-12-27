@@ -148,9 +148,9 @@ export default {
         "in behandeling": 1,
         voltooid: 2,
       },
-      //TODO set real initial screeningstate of use
-      previousScreeningstate: "nog niet in behandeling",
-      screeningstate: "nog niet in behandeling",
+
+      previousScreeningstate: "",
+      screeningstate: "",
     };
   },
   watch: {
@@ -213,6 +213,16 @@ export default {
       }
     },
   },
+  created() {
+    this.previousScreeningstate = this.getKeyByValue(
+      this.screeningstates,
+      this.user.screeningstatus
+    );
+    this.screeningstate = this.getKeyByValue(
+      this.screeningstates,
+      this.user.screeningstatus
+    );
+  },
   methods: {
     onClick() {
       this.$router.push("/user/" + this.user.userid);
@@ -236,6 +246,9 @@ export default {
             }
           });
       }
+    },
+    getKeyByValue(object, value) {
+      return Object.keys(object).find((key) => object[key] == value);
     },
   },
 };
