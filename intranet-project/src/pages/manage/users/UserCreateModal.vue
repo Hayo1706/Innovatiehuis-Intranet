@@ -60,6 +60,9 @@
                   {{ screeningstate }}
                 </option>
               </select>
+              <br />
+              (De gebruiker heeft pas rechten die bij zijn rol horen, als de
+              screening voltooid is.)
             </div>
           </form>
         </div>
