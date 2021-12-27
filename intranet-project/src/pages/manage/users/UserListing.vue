@@ -168,7 +168,7 @@ export default {
         if (answer) {
           const screeningstateId = this.screeningstates[val];
 
-          const updatedOnBackend = this.updateUser(
+          UserService.updateUser(
             {
               firstname: this.user.firstname,
               lastname: this.user.lastname,
@@ -177,16 +177,17 @@ export default {
               screeningstatus: screeningstateId,
             },
             this.user.userid
-          );
-
-          if (updatedOnBackend) {
-            this.previousScreeningstate = this.screeningstate;
-            return;
-          } else {
-            //display error
-          }
-          //on failure of updating on backend or cancel by user, undo setting a new screeningstate
-          this.screeningstate = this.previousScreeningstate;
+          )
+            .then(() => {
+              this.previousRole = this.selectedRole;
+              return;
+            })
+            .catch((err) => {
+              this.selectedRole = this.previousRole;
+              if (err.response) {
+                console.log(err.response.status);
+              }
+            });
         }
       }
     },
@@ -204,7 +205,7 @@ export default {
         if (answer) {
           const roleid = this.roles[val];
 
-          const updatedOnBackend = this.updateUser(
+          UserService.updateUser(
             {
               firstname: this.user.firstname,
               lastname: this.user.lastname,
@@ -213,18 +214,17 @@ export default {
               screeningstatus: this.user.screeningstatus,
             },
             this.user.userid
-          );
-
-          //TODO update the role on the backend
-
-          if (updatedOnBackend) {
-            this.previousRole = this.selectedRole;
-            return;
-          } else {
-            //display error
-          }
-          //on failure of updating on backend or cancel by user, undo setting a new role
-          this.selectedRole = this.previousRole;
+          )
+            .then(() => {
+              this.previousRole = this.selectedRole;
+              return;
+            })
+            .catch((err) => {
+              this.selectedRole = this.previousRole;
+              if (err.response) {
+                console.log(err.response.status);
+              }
+            });
         }
       }
     },
@@ -240,18 +240,6 @@ export default {
     );
   },
   methods: {
-    updateUser(user, userid) {
-      UserService.updateUser(user, userid)
-        .then(() => {
-          return true;
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-            return false;
-          }
-        });
-    },
     onClick() {
       this.$router.push("/user/" + this.user.userid);
     },
