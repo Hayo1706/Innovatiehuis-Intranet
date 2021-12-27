@@ -74,4 +74,11 @@ export default {
   },
 };
 </script>
-
+<style scoped>
+#createProjectModal {
+  font-family: AddeleThin;
+}
+.modal-title {
+  font-family: Montserrat;
+}
+</style>

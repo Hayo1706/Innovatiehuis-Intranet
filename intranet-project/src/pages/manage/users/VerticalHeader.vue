@@ -20,11 +20,8 @@ export default {
 </script>
 
 <style scoped>
-#projectsHeader {
-  font-family: AddeleSemiBold;
-}
 .headerText {
-  font-family: AddeleSemiBold;
+  font-family: Montserrat;
   height: 53px;
 }
 </style>

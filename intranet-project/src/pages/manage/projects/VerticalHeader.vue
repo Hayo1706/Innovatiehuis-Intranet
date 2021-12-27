@@ -19,7 +19,7 @@ export default {
 </script>
 <style scoped>
 .headerText {
-  font-family: AddeleSemiBold;
+  font-family: Montserrat;
   height: 53px;
 }
 </style>

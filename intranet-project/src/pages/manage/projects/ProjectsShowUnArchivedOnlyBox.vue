@@ -37,6 +37,7 @@ export default {
 <style  scoped>
 label {
   font-size: 15px;
+  font-family: AddeleThin;
 }
 #showunarchivedonlybox {
   margin-right: 4px;

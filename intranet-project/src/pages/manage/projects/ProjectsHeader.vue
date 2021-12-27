@@ -53,7 +53,7 @@ export default {
   justify-content: space-between;
   flex-basis: 100%;
   gap: 60px;
-  font-family: Monserrat;
+  font-family: Montserrat;
 }
 .input-group {
   width: 90%;

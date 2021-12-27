@@ -41,5 +41,6 @@ export default {
 <style  scoped>
 #search-input {
   margin-right: 4px;
+  font-family: AddeleThin;
 }
 </style>

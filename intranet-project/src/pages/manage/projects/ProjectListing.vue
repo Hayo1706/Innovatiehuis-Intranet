@@ -95,9 +95,7 @@ export default {
     onClick() {
       this.$router.push("/project/" + this.project.projectid);
     },
-    loadParentsModal() {
-      this.$router.push("/project/" + this.project.parentid);
-    },
+    loadParentsModal() {},
     loadChildrenModal() {},
   },
 };
@@ -110,6 +108,7 @@ export default {
   padding: 10px;
   box-sizing: border-box;
   color: var(--blue1);
+  font-family: AddeleSemiBold;
 }
 .row {
   padding-top: 12px;
@@ -125,9 +124,8 @@ export default {
   height: fit-content;
   cursor: pointer;
   width: fit-content;
-  font-family: AddeleSemiBold;
 }
 .mobileRow {
-  height: 54px;
+  height: 53px;
 }
 </style>

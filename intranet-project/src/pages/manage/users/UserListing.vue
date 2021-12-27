@@ -261,6 +261,7 @@ export default {
   padding: 10px;
   box-sizing: border-box;
   color: var(--blue1);
+  font-family: AddeleSemiBold;
 }
 .row {
   padding-top: 12px;
@@ -276,7 +277,6 @@ export default {
   height: fit-content;
   cursor: pointer;
   width: fit-content;
-  font-family: AddeleSemiBold;
 }
 .mobileRow {
   min-height: 53px;

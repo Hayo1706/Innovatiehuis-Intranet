@@ -145,5 +145,11 @@ select {
   margin-bottom: 10px;
   border-radius: 0.25rem;
 }
+#createUserModal {
+  font-family: AddeleThin;
+}
+.modal-title {
+  font-family: Montserrat;
+}
 </style>
 
