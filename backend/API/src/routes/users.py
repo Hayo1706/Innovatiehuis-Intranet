@@ -30,11 +30,12 @@ def post():
         email = body['email']
         roleid = body['roleid']
         screeningstatus = body['screeningstatus']
+        hash = "123"
     except KeyError:
         return make_response("Invalid body", 404)
 
     query_update(
         "INSERT INTO users (firstname, lastname, email, roleid, screeningstatus) VALUES (%(firstname)s, %(lastname)s, %(email)s, %(roleid)s, %(screeningstatus)s)",
-        {'firstname': firstname, 'lastname': lastname, 'email': email, 'roleid': roleid, 'screeningstatus': screeningstatus})
+        {'firstname': firstname, 'lastname': lastname, 'email': email, 'roleid': roleid, 'screeningstatus': screeningstatus,'hash': hash})
     return make_response("User successfully added", 200)
 
