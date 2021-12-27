@@ -23,7 +23,7 @@
             :id="reply.replyid"
             :announcementid="reply.announcementid"
             :userid="reply.userid"
-            :username="reply.firstname + ' ' + reply.lastname"
+            :username="reply.first_name + ' ' + reply.last_name"
             :timestamp="reply.timestamp"
             :content="reply.content"
             @reload="reload()"

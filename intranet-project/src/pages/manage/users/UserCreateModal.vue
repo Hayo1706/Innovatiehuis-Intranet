@@ -24,13 +24,13 @@
             <div class="mb-9">
               <!-- TODO add input here-->
               <input
-                v-model="this.firstname"
+                v-model="this.first_name"
                 class="form-control"
                 id="message-text"
                 placeholder="Voornaam"
               />
               <input
-                v-model="this.lastname"
+                v-model="this.last_name"
                 class="form-control"
                 id="message-text"
                 placeholder="Achternaam"
@@ -52,7 +52,7 @@
               </select>
               <br />
               Screeningstatus: &nbsp;
-              <select v-model="selectedScreeingstate">
+              <select v-model="selectedScreeningState">
                 <option
                   v-for="screeningstate in Object.keys(this.screeningstates)"
                   v-bind:key="screeningstate"
@@ -100,13 +100,13 @@ export default {
         voltooid: 2,
       },
       selectedRole: "student",
-      selectedScreeingstate: "nog niet in behandeling",
+      selectedScreeningState: "nog niet in behandeling",
 
-      firstname: "",
-      lastname: "",
+      first_name: "",
+      last_name: "",
       email: "",
       selectedRoleId: 2,
-      selectedScreeingstateId: 0,
+      selectedScreeningStateId: 0,
     };
   },
 
@@ -121,25 +121,25 @@ export default {
     selectedRole: function (val) {
       this.selectedRoleId = this.roles[val];
     },
-    selectedScreeingstate: function (val) {
-      this.selectedScreeingstateId = this.screeningstates[val];
+    selectedScreeningState: function (val) {
+      this.selectedScreeningStateId = this.screeningstates[val];
     },
   },
   methods: {
     addNewUser() {
       UserService.addUser({
-        firstname: this.firstname,
-        lastname: this.lastname,
+        first_name: this.first_name,
+        last_name: this.last_name,
         email: this.email,
         roleid: this.selectedRoleId,
-        screeningstatus: this.selectedScreeingstateId,
+        screening_status: this.selectedScreeningStateId,
       })
         .then(() => {
           alert(
             "De gebruiker '" +
-              this.firstname +
+              this.first_name +
               " " +
-              this.lastname +
+              this.last_name +
               "' is toegevoegd!"
           );
           window.location.reload();
@@ -152,13 +152,13 @@ export default {
         });
     },
     clearForm() {
-      this.firstname = "";
-      this.lastname = "";
+      this.first_name = "";
+      this.last_name = "";
       this.email = "";
       this.selectedRole = "student";
       this.selectedRoleId = 2;
-      this.selectedScreeingstate = "nog niet in behandeling";
-      this.selectedScreeingstateId = 0;
+      this.selectedScreeningState = "nog niet in behandeling";
+      this.selectedScreeningStateId = 0;
     },
   },
 };

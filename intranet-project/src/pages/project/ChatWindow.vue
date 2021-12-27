@@ -8,7 +8,7 @@
         <div class="component-body">
             <div class="container-fluid">
                 <div class="row" v-for="message in messages" :key="message.name">
-                    {{message.name}}: {{ message.message }}
+                    {{message.first_name}} {{message.last_name}}: {{ message.content }}
                 </div>
             </div>
             <div>
@@ -39,10 +39,10 @@ export default {
     data: function () {
         return { 
             messages: [
-                {name:"John Doe", message:"Hey"},
-                {name:"John Doe", message:"Does this work?"},
-                {name:"Jane Doe", message:"Heya!! Yes it works"},
-                {name:"John Doe", message:"Alright awesome!"},
+                {first_name: "John", last_name: "Doe", content: "Hey"},
+                {first_name: "John", last_name: "Doe", content: "Does this work?"},
+                {first_name: "Jane", last_name: "Doe", content: "Heya!! Yes it works"},
+                {first_name: "John", last_name: "Doe", content: "Alright awesome!"},
             ],
         };
     },

@@ -1,11 +1,23 @@
 <template>
   <div class="container-fluid">
     <div class="row">
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
       <div class="col-8">
         <ProjectsWindow>Mijn Projecten</ProjectsWindow>
       </div>
       <div class="col-4">
-        <AnnouncementWindow @reload="reloadAnnouncementWindow()" :key="this.announcementWindowKey">Algemene Mededelingen</AnnouncementWindow>
+        <AnnouncementWindow
+          @reload="reloadAnnouncementWindow()"
+          :key="this.announcementWindowKey"
+        >Algemene Mededelingen</AnnouncementWindow>
       </div>
     </div>
   </div>
@@ -29,7 +41,7 @@ export default {
     }
   },
   created() {
-    this.$emit('newHeaderTitle', 'Hoofdpagina')
+    this.$emit('newHeaderTitle', 'Hoofdpagina');
   }
 };
 </script>

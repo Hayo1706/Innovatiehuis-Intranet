@@ -1,9 +1,9 @@
 <template>
   <div class="col">
-    <div id="archivedText" v-if="project.isarchived">Gearchiveerd</div>
+    <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
     <a class="link" @click="gotoMembers()">Leden</a>
     <a
-      v-if="project.isarchived"
+      v-if="project.is_archived"
       src="@/assets/images/upload.png"
       class="link"
       @click="handleArchiveProject(project)"
@@ -34,7 +34,7 @@ export default {
     },
     async handleDeleteProject(project) {
       let answer = confirm(
-        'Wil je het project "' + project.name + '" echt verwijderen?'
+        'Wil je het project "' + project.project_name + '" echt verwijderen?'
       );
       if (answer) {
         this.$emit("removeProject", project.projectid);
@@ -42,11 +42,11 @@ export default {
     },
     async handleArchiveProject(project) {
       let action = "archiveren";
-      if (project.isarchived) {
+      if (project.is_archived) {
         action = "dearchiveren";
       }
       let answer = confirm(
-        'Wil je het project "' + project.name + '" echt ' + action + "?"
+        'Wil je het project "' + project.project_name + '" echt ' + action + "?"
       );
       if (answer) {
         this.$emit("archiveProject", project);

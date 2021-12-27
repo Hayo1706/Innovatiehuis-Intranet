@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="container-fluid">
-      <div v-for="user of filteredUsers" :key="user.firstname">
+      <div v-for="user of filteredUsers" :key="user.first_name">
         <UserListing
           v-bind:user="user"
           @removeUser="this.removeUser"
@@ -73,7 +73,7 @@ export default {
       if (this.searchTerm == null) {
         return true;
       } else {
-        return (item.firstname + " " + item.lastname)
+        return (item.first_name + " " + item.last_name)
           .toLowerCase()
           .includes(this.searchTerm.toLowerCase());
       }

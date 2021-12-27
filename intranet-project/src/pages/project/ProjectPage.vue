@@ -45,8 +45,7 @@ export default {
   data: function () {
     return {
       announcementWindowKey: 0,
-      projectId: this.$route.params.id,
-      projectName: this.$route.params.id,
+      projectId: this.$route.params.id
     };
   },
   methods: {

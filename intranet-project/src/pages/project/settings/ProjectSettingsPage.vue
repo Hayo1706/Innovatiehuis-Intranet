@@ -5,7 +5,7 @@
 <script>
 export default {
   components: {},
-  name: "????????",
+  name: "ProjectSettings",
   data: function () {
     return {
     };
