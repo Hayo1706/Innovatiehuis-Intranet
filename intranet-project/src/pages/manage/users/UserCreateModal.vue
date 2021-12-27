@@ -71,7 +71,7 @@
             type="button"
             class="btn btn-primary"
             data-bs-dismiss="modal"
-            @click="addNewFolder()"
+            @click="addNewUser()"
           >
             Toevoegen
           </button>
@@ -88,6 +88,7 @@
   </div>
 </template>
 <script>
+import UserService from "@/services/UserService.js";
 export default {
   name: "UserCreateModal",
   data: function () {
@@ -125,6 +126,15 @@ export default {
     },
   },
   methods: {
+    addNewUser() {
+      UserService.addUser(this.user)
+        .then(() => {})
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+    },
     clearForm() {
       this.firstname = "";
       this.lastname = "";

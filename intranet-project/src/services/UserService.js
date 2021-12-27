@@ -24,10 +24,21 @@ var UserService = function () {
         const { data } = await axiosClient.delete(`/users/${userid}`, { timeout: 2000 });
         return data;
     }
+    async function addUser(user) {
+        const { data } = await axiosClient.post(`/users`, {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            roleid: user.roleid,
+            screeningstatus: user.screeningstatus
+        }, { timeout: 2000 });
+        return data;
+    }
     return {
         getUsers,
         getUserById,
-        deleteUser
+        addUser,
+        deleteUser,
     }
 
 }
