@@ -24,7 +24,7 @@ def delete(id):
 
 def post():
     try:
-        body = connexion.request.json['announcement']
+        body = connexion.request.json
         firstname = body['firstname']
         lastname = body['lastname']
         email = body['email']
@@ -34,7 +34,7 @@ def post():
         return make_response("Invalid body", 404)
 
     query_update(
-        "INSERT INTO users (firstname, lastname, email, role, screeningstatus) VALUES (%(firstname)s, %(lastname)s, %(email)s, %(role)s, %(screeningstatus)s)",
-        {'firstname': firstname, 'lastname': lastname, 'email': email, 'role': roleid, 'screeningstatus': screeningstatus})
+        "INSERT INTO users (firstname, lastname, email, roleid, screeningstatus) VALUES (%(firstname)s, %(lastname)s, %(email)s, %(roleid)s, %(screeningstatus)s)",
+        {'firstname': firstname, 'lastname': lastname, 'email': email, 'roleid': roleid, 'screeningstatus': screeningstatus})
     return make_response("User successfully added", 200)
 

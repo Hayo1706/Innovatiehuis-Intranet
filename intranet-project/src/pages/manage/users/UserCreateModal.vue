@@ -127,7 +127,13 @@ export default {
   },
   methods: {
     addNewUser() {
-      UserService.addUser(this.user)
+      UserService.addUser({
+        firstname: this.firstname,
+        lastname: this.lastname,
+        email: this.email,
+        roleid: this.selectedRoleId,
+        screeningstatus: this.selectedScreeingstateId,
+      })
         .then(() => {})
         .catch((err) => {
           if (err.response) {

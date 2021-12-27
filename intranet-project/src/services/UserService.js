@@ -25,13 +25,8 @@ var UserService = function () {
         return data;
     }
     async function addUser(user) {
-        const { data } = await axiosClient.post(`/users`, {
-            firstname: user.firstname,
-            lastname: user.lastname,
-            email: user.email,
-            roleid: user.roleid,
-            screeningstatus: user.screeningstatus
-        }, { timeout: 2000 });
+        console.log(user);
+        const { data } = await axiosClient.post(`/users`, user, { timeout: 2000 });
         return data;
     }
     return {

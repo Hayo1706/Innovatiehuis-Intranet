@@ -431,9 +431,9 @@ paths:
                 email:
                   type: string
                 roleid:
-                  type: string
+                  type: integer
                 screeningstatus:
-                  type: string
+                  type: integer
       responses:
         200:
           description: Successfully posted announcement to project
