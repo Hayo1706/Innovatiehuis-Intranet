@@ -35,7 +35,7 @@ def post():
         return make_response("Invalid body", 404)
 
     query_update(
-        "INSERT INTO users (firstname, lastname, email, roleid, screeningstatus) VALUES (%(firstname)s, %(lastname)s, %(email)s, %(roleid)s, %(screeningstatus)s)",
-        {'firstname': firstname, 'lastname': lastname, 'email': email, 'roleid': roleid, 'screeningstatus': screeningstatus,'hash': hash})
+        "INSERT INTO users (firstname, lastname, email, roleid, screeningstatus,hash) VALUES (%(firstname)s, %(lastname)s, %(email)s, %(roleid)s, %(screeningstatus)s)",
+        {'firstname': firstname, 'lastname': lastname, 'email': email, 'roleid': roleid, 'screeningstatus': screeningstatus, 'hash': hash})
     return make_response("User successfully added", 200)
 
