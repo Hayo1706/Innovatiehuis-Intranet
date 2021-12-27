@@ -436,7 +436,7 @@ paths:
                   type: integer
       responses:
         200:
-          description: Successfully posted announcement to project
+          description: Successfully added user
   /users/{id}:
     get:
       operationId: src.routes.users.read_one
@@ -458,6 +458,33 @@ paths:
       responses:
         200:
           description: Successfully delete user
+    put:
+      operationId: src.routes.users.put
+      tags:
+        - Users
+      summary: Edit user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                roleid:
+                  type: integer
+                screeningstatus:
+                  type: integer
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully edited user
 
   /users/{id}/projects:
     get:
