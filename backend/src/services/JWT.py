@@ -1,37 +1,19 @@
-import time
 import connexion
-import six
 import datetime
-from flask import abort, make_response
-from werkzeug.exceptions import Unauthorized
+from flask import abort, make_response, jsonify
 from .helper_functions import query, query_update
-# from flask_login import LoginManager, UserMixin, login_user
-from jose import JWTError, jwt
-from .extensions import login_manager
 
+from flask_jwt_extended import jwt_required, \
+    create_access_token, create_refresh_token, get_jwt_identity, set_access_cookies, \
+    set_refresh_cookies, unset_jwt_cookies
 
 JWT_ISSUER = 'innovatieplatform'
-JWT_SECRET = 'change_this'  # TODO Change This
+JWT_SECRET = 'kiZn04wb0XEPfpnkTbgmFtHtNElRThM2nWNdD51KaosfRT8HzVLqPB3UMnKPwb1'  # TODO Change This? Moet Secret om de zo veel tijd gerefreshed worden?
 JWT_LIFETIME_SECONDS = 600
 JWT_ALGORITHM = 'HS256'
 
 ATTEMPTS_BEFORE_COOLDOWN = 6
 COOLDOWN_TIME_SECONDS = 60
-
-#
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return check_db(user_id).get_id()
-
-
-def check_db(userid):
-    # query database just so we can pass an object to the callback
-    user = query("SELECT firstname, lastname, roleid,userid WHERE userid=%(userid)s", {'userid': userid})[0]
-    object = User(user['firstname'], user['lastname'], user['roleid'], user['userid'], active=True)
-    if object.id == userid:
-        return object
-    else:
-        return None
 
 
 def generate_token():
@@ -60,37 +42,35 @@ def generate_token():
         query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 where "
                      "userid = %(userid)s", {'userid': user['userid']})
         return make_response("Wrong password or username", 401)
-    object = User(user['firstname'], user['lastname'], user['roleid'], user['userid'], active=True)
-    # login_user(object)
-    timestamp = _current_timestamp()
-    payload = {
-        "iss": JWT_ISSUER,
-        "iat": int(timestamp),
-        "exp": int(timestamp + JWT_LIFETIME_SECONDS),
-        "sub": str(id),
-        "scope": str('admin')  # TODO Change this
-    }
-    return {'access_token': jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM), 'token_type': "bearer"}
+    access_token = create_access_token(identity=user['userid'])
+    refresh_token = create_refresh_token(identity=user['userid'])
+
+    resp = jsonify({'login': True})
+    set_access_cookies(resp, access_token)
+    set_refresh_cookies(resp, refresh_token)
+    return resp, 200
 
 
-def decode_token(token):
-    try:
-        return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-    except JWTError as e:
-        six.raise_from(Unauthorized, e)
+@jwt_required(refresh=True)
+def refresh():
+    # Create the new access token
+    current_user = get_jwt_identity()
+    access_token = create_access_token(identity=current_user)
+
+    # Set the access JWT and CSRF double submit protection cookies
+    # in this response
+    resp = jsonify({'refresh': True})
+    set_access_cookies(resp, access_token)
+    return resp, 200
 
 
-def _current_timestamp() -> int:
-    return int(time.time())
-
-
-class User():
-    def __init__(self, firstname, lastname, roleid, id, active=True):
-        self.firstname = firstname
-        self.lastname = lastname
-        self.roleid = roleid
-        self.id = id
-        self.active = active
-
-    def is_active(self):
-        return self.active
+# Because the JWTs are stored in an httponly cookie now, we cannot
+# log the user out by simply deleting the cookie in the frontend.
+# We need the backend to send us a response to delete the cookies
+# in order to logout. unset_jwt_cookies is a helper function to
+# do just that.
+@jwt_required
+def logout():
+    resp = jsonify({'logout': True})
+    unset_jwt_cookies(resp)
+    return resp, 200
