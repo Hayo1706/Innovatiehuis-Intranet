@@ -128,9 +128,9 @@ export default {
   methods: {
     addNewUser() {
       if (!this.validateForm()) {
-        return false;
+        return;
       }
-      //validat email format
+
       UserService.addUser({
         first_name: this.first_name,
         last_name: this.last_name,
