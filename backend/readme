@@ -1,0 +1,3 @@
+pip install python-jose[cryptography]
+pip install connexion[swagger]
+pip install flask-login
