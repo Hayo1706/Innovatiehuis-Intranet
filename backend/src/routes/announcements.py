@@ -5,8 +5,8 @@ from ..services.helper_functions import *
 
 def read_global_announcements():
     return query(
-        "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.firstname, "
-        "users.lastname, announcements.title, announcements.content FROM announcements JOIN users "
+        "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
+        "users.last_name, announcements.title, announcements.content FROM announcements JOIN users "
         "ON announcements.userid = users.userid "
         "WHERE announcements.projectid IS NULL "
         "ORDER BY announcements.timestamp DESC", None)
@@ -14,8 +14,8 @@ def read_global_announcements():
 
 def read_all(id):
     return query(
-        "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.firstname, "
-        "users.lastname, announcements.title, announcements.content FROM announcements JOIN users "
+        "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
+        "users.last_name, announcements.title, announcements.content FROM announcements JOIN users "
         "ON announcements.userid = users.userid "
         "WHERE announcements.projectid = %(id)s"
         " ORDER BY announcements.timestamp DESC", {'id': id})

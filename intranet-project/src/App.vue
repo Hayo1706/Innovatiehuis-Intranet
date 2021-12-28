@@ -21,6 +21,9 @@ export default {
       document.title = header_title;
     },
   },
+  created() {
+    
+  }
 };
 </script>
 

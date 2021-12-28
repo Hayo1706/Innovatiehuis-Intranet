@@ -47,7 +47,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/id'
         - in: query
-          name: isarchived
+          name: is_archived
           required: true
           schema:
             type: boolean

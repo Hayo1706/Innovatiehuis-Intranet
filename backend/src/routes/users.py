@@ -5,24 +5,24 @@ from ..services.helper_functions import *
 
 def read_all():
     return query(
-        "SELECT userid, firstname, lastname, email, roleid,`name` AS rolename, screeningstatus, createdat, "
-        "COUNT(projectid) AS amountprojects, IFNULL(MAX(lastseen),createdat) AS lastseen FROM (SELECT * FROM users "
-        "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_has_projects USING(userid) GROUP BY userid")
+        "SELECT userid, first_name, last_name, email, roleid, role_name, screening_status, created, "
+        "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "
+        "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid")
 
 
 def read_one(id):
     return query(
-        "SELECT userid, firstname, lastname, email, roleid,`name` AS rolename, screeningstatus, createdat, "
-        "COUNT(projectid) AS amountprojects, IFNULL(MAX(lastseen),createdat) AS lastseen FROM (SELECT * FROM users "
-        "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_has_projects USING(userid) GROUP BY userid where "
+        "SELECT userid, first_name, last_name, email, roleid, role_name, screening_status, created, "
+        "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "
+        "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid where "
         "userid= %(id)s",
         {'id': id})
 
 
 def read_user_projects(id):
-    return query("SELECT * FROM users_has_projects INNER JOIN projects ON "
-                 "users_has_projects.projectid = projects.projectid "
-                 "WHERE users_has_projects.userid = %(id)s AND projects.isarchived = 0", {'id': id})
+    return query("SELECT * FROM users_have_projects INNER JOIN projects ON "
+                 "users_have_projects.projectid = projects.projectid "
+                 "WHERE users_have_projects.userid = %(id)s AND projects.is_archived = 0", {'id': id})
 
 
 def delete(id):
@@ -34,20 +34,20 @@ def delete(id):
 def post():
     try:
         body = connexion.request.json
-        firstname = body['firstname']
-        lastname = body['lastname']
+        first_name = body['first_name']
+        last_name = body['last_name']
         email = body['email']
         roleid = body['roleid']
-        screeningstatus = body['screeningstatus']
-        hash = "123"
+        screening_status = body['screening_status']
+        password_hash = "123" # TODO: dynamic hash creation
     except KeyError:
         return make_response("Invalid body", 404)
 
     query_update(
-        "INSERT INTO users (firstname, lastname, email, roleid, screeningstatus,hash) VALUES (%(firstname)s, "
-        "%(lastname)s, %(email)s, %(roleid)s, %(screeningstatus)s,%(hash)s)",
-        {'firstname': firstname, 'lastname': lastname, 'email': email, 'roleid': roleid,
-         'screeningstatus': screeningstatus, 'hash': hash})
+        "INSERT INTO users (first_name, last_name, email, roleid, screening_status, password_hash) VALUES (%(first_name)s, "
+        "%(last_name)s, %(email)s, %(roleid)s, %(screening_status)s,%(password_hash)s)",
+        {'first_name': first_name, 'last_name': last_name, 'email': email, 'roleid': roleid,
+         'screening_status': screening_status, 'password_hash': password_hash})
     return make_response("User successfully added", 200)
 
 
@@ -55,16 +55,16 @@ def put(id):
     is_int(id)
     try:
         body = connexion.request.json
-        firstname = body['firstname']
-        lastname = body['lastname']
+        first_name = body['first_name']
+        last_name = body['last_name']
         email = body['email']
         roleid = body['roleid']
-        screeningstatus = body['screeningstatus']
+        screening_status = body['screening_status']
     except KeyError:
         return make_response("Invalid body", 404)
 
     query_update(
-        "UPDATE users SET firstname=%(firstname)s, lastname=%(lastname)s, email=%(email)s, roleid=%(roleid)s, screeningstatus=%(screeningstatus)s WHERE userid=%(userid)s",
-        {'firstname': firstname, 'lastname': lastname, 'email': email, 'roleid': roleid,
-         'screeningstatus': screeningstatus, "userid": id})
+        "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, roleid=%(roleid)s, screening_status=%(screening_status)s WHERE userid=%(userid)s",
+        {'first_name': first_name, 'last_name': last_name, 'email': email, 'roleid': roleid,
+         'screening_status': screening_status, "userid": id})
     return make_response("User successfully updated", 200)

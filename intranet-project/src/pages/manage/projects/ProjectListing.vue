@@ -5,11 +5,11 @@
       <!-- small screens-->
       <div class="col d-block d-lg-none">
         <div class="projectButton mobileRow" @click="onClick()">
-          {{ project.name }}
+          {{ project.project_name }}
         </div>
         <div class="mobileRow">
           {{
-            project.createdat.toLocaleString("nl-NL", {
+            project.created.toLocaleString("nl-NL", {
               day: "numeric",
               month: "numeric",
               year: "numeric",
@@ -18,7 +18,7 @@
         </div>
         <div class="mobileRow">
           {{
-            project.lastupdated.toLocaleString("nl-NL", {
+            project.last_updated.toLocaleString("nl-NL", {
               day: "numeric",
               month: "numeric",
               year: "numeric",
@@ -39,12 +39,12 @@
       <!-- large screens-->
       <div class="col d-none d-lg-block" @click="onClick()">
         <div class="projectButton">
-          {{ project.name }}
+          {{ project.project_name }}
         </div>
       </div>
       <div class="col d-none d-lg-block">
         {{
-          project.createdat.toLocaleString("nl-NL", {
+          project.created.toLocaleString("nl-NL", {
             day: "numeric",
             month: "numeric",
             year: "numeric",
@@ -53,7 +53,7 @@
       </div>
       <div class="col d-none d-lg-block">
         {{
-          project.lastupdated.toLocaleString("nl-NL", {
+          project.last_updated.toLocaleString("nl-NL", {
             day: "numeric",
             month: "numeric",
             year: "numeric",

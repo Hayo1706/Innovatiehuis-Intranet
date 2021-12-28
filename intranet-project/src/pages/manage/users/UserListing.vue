@@ -5,11 +5,11 @@
       <!-- small screens-->
       <div class="col d-block d-lg-none">
         <div class="userButton mobileRow" @click="onClick()">
-          {{ user.firstname + " " + user.lastname }}
+          {{ user.first_name + " " + user.last_name }}
         </div>
         <div class="mobileRow">
           {{
-            user.createdat.toLocaleString("nl-NL", {
+            user.created.toLocaleString("nl-NL", {
               day: "numeric",
               month: "numeric",
               year: "numeric",
@@ -21,7 +21,7 @@
         </div>
         <div class="mobileRow">
           {{
-            user.lastseen.toLocaleString("nl-NL", {
+            user.last_seen.toLocaleString("nl-NL", {
               day: "numeric",
               month: "numeric",
               year: "numeric",
@@ -66,11 +66,11 @@
 
       <!-- large screens-->
       <div class="col d-none d-lg-block" @click="onClick()">
-        <div class="userButton">{{ user.firstname + " " + user.lastname }}</div>
+        <div class="userButton">{{ user.first_name + " " + user.last_name }}</div>
       </div>
       <div class="col d-none d-lg-block">
         {{
-          user.createdat.toLocaleString("nl-NL", {
+          user.created.toLocaleString("nl-NL", {
             day: "numeric",
             month: "numeric",
             year: "numeric",
@@ -82,7 +82,7 @@
       </div>
       <div class="col d-none d-lg-block">
         {{
-          user.lastseen.toLocaleString("nl-NL", {
+          user.last_seen.toLocaleString("nl-NL", {
             day: "numeric",
             month: "numeric",
             year: "numeric",
@@ -140,8 +140,8 @@ export default {
   name: "UserListing",
   data: function () {
     return {
-      previousRole: this.user.rolename,
-      selectedRole: this.user.rolename,
+      previousRole: this.user.role_name,
+      selectedRole: this.user.role_name,
       roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
       screeningstates: {
         "nog niet in behandeling": 0,
@@ -157,10 +157,10 @@ export default {
     screeningstate: function (val) {
       if (val != this.previousScreeningstate) {
         let answer = confirm(
-          'Wil je de screeningstatus van de gebruiker "' +
-            this.user.firstname +
+          'Wil je de screening_status van de gebruiker "' +
+            this.user.first_name +
             " " +
-            this.user.lastname +
+            this.user.last_name +
             '" echt veranderen naar "' +
             val +
             '"?'
@@ -170,11 +170,11 @@ export default {
 
           UserService.updateUser(
             {
-              firstname: this.user.firstname,
-              lastname: this.user.lastname,
+              first_name: this.user.first_name,
+              last_name: this.user.last_name,
               email: this.user.email,
               roleid: this.user.roleid,
-              screeningstatus: screeningstateId,
+              screening_status: screeningstateId,
             },
             this.user.userid
           )
@@ -193,9 +193,9 @@ export default {
       if (val != this.previousRole) {
         let answer = confirm(
           'Wil je de rol van de gebruiker "' +
-            this.user.firstname +
+            this.user.first_name +
             " " +
-            this.user.lastname +
+            this.user.last_name +
             '" echt veranderen naar ' +
             val +
             "?"
@@ -205,11 +205,11 @@ export default {
 
           UserService.updateUser(
             {
-              firstname: this.user.firstname,
-              lastname: this.user.lastname,
+              first_name: this.user.first_name,
+              last_name: this.user.last_name,
               email: this.user.email,
               roleid: roleid,
-              screeningstatus: this.user.screeningstatus,
+              screening_status: this.user.screening_status,
             },
             this.user.userid
           )
@@ -228,11 +228,11 @@ export default {
   created() {
     this.previousScreeningstate = this.getKeyByValue(
       this.screeningstates,
-      this.user.screeningstatus
+      this.user.screening_status
     );
     this.screeningstate = this.getKeyByValue(
       this.screeningstates,
-      this.user.screeningstatus
+      this.user.screening_status
     );
   },
   methods: {
@@ -242,9 +242,9 @@ export default {
     async handleRemoveUser(user) {
       let answer = confirm(
         'Wil je het project  de gebruiker "' +
-          user.firstname +
+          user.first_name +
           " " +
-          user.lastname +
+          user.last_name +
           " echt verwijderen ?"
       );
       if (answer) {

@@ -47,17 +47,17 @@ def generate_token():
         return make_response("Wrong password or username", 401)
     user = user[0]
 
-    if int(user['wrongpasswordcount']) >= ATTEMPTS_BEFORE_COOLDOWN:
-        if int((datetime.datetime.now() - user['lastwrongpassword']).total_seconds()) > COOLDOWN_TIME_SECONDS:
-            query_update("UPDATE users SET wrongpasswordcount = 0 where userid = %(userid)s",
+    if int(user['failed_login_count']) >= ATTEMPTS_BEFORE_COOLDOWN:
+        if int((datetime.datetime.now() - user['failed_login_count']).total_seconds()) > COOLDOWN_TIME_SECONDS:
+            query_update("UPDATE users SET failed_login_count = 0 where userid = %(userid)s",
                          {'userid': user['userid']})
         else:
             return make_response("Acces Denied, your account is blocked for " +
                                  str(int((datetime.datetime.now() - user[
-                                     'lastwrongpassword']).total_seconds()) - ATTEMPTS_BEFORE_COOLDOWN) +
+                                     'last_failed_login']).total_seconds()) - ATTEMPTS_BEFORE_COOLDOWN) +
                                  " more seconds", 401)
-    if not user['hash'] == send_password:
-        query_update("UPDATE users SET lastwrongpassword = NOW(),wrongpasswordcount = wrongpasswordcount + 1 where "
+    if not user['password_hash'] == send_password:
+        query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 where "
                      "userid = %(userid)s", {'userid': user['userid']})
         return make_response("Wrong password or username", 401)
     object = User(user['firstname'], user['lastname'], user['roleid'], user['userid'], active=True)

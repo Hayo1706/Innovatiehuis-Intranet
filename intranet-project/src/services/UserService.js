@@ -6,17 +6,17 @@ var UserService = function () {
 
     async function getUsers() {
         const { data } = await axiosClient.get('/users', { timeout: 2000 });
-        data.forEach(user => { user.createdat = jsonToJsDate(user.createdat) });
+        data.forEach(user => { user.created = jsonToJsDate(user.created) });
         data.forEach(user => {
-            user.lastseen = jsonToJsDate(user.lastseen)
+            user.last_seen = jsonToJsDate(user.last_seen)
         });
         return data;
     }
     async function getUserById(userid) {
         const { data } = await axiosClient.get(`'/users/${userid}`, { timeout: 2000 });
-        data.forEach(user => { user.createdat = jsonToJsDate(user.createdat) });
+        data.forEach(user => { user.created = jsonToJsDate(user.created) });
         data.forEach(user => {
-            user.lastseen = jsonToJsDate(user.lastseen)
+            user.last_seen = jsonToJsDate(user.last_seen)
         });
         return data;
     }

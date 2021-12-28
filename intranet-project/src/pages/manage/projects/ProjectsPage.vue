@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="container-fluid">
-      <div v-for="project of filteredProjects" :key="project.name">
+      <div v-for="project of filteredProjects" :key="project.project_name">
         <ProjectListing
           class="projectlisting"
           @removeProject="this.removeProject"
@@ -87,8 +87,8 @@ export default {
       ProjectService.deleteProject(id)
         .then(() => {
           //remove the project from the view
-          this.projects = this.projects.filter(function (item) {
-            return item.projectid !== id;
+          this.projects = this.projects.filter(function (project) {
+            return project.projectid !== id;
           });
         })
         .catch((err) => {
@@ -100,11 +100,11 @@ export default {
     },
     archiveProject(project) {
       let projectCopy = JSON.parse(JSON.stringify(project));
-      projectCopy.isarchived = !projectCopy.isarchived;
+      projectCopy.is_archived = !projectCopy.is_archived;
       ProjectService.updateProject(projectCopy)
         .then(() => {
-          project.isarchived = !project.isarchived;
-          project.lastupdated = new Date();
+          project.is_archived = !project.is_archived;
+          project.last_updated = new Date();
         })
         .catch((err) => {
           if (err.response) {
@@ -112,35 +112,35 @@ export default {
           }
         });
     },
-    shouldShow(item) {
+    shouldShow(project) {
       let shouldShow = false;
-      shouldShow = this.matchesSearchTermWhenShould(item);
+      shouldShow = this.matchesSearchTermWhenShould(project);
       if (shouldShow) {
-        shouldShow = this.showArchivedWhenShould(item);
+        shouldShow = this.showArchivedWhenShould(project);
       }
 
       return shouldShow;
     },
-    matchesSearchTermWhenShould(item) {
+    matchesSearchTermWhenShould(project) {
       if (this.searchTerm == null) {
         return true;
       } else {
-        return item.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+        return project.project_name.toLowerCase().includes(this.searchTerm.toLowerCase());
       }
     },
-    showArchivedWhenShould(item) {
+    showArchivedWhenShould(project) {
       if (!this.showUnArchivedOnly) {
         return true;
       } else {
-        return item.isarchived == false;
+        return project.is_archived == false;
       }
     },
   },
 
   computed: {
     filteredProjects() {
-      return this.projects.filter((item) => {
-        return this.shouldShow(item);
+      return this.projects.filter((project) => {
+        return this.shouldShow(project);
       });
     },
   },

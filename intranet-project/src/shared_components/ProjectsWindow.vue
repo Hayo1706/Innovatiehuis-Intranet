@@ -11,8 +11,8 @@
         v-for="project of projects"
         :key="project.id"
         v-bind:projectId="project.projectid"
-        v-bind:projectName="project.name"
-        v-bind:lastUpdated="project.lastupdated"
+        v-bind:projectName="project.project_name"
+        v-bind:lastUpdated="project.last_updated"
         v-on:reload="reload()"
       />
     </div>

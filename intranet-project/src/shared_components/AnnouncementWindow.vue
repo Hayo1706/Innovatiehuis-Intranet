@@ -20,7 +20,7 @@
           :id="announcement.announcementid"
           :timestamp="announcement.timestamp"
           :userid="announcement.userid"
-          :username="announcement.firstname + ' ' + announcement.lastname"
+          :username="announcement.first_name + ' ' + announcement.last_name"
           :title="announcement.title"
           :content="announcement.content"
           @reload="reload()"

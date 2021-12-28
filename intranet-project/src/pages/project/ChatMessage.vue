@@ -10,8 +10,10 @@
 export default {
   name: "ChatMessage",
   props: {
-    name: { type: String, required: true },
-    message: { type: String, required: true },
+    userid: { type: Number, required: true },
+    first_name: { type: String, required: true },
+    last_name: { type: String, required: true },
+    content: { type: String, required: true },
   },
   data: function () {
     return {
