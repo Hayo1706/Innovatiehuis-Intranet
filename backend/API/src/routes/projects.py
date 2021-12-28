@@ -3,12 +3,12 @@ from ..services.helper_functions import *
 
 
 def read_all():
-    return query("SELECT projectid, project_name, description, isarchived, created, last_updated FROM projects")
+    return query("SELECT projectid, project_name, description, is_archived, created, last_updated FROM projects")
 
 
 def read_one(id):
     is_int(id)
-    return query("SELECT projectid, project_name, description, isarchived, created, last_updated FROM projects WHERE projectid = %(id)s", {'id': id})
+    return query("SELECT projectid, project_name, description, is_archived, created, last_updated FROM projects WHERE projectid = %(id)s", {'id': id})
 
 
 def update(id, is_archived):
