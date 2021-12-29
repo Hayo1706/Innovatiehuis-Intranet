@@ -37,11 +37,15 @@ router.beforeEach((to, from, next) => {
   if (to.fullPath != "/login") {
     localStorage.setItem("previousRoute", to.fullPath);
   }
-  if (localStorage.getItem("token") == null && to.fullPath != "/login") {
+  if (!localStorage.getItem("loggedIn") && to.fullPath != "/login") {
 
     next({ path: '/login' });
   } else {
     next();
+    //TODO 404 on acces with wrong role
+    if (to.fullPath == "/manage/projects" || to.fullPath == "/manage/projects") {
+      return;
+    }
   }
 })
 const app = createApp(App);
