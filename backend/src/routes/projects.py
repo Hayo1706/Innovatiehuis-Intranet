@@ -1,9 +1,6 @@
 from flask import make_response
 from ..services.helper_functions import *
-from flask_login import login_required
 
-
-@login_required
 def read_all():
     return query("SELECT projectid, project_name, description, is_archived, created, last_updated FROM projects")
 
