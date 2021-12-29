@@ -37,7 +37,7 @@ router.beforeEach((to, from, next) => {
   if (to.fullPath != "/login") {
     localStorage.setItem("previousRoute", to.fullPath);
   }
-  if (localStorage.getItem("token") == null && to.fullPath != "/login") {
+  if (!localStorage.getItem("loggedIn") && to.fullPath != "/login") {
 
     next({ path: '/login' });
   } else {
