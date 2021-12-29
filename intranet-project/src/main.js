@@ -42,6 +42,10 @@ router.beforeEach((to, from, next) => {
     next({ path: '/login' });
   } else {
     next();
+    //TODO 404 on acces with wrong role
+    if (to.fullPath == "/manage/projects" || to.fullPath == "/manage/projects") {
+      return;
+    }
   }
 })
 const app = createApp(App);
