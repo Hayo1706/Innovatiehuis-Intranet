@@ -36,14 +36,9 @@ export default {
   methods: {
       downloadFile(){
         FilestorageService.downloadFile(this.projectid, this.path)
-        .then(() => {
+        .then((response) => { 
+          alert(response.data)
         })
-        .catch((err) => {
-            if (err.response) {
-            console.log(err.response.status);
-            }
-            alert(err);
-        });
       },
       deleteFile(){
         FilestorageService.deleteFile(this.projectid, this.path)

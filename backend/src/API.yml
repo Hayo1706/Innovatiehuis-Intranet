@@ -188,6 +188,7 @@ paths:
       summary: Returns folder(s) in directory
       parameters:
         - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
       responses:
         200:
           description: Successfully retrieved folders at given path

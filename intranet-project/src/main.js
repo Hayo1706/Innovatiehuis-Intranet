@@ -21,12 +21,14 @@ const routes = [
   { path: '/manage/projects', component: ProjectsPage },
   { path: '/manage/users', component: UsersPage },
   { path: '/project/:id', component: ProjectPage },
+  { path: '/project/:id/:catchAll(.*)', component: ProjectPage },
   { path: '/project/:id/settings', component: ProjectSettingsPage },
   { path: '/project/:id/members', component: ProjectMembersPage },
   { path: '/user/:id', component: UserPage },
   { path: '/home', component: HomePage },
   { path: '/login', component: LoginPage },
-  { path: '/:catchAll(.*)', component: NotFoundPage }
+  { path: '/:catchAll(.*)', component: NotFoundPage },
+
 ]
 const router = createRouter({
   history: createWebHistory(),

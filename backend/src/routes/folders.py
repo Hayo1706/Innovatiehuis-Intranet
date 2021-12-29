@@ -21,7 +21,12 @@ def dir_exists(path):
         return False
 
 def getFoldersInPath(id):
-    requested_path = root + getProjectPath(id) + "/"
+    folder_path = connexion.request.values.get('path')
+    if folder_path == id:
+        requested_path = root + getProjectPath(id)
+    else:
+        requested_path = root + folder_path
+
     list_of_files = []
     if path_exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)

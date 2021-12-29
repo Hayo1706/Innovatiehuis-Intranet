@@ -4,8 +4,8 @@ import axiosClient from './AxiosClient';
 var FilestorageService = function () {
 
 
-    async function getFoldersOfProject(projectid) {
-        const { data } = await axiosClient.get(`/projects/${projectid}/folders`, { timeout: 2000 });
+    async function getFoldersOfProject(projectid, path) {
+        const { data } = await axiosClient.get(`/projects/${projectid}/folders?path=` + path, { timeout: 2000 });
         return data;
     }
 
@@ -38,8 +38,8 @@ var FilestorageService = function () {
     }
 
     async function downloadFile(projectid, path) {
-        const { data } = await axiosClient.get(`/projects/${projectid}/file?path=` + path, { timeout: 2000 })
-        return data
+       const data = await axiosClient.get(`/projects/${projectid}/file?path=` + path, { timeout: 2000 })
+       return data
     }
 
     async function updateFile(projectid, path, files) {
