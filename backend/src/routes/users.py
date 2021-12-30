@@ -1,8 +1,10 @@
 import connexion
 
 from ..services.helper_functions import *
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
+@jwt_required()
 def read_all():
     return query(
         "SELECT userid, first_name, last_name, email, roleid, role_name, screening_status, created, "
@@ -39,7 +41,7 @@ def post():
         email = body['email']
         roleid = body['roleid']
         screening_status = body['screening_status']
-        password_hash = "123" # TODO: dynamic hash creation
+        password_hash = "123"  # TODO: dynamic hash creation
     except KeyError:
         return make_response("Invalid body", 404)
 

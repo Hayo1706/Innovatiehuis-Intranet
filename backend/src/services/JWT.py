@@ -5,7 +5,7 @@ from .helper_functions import query, query_update
 
 from flask_jwt_extended import jwt_required, \
     create_access_token, create_refresh_token, get_jwt_identity, set_access_cookies, \
-    set_refresh_cookies, unset_jwt_cookies
+    set_refresh_cookies, unset_jwt_cookies, verify_jwt_in_request
 
 JWT_ISSUER = 'innovatieplatform'
 JWT_SECRET = 'kiZn04wb0XEPfpnkTbgmFtHtNElRThM2nWNdD51KaosfRT8HzVLqPB3UMnKPwb1'  # TODO Change This? Moet Secret om de zo veel tijd gerefreshed worden?

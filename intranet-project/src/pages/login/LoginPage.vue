@@ -43,11 +43,8 @@ export default {
           "&password=" +
           this.loginAttempt.password
       )
-        .then((response) => {
-          console.log(response);
-
+        .then(() => {
           localStorage.setItem("loggedIn", true);
-
           this.$router.push(this.nextLink);
         })
         .catch((err) => {

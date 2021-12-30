@@ -21,7 +21,6 @@ def read_all(id):
         " ORDER BY announcements.timestamp DESC", {'id': id})
 
 
-# TODO fix dit zodat correcte user wordt ingeschreven
 @jwt_required()
 def post_global():
     try:
@@ -30,14 +29,13 @@ def post_global():
         content = body['content']
     except KeyError:
         return make_response("Invalid body", 404)
-    print(get_jwt_identity())
     query_update(
-        "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, %(content)s)",
+        "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
+        "%(content)s)",
         {'userid': get_jwt_identity(), 'content': content, 'title': title})
     return make_response("Global Announcement successfully posted".format(projectid=str(id)), 200)
 
-
-# TODO fix dit zodat correcte user wordt ingeschreven
+@jwt_required()
 def post(id):
     is_int(id)
     try:
@@ -48,8 +46,9 @@ def post(id):
         return make_response("Invalid body", 404)
 
     query_update(
-        "INSERT INTO announcements (userid, projectid, title, content) VALUES (5, %(id)s, %(title)s, %(content)s)",
-        {'id': id, 'content': content, 'title': title})
+        "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, %(id)s, %(title)s, "
+        "%(content)s)",
+        {'userid': get_jwt_identity(), 'id': id, 'content': content, 'title': title})
     return make_response("Announcement in project={projectid} successfully posted".format(projectid=str(id)), 200)
 
 

@@ -102,7 +102,7 @@ export default {
       editData: { title: this.title + "", content: this.content + "" },
       editing: false,
       replies: [],
-      newReply: { userid: 1, content: "" }, //TODO: get userid dynamically from JWT/Session
+      newReply: { content: "" },
     };
   },
   async created() {
@@ -144,7 +144,7 @@ export default {
         });
     },
     addReply() {
-      AnnouncementService.addReply(this.id, this.newReply) // TODO: get userid dynamically from JWT/Session
+      AnnouncementService.addReply(this.id, this.newReply)
         .then((response) => {
           console.log(response);
           this.newReply.content = "";
