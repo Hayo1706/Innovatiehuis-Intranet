@@ -23,7 +23,7 @@ def create_app():
     app.app.config['SQLALCHEMY_POOL_SIZE'] = 20
     app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.app.config['SQLALCHEMY_DATABASE_URI'] = url
-    CORS(app.app)  # TODO Change this when in production
+    #CORS(app.app)  # TODO Change this when in production
     db.init_app(app.app)
     with app.app.app_context():
         db.create_engine(url, {})

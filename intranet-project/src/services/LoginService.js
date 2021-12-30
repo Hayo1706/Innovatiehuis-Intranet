@@ -12,14 +12,8 @@ var LoginService = function () {
         return data;
     }
 
-    function setJWT(data) {
-
-        this.$cookies.set(key, value)
-    }
-
     return {
-        attemptLogin,
-        setJWT
+        attemptLogin
     }
 
 }
