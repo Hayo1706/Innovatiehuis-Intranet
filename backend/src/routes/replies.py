@@ -1,6 +1,7 @@
 from flask import make_response
 import connexion
 from ..services.helper_functions import *
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 def read_all(id):
@@ -12,17 +13,18 @@ def read_all(id):
         "ORDER BY replies.timestamp ASC", {'id': id})
 
 
+@jwt_required()
 def post(id):
     try:
         body = connexion.request.json['reply']
-        userid = body['userid']
         content = body['content']
     except KeyError:
         return make_response("Invalid body", 404)
     query_update(
         "INSERT INTO replies (announcementid, userid, content) VALUES (%(id)s, %(userid)s, %(content)s)",
-        {'id': id, 'userid': userid, 'content': content})
-    return make_response("Reply to announcement={announcementid} successfully posted".format(announcementid=str(id)), 200)
+        {'id': id, 'userid': get_jwt_identity(), 'content': content})
+    return make_response("Reply to announcement={announcementid} successfully posted".format(announcementid=str(id)),
+                         200)
 
 
 def edit(id):

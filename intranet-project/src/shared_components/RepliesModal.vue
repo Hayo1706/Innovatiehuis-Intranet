@@ -71,14 +71,14 @@ export default {
   },
   data: function () {
     return {
-      newReply: { userid: 1, content: "" }, //TODO: get userid dynamically from JWT/Session
+      newReply: {content: "" },
     };
   },
   async created() {},
   methods: {
     addReply() {
       console.log("current announcement id = " + this.id);
-      AnnouncementService.addReply(this.id, this.newReply) // TODO: get userid dynamically from JWT/Session
+      AnnouncementService.addReply(this.id, this.newReply)
         .then((response) => {
           console.log(response);
           this.newReply.content = "";

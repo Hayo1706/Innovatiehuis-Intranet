@@ -1,3 +1,6 @@
 pip install python-jose[cryptography]
 pip install connexion[swagger]
 pip install flask-login
+pip install flask-sqlalchemy
+pip install sqlalchemy
+pip install flask-jwt-extended 4.3.1

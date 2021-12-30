@@ -3,13 +3,25 @@ import axios from 'axios';
 import router from '../main';
 
 const axiosClient = axios.create({
-    baseURL: 'http://127.0.0.1:5000/api'
+    baseURL: 'http://localhost:8080/api' //TODO Change when in production
 
 });
 
+axiosClient.interceptors.request.use(
+    function(config) {
+        const token = localStorage.getItem("token");
+        if (token) {
+            config.headers["X-CSRF-TOKEN"] =
+                document.cookie.match('(^|;)\\s*' + 'csrf_access_token' + '\\s*=\\s*([^;]+)')?.pop();
+        }
+        return config;
+    },
+    function(error) {
+        return Promise.reject(error);
+    }
+);
 
 axiosClient.interceptors.response.use(response => {
-
     return response
 },
     err => {

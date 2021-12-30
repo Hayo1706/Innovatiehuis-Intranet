@@ -1,15 +1,6 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        ></button>
-      </div>
       <div class="col-8">
         <ProjectsWindow>Mijn Projecten</ProjectsWindow>
       </div>
@@ -26,6 +17,7 @@
 <script>
 import AnnouncementWindow from '../../shared_components/AnnouncementWindow.vue';
 import ProjectsWindow from '../../shared_components/ProjectsWindow.vue';
+
 
 export default {
   components: { AnnouncementWindow, ProjectsWindow },
