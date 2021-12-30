@@ -110,7 +110,7 @@ def moveFile(id):
 def downloadFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
     if isFilePathValid(requested_path):
-        send_file(requested_path, as_attachment=True)
+        return send_file(requested_path, as_attachment=True)
 
 def deleteFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')

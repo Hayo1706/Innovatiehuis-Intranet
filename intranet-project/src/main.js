@@ -21,12 +21,14 @@ const routes = [
   { path: '/manage/projects', component: ProjectsPage },
   { path: '/manage/users', component: UsersPage },
   { path: '/project/:id', component: ProjectPage },
+  { path: '/project/:id/:catchAll(.*)', component: ProjectPage },
   { path: '/project/:id/settings', component: ProjectSettingsPage },
   { path: '/project/:id/members', component: ProjectMembersPage },
   { path: '/user/:id', component: UserPage },
   { path: '/home', component: HomePage },
   { path: '/login', component: LoginPage },
-  { path: '/:catchAll(.*)', component: NotFoundPage }
+  { path: '/:catchAll(.*)', component: NotFoundPage },
+
 ]
 const router = createRouter({
   history: createWebHistory(),
@@ -37,11 +39,15 @@ router.beforeEach((to, from, next) => {
   if (to.fullPath != "/login") {
     localStorage.setItem("previousRoute", to.fullPath);
   }
-  if (localStorage.getItem("token") == null && to.fullPath != "/login") {
+  if (!localStorage.getItem("loggedIn") && to.fullPath != "/login") {
 
     next({ path: '/login' });
   } else {
     next();
+    //TODO 404 on acces with wrong role
+    if (to.fullPath == "/manage/projects" || to.fullPath == "/manage/projects") {
+      return;
+    }
   }
 })
 const app = createApp(App);

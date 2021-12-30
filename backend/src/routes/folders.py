@@ -21,7 +21,12 @@ def dir_exists(path):
         return False
 
 def getFoldersInPath(id):
-    requested_path = root + getProjectPath(id) + "/"
+    folder_path = connexion.request.values.get('path')
+    if folder_path == id:
+        requested_path = root + getProjectPath(id)
+    else:
+        requested_path = root + folder_path
+
     list_of_files = []
     if path_exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)
@@ -146,8 +151,8 @@ def secureFolderName(file_name):
 
 # TODO os.path.join("c:\\", "temp", "new folder") Joins zijn Safer nog naar kijken !
 if not dir_exists(root):
-    if not dir_exists("../../../filestorage"):
-        os.mkdir("../../../filestorage");
-    if not dir_exists("../../../filestorage/root"):
-        os.mkdir("../../../filestorage/root")
+    if not dir_exists("../../filestorage"):
+        os.mkdir("../../filestorage");
+    if not dir_exists("../../filestorage/root"):
+        os.mkdir("../../filestorage/root")
 

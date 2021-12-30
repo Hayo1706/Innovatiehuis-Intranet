@@ -7,11 +7,7 @@ const axiosClient = axios.create({
 
 });
 
-axiosClient.interceptors.request.use(function (config) {
-    const token = localStorage.getItem('token');
-    config.headers.Authorization = token ? `Bearer ${token}` : '';
-    return config;
-});
+
 axiosClient.interceptors.response.use(response => {
 
     return response
@@ -19,11 +15,11 @@ axiosClient.interceptors.response.use(response => {
     err => {
 
         //login error
-        if (err.response.data.status == 401) {
+        if (err.response.status == 401) {
+            localStorage.removeItem("loggedIn");
             router.push('/login');
 
         }
-
     }
 
 );

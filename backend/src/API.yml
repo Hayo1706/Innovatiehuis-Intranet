@@ -47,7 +47,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/id'
         - in: query
-          name: isarchived
+          name: is_archived
           required: true
           schema:
             type: boolean
@@ -218,6 +218,7 @@ paths:
       summary: Returns folder(s) in directory
       parameters:
         - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/path'
       responses:
         200:
           description: Successfully retrieved folders at given path
@@ -539,9 +540,9 @@ paths:
       tags:
         - Authorization
       summary: User requests token
-      security: [
-        {}
-      ]
+#      security: [
+#        {}
+#      ]
       requestBody:
         required: true
         content:
@@ -549,7 +550,7 @@ paths:
             schema:
               type: object
               properties:
-                email:
+                username:
                   type: string
                 password:
                   type: string
@@ -600,21 +601,21 @@ components:
       properties:
         files:
           type: array
-  securitySchemes:
-    oAuthSecurity: # <---- arbitrary name
-      type: oauth2
-      description: This API uses OAuth 2 with the password grant flow.
-      x-tokenInfoFunc: src.services.JWT.decode_token
-      flows:
-        password: # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
-          tokenUrl: /api/auth
-          scopes:
-            admin: Admins
-            moderator: Moderators
-            user: Students
-
-
-# Step 2 - apply security globally...
-security:
-  - oAuthSecurity:
-      - admin
+#  securitySchemes:
+#    oAuthSecurity: # <---- arbitrary name
+#      type: oauth2
+#      description: This API uses OAuth 2 with the password grant flow.
+#      x-tokenInfoFunc: src.services.JWT.decode_token
+#      flows:
+#        password: # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+#          tokenUrl: /api/auth
+#          scopes:
+#            admin: Admins
+#            moderator: Moderators
+#            user: Students
+#
+#
+## Step 2 - apply security globally...
+#security:
+#  - oAuthSecurity:
+#      - admin

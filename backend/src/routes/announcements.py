@@ -1,7 +1,7 @@
 import connexion
 from flask import make_response
 from ..services.helper_functions import *
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 def read_global_announcements():
     return query(
@@ -22,6 +22,7 @@ def read_all(id):
 
 
 # TODO fix dit zodat correcte user wordt ingeschreven
+@jwt_required()
 def post_global():
     try:
         body = connexion.request.json['announcement']
@@ -29,9 +30,10 @@ def post_global():
         content = body['content']
     except KeyError:
         return make_response("Invalid body", 404)
+    print(get_jwt_identity())
     query_update(
-        "INSERT INTO announcements (userid, projectid, title, content) VALUES (5, NULL, %(title)s, %(content)s)",
-        {'content': content, 'title': title})
+        "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, %(content)s)",
+        {'userid': get_jwt_identity(), 'content': content, 'title': title})
     return make_response("Global Announcement successfully posted".format(projectid=str(id)), 200)
 
 

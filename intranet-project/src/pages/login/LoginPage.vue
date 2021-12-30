@@ -46,7 +46,7 @@ export default {
         .then((response) => {
           console.log(response);
 
-          localStorage.setItem("token", response.access_token);
+          localStorage.setItem("loggedIn", true);
 
           this.$router.push(this.nextLink);
         })

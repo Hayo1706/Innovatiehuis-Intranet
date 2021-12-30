@@ -11,8 +11,9 @@
               <ProjectFolder
                 :projectid="this.$route.params.id"
                 :name="folder"
-                :path="'/' + folder"
+                :path="this.currentPath + '/' + folder"
                 :shared='no'
+                @currentPathChanged="folderPathChange"
               />
             </div>
           </div>
@@ -37,6 +38,7 @@ export default {
     return { 
       folders: [],
       searchTerm: "",
+      currentPath: this.$route.fullPath.split("/project/")[1],
      };
   },
   methods: {
@@ -54,10 +56,11 @@ export default {
         return false;
       }
     },
-  },
-  async created() {
-    //this.$emit("newHeaderTitle", "NAAM + PAD");
-    FilestorageService.getFoldersOfProject(this.$route.params.id)
+    folderPathChange(){
+      this.setFolders();
+    },
+    setFolders(){
+      FilestorageService.getFoldersOfProject(this.$route.params.id, this.currentPath)
       .then((response) => {
         this.folders = response;
       })
@@ -67,7 +70,12 @@ export default {
         }
         alert(err);
       });
+    },
   },
+  async created() {
+    //this.$emit("newHeaderTitle", "NAAM + PAD");
+    this.setFolders();
+  }
 }
 </script>
 

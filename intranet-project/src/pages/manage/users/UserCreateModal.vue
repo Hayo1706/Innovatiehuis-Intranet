@@ -22,12 +22,13 @@
         <div class="modal-body">
           <form>
             <div class="mb-9">
-              <!-- TODO add input here-->
+              <div id="errorMessage">{{ errorMessage }}</div>
               <input
                 v-model="this.first_name"
                 class="form-control"
                 id="message-text"
                 placeholder="Voornaam"
+                required
               />
               <input
                 v-model="this.last_name"
@@ -67,12 +68,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-dismiss="modal"
-            @click="addNewUser()"
-          >
+          <button type="button" class="btn btn-primary" @click="addNewUser()">
             Toevoegen
           </button>
           <button
@@ -89,10 +85,13 @@
 </template>
 <script>
 import UserService from "@/services/UserService.js";
+import { Modal } from "bootstrap";
 export default {
   name: "UserCreateModal",
   data: function () {
     return {
+      errorMessage: "",
+      modal: null,
       roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
       screeningstates: {
         "nog niet in behandeling": 0,
@@ -115,6 +114,7 @@ export default {
     myModalEl.addEventListener("hidden.bs.modal", () => {
       this.clearForm();
     });
+    this.modal = new Modal(myModalEl);
   },
 
   watch: {
@@ -127,6 +127,10 @@ export default {
   },
   methods: {
     addNewUser() {
+      if (!this.validateForm()) {
+        return;
+      }
+
       UserService.addUser({
         first_name: this.first_name,
         last_name: this.last_name,
@@ -135,6 +139,7 @@ export default {
         screening_status: this.selectedScreeningStateId,
       })
         .then(() => {
+          this.closeModal();
           alert(
             "De gebruiker '" +
               this.first_name +
@@ -148,8 +153,37 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert("Er ging iets mis! Probeer later weer");
+          this.errorMessage =
+            "Er ging iets mis bij het aanmaken van een gebruiker, probeer later opnieuw.";
         });
+    },
+    setFieldEmptyErrorMessage(name) {
+      this.errorMessage = 'Het veld "' + name + '" mag niet leeg zijn.';
+    },
+    fieldEmpty(field) {
+      return field.trim() == "";
+    },
+    validateForm() {
+      let firstNameEmpty = this.fieldEmpty(this.first_name);
+      if (firstNameEmpty) {
+        this.setFieldEmptyErrorMessage("Voornaam");
+        return false;
+      }
+      let lastNameEmpty = this.fieldEmpty(this.last_name);
+      if (lastNameEmpty) {
+        this.setFieldEmptyErrorMessage("Achternaam");
+        return false;
+      }
+      let emailEmpty = this.fieldEmpty(this.email);
+      if (emailEmpty) {
+        this.setFieldEmptyErrorMessage("Email");
+        return false;
+      }
+      if (!this.validateEmail()) {
+        this.errorMessage = "Het formaat van het emailadress is niet correct.";
+        return false;
+      }
+      return true;
     },
     clearForm() {
       this.first_name = "";
@@ -159,6 +193,16 @@ export default {
       this.selectedRoleId = 2;
       this.selectedScreeningState = "nog niet in behandeling";
       this.selectedScreeningStateId = 0;
+      this.errorMessage = "";
+    },
+    closeModal() {
+      this.modal.hide();
+    },
+    validateEmail() {
+      //Per the W3C HTML5 spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
+      return this.email.match(
+        "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+      );
     },
   },
 };
@@ -176,6 +220,10 @@ select {
 }
 .modal-title {
   font-family: Montserrat;
+}
+#errorMessage {
+  margin-bottom: 10px;
+  color: red;
 }
 </style>
 
