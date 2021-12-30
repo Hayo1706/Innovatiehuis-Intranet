@@ -56,8 +56,10 @@ export default {
         return false;
       }
     },
-    folderPathChange(){
+    folderPathChange(path){
+      this.currentPath = path.split("/project/")[1];
       this.setFolders();
+      this.$router.push(path);
     },
     setFolders(){
       FilestorageService.getFoldersOfProject(this.$route.params.id, this.currentPath)

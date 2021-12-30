@@ -128,10 +128,10 @@ def createDirFromRequest(id):
 
 def deleteDir(id):
     #TODO get root path of project by id
-    root_path_project = getProjectPath(id) + "/"
     path_to_delete = connexion.request.values.get('path')
-    if dir_exists(root + root_path_project + path_to_delete):
-        os.rmdir(root + root_path_project + path_to_delete)
+    print(root + path_to_delete)
+    if dir_exists(root + path_to_delete):
+        os.rmdir(root + path_to_delete)
         print("Succesfully deleted folder")
         return make_response("Succesfully deleted folder", 200)
     else:

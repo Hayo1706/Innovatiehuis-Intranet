@@ -1,6 +1,6 @@
 <template>
-  <div class="projectFolder" @click.right="viewMenu = true" @mouseleave="viewMenu = false" @click="goToFolder()">
-    <div class="container-fluid" @mouseleave="renameFolder()">
+  <div class="projectFolder" @click.right="viewMenu = true" @mouseleave="viewMenu = false">
+    <div class="container-fluid" @mouseleave="renameFolder()" @click="goToFolder()">
       <div class="row">
         <div class="col-sm-3">
           <img class="foldersImage" v-if="this.shared != 'yes'" src=".\..\..\assets\images\folder.png"/> 
@@ -67,8 +67,7 @@ export default {
       }
     }, 
     goToFolder(){
-      this.$router.push("/project/" + this.path);
-      this.$emit("currentPathChanged");
+      this.$emit("currentPathChanged", "/project/" + this.path);
       
     } 
   },

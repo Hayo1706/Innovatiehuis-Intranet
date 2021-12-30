@@ -1,5 +1,14 @@
 <template>
   <div class="projectFile" @click.right="viewMenu = true" @mouseleave="viewMenu = false">
+    <div>
+      <div class="row">
+        <img v-if="this.type == 'pdf'" src=".\..\..\assets\images\pdficon.png"/>
+        <img v-if="this.type == 'txt'" src=".\..\..\assets\images\txticon.png"/>
+        <img v-if="this.type == 'docx'" src=".\..\..\assets\images\wordicon.jpg"/>
+        <img v-if="this.type == 'pptx'" src=".\..\..\assets\images\powerpointicon.png"/>
+        <img v-if="this.type == 'xlsx'" src=".\..\..\assets\images\excelicon.png"/>
+      </div>
+    </div>
     <div class = "box" @mouseleave="editName = false">
         <div class = "content" @dblclick="editName = true" @mouseleave="renameFile()"> <!--- Position of content is absolute --->
             <input v-if="editName == false" class="fileName" v-model="fileName" disabled/>
@@ -31,6 +40,14 @@ export default {
       fileName: this.name.split(".")[0],
       editName: false,
       fileType: this.type,
+      dictType: {
+        pdf: "pdficon.png",
+        docx: "wordicon.jpg",
+        xlsx: "excelicon.png",
+        pptx: "powerpointicon.png",
+        txt: "txticon.png",
+        unknown: "unknownfile.png",
+      }
     };
   },
   methods: {
@@ -54,18 +71,25 @@ export default {
         });
       },
       renameFile(){
-        FilestorageService.updateFile(this.projectid, this.path)
-        .then((response) => {
-            this.editName = false;
-            alert(response)
-        })
-        .catch((err) => {
-            if (err.response) {
-            console.log(err.response.status);
-            }
-            alert(err);
-        });
-    },  
+        if(this.editName == true){
+          FilestorageService.updateFile(this.projectid, this.path)
+          .then((response) => {
+              this.editName = false;
+              alert(response)
+          })
+          .catch((err) => {
+              if (err.response) {
+              console.log(err.response.status);
+              }
+              alert(err);
+          });
+        }
+      },
+      getTypeImage(){
+        if(this.fileType in this.dictType){
+          alert("yes")
+        }
+      } 
   }
 };
 </script>
@@ -83,18 +107,6 @@ export default {
   border: 0px;
   width: 70%;
 }
-.box {
-    position: relative;
-    width:    100%; /* desired width */
-    background-color: var(--blue2);
-    margin-bottom: calc(1vw + 1vh);
-}
-.box:before {
-    content:     "";
-    display:     block;
-    padding-top: 100%; /* initial ratio of 1:1*/
-}
-
 .content {
     position: absolute;
 }
