@@ -64,6 +64,36 @@ paths:
       responses:
         200:
           description: Project deleted
+  /projects/{id}/parents:
+    get:
+      operationId: src.routes.projects.read_parents
+      tags:
+        - Project
+      summary: Read all projects marked as parent of a specific project
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully read project operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /projects/{id}/children:
+    get:
+      operationId: src.routes.projects.read_children
+      tags:
+        - Project
+      summary: Read all projects marked as child of a specific project
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully read project operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
 
 #  /projects/upload:
 #    post:
@@ -555,13 +585,13 @@ components:
       properties:
         projectid:
           type: integer
-        name:
+        project_name:
           type: string
-        isarchived:
+        is_archived:
           type: boolean
-        createdat:
+        create:
           type: string
-        lastupdated:
+        last_updated:
           type: string
     Files:
       type: object

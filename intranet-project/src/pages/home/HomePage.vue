@@ -1,15 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        ></button>
-      </div>
+      <Warning v-if="this.warningIsVisible"></Warning>
       <div class="col-8">
         <ProjectsWindow>Mijn Projecten</ProjectsWindow>
       </div>
@@ -26,22 +18,35 @@
 <script>
 import AnnouncementWindow from '../../shared_components/AnnouncementWindow.vue';
 import ProjectsWindow from '../../shared_components/ProjectsWindow.vue';
+import Warning from '../../shared_components/Warning.vue';
+import Vue from 'vue';
 
 export default {
-  components: { AnnouncementWindow, ProjectsWindow },
+  components: { AnnouncementWindow, ProjectsWindow, Warning },
   name: "HomePage",
   data: function () {
     return {
-      announcementWindowKey: 0
+      announcementWindowKey: 0,
+      warningIsVisible: false
     };
   },
   methods: {
     reloadAnnouncementWindow() {
       this.announcementWindowKey += 1;
+    },
+    triggerWarning() {
+      this.warningIsVisible = true;
     }
   },
   created() {
     this.$emit('newHeaderTitle', 'Hoofdpagina');
+    this.triggerWarning();
+
+    var WarningClass = Vue.extend(Warning)
+    var warning = new WarningClass();
+    warning.$mount();
+    this.$refs.alert_container.appendChild(warning.$el);
+
   }
 };
 </script>

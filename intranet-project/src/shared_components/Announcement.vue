@@ -24,7 +24,7 @@
     </h2>
     <div
       :id="'collapse' + this.id"
-      class="accordion-collapse collapse show"
+      class="accordion-collapse collapse"
       :aria-labelledby="'heading' + this.id"
     >
       <div class="accordion-body">

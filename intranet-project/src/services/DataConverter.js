@@ -1,14 +1,3 @@
-// export function convertDates(json) {
-//     Object.values(json).forEach(value => {
-//       if (typeof json[value] === 'object') {
-//         return convertDates(json[value]);
-//       }
-//       json[value] jsonToJsDate(json[value])
-//     });
-    
-//     return o;
-//   }
-
 export function jsonToJsDate(sqlDate){
     //sqlDate in SQL DATETIME format ("yyyy-mm-ddThh:mm:ss.msZ")
     var sqlDateArr1 = sqlDate.split("-");
