@@ -563,6 +563,22 @@ paths:
                 type: string
         401:
           description: Unauthorized
+  /logout:
+    post:
+      operationId: src.services.JWT.logout
+      tags:
+        - Authorization
+      summary: User logs out and removes cookies
+#      security: [
+#        {}
+#      ]
+      responses:
+        200:
+          description: Unset cookie token
+          content:
+            'application/json':
+              schema:
+                type: string
 
 components:
   parameters:

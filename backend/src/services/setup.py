@@ -1,14 +1,10 @@
 import connexion
-import flask
-from flask_cors import CORS
-from flask_jwt_extended import jwt_required
-from sqlalchemy import create_engine
-
 from .extensions import db, jwt
 from .JWT import JWT_SECRET
-from flask import request
+from flask import request, jsonify
 
 from flask_jwt_extended import verify_jwt_in_request
+from flask_jwt_extended import unset_jwt_cookies
 
 url = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
 
@@ -22,8 +18,8 @@ def create_app():
     app.app.config['JWT_SECRET_KEY'] = JWT_SECRET
     app.app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.app.config[
-        'JWT_COOKIE_CSRF_PROTECT'] = True  # TODO Regel dit, csrf token moet meegestuurd worden in frontend
-    app.app.config['JWT_CSRF_CHECK_FORM'] = True  # TODO Regel dit ook
+        'JWT_COOKIE_CSRF_PROTECT'] = True
+    app.app.config['JWT_CSRF_CHECK_FORM'] = True
 
     app.app.config['SQLALCHEMY_POOL_SIZE'] = 20
     app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -31,10 +27,15 @@ def create_app():
     db.init_app(app.app)
 
     @app.app.before_request
-    def hoi():
-        if not request.base_url == 'http://127.0.0.1:5000/api/auth':
-            # verify_jwt_in_request()
-            print()
+    def remove_jwt_if_expired():
+        if not request.path == '/api/auth':
+            try:
+                verify_jwt_in_request()
+            except Exception as e:
+                print(e)
+                resp = jsonify({'logout': True})
+                unset_jwt_cookies(resp)
+                return resp, 401
 
     with app.app.app_context():
         db.create_engine(url, {})
