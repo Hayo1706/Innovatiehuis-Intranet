@@ -69,24 +69,18 @@ def upload_file(file, path):
     return make_response('file upload failed, no file was selected', 400)
 
 def getFilesInPath(id):
-    requested_path = root + id
+    folder_path = connexion.request.values.get('path')
+    print(folder_path)
+    requested_path = root + getProjectPath(id) + folder_path
+    print(requested_path)
     list_of_files = []
     if path_exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)
         for path in paths_in_requested_path:
             if not os.path.isdir(requested_path + "/" + path):
                 list_of_files.append(path)
-    return list_of_files
 
-def deleteFile(id):
-    project_path = id
-    sub_file_path = connexion.request.values.get('path')
-    file_path = project_path + sub_file_path
-    print(isFilePathValid(file_path))
-    if isFilePathValid(file_path):
-        os.remove(root + file_path)
-        return make_response("Succesfully deleted file", 200)
-    return make_response("Failed to delete file", 400)
+    return list_of_files
 
 def moveFile(id):
     source_path = connexion.request.json['from']
@@ -114,6 +108,7 @@ def downloadFile(id):
 
 def deleteFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
+    print(requested_path)
     if isFilePathValid(requested_path):
         os.remove(requested_path)
         return make_response("Succesfully deleted file", 200)

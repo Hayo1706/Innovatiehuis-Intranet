@@ -27,8 +27,8 @@ var FilestorageService = function () {
 
 
 
-    async function getFilesOfProject(projectid) {
-        const { data } = await axiosClient.get(`/projects/${projectid}/files`, { timeout: 2000 });
+    async function getFilesOfPath(projectid, path) {
+        const { data } = await axiosClient.get(`/projects/${projectid}/files?path=` + path, { timeout: 2000 });
         return data;
     }
 
@@ -59,7 +59,7 @@ var FilestorageService = function () {
         uploadFiles,
         downloadFile,
         getFoldersOfProject,
-        getFilesOfProject,
+        getFilesOfPath,
         createFolder,
         deleteFolder,
         renameFolder,

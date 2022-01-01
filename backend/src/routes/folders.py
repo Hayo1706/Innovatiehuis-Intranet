@@ -33,7 +33,6 @@ def getFoldersInPath(id):
         for path in paths_in_requested_path:
             if os.path.isdir(requested_path + "/" + path):
                 list_of_files.append(path)
-    print(list_of_files)
     return list_of_files
 
 def getUniqueDirPath(new_dir, current_path, count):
@@ -107,16 +106,18 @@ def isDirMoveValid(from_path, to_path):
     return
 
 def createDirFromRequest(id):
-    path_in_project = connexion.request.values.get('path')
-    if path_in_project == "/":
-        path_in_project = ""
+    path_in_project = connexion.request.values.get('path') + "/" 
 
-    full_path = getProjectPath(id) + "/" + path_in_project
+    full_path = getProjectPath(id) + path_in_project
+
+    print(full_path)
 
     new_dir_name = connexion.request.json['name']
     new_dir_name = secureFolderName(new_dir_name)
 
     new_dir_path = getUniqueDirPath(new_dir_name, full_path, 0)
+
+    print(new_dir_path)
 
     if full_path == None or new_dir_name == None:
         print("Failed to create new folder")
