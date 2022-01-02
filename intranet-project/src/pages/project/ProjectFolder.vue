@@ -53,23 +53,6 @@
               </div>
             </form>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-dismiss="modal"
-              @click="addNewFolder()"
-            >
-              Toevoegen
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Annuleren
-            </button>
-          </div>
         </div>
       </div>
     </div>
