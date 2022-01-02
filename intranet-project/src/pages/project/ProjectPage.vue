@@ -2,7 +2,7 @@
   <div>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-8">
+        <div class="col-sm-8">
             <div class="row">
               <div class="col-sm">
                 <FoldersView 
@@ -18,7 +18,7 @@
               </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-sm-4">
             <div class="row">
               <AnnouncementWindow @reload="reloadAnnouncementWindow()" :key="this.announcementWindowKey">Mededelingen</AnnouncementWindow>
             </div>
