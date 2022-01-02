@@ -100,7 +100,7 @@
         </select>
       </div>
       <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
-      <div class="col d-none d-lg-block">
+      <div class="col d-none d-lg-block" id="screening">
         <select v-model="screeningstate">
           <option
             v-for="screeningstate in Object.keys(this.screeningstates)"
@@ -268,39 +268,43 @@ export default {
 
 <style scoped>
 #user-listing {
-  background-color: var(--blue3);
-  margin: 3px;
   padding: 10px;
   box-sizing: border-box;
   color: var(--blue1);
-  font-family: AddeleSemiBold;
+  overflow: visible;
+  background: linear-gradient(to right top, rgba(230,230,230,0.7), rgba(230,230,230,0.9));
+  border-radius: 1rem;
+  margin-bottom: 1vh;
+  font-size: 2vh;
+  border: solid var(--gold1) 2px;
 }
+
 .row {
   padding-top: 12px;
 }
 .userButton {
   font-weight: bold;
-  background-color: var(--gold2);
+  background-color: var(--gold1);
   color: var(--blue1);
-  border-style: outset;
-  border-radius: 8px;
+  border-radius: 1rem;
   padding-left: 10px;
   padding-right: 10px;
   height: fit-content;
   cursor: pointer;
   width: fit-content;
+  margin-left: 10px;
 }
 .mobileRow {
   min-height: 53px;
 }
 img {
-  width: 50px;
+  width: 30px;
   margin-right: 2px;
   margin-top: 10px;
 }
 .link {
   cursor: pointer;
-  color: var(--gold2);
+  color: var(--gold1);
   display: block;
   margin-bottom: 10px;
   text-decoration: none;

@@ -73,7 +73,7 @@ export default {
 <style>
 #login {
   width: 400px;
-  margin: auto;
+  margin: 5vh auto auto;
 }
 #center {
   margin: auto;

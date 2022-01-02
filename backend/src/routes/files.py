@@ -70,9 +70,7 @@ def upload_file(file, path):
 
 def getFilesInPath(id):
     folder_path = connexion.request.values.get('path')
-    print(folder_path)
     requested_path = root + getProjectPath(id) + folder_path
-    print(requested_path)
     list_of_files = []
     if path_exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)
@@ -90,7 +88,6 @@ def moveFile(id):
     target_path = root + getProjectPath(id) + "/" + target_path
 
     if isFilePathValid(getProjectPath(id) + "/" + source_path) and dir_exists(target_path):
-        print(source_path)
         try:
             shutil.move(source_path, target_path)
         except:
@@ -108,7 +105,6 @@ def downloadFile(id):
 
 def deleteFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
-    print(requested_path)
     if isFilePathValid(requested_path):
         os.remove(requested_path)
         return make_response("Succesfully deleted file", 200)

@@ -32,19 +32,21 @@ export default {
 
 <style scoped>
 .project-button {
-  padding: 10px;
-  margin: 10px;
+  box-sizing: border-box;
+  margin-left: 10px;
+  margin-top: 2vh;
   font-size: 16pt;
-  font-weight: bold;
-  background-color: var(--gold2);
+  background: linear-gradient(to left top, rgba(50,50,80,0.5), rgba(225,225,225,0.7));
+  border-radius: 0 1rem 1rem 0;
   color: var(--blue1);
-  width: 100%;
-  height: 12vh;
-  border-style: outset;
+  width: 95%;
+  height: 10vh;
   align-items: center;
   display: flex;
-  border-radius: 8px;
   cursor: pointer;
+  border: transparent;
+  border-left: solid var(--gold1) 2px;
+
 }
 img {
   height: 5vh;

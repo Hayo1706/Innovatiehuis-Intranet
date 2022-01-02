@@ -3,7 +3,6 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-8">
-          <div class="container-fluid">
             <div class="row">
               <div class="col-sm">
                 <FoldersView 
@@ -18,17 +17,14 @@
                 :path ="this.path"/>
               </div>
             </div>
-          </div>
         </div>
         <div class="col-sm-4">
-          <div class="container-fluid">
             <div class="row">
               <AnnouncementWindow @reload="reloadAnnouncementWindow()" :key="this.announcementWindowKey">Mededelingen</AnnouncementWindow>
             </div>
             <div class="row">
                 <ChatWindow></ChatWindow>
             </div>
-          </div>
         </div>
       </div>
     </div>
@@ -50,7 +46,7 @@ export default {
     return {
       announcementWindowKey: 0,
       projectId: this.$route.params.id,
-      path: this.$route.fullPath.split("/project/")[1]
+      path: this.$route.fullPath.split("/project/")[1].split(this.$route.params.id)[1]
     };
   },
   methods: {

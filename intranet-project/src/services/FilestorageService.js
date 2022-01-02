@@ -9,6 +9,11 @@ var FilestorageService = function () {
         return data;
     }
 
+    async function moveFolder(projectid, from, to, rename) {
+        const { data } = await axiosClient.put(`/projects/${projectid}/folders`, { from, to, rename } , { timeout: 2000 });
+        return data;
+    }
+
     async function createFolder(projectid, path, name) {
         const { data } = await axiosClient.post(`/projects/${projectid}/folders?path=` + path, { name }, { timeout: 2000 });
         return data;
@@ -64,7 +69,8 @@ var FilestorageService = function () {
         deleteFolder,
         renameFolder,
         deleteFile,
-        updateFile
+        updateFile,
+        moveFolder
     }
 
 

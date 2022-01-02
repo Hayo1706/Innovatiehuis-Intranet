@@ -47,9 +47,8 @@ export default {
           formData.append(files[i].name, files[i]);
         }
         FilestorageService.uploadFiles(this.$route.params.id, path, formData)
-        .then((response) => {
+        .then(() => {
           this.$emit('newFilesUploaded');
-          alert(response);
         })
         .catch((err) => {
           if (err.response) {

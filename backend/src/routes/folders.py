@@ -22,28 +22,27 @@ def dir_exists(path):
 
 def getFoldersInPath(id):
     folder_path = connexion.request.values.get('path')
-    if folder_path == id:
-        requested_path = root + getProjectPath(id)
-    else:
-        requested_path = root + folder_path
-
+    requested_path = root + getProjectPath(id) + folder_path
+    print(requested_path)
     list_of_files = []
     if path_exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)
         for path in paths_in_requested_path:
             if os.path.isdir(requested_path + "/" + path):
                 list_of_files.append(path)
+    print(list_of_files)
     return list_of_files
 
 def getUniqueDirPath(new_dir, current_path, count):
+    path_to_check = current_path + "/" + new_dir
     if count == 0:
-        if dir_exists(root + current_path + new_dir):
+        if dir_exists(path_to_check):
             return getUniqueDirPath(new_dir, current_path, count + 1)
-        return current_path + new_dir
+        return path_to_check
     else:
-        if dir_exists(root + current_path + new_dir  + " (" + str(count) + ")"):
+        if dir_exists(path_to_check  + " (" + str(count) + ")"):
             return getUniqueDirPath(new_dir, current_path, count + 1)
-        return current_path + new_dir + " (" + str(count) + ")"
+        return path_to_check + " (" + str(count) + ")"
 
 def checkFolderNameValid(path, new_name):
     if dir_exists(path + "/" + new_name):
@@ -106,43 +105,43 @@ def isDirMoveValid(from_path, to_path):
     return
 
 def createDirFromRequest(id):
-    path_in_project = connexion.request.values.get('path') + "/" 
-
-    full_path = getProjectPath(id) + path_in_project
-
-    print(full_path)
+    requested_path = connexion.request.values.get('path')
+    current_path = root + getProjectPath(id) + requested_path
 
     new_dir_name = connexion.request.json['name']
     new_dir_name = secureFolderName(new_dir_name)
 
-    new_dir_path = getUniqueDirPath(new_dir_name, full_path, 0)
+    new_dir_path = getUniqueDirPath(new_dir_name, current_path, 0)
 
-    print(new_dir_path)
-
-    if full_path == None or new_dir_name == None:
+    if new_dir_path == None or new_dir_name == None:
         print("Failed to create new folder")
         return make_response("Failed to create new folder", 400)
 
-    os.mkdir(root + new_dir_path)
-    print("Succesfully created new folder")
-    return make_response("Succesfully created new folder", 200)
+    try:
+        print(new_dir_path)
+        os.mkdir(new_dir_path)
+        print("Succesfully created new folder")
+        return make_response("Succesfully created new folder", 200)
+    except:
+        print("Failed to created new folder")
+        return make_response("Failed to created new folder", 400)
+
 
 def deleteDir(id):
-    #TODO get root path of project by id
     path_to_delete = connexion.request.values.get('path')
-    print(root + path_to_delete)
-    if dir_exists(root + path_to_delete):
-        os.rmdir(root + path_to_delete)
-        print("Succesfully deleted folder")
-        return make_response("Succesfully deleted folder", 200)
+    requested_path = root + getProjectPath(id) + path_to_delete
+    print(requested_path)
+    if dir_exists(requested_path):
+        try:
+            os.rmdir(requested_path)
+            print("Succesfully deleted folder")
+            return make_response("Succesfully deleted folder", 200)
+        except:
+            print("An error occured when trying to delete folder")
+            return make_response("An error occured when trying to delete folder, there are folders inside", 400)
     else:
         print("Folder could not be deleted, please refresh.")
         return make_response("Folder could not be deleted, please refresh.", 400)
-
-def createDir(new_dir, current_path):
-    new_dir_path = getUniqueDirPath(new_dir, current_path, 0)
-    os.mkdir(root + new_dir_path)
-    return new_dir_path
 
 def secureFolderName(file_name):
     secure_name = secure_filename(file_name)
