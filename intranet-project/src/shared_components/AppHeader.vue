@@ -1,12 +1,12 @@
 <template>
   <header>
-    <div v-if="this.$route.name != 'LoginPage'">
+    <div v-if="this.$route.path != '/login'">
       <img @click="logoClick()" src=".\..\assets\images\logo\square.png" />
     </div>
     <p id="header_title_text">
       <slot></slot>
     </p>
-    <div v-if="this.$route.name != 'LoginPage'">
+    <div v-if="this.$route.path != '/login'">
       <img @click="userClick()" src=".\..\assets\images\profile_icon.png" />
       <img @click="logout()" src=".\..\assets\images\logout-icon.png" style="height: 8vh;" />
     </div>
