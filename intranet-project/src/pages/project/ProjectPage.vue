@@ -46,7 +46,7 @@ export default {
     return {
       announcementWindowKey: 0,
       projectId: this.$route.params.id,
-      path: this.$route.fullPath.split("/project/")[1]
+      path: this.$route.fullPath.split("/project/")[1].split(this.$route.params.id)[1]
     };
   },
   methods: {

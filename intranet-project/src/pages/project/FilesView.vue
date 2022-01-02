@@ -34,8 +34,12 @@ export default {
     ProjectFile
   },
   name: "FilesView",
-  props: {
-    path: { type: String, required: true },
+  props: ['path'],
+  watch:{
+    path(newPath){
+      this.currentPath = newPath;
+      this.setFiles();
+    }
   },
   data: function () {
     return { 
@@ -78,9 +82,6 @@ export default {
   },
   async created() {
     this.setFiles();
-    //this.$parent.$on('pathChanged', this.setPath);
-    //this.$emit("newHeaderTitle", "NAAM + PAD");
-    
   },
 }
 </script>

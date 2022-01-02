@@ -50,7 +50,7 @@
                   v-model="this.newFolderName"
                   class="form-control"
                   id="message-text"
-                  placeholder="Nieuwe Map"
+                  placeholder="Nieuwe_Map"
                 />
               </div>
             </form>
@@ -89,20 +89,19 @@ export default {
   data: function () {
     return {
       newFolderName: null,
+      path: this.$route.fullPath.split("/project/" + this.$route.params.id)[1],
     };
   },
   methods: {
     addNewFolder() {
       if (this.newFolderName == null) {
-        this.newFolderName = "Nieuwe Map";
+        this.newFolderName = "Nieuwe_Map";
       }
-      var path = this.$route.fullPath.split("/project/" + this.$route.params.id)[1]
       FilestorageService.createFolder(
         this.$route.params.id,
-        path,
+        this.path,
         this.newFolderName
-      ).then((response) => {
-        alert(response)
+      ).then(() => {
         this.$emit('newFolderAdded');
         this.newFolderName = null;
       })

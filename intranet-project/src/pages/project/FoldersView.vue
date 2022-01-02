@@ -1,6 +1,7 @@
 <template>
     <div>
       <ProjectFolderHeader
+        :path = this.currentPath
         @newFolderAdded="(id) => reloadFolders()"
         @searchBarChanged="setSearchTerm"
       />
@@ -9,6 +10,7 @@
           <div v-for="folder in folders" :key="folder" class="col-sm-3">
             <div v-if="folderNameInSearchTerm(folder)">
               <ProjectFolder
+                :directorypath="this.path"
                 :projectid="this.$route.params.id"
                 :name="folder"
                 :path="this.path + '/' + folder"
@@ -32,14 +34,19 @@ export default {
     ProjectFolder,
   },
   name: "FoldersView",
-  props: {
-    path: { type: String, required: true },
+  props: ['path'],
+  watch:{
+    path(newPath){
+      this.currentPath = newPath;
+      this.setFolders();
+    }
   },
   data: function () {
     return { 
       folders: [],
       searchTerm: "",
-      currentPath: this.path
+      currentPath: this.path,
+      projectid: this.$route.params.id
      };
   },
   methods: {
@@ -58,13 +65,12 @@ export default {
       }
     },
     folderPathChange(path){
-      this.currentPath = path.split("/project/")[1];
-      this.setFolders();
-      this.$router.push(path);
-      this.$emit("currentPathChanged", this.path);
+      this.currentPath = path;
+      this.$router.push("/project/" + this.projectid + path);
+      this.$emit("currentPathChanged", this.currentPath);
     },
     setFolders(){
-      FilestorageService.getFoldersOfProject(this.$route.params.id, this.currentPath)
+      FilestorageService.getFoldersOfProject(this.projectid, this.path)
       .then((response) => {
         this.folders = response;
       })
