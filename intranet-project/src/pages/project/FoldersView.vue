@@ -11,7 +11,7 @@
               <ProjectFolder
                 :projectid="this.$route.params.id"
                 :name="folder"
-                :path="this.currentPath + '/' + folder"
+                :path="this.path + '/' + folder"
                 :shared='no'
                 @currentPathChanged="folderPathChange"
               />
@@ -32,13 +32,14 @@ export default {
     ProjectFolder,
   },
   name: "FoldersView",
-  props: [
-  ],
+  props: {
+    path: { type: String, required: true },
+  },
   data: function () {
     return { 
       folders: [],
       searchTerm: "",
-      currentPath: this.$route.fullPath.split("/project/")[1],
+      currentPath: this.path
      };
   },
   methods: {
@@ -60,6 +61,7 @@ export default {
       this.currentPath = path.split("/project/")[1];
       this.setFolders();
       this.$router.push(path);
+      this.$emit("currentPathChanged", this.path);
     },
     setFolders(){
       FilestorageService.getFoldersOfProject(this.$route.params.id, this.currentPath)

@@ -5,12 +5,16 @@
         <div class="col-8">
             <div class="row">
               <div class="col-sm">
-                <FoldersView />
+                <FoldersView 
+                :path ="this.path"
+                @currentPathChanged="pathChanged"
+               />
               </div>
             </div>
             <div class="row">
               <div class="col-sm">
-                <FilesView />
+                <FilesView 
+                :path ="this.path"/>
               </div>
             </div>
         </div>
@@ -41,13 +45,17 @@ export default {
   data: function () {
     return {
       announcementWindowKey: 0,
-      projectId: this.$route.params.id
+      projectId: this.$route.params.id,
+      path: this.$route.fullPath.split("/project/")[1]
     };
   },
   methods: {
-      reloadAnnouncementWindow() {
-        this.announcementWindowKey += 1;
-    }
+    pathChanged(path){
+      this.path = path
+    },
+    reloadAnnouncementWindow() {
+      this.announcementWindowKey += 1;
+    },
   },
   async created() {
     ProjectService.getProjectById(this.$route.params.id)

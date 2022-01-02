@@ -68,7 +68,6 @@ export default {
     }, 
     goToFolder(){
       this.$emit("currentPathChanged", "/project/" + this.path);
-      
     } 
   },
 };

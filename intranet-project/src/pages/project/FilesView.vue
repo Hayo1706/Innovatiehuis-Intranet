@@ -2,7 +2,7 @@
     <div>
       <ProjectFilesHeader 
         @searchBarChanged="setSearchTerm"
-        @newFilesUploaded="reloadFiles()"
+        @newFilesUploaded="reloadPage()"
       />
          
       <div class="container-fluid"> 
@@ -13,9 +13,9 @@
                 :projectid="this.$route.params.id"
                 :name="file"
                 :type="file.split('.').pop()"
-                :path="'/' + file"
+                :path="this.path.split(this.projectid)[1] + '/' + file"
                 :shared='no'
-                @fileDeleted="reloadFiles()"
+                @fileDeleted="reloadPage()"
               />
             </div>
           </div>
@@ -34,15 +34,15 @@ export default {
     ProjectFile
   },
   name: "FilesView",
-  props: [
-
-  ],
+  props: {
+    path: { type: String, required: true },
+  },
   data: function () {
     return { 
       files: [],
       projectid: this.$route.params.id,
       searchTerm: "",
-      path: this.$route.fullPath.split("/project/" + this.$route.params.id)[1]
+      currentPath: this.path,
       };
   },
   methods: {
@@ -57,13 +57,11 @@ export default {
      setSearchTerm(value) {
       this.searchTerm = value;
     },
-    reloadFiles(){
-      location.reload();
+    setPath(path){
+      this.currentPath = path;
     },
-  },
-  async created() {
-    //this.$emit("newHeaderTitle", "NAAM + PAD");
-    FilestorageService.getFilesOfProject(this.$route.params.id)
+    setFiles(){
+      FilestorageService.getFilesOfPath(this.projectid, this.path.split(this.projectid)[1])
       .then((response) => {
         this.files = response;
       })
@@ -73,6 +71,16 @@ export default {
         }
         alert(err);
       });
+    },
+    reloadPage(){
+      location.reload();
+    }
+  },
+  async created() {
+    this.setFiles();
+    //this.$parent.$on('pathChanged', this.setPath);
+    //this.$emit("newHeaderTitle", "NAAM + PAD");
+    
   },
 }
 </script>
