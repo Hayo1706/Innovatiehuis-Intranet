@@ -1,22 +1,21 @@
 <template>
   <header>
+    <div class="float-left">
+      <img @click="logoClick()" src=".\..\assets\images\logo\square.png" style="height: 8vh;" />
+    </div>
     <p id="header_title_text">
-      <img
-        @click="logoClick()"
-        src=".\..\assets\images\logo\square.png"
-        style="position: absolute; left: 20px; height: 8vh;"
-      />
       <slot></slot>
-      <img
-        @click="userClick()"
-        src=".\..\assets\images\profile_icon.png"
-        style="position: absolute; right: 20px; height: 8vh;"
-      />
     </p>
+    <div class="float-right">
+      <img @click="userClick()" src=".\..\assets\images\profile_icon.png" style="height: 8vh;" />
+      <img @click="logout()" src=".\..\assets\images\logout-icon.png" style="height: 8vh;" />
+    </div>
   </header>
 </template>
 
 <script>
+import LoginService from "../services/LoginService";
+
 export default {
   name: "AppHeader",
   props: ["header_title"],
@@ -28,8 +27,11 @@ export default {
       this.$router.push("/home");
     },
     userClick() {
-      this.$router.push("/user/1");
+      this.$router.push("/user/1"); //TODO: dynamic
     },
+    logout() {
+      LoginService.logout();
+    }
   },
 };
 </script>
@@ -45,7 +47,7 @@ header {
   width: 100%;
   height: 10vh;
   background-color: var(--blue1);
-  -webkit-box-shadow: 3px 3px 1px 2p var(--gold1); 
+  -webkit-box-shadow: 3px 3px 1px 2p var(--gold1);
   box-shadow: 3px 3px 1px 2px var(--gold1);
 }
 #header_title_text {

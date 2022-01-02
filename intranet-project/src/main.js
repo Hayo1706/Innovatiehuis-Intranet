@@ -27,8 +27,7 @@ const routes = [
   { path: '/user/:id', component: UserPage },
   { path: '/home', component: HomePage },
   { path: '/login', component: LoginPage },
-  { path: '/:catchAll(.*)', component: NotFoundPage },
-
+  { path: '/:catchAll(.*)', component: NotFoundPage }
 ]
 const router = createRouter({
   history: createWebHistory(),
@@ -40,8 +39,7 @@ router.beforeEach((to, from, next) => {
     localStorage.setItem("previousRoute", to.fullPath);
   }
   if (!localStorage.getItem("loggedIn") && to.fullPath != "/login") {
-
-    next({ path: '/login' });
+    next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." }});
   } else {
     next();
     //TODO 404 on acces with wrong role
