@@ -44,12 +44,13 @@ img {
 header {
   width: 100%;
   height: 10vh;
-  background-color: var(--blue1);
-  -webkit-box-shadow: 3px 3px 1px 2p var(--gold1); 
-  box-shadow: 3px 3px 1px 2px var(--gold1);
+  /*background-color: var(--blue1);*/
+  background: linear-gradient(to right bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.8));
+  backdrop-filter: blur(4rem);
+  border-bottom: solid 2px var(--gold1);
 }
 #header_title_text {
-  color: white;
+  color: var(--blue1);
   font-size: calc(2vw + 2vh);
   height: 100%;
   margin: 0;
@@ -57,6 +58,5 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: Montserrat;
 }
 </style>

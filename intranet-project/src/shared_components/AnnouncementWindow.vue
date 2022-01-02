@@ -10,7 +10,7 @@
         data-bs-target="#announcementModal"
       />
     </div>
-    <div class="component-body" id="announcement-window">
+    <div class="component-body">
       <div
         class="accordion"
         v-for="announcement in this.announcements"
@@ -159,10 +159,7 @@ export default {
 
 
 <style scoped>
-#announcement-window {
-  overflow: auto;
-  flex: 1;
-}
+
 #add-button {
   background-image: url("./../assets/images/add_icon.png");
 }

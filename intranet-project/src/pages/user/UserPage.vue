@@ -1,8 +1,14 @@
 <template>
-    <div>
-      <PersonalDetails />
-      <ProjectsWindow />
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-6">
+        <PersonalDetails />
+      </div>
+      <div class="col-6">
+        <ProjectsWindow />
+      </div>
     </div>
+  </div>
 </template>
 
 <script>

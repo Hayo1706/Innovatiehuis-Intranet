@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="component-container">
       <p>Personal Details</p>
     </div>
 </template>

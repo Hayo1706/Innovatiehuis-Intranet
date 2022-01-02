@@ -84,7 +84,6 @@ p {
 .filesview {
   color: white;
   font-size: calc(1vw + 1vh);
-  font-family: AddeleSemiBold;
   height: 100%;
   margin: calc(1vw + 1vh);
   text-align: center;

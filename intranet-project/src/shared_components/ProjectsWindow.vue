@@ -65,13 +65,10 @@ export default {
   background-color: var(--gold2);
   color: var(--blue1);
   height: 4.5vh;
-  border-style: outset;
-  border-width: 2px;
   align-items: center;
   display: flex;
-  border-top-left-radius: 2vh;
-  border-top-right-radius: 2vh;
   cursor: pointer;
   float: right;
+  box-shadow: 1vh 1vh;
 }
 </style>

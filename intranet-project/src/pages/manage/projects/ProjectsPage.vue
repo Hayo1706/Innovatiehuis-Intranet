@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-fluid">
     <button
       id="actionButton"
       class="btn pmd-btn-fab pmd-ripple-effect btn-primary"
@@ -9,44 +9,46 @@
     >
       <i class="material-icons pmd-sm">Project toevoegen</i>
     </button>
-    <ProjectsHeader
-      @searchBarChanged="setSearchTerm"
-      @showUnArchivedOnly="setShowUnArchived"
-      v-bind:searchTerm="this.searchTerm"
-      v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
-    ></ProjectsHeader>
-    <ProjectCreateModal></ProjectCreateModal>
-    <div class="container-fluid d-sm-block d-lg-none">
-      <div class="row">
-        <SearchBar
-          class="col"
-          id="searchBarMobile"
-          @searchBarChanged="setSearchTerm"
-          v-bind:searchTerm="this.searchTerm"
-        ></SearchBar>
-        <ProjectsShowUnArchivedOnlyBox
-          id="showunarchivedonlyboxMobile"
-          class="col"
-          @showUnArchivedOnly="setShowUnArchived"
-          v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
-        ></ProjectsShowUnArchivedOnlyBox>
-        <hr />
+    <div class="component-container" id="scrollable">
+      <ProjectsHeader
+        @searchBarChanged="setSearchTerm"
+        @showUnArchivedOnly="setShowUnArchived"
+        v-bind:searchTerm="this.searchTerm"
+        v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
+      ></ProjectsHeader>
+      <ProjectCreateModal></ProjectCreateModal>
+      <div class="container-fluid d-sm-block d-lg-none">
+        <div class="row">
+          <SearchBar
+            class="col"
+            id="searchBarMobile"
+            @searchBarChanged="setSearchTerm"
+            v-bind:searchTerm="this.searchTerm"
+          ></SearchBar>
+          <ProjectsShowUnArchivedOnlyBox
+            id="showunarchivedonlyboxMobile"
+            class="col"
+            @showUnArchivedOnly="setShowUnArchived"
+            v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
+          ></ProjectsShowUnArchivedOnlyBox>
+          <hr />
+        </div>
       </div>
+      <div class="container-fluid">
+        <div v-for="project of filteredProjects" :key="project.project_name">
+          <ProjectListing
+            class="projectlisting"
+            @removeProject="this.removeProject"
+            @archiveProject="this.archiveProject"
+            v-bind:project="project"
+          ></ProjectListing>
+        </div>
+        <div id="noresults" v-if="filteredProjects.length == 0">
+          Geen resultaten.
+        </div>
+      </div>
+      <div id="littleSpace"></div>
     </div>
-    <div class="container-fluid">
-      <div v-for="project of filteredProjects" :key="project.project_name">
-        <ProjectListing
-          class="projectlisting"
-          @removeProject="this.removeProject"
-          @archiveProject="this.archiveProject"
-          v-bind:project="project"
-        ></ProjectListing>
-      </div>
-      <div id="noresults" v-if="filteredProjects.length == 0">
-        Geen resultaten.
-      </div>
-    </div>
-    <div id="littleSpace"></div>
   </div>
 </template>
 

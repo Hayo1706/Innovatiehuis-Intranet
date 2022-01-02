@@ -21,7 +21,6 @@ export default {
 
 <style scoped>
 .headerText {
-  font-family: Montserrat;
   height: 53px;
 }
 </style>

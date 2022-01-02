@@ -103,12 +103,15 @@ export default {
 
 <style scoped>
 #project-listing {
-  background-color: var(--blue3);
-  margin: 3px;
   padding: 10px;
   box-sizing: border-box;
   color: var(--blue1);
-  font-family: AddeleSemiBold;
+  overflow: visible;
+  background: linear-gradient(to right top, rgba(230,230,230,0.7), rgba(230,230,230,0.9));
+  border-radius: 1rem;
+  margin-bottom: 1vh;
+  font-size: 2vh;
+  border: solid var(--gold1) 2px;
 }
 .row {
   padding-top: 12px;
