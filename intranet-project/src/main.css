@@ -8,7 +8,7 @@ body {
     background-size: 100vw;
     background-repeat: no-repeat;
     /*background: linear-gradient(to left TOP, rgb(50,50,50), rgb(20,20,80)) no-repeat;*/
-    min-height: 100vh;
+    min-height: 100%;
 
     /*background-color: white;*/
 }
@@ -17,7 +17,7 @@ body {
 }
 .container-fluid{
     max-width: 1500px;
-    margin-top: 5vh;
+    margin-top: 3vh;
 }
 
 p {
@@ -28,7 +28,7 @@ p {
     /*background: linear-gradient(to left top, rgba(50,50,80,0.8), rgba(225,225,225,1));*/
     background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
     border: solid var(--gold1) 2px;
-    backdrop-filter: blur(4rem);
+    backdrop-filter: blur(1rem);
     min-height: 80vh;
     max-height: 80vh;
     overflow-y: scroll;

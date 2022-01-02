@@ -9,11 +9,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
     function(config) {
-        const token = localStorage.getItem("token");
-        if (token) {
-            config.headers["X-CSRF-TOKEN"] =
-                document.cookie.match('(^|;)\\s*' + 'csrf_access_token' + '\\s*=\\s*([^;]+)')?.pop();
-        }
+        config.headers["X-CSRF-TOKEN"] = document.cookie.match('(^|;)\\s*' + 'csrf_access_token' + '\\s*=\\s*([^;]+)')?.pop();
         return config;
     },
     function(error) {
