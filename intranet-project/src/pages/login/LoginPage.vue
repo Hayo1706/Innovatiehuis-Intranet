@@ -7,16 +7,18 @@
         style="text-align: center"
         type="text"
         placeholder="e-mail"
+        v-on:keyup.enter="submit()"
       /><br />
       <input
         v-model="this.loginAttempt.password"
         style="text-align: center"
         type="password"
         placeholder="wachtwoord"
+        v-on:keyup.enter="submit()"
       /><br />
       <button @click="submit()">Verzenden</button><br />
       <p v-if="this.enteredWrongPassword" id="error-message">
-        Nee dat is fout.
+        Gebruikersnaam en/of wachtwoord is incorrect.
       </p>
     </div>
   </div>
@@ -32,7 +34,7 @@ export default {
     return {
       enteredWrongPassword: false,
       loginAttempt: { email: "", password: "" },
-      nextLink: "/home",
+      redirectTarget: "/home"
     };
   },
   methods: {
@@ -43,9 +45,12 @@ export default {
           "&password=" +
           this.loginAttempt.password
       )
-        .then(() => {
+        .then((response) => {
+          console.log(response);
+
           localStorage.setItem("loggedIn", true);
-          this.$router.push(this.nextLink);
+
+          this.$router.push(this.redirectTarget);
         })
         .catch((err) => {
           if (err.response) {
@@ -59,7 +64,7 @@ export default {
     this.$emit("newHeaderTitle", "Innovatiehuis Intranet");
     const previousRoute = localStorage.getItem("previousRoute");
     if (previousRoute) {
-      this.nextLink = previousRoute;
+      this.redirectTarget = previousRoute;
     }
   },
 };

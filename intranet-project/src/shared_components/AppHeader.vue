@@ -10,11 +10,18 @@
           @click="userClick()"
           src=".\..\assets\images\profile_icon.png"
         />
+        <img
+          @click="logout()"
+          src=".\..\assets\images\logout-icon.png"
+          style="height: 8vh;"
+        />
       </p>
   </header>
 </template>
 
 <script>
+import LoginService from "../services/LoginService";
+
 export default {
   name: "AppHeader",
   props: ["header_title"],
@@ -26,8 +33,11 @@ export default {
       this.$router.push("/home");
     },
     userClick() {
-      this.$router.push("/user/1");
+      this.$router.push("/user/1"); //TODO: dynamic
     },
+    logout() {
+      LoginService.logout();
+    }
   },
 };
 </script>
