@@ -33,6 +33,7 @@ export default {
     components: {
     SearchBar,
   },
+  props: ['path'],
   data: function () {
     return {
       files: [],
@@ -42,11 +43,10 @@ export default {
       uploadFiles(e){
         var files = e.target.files;
         var formData = new FormData();
-        var path = this.$route.fullPath.split("/project/" + this.$route.params.id)[1];
         for (let i = 0; i < files.length; i++) {
           formData.append(files[i].name, files[i]);
         }
-        FilestorageService.uploadFiles(this.$route.params.id, path, formData)
+        FilestorageService.uploadFiles(this.$route.params.id, this.path, formData)
         .then(() => {
           this.$emit('newFilesUploaded');
         })

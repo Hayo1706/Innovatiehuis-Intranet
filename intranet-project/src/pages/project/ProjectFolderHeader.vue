@@ -86,10 +86,10 @@ export default {
     components: {
     SearchBar,
   },
+  props: ['path'],
   data: function () {
     return {
       newFolderName: null,
-      path: this.$route.fullPath.split("/project/" + this.$route.params.id)[1],
     };
   },
   methods: {

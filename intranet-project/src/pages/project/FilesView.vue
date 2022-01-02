@@ -1,6 +1,7 @@
 <template>
     <div>
       <ProjectFilesHeader 
+        :path = this.path
         @searchBarChanged="setSearchTerm"
         @newFilesUploaded="reloadPage()"
       />
@@ -13,7 +14,7 @@
                 :projectid="this.$route.params.id"
                 :name="file"
                 :type="file.split('.').pop()"
-                :path="this.path.split(this.projectid)[1] + '/' + file"
+                :path="this.path + '/' + file"
                 :shared='no'
                 @fileDeleted="reloadPage()"
               />
@@ -65,7 +66,7 @@ export default {
       this.currentPath = path;
     },
     setFiles(){
-      FilestorageService.getFilesOfPath(this.projectid, this.path.split(this.projectid)[1])
+      FilestorageService.getFilesOfPath(this.projectid, this.path)
       .then((response) => {
         this.files = response;
       })

@@ -246,6 +246,8 @@ paths:
       responses:
         200:
           description: Successfully moved folder
+        400:
+          description: Failed to move folder
     delete:
       operationId: src.routes.folders.deleteDir
       tags:

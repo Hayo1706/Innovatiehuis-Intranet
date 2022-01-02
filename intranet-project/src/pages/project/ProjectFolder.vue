@@ -15,45 +15,16 @@
     <div class="container" v-if="viewMenu == true">
       <div class="row"><button @click="deleteFolder()">Verwijder</button></div>
       <div class="row">
-        <button  
-          data-bs-toggle="modal"
-          data-bs-target="#moveModal">
+        <button @click="moveMenu = true">
           Verplaats
           </button>
         </div>
     </div>
-    
-    <div
-      class="modal fade"
-      id="moveModal"
-      tabindex="-1"
-      aria-labelledby="moveModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="moveModalLabel">
-              Verplaatsen naar
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-9" v-if="this.folders.length == 1">
-                <h9>There are no folders to move to</h9>
-              </div>
-              <div class="mb-9" v-for="folder in this.folders" :key="folder">
-                <button v-if="folder != this.name" @click="moveToFolder(folder)">{{folder}}</button>
-              </div>
-            </form>
-          </div>
-        </div>
+    <div class="container" v-if="moveMenu == true">
+      <div class="row" v-for="folder in this.folders" :key="folder">
+        <button v-if="folder != this.name" @click="moveToFolder(folder)">
+          {{folder}}
+        </button>
       </div>
     </div>
   </div>
@@ -73,6 +44,7 @@ export default {
   data: function () {
     return {
       viewMenu: false,
+      moveMenu: false,
       folderName: this.name,
       newName: this.name,
       editName: false,
@@ -111,7 +83,11 @@ export default {
     moveToFolder(folder){
       var folder_path = this.directorypath + "/" + folder
       FilestorageService.moveFolder(this.projectid, this.path, folder_path, "")
-      .then(() => {
+      .then((response) => {
+        if(response.status == 400){
+          alert(response)
+        }
+        location.reload();
       })
       .catch((err) => {
         if (err.response) {
