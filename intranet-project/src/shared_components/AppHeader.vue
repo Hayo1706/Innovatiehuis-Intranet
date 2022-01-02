@@ -74,9 +74,10 @@ header {
 
 #header_title_text {
   color: var(--blue1);
-  font-size: calc(4vh);
+  font-size: min(calc(10px + 2vw), 36px);
   display: flex;
   justify-content: space-around;
+  align-items: center;
   max-width: 1500px;
   margin: auto;
 }
