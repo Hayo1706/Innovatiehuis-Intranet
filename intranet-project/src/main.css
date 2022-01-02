@@ -8,7 +8,7 @@ body {
     background-size: 100vw;
     background-repeat: no-repeat;
     /*background: linear-gradient(to left TOP, rgb(50,50,50), rgb(20,20,80)) no-repeat;*/
-    min-height: 100vh;
+    min-height: 100%;
 
     /*background-color: white;*/
 }
