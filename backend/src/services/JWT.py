@@ -69,7 +69,6 @@ def refresh():
 # We need the backend to send us a response to delete the cookies
 # in order to logout. unset_jwt_cookies is a helper function to
 # do just that.
-@jwt_required
 def logout():
     resp = jsonify({'logout': True})
     unset_jwt_cookies(resp)
