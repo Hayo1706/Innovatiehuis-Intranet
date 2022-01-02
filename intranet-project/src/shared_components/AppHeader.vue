@@ -1,23 +1,15 @@
 <template>
   <header>
-      <div id="header_title_text">
-        <img class="logo"
-          @click="logoClick()"
-          src=".\..\assets\images\logo\square.png"
-        />
-        <slot></slot>
-        <div>
-        <img
-          @click="userClick()"
-          src=".\..\assets\images\profile_icon.png"
-        />
-        <img
-          @click="logout()"
-          src=".\..\assets\images\logout-icon.png"
-          style="height: 8vh;"
-        />
-        </div>
-      </div>
+    <div v-if="this.$route.name != 'LoginPage'">
+      <img @click="logoClick()" src=".\..\assets\images\logo\square.png" />
+    </div>
+    <p id="header_title_text">
+      <slot></slot>
+    </p>
+    <div v-if="this.$route.name != 'LoginPage'">
+      <img @click="userClick()" src=".\..\assets\images\profile_icon.png" />
+      <img @click="logout()" src=".\..\assets\images\logout-icon.png" style="height: 8vh;" />
+    </div>
   </header>
 </template>
 
@@ -39,6 +31,7 @@ export default {
     },
     logout() {
       LoginService.logout();
+      this.$router.push("/login");
     }
   },
 };
@@ -54,11 +47,17 @@ img {
 header {
   width: 100%;
   height: 8vh;
-  margin-top: 2vh;
+  margin-top: 1vh;
   /*background-color: var(--blue1);*/
-  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.8),
+    rgba(225, 225, 225, 0.9)
+  );
   backdrop-filter: blur(1rem);
   border-bottom: solid 2px var(--gold1);
+  display: flex;
+  justify-content: space-between;
 }
 .logo{
   margin-left: 8vh;
