@@ -1,16 +1,27 @@
 <template>
   <header>
-    <div v-if="this.$route.name != 'LoginPage'">
-      <img @click="logoClick()" src=".\..\assets\images\logo\square.png" />
-    </div>
-    <p id="header_title_text">
+    <div id="header_title_text">
+      <img class="logo"
+           @click="logoClick()"
+           src=".\..\assets\images\logo\square.png"
+           v-if="this.$route.name != 'LoginPage'"
+      />
       <slot></slot>
-    </p>
-    <div v-if="this.$route.name != 'LoginPage'">
-      <img @click="userClick()" src=".\..\assets\images\profile_icon.png" />
-      <img @click="logout()" src=".\..\assets\images\logout-icon.png" style="height: 8vh;" />
+      <div v-if="this.$route.name != 'LoginPage'">
+        <img
+            @click="userClick()"
+            src=".\..\assets\images\profile_icon.png"
+
+        />
+        <img
+            @click="logout()"
+            src=".\..\assets\images\logout-icon.png"
+            style="height: 8vh;"
+        />
+      </div>
     </div>
   </header>
+
 </template>
 
 <script>
@@ -56,8 +67,6 @@ header {
   );
   backdrop-filter: blur(1rem);
   border-bottom: solid 2px var(--gold1);
-  display: flex;
-  justify-content: space-between;
 }
 .logo{
   margin-left: 8vh;
