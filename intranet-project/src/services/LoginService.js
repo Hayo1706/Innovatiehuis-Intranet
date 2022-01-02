@@ -11,8 +11,13 @@ var LoginService = function () {
         });
     }
 
+    async function logout() {
+        return await axiosClient.post('logout', {timeout: 2000});
+    }
+
     return {
-        attemptLogin
+        attemptLogin,
+        logout
     }
 
 }
