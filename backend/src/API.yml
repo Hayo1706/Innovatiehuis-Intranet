@@ -191,7 +191,7 @@ paths:
         200:
           description: Succesfully deleted file
     put:
-      operationId: src.routes.files.editFile
+      operationId: src.routes.files.renameFile
       tags:
         - Files
       summary: Update file
@@ -201,12 +201,13 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
-                files:
-                  type: array
+                name:
+                  type: string
+
       responses:
         200:
           description: Successfully updated file

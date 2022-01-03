@@ -47,8 +47,8 @@ var FilestorageService = function () {
        return data
     }
 
-    async function updateFile(projectid, path, files) {
-        const { data } = await axiosClient.put(`/projects/${projectid}/file?path=` + path, files, { timeout: 2000 })
+    async function renameFile(projectid, path, name, type) {
+        const { data } = await axiosClient.put(`/projects/${projectid}/file?path=` + path, { name, type }, { timeout: 2000 })
         return data
     }
 
@@ -69,7 +69,7 @@ var FilestorageService = function () {
         deleteFolder,
         renameFolder,
         deleteFile,
-        updateFile,
+        renameFile,
         moveFolder
     }
 

@@ -3,7 +3,7 @@
     <ProjectFilesHeader
       :path="this.path"
       @searchBarChanged="setSearchTerm"
-      @newFilesUploaded="reloadPage()"
+      @newFilesUploaded="setFiles()"
     />
 
     <div class="container-fluid">
@@ -18,7 +18,8 @@
               :type="file.split('.').pop()"
               :path="this.path + '/' + file"
               :shared="no"
-              @fileDeleted="reloadPage()"
+              @fileDeleted="setFiles()"
+              @nameChanged="setFiles()"
             />
           </div>
         </div>

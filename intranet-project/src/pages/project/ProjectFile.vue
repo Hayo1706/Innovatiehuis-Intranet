@@ -83,12 +83,12 @@ export default {
       downloadFile(){
         FilestorageService.downloadFile(this.projectid, this.path)
         .then((response) => { 
-          const blob = new Blob([response.data], { type: response.headers["content-type"] })
+          const url = window.URL.createObjectURL(new Blob([response.data]))
           const link = document.createElement('a')
-          link.href = URL.createObjectURL(blob)
-          link.download = this.name
-          link.click()
-          URL.revokeObjectURL(link.href)
+          link.href = url;
+          link.setAttribute('download', this.name);
+          document.body.appendChild(link)
+          link.click();
         }).catch(console.error)
       },
       deleteFile(){
@@ -105,16 +105,21 @@ export default {
     },
     renameFile() {
       if (this.editName == true) {
-        FilestorageService.updateFile(this.projectid, this.path)
-          .then((response) => {
-            this.editName = false;
-            alert(response);
-          })
-          .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
-          });
+        var newFileName = this.fileName + "." + this.fileType
+        if(this.name != newFileName){
+          FilestorageService.renameFile(this.projectid, this.path, newFileName)
+            .then((response) => {
+              this.editName = false;
+              console.log(response.data);
+              this.$emit("nameChanged");
+            })
+            .catch((err) => {
+              if (err.response) {
+                console.log(err.response.status);
+              }
+            });
+        }
+        
       }
     },
     getTypeImage() {
