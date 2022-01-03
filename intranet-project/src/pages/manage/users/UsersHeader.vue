@@ -36,31 +36,15 @@ export default {
 #usersHeader {
   width: 100%;
   box-sizing: border-box;
-  min-height: 10vh;
+  min-height: 13vh;
   background-color: var(--blue1);
   border: white 5px solid;
   margin-top: 1vh;
   color: white;
-  font-size: calc(1vw + 1vh);
+  font-size: calc(1vh + 1vw);
+
   padding: 20px;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-basis: 100%;
-  gap: 60px;
   margin-bottom: 1vh;
-}
-.input-group {
-  width: 90%;
-}
-#search-input {
-  margin-right: 4px;
-}
-img {
-  width: calc(2vw + 3vh);
-  padding-bottom: 10px;
-  padding-left: 10px;
-  cursor: pointer;
 }
 </style>

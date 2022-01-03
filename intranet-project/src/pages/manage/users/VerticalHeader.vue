@@ -26,5 +26,6 @@ export default {
 .headerText {
   font-family: Montserrat;
   height: 50px;
+  font-size: calc(1vw + 1vh);
 }
 </style>

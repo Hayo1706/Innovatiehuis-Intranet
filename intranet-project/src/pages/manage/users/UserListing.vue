@@ -283,7 +283,7 @@ export default {
   );
   border-radius: 1rem;
   margin-bottom: 1vh;
-  font-size: 2vh;
+  font-size: 1.9vh;
   border: solid var(--gold1) 2px;
 }
 
@@ -319,5 +319,8 @@ img {
 }
 select {
   border-radius: 0.25rem;
+}
+.full-button {
+  width: fit-content;
 }
 </style>
