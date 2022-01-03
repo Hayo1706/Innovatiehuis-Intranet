@@ -80,15 +80,19 @@ export default {
     };
   },
   methods: {
-    downloadFile() {
-      FilestorageService.downloadFile(this.projectid, this.path).then(
-        (response) => {
-          alert(response.data);
-        }
-      );
-    },
-    deleteFile() {
-      FilestorageService.deleteFile(this.projectid, this.path)
+      downloadFile(){
+        FilestorageService.downloadFile(this.projectid, this.path)
+        .then((response) => { 
+          const blob = new Blob([response.data], { type: response.headers["content-type"] })
+          const link = document.createElement('a')
+          link.href = URL.createObjectURL(blob)
+          link.download = this.name
+          link.click()
+          URL.revokeObjectURL(link.href)
+        }).catch(console.error)
+      },
+      deleteFile(){
+        FilestorageService.deleteFile(this.projectid, this.path)
         .then((response) => {
           this.$emit("fileDeleted");
           alert(response);
