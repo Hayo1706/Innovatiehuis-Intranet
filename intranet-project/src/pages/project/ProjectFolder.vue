@@ -1,29 +1,50 @@
 <template>
-  <div class="projectFolder" @click.right="viewMenu = true" @mouseleave="viewMenu = false">
+  <div
+    class="projectFolder"
+    @click.right="viewMenu = true"
+    @mouseleave="viewMenu = false"
+  >
     <div class="container-fluid" @mouseleave="renameFolder()">
       <div class="row">
         <div class="col-sm-3">
-          <img class="foldersImage" @click="goToFolder()" v-if="this.shared != 'yes'" src=".\..\..\assets\images\folder.png"/> 
-          <img class="foldersImage" @click="goToFolder()" v-if="this.shared == 'yes'" src=".\..\..\assets\images\shared_folder.png"/> 
+          <img
+            class="foldersImage"
+            @click="goToFolder()"
+            v-if="this.shared != 'yes'"
+            src=".\..\..\assets\images\folder.png"
+          />
+          <img
+            class="foldersImage"
+            @click="goToFolder()"
+            v-if="this.shared == 'yes'"
+            src=".\..\..\assets\images\shared_folder.png"
+          />
         </div>
         <div class="col-sm-9" @dblclick="editName = true">
-          <input class="folderName" v-if="this.editName == true" v-model="newName"/>
-          <input class="folderName" disabled v-if="this.editName == false" v-model="folderName"/>
+          <input
+            class="folderName"
+            v-if="this.editName == true"
+            v-model="newName"
+          />
+          <input
+            class="folderName"
+            disabled
+            v-if="this.editName == false"
+            v-model="folderName"
+          />
         </div>
       </div>
     </div>
     <div class="container" v-if="viewMenu == true">
       <div class="row"><button @click="deleteFolder()">Verwijder</button></div>
       <div class="row">
-        <button @click="moveMenu = true">
-          Verplaats
-          </button>
-        </div>
+        <button @click="moveMenu = true">Verplaats</button>
+      </div>
     </div>
     <div class="container" v-if="moveMenu == true">
       <div class="row" v-for="folder in this.folders" :key="folder">
         <button v-if="folder != this.name" @click="moveToFolder(folder)">
-          {{folder}}
+          {{ folder }}
         </button>
       </div>
     </div>
@@ -35,7 +56,7 @@ import FilestorageService from "@/services/FilestorageService.js";
 export default {
   name: "ProjectFolder",
   props: {
-    projectid: { type: String, required: true},
+    projectid: { type: String, required: true },
     name: { type: String, required: true },
     path: { type: String, required: true },
     shared: { type: String, required: true },
@@ -48,97 +69,98 @@ export default {
       folderName: this.name,
       newName: this.name,
       editName: false,
-      folders: []
+      folders: [],
     };
   },
   methods: {
-    deleteFolder(){
+    deleteFolder() {
       FilestorageService.deleteFolder(this.projectid, this.path)
-      .then(() => {
-        location.reload();
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
-    },
-    renameFolder(){
-      this.editName = false;
-      if(!(this.newName == this.folderName)){
-        FilestorageService.renameFolder(this.projectid, this.path, "", this.newName)
         .then(() => {
-          this.editName = false;
-          this.folderName = this.newName;
+          location.reload();
         })
         .catch((err) => {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
         });
+    },
+    renameFolder() {
+      this.editName = false;
+      if (!(this.newName == this.folderName)) {
+        FilestorageService.renameFolder(
+          this.projectid,
+          this.path,
+          "",
+          this.newName
+        )
+          .then(() => {
+            this.editName = false;
+            this.folderName = this.newName;
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
       }
-    }, 
-    moveToFolder(folder){
-      var folder_path = this.directorypath + "/" + folder
+    },
+    moveToFolder(folder) {
+      var folder_path = this.directorypath + "/" + folder;
       FilestorageService.moveFolder(this.projectid, this.path, folder_path, "")
-      .then((response) => {
-        if(response.status == 400){
-          alert(response)
-        }
-        location.reload();
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
+        .then((response) => {
+          if (response.status == 400) {
+            alert(response);
+          }
+          location.reload();
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
     },
-    getFolders(path){
+    getFolders(path) {
       FilestorageService.getFoldersOfProject(this.projectid, path)
-      .then((response) => {
-        this.folders = response;
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
+        .then((response) => {
+          this.folders = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
     },
-    goToFolder(){
+    goToFolder() {
       this.$emit("currentPathChanged", this.path);
-    } 
+    },
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");
     this.getFolders(this.directorypath);
-  }
+  },
 };
 </script>
 
 <style scoped>
-.projectFolder{
+.projectFolder {
   color: white;
   width: 100%;
   min-height: calc(1.5vw + 1.5vh);
-  font-size: calc(0.5vh + 0.5vw)
+  font-size: calc(0.5vh + 0.5vw);
 }
-.foldersImage{
+.foldersImage {
   width: calc(1.5vw + 1.5vh);
 }
-.folderName{
+.folderName {
   background-color: transparent;
   color: white;
   border: 0px;
 }
-.container{
+.container {
   margin-top: 2vh;
 }
-h5, h9{
+h5,
+h9 {
   color: black;
 }
-
 </style>

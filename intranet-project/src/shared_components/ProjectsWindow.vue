@@ -1,8 +1,8 @@
 <template>
   <div class="component-container">
-      <div class="component-header">
-        <slot></slot>
-      </div>
+    <div class="component-header">
+      <slot></slot>
+    </div>
     <div class="full-button" @click="toProjectsPage()">Alle Projecten</div>
     <div class="full-button" @click="toUsersPage()">Alle Gebruikers</div>
 
@@ -39,7 +39,6 @@ export default {
         if (err.response) {
           console.log(err.response.status);
         }
-        alert(err);
       });
   },
   methods: {
@@ -54,5 +53,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

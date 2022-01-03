@@ -57,7 +57,6 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
         });
     },
     remove() {
@@ -71,7 +70,6 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
         });
     },
   },

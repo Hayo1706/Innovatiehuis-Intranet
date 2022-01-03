@@ -28,12 +28,6 @@
             })
           }}
         </div>
-        <div class="mobileRow">
-          <span @click="onParrentClick()" class="projectButton">Open</span>
-        </div>
-        <div class="mobileRow">
-          <span @click="onParrentClick()" class="projectButton">Open</span>
-        </div>
       </div>
 
       <!-- large screens-->
@@ -62,12 +56,6 @@
             second: "numeric",
           })
         }}
-      </div>
-      <div class="col d-none d-lg-block">
-        <span @click="onParrentClick()" class="full-button">Open</span>
-      </div>
-      <div class="col d-none d-lg-block">
-        <span @click="onParrentClick()" class="full-button">Open</span>
       </div>
 
       <div class="col">
@@ -107,7 +95,11 @@ export default {
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
-  background: linear-gradient(to right top, rgba(230,230,230,0.7), rgba(230,230,230,0.9));
+  background: linear-gradient(
+    to right top,
+    rgba(230, 230, 230, 0.7),
+    rgba(230, 230, 230, 0.9)
+  );
   border-radius: 1rem;
   margin-bottom: 1vh;
   font-size: 2vh;

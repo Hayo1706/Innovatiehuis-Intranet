@@ -71,7 +71,7 @@ export default {
   },
   data: function () {
     return {
-      newReply: {content: "" },
+      newReply: { content: "" },
     };
   },
   async created() {},
@@ -88,7 +88,6 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
         });
     },
     reload() {
