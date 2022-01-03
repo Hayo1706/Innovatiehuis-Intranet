@@ -66,15 +66,17 @@
         ></ProjectButtons>
       </div>
     </div>
+    <ProjectInfo v-bind:project="project"></ProjectInfo>
   </div>
 </template>
 
 <script>
 import VerticalHeader from "./VerticalHeader.vue";
 import ProjectButtons from "./ProjectButtons.vue";
+import ProjectInfo from "./ProjectInfo.vue";
 export default {
   props: ["project"],
-  components: { VerticalHeader, ProjectButtons },
+  components: { VerticalHeader, ProjectButtons, ProjectInfo },
   name: "ProjectListing",
   data: function () {
     return {};
