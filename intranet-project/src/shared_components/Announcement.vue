@@ -115,7 +115,6 @@ export default {
         if (err.response) {
           console.log(err.response.status);
         }
-        alert(err);
       });
   },
   methods: {
@@ -140,7 +139,6 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
         });
     },
     addReply() {
@@ -154,7 +152,6 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
         });
     },
     reload() {
@@ -168,16 +165,16 @@ export default {
 <style scoped>
 .accordion-item {
   margin-bottom: 1vh;
-  background: linear-gradient(to left top, rgba(50,50,80,0.5), rgba(225,225,225,0.7));
-
+  background: linear-gradient(
+    to left top,
+    rgba(50, 50, 80, 0.5),
+    rgba(225, 225, 225, 0.7)
+  );
 }
 .accordion-button {
   background: var(--blue2);
   color: white;
-
 }
 .accordion-body {
-
-
 }
 </style>

@@ -124,7 +124,6 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
         });
     },
     addAnnouncement() {
@@ -143,7 +142,6 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert(err);
         });
     },
     reload() {
@@ -159,7 +157,6 @@ export default {
 
 
 <style scoped>
-
 #add-button {
   background-image: url("./../assets/images/add_icon.png");
 }

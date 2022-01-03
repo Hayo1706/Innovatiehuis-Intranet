@@ -1,27 +1,27 @@
 <template>
-    <div>
-      <ProjectFolderHeader
-        :path = this.currentPath
-        @newFolderAdded="(id) => reloadFolders()"
-        @searchBarChanged="setSearchTerm"
-      />
-      <div class="container-fluid">
-        <div class="row">
-          <div v-for="folder in folders" :key="folder" class="col-sm-3">
-            <div v-if="folderNameInSearchTerm(folder)">
-              <ProjectFolder
-                :directorypath="this.path"
-                :projectid="this.$route.params.id"
-                :name="folder"
-                :path="this.path + '/' + folder"
-                :shared='no'
-                @currentPathChanged="folderPathChange"
-              />
-            </div>
+  <div>
+    <ProjectFolderHeader
+      :path="this.currentPath"
+      @newFolderAdded="(id) => reloadFolders()"
+      @searchBarChanged="setSearchTerm"
+    />
+    <div class="container-fluid">
+      <div class="row">
+        <div v-for="folder in folders" :key="folder" class="col-sm-3">
+          <div v-if="folderNameInSearchTerm(folder)">
+            <ProjectFolder
+              :directorypath="this.path"
+              :projectid="this.$route.params.id"
+              :name="folder"
+              :path="this.path + '/' + folder"
+              :shared="no"
+              @currentPathChanged="folderPathChange"
+            />
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -34,64 +34,62 @@ export default {
     ProjectFolder,
   },
   name: "FoldersView",
-  props: ['path'],
-  watch:{
-    path(newPath){
+  props: ["path"],
+  watch: {
+    path(newPath) {
       this.currentPath = newPath;
       this.setFolders();
-    }
+    },
   },
   data: function () {
-    return { 
+    return {
       folders: [],
       searchTerm: "",
       currentPath: this.path,
-      projectid: this.$route.params.id
-     };
+      projectid: this.$route.params.id,
+    };
   },
   methods: {
-    reloadFolders(){
+    reloadFolders() {
       location.reload();
     },
     setSearchTerm(value) {
       this.searchTerm = value;
     },
-    folderNameInSearchTerm(name){
-      if(name.includes(this.searchTerm) || this.searchTerm == null){
+    folderNameInSearchTerm(name) {
+      if (name.includes(this.searchTerm) || this.searchTerm == null) {
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     },
-    folderPathChange(path){
+    folderPathChange(path) {
       this.currentPath = path;
       this.$router.push("/project/" + this.projectid + path);
       this.$emit("currentPathChanged", this.currentPath);
     },
-    setFolders(){
+    setFolders() {
       FilestorageService.getFoldersOfProject(this.projectid, this.path)
-      .then((response) => {
-        this.folders = response;
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
+        .then((response) => {
+          this.folders = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
     },
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");
     this.setFolders();
-  }
-}
+  },
+};
 </script>
 
 
 <style scoped>
-.row{
+.row {
   font-size: calc(0.7vw + 0.7vh);
   text-align: left;
 }

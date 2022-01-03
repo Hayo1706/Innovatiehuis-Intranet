@@ -4,12 +4,12 @@
       <div class="row">
         <div class="col-sm-9">Folders View</div>
         <div class="col-sm-2">
-        <SearchBar
-          @searchBarChanged="
-            (searchTerm) => $emit('searchBarChanged', searchTerm)
-          "
-          v-bind:searchTerm="this.searchTerm"
-        ></SearchBar>
+          <SearchBar
+            @searchBarChanged="
+              (searchTerm) => $emit('searchBarChanged', searchTerm)
+            "
+            v-bind:searchTerm="this.searchTerm"
+          ></SearchBar>
         </div>
         <div class="col-sm-1">
           <button
@@ -83,10 +83,10 @@ import FilestorageService from "@/services/FilestorageService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 export default {
   name: "ProjectFolderHeader",
-    components: {
+  components: {
     SearchBar,
   },
-  props: ['path'],
+  props: ["path"],
   data: function () {
     return {
       newFolderName: null,
@@ -101,16 +101,16 @@ export default {
         this.$route.params.id,
         this.path,
         this.newFolderName
-      ).then(() => {
-        this.$emit('newFolderAdded');
-        this.newFolderName = null;
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        alert(err);
-      });
+      )
+        .then(() => {
+          this.$emit("newFolderAdded");
+          this.newFolderName = null;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
     },
     reload() {
       console.log("updating key");
@@ -128,7 +128,6 @@ export default {
   margin: calc(1vw + 1vh);
   text-align: center;
   background-color: var(--blue1);
-  
 }
 .iconButton {
   border: 0;
@@ -142,6 +141,5 @@ export default {
 .input-group {
   margin: 0.5vh auto;
   height: 80%;
-
 }
 </style>
