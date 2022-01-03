@@ -89,6 +89,7 @@ export default {
           link.setAttribute('download', this.name);
           document.body.appendChild(link)
           link.click();
+          link.remove();
         }).catch(console.error)
       },
       deleteFile(){
