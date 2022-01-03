@@ -167,6 +167,7 @@ export default {
   padding-top: 5px;
   margin-top: 5px;
   margin-bottom: 5px;
+  height: fit-content;
   width: 100%;
 }
 #noresults {
