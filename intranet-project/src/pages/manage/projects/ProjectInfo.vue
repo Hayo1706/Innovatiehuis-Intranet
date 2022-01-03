@@ -33,6 +33,7 @@
           :data-bs-target="'#collapseParents' + this.project.projectid"
           aria-expanded="false"
           :aria-controls="'collapseParents' + this.project.projectid"
+          @click="this.onParentsClick()"
         >
           Overkoepelende projecten
         </button>
@@ -43,7 +44,15 @@
         aria-labelledby="heading"
       >
         <div class="accordion-body">
-          {{ project.description }}
+          <div
+            class="full-button"
+            v-for="parent in this.parents"
+            v-bind:key="parent.projectid"
+            @click="navigate(parent.projectid)"
+          >
+            {{ parent.project_name }}
+          </div>
+          <div v-if="this.parents.length == 0">Geen resultaten</div>
         </div>
       </div>
     </div>
@@ -57,6 +66,7 @@
           :data-bs-target="'#collapseChildren' + this.project.projectid"
           aria-expanded="false"
           :aria-controls="'collapseChildren' + this.project.projectid"
+          @click="this.onChildrenClick()"
         >
           Sub-projecten
         </button>
@@ -67,7 +77,15 @@
         aria-labelledby="heading"
       >
         <div class="accordion-body">
-          {{ project.description }}
+          <div
+            class="full-button"
+            v-for="child in this.children"
+            v-bind:key="child.projectid"
+            @click="navigate(child.projectid)"
+          >
+            {{ child.project_name }}
+          </div>
+          <div v-if="this.parents.length == 0">Geen resultaten</div>
         </div>
       </div>
     </div>
@@ -75,14 +93,56 @@
 </template>
 
 <script>
+import ProjectService from "@/services/ProjectService.js";
 export default {
   props: ["project"],
   components: {},
   name: "ProjectInfo",
   data: function () {
-    return {};
+    return {
+      parents: [],
+      children: [],
+      parentsOpen: false,
+      childrenOpen: false,
+    };
   },
-  methods: {},
+  methods: {
+    onParentsClick() {
+      if (!this.parentsOpen) {
+        ProjectService.getParentsById(this.project.projectid)
+          .then((response) => {
+            //remove the project from the view
+            this.parents = response;
+          })
+          .catch((err) => {
+            //invalid operation on server
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      }
+      this.parentsOpen = !this.parentsOpen;
+    },
+    onChildrenClick() {
+      if (!this.childrenOpen) {
+        ProjectService.getChildrenById(this.project.projectid)
+          .then((response) => {
+            //remove the project from the view
+            this.children = response;
+          })
+          .catch((err) => {
+            //invalid operation on server
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      }
+      this.childrenOpen = !this.childrenOpen;
+    },
+    navigate(projectid) {
+      this.$router.push("/project/" + projectid);
+    },
+  },
 };
 </script>
 
@@ -94,5 +154,8 @@ export default {
 button {
   font-family: Montserrat;
   color: var(--blue1);
+}
+.full-button {
+  width: fit-content;
 }
 </style>

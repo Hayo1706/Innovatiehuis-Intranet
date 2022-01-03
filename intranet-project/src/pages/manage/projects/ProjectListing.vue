@@ -85,8 +85,6 @@ export default {
     onClick() {
       this.$router.push("/project/" + this.project.projectid);
     },
-    loadParentsModal() {},
-    loadChildrenModal() {},
   },
 };
 </script>
@@ -94,7 +92,6 @@ export default {
 <style scoped>
 #project-listing {
   padding: 10px;
-  box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
   background: linear-gradient(
@@ -123,6 +120,6 @@ export default {
   width: fit-content;
 }
 .mobileRow {
-  height: 53px;
+  height: 50px;
 }
 </style>

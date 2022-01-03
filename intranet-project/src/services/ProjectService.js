@@ -29,6 +29,18 @@ var ProjectService = function () {
         data.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
         return data;
     }
+    async function getParentsById(projectid) {
+        const { data } = await axiosClient.get(`/projects/${projectid}/parents`, { timeout: 2000 });
+        data.forEach(project => { project.created = jsonToJsDate(project.created) });
+        data.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
+        return data;
+    }
+    async function getChildrenById(projectid) {
+        const { data } = await axiosClient.get(`/projects/${projectid}/children`, { timeout: 2000 });
+        data.forEach(project => { project.created = jsonToJsDate(project.created) });
+        data.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
+        return data;
+    }
 
     return {
         getProjects,
@@ -36,6 +48,8 @@ var ProjectService = function () {
         deleteProject,
         updateProject,
         getProjectsByUser,
+        getParentsById,
+        getChildrenById
     }
 
 
