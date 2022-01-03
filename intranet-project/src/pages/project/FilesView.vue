@@ -17,9 +17,11 @@
               :name="file"
               :type="file.split('.').pop()"
               :path="this.path + '/' + file"
+              :directorypath="this.path"
               :shared="no"
               @fileDeleted="setFiles()"
               @nameChanged="setFiles()"
+              @fileMoved="setFiles()"
             />
           </div>
         </div>

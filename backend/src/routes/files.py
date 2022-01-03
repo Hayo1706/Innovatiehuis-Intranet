@@ -110,6 +110,24 @@ def downloadFile(id):
             file_mimetype = mimetypes.guess_type(requested_path)[0]
             return send_from_directory(root + path_in_folder, filename=file_name, mimetype=file_mimetype, as_attachment=True)
 
+def moveFile(id):
+    source_path = unquote(connexion.request.json['from'])
+    source_path = root + getProjectPath(id) + source_path
+    file_name = source_path.rsplit('/', 1)[1]
+
+    target_path = unquote(connexion.request.json['to'])
+    target_folder_path = root + getProjectPath(id) + target_path
+    target_path = target_folder_path + "/" + file_name
+
+    print(source_path, target_path, target_folder_path)
+    if file_exists(source_path) and dir_exists(target_folder_path):
+        if not file_exists(target_path):
+            shutil.move(source_path, target_path)
+            return response("Succesfully moved file", 200)
+    return response("Failed to move file", 400)
+
+
+
 
 def deleteFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')

@@ -2,7 +2,7 @@
   <div
     class="projectFile"
     @click.right="viewMenu = true"
-    @mouseleave="viewMenu = false"
+    @mouseleave="viewMenu = false; moveMenu = false"
   >
     <div>
       <div class="row">
@@ -47,7 +47,26 @@
     </div>
     <div class="container" v-if="viewMenu == true">
       <div class="row"><button @click="downloadFile()">Download</button></div>
-      <div class="row"><button @click="deleteFile()">Delete</button></div>
+      <div class="row"><button @click="deleteFile()">Verwijder</button></div>
+      <div class="row"><button @click="moveMenu = true; setFolders()">Verplaats</button></div>
+
+
+
+      <div class="container" v-if="moveMenu == true">
+        <div v-if="this.folders.length > 0">
+          <div class="row" v-for="folder in this.folders" :key="folder">
+            <button @click="moveFile(this.directorypath + '/' + folder)">
+              {{ folder }}
+            </button>
+          </div>
+        </div>
+        <div v-else>
+          <h9>There are no folders to move to</h9>
+        </div>
+      </div>
+
+
+
     </div>
   </div>
 </template>
@@ -61,13 +80,16 @@ export default {
     name: { type: String, required: true },
     type: { type: String, required: false },
     path: { type: String, required: true },
+    directorypath: { type: String, required: true },
     shared: { type: String, required: true },
   },
   data: function () {
     return {
       viewMenu: false,
+      moveMenu: false,
       fileName: this.name.split(".")[0],
       editName: false,
+      folders: [],
       fileType: this.type,
       dictType: {
         pdf: "pdficon.png",
@@ -119,8 +141,29 @@ export default {
               }
             });
         }
-        
       }
+    },
+    setFolders() {
+      FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
+        .then((response) => {
+          this.folders = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+    },
+    moveFile(target_path) {
+      FilestorageService.moveFile(this.projectid, this.path, target_path)
+      .then(() => {
+          this.$emit("fileMoved");
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
     },
     getTypeImage() {
       if (this.fileType in this.dictType) {

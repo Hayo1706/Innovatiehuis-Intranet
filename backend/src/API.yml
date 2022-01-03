@@ -146,27 +146,27 @@ paths:
       responses:
         200:
           description: Succesfully uploaded file
-#    put:
-#      operationId: src.routes.files.???????
-#      tags:
-#        - Files
-#      summary: Move file to another directory
-#      parameters:
-#        - $ref: '#/components/parameters/id'
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              type: object
-#              properties:
-#                from:
-#                  type: string
-#                to:
-#                  type: string
-#      responses:
-#        200:
-#          description: Successfully moved file
+    put:
+      operationId: src.routes.files.moveFile
+      tags:
+        - Files
+      summary: Move file to another directory
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+      responses:
+        200:
+          description: Successfully moved file
   /projects/{id}/file:
     get:
       operationId: src.routes.files.downloadFile

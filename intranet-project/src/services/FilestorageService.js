@@ -31,14 +31,18 @@ var FilestorageService = function () {
 
 
 
-
     async function getFilesOfPath(projectid, path) {
         const { data } = await axiosClient.get(`/projects/${projectid}/files?path=` + path, { timeout: 2000 });
         return data;
     }
 
     async function uploadFiles(projectid, path, files) {
-        const { data } = await axiosClient.post(`/projects/${projectid}/files?path=` + path, files , { timeout: 2000 })
+        const { data } = await axiosClient.post(`/projects/${projectid}/files?path=` + path, files , { timeout: 20000 })
+        return data
+    }
+
+    async function moveFile(projectid, from, to){
+        const { data } = await axiosClient.put(`/projects/${projectid}/files`, {from, to} , { timeout: 20000 })
         return data
     }
 
@@ -61,15 +65,16 @@ var FilestorageService = function () {
     
 
     return {
+        getFilesOfPath,
         uploadFiles,
         downloadFile,
+        deleteFile,
+        moveFile,
+        renameFile,
         getFoldersOfProject,
-        getFilesOfPath,
         createFolder,
         deleteFolder,
         renameFolder,
-        deleteFile,
-        renameFile,
         moveFolder
     }
 
