@@ -192,11 +192,7 @@ paths:
         200:
           description: Succesfully deleted file
     put:
-<<<<<<< Updated upstream
-      operationId: src.routes.files.renameFile
-=======
-      operationId: src.endpoints.files.editFile
->>>>>>> Stashed changes
+      operationId: src.endpoints.files.renameFile
       tags:
         - Files
       summary: Update file

@@ -1,13 +1,8 @@
 import connexion
 import datetime
-<<<<<<< Updated upstream:backend/src/services/JWT.py
-from flask import abort, make_response, jsonify
-from .helper_functions import query, query_update, response
-=======
 import src.config as config
 from flask import  jsonify
 from src.services.helper_functions import query, query_update, response
->>>>>>> Stashed changes:backend/src/endpoints/auth.py
 
 from flask_jwt_extended import jwt_required, \
     create_access_token, create_refresh_token, get_jwt_identity, set_access_cookies, \

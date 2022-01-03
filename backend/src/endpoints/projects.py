@@ -1,8 +1,5 @@
-<<<<<<< Updated upstream:backend/src/routes/projects.py
-=======
 import src.config as config
 import connexion
->>>>>>> Stashed changes:backend/src/endpoints/projects.py
 from ..services.helper_functions import *
 from flask_jwt_extended import get_jwt_identity
 
