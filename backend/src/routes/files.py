@@ -1,6 +1,6 @@
+import mimetypes
 import os
 import json
-import mimetypes
 
 import connexion
 from flask import Flask, render_template, request, send_file, send_from_directory
@@ -101,11 +101,13 @@ def moveFile(id):
 
 def downloadFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
+    requested_path = unquote(requested_path)
     file_name = requested_path.rsplit('/', 1)[1]
     path_in_folder = requested_path.rsplit('/', 1)[0]
     if os.path.exists(requested_path):
         if isFilePathValid(requested_path):
-            return send_from_directory(root + path_in_folder, file_name)
+            file_mimetype = mimetypes.guess_type(requested_path)[0]
+            return send_from_directory(root + path_in_folder, filename=file_name, mimetype=file_mimetype, as_attachment=True)
 
 
 def deleteFile(id):
@@ -116,10 +118,22 @@ def deleteFile(id):
 
     return make_response("Failed to delete file", 400)
 
-def editFile(id):
+def renameFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
+    requested_path = unquote(requested_path)
     if isFilePathValid(requested_path):
-        return make_response("This doesn't work yet", 200)
+        folder_path = requested_path.rsplit('/', 1)[0]
+        old_name = requested_path.rsplit('/', 1)[1]
+        new_name = connexion.request.json['name']
+        if old_name != new_name:
+            new_name = getUniqueFileName(new_name, folder_path, 0)
+            os.rename(folder_path + "/" + old_name, folder_path + "/" + new_name)
+            return make_response("Succesfully updated file name from: " + old_name + " to: " + new_name , 200)
+
+        return make_response("New name is equal to old name", 400)
+
+    return make_response("Original file path is invalid", 400)
+
 
 
 
