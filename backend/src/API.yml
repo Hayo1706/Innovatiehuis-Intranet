@@ -148,7 +148,7 @@ paths:
         200:
           description: Succesfully uploaded file
     put:
-      operationId: src.routes.files.moveFile
+      operationId: src.endpoints.files.moveFile
       tags:
         - Files
       summary: Move file to another directory
