@@ -19,12 +19,12 @@ def post(id):
         body = connexion.request.json['reply']
         content = body['content']
     except KeyError:
-        return make_response("Invalid body", 404)
+        return response("Invalid body", 404)
     query_update(
         "INSERT INTO replies (announcementid, userid, content) VALUES (%(id)s, %(userid)s, %(content)s)",
         {'id': id, 'userid': get_jwt_identity(), 'content': content})
-    return make_response("Reply to announcement={announcementid} successfully posted".format(announcementid=str(id)),
-                         200)
+    return response("Reply to announcement={announcementid} successfully posted".format(announcementid=str(id)),
+                    200)
 
 
 def edit(id):
@@ -33,15 +33,15 @@ def edit(id):
         body = connexion.request.json['reply']
         content = body['content']
     except KeyError:
-        return make_response("Invalid body", 404)
+        return response("Invalid body", 404)
 
     query_update(
         "UPDATE replies SET content=%(content)s WHERE replyid=%(id)s",
         {'id': id, 'content': content})
-    return make_response("Reply {id} successfully edited".format(id=str(id)), 200)
+    return response("Reply {id} successfully edited".format(id=str(id)), 200)
 
 
 def delete(id):
     is_int(id)
     query_update("DELETE FROM replies WHERE replyid =%(id)s", {'id': id})
-    return make_response("{id} successfully deleted".format(id=str(id)), 200)
+    return response("{id} successfully deleted".format(id=str(id)), 200)

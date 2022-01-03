@@ -3,6 +3,7 @@ from flask import make_response
 from ..services.helper_functions import *
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+
 def read_global_announcements():
     return query(
         "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
@@ -28,12 +29,13 @@ def post_global():
         title = body['title']
         content = body['content']
     except KeyError:
-        return make_response("Invalid body", 404)
+        return response("Invalid body", 404)
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
         "%(content)s)",
         {'userid': get_jwt_identity(), 'content': content, 'title': title})
-    return make_response("Global Announcement successfully posted".format(projectid=str(id)), 200)
+    return response("Global Announcement successfully posted".format(projectid=str(id)), 200)
+
 
 @jwt_required()
 def post(id):
@@ -43,19 +45,19 @@ def post(id):
         title = body['title']
         content = body['content']
     except KeyError:
-        return make_response("Invalid body", 404)
+        return response("Invalid body", 404)
 
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, %(id)s, %(title)s, "
         "%(content)s)",
         {'userid': get_jwt_identity(), 'id': id, 'content': content, 'title': title})
-    return make_response("Announcement in project={projectid} successfully posted".format(projectid=str(id)), 200)
+    return response("Announcement in project={projectid} successfully posted".format(projectid=str(id)), 200)
 
 
 def delete(id):
     is_int(id)
     query_update("DELETE FROM announcements WHERE announcementid = %(id)s", {'id': id})
-    return make_response("{announcement} successfully deleted".format(announcement=str(id)), 200)
+    return response("{announcement} successfully deleted".format(announcement=str(id)), 200)
 
 
 def edit(id):
@@ -65,8 +67,8 @@ def edit(id):
         title = body['title']
         content = body['content']
     except KeyError:
-        return make_response("Invalid body", 404)
+        return response("Invalid body", 404)
     query_update(
         "UPDATE announcements SET title=%(title)s, content=%(content)s WHERE announcementid=%(id)s",
         {'id': id, 'content': content, 'title': title})
-    return make_response("Announcement in project={projectid} successfully edited".format(projectid=str(id)), 200)
+    return response("Announcement in project={projectid} successfully edited".format(projectid=str(id)), 200)
