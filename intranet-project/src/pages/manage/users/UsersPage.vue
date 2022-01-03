@@ -1,43 +1,44 @@
 <template>
   <div class="container-fluid">
     <button
-        id="actionButton"
-        class="full btn pmd-btn-fab pmd-ripple-effect btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#createUserModal"
-        type="button"
-    >        <i class="material-icons pmd-sm">Gebruiker toevoegen</i>
-  </button>
-    <div class="component-container" id="scrollable">
-      <UsersHeader class="component-header"
-        @searchBarChanged="setSearchTerm"
-        v-bind:searchTerm="this.searchTerm"
-      ></UsersHeader>
-      <UserCreateModal></UserCreateModal>
-      <div class="container-fluid d-sm-block d-lg-none">
-        <div class="row">
-          <SearchBar
-            class="col"
-            id="searchBarMobile"
-            @searchBarChanged="setSearchTerm"
-            v-bind:searchTerm="this.searchTerm"
-          ></SearchBar>
-          <hr />
-        </div>
+      id="actionButton"
+      class="full btn pmd-btn-fab pmd-ripple-effect btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#createUserModal"
+      type="button"
+    >
+      <i class="material-icons pmd-sm">Gebruiker toevoegen</i>
+    </button>
+
+    <UsersHeader
+      class="component-header"
+      @searchBarChanged="setSearchTerm"
+      v-bind:searchTerm="this.searchTerm"
+    ></UsersHeader>
+    <UserCreateModal></UserCreateModal>
+    <div class="container-fluid d-sm-block d-lg-none">
+      <div class="row">
+        <SearchBar
+          class="col"
+          id="searchBarMobile"
+          @searchBarChanged="setSearchTerm"
+          v-bind:searchTerm="this.searchTerm"
+        ></SearchBar>
+        <hr />
       </div>
-      <div class="container-fluid">
-        <div v-for="user of filteredUsers" :key="user.first_name">
-          <UserListing
-            v-bind:user="user"
-            @removeUser="this.removeUser"
-          ></UserListing>
-        </div>
-        <div id="noresults" v-if="filteredUsers.length == 0">
-          Geen resultaten.
-        </div>
-      </div>
-      <div id="littleSpace"></div>
     </div>
+    <div class="container-fluid">
+      <div v-for="user of filteredUsers" :key="user.first_name">
+        <UserListing
+          v-bind:user="user"
+          @removeUser="this.removeUser"
+        ></UserListing>
+      </div>
+      <div id="noresults" v-if="filteredUsers.length == 0">
+        Geen resultaten.
+      </div>
+    </div>
+    <div id="littleSpace"></div>
   </div>
 </template>
 
