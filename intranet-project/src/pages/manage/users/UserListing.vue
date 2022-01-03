@@ -283,7 +283,7 @@ export default {
   );
   border-radius: 1rem;
   margin-bottom: 1vh;
-  font-size: 1.9vh;
+  font-size: 1.7vh;
   border: solid var(--gold1) 2px;
 }
 

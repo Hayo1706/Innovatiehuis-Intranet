@@ -45,12 +45,6 @@ export default {
   color: white;
   font-size: calc(1vw + 1vh);
   padding: 20px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-basis: 100%;
-  gap: 60px;
   font-family: Montserrat;
   margin-bottom: 1vh;
 }
