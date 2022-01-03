@@ -2,7 +2,7 @@
   <div>
     <ProjectFolderHeader
       :path="this.currentPath"
-      @newFolderAdded="(id) => reloadFolders()"
+      @newFolderAdded="(id) => setFolders()"
       @searchBarChanged="setSearchTerm"
     />
     <div class="container-fluid">
@@ -16,6 +16,8 @@
               :path="this.path + '/' + folder"
               :shared="no"
               @currentPathChanged="folderPathChange"
+              @folderMoved="setFolders()"
+              @folderDeleted="setFolders()"
             />
           </div>
         </div>
@@ -50,9 +52,6 @@ export default {
     };
   },
   methods: {
-    reloadFolders() {
-      location.reload();
-    },
     setSearchTerm(value) {
       this.searchTerm = value;
     },

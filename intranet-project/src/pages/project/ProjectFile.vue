@@ -94,9 +94,8 @@ export default {
       },
       deleteFile(){
         FilestorageService.deleteFile(this.projectid, this.path)
-        .then((response) => {
+        .then(() => {
           this.$emit("fileDeleted");
-          alert(response);
         })
         .catch((err) => {
           if (err.response) {

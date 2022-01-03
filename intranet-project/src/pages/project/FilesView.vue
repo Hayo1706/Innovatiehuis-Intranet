@@ -78,9 +78,6 @@ export default {
           }
         });
     },
-    reloadPage() {
-      location.reload();
-    },
   },
   async created() {
     this.setFiles();

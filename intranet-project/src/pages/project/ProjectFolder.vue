@@ -2,7 +2,7 @@
   <div
     class="projectFolder"
     @click.right="viewMenu = true"
-    @mouseleave="viewMenu = false"
+    @mouseleave="viewMenu = false; moveMenu = false"
   >
     <div class="container-fluid" @mouseleave="renameFolder()">
       <div class="row">
@@ -38,14 +38,19 @@
     <div class="container" v-if="viewMenu == true">
       <div class="row"><button @click="deleteFolder()">Verwijder</button></div>
       <div class="row">
-        <button @click="moveMenu = true">Verplaats</button>
+        <button @click="moveMenu = true; getFolders()">Verplaats</button>
       </div>
     </div>
     <div class="container" v-if="moveMenu == true">
-      <div class="row" v-for="folder in this.folders" :key="folder">
-        <button v-if="folder != this.name" @click="moveToFolder(folder)">
-          {{ folder }}
-        </button>
+      <div v-if="this.folders.length > 1">
+        <div class="row" v-for="folder in this.folders" :key="folder">
+          <button v-if="folder != this.name" @click="moveToFolder(folder)">
+            {{ folder }}
+          </button>
+        </div>
+      </div>
+      <div v-else>
+        <h9>There are no folders to move to</h9>
       </div>
     </div>
   </div>
@@ -76,7 +81,7 @@ export default {
     deleteFolder() {
       FilestorageService.deleteFolder(this.projectid, this.path)
         .then(() => {
-          location.reload();
+          this.$emit("folderDeleted");
         })
         .catch((err) => {
           if (err.response) {
@@ -111,7 +116,7 @@ export default {
           if (response.status == 400) {
             alert(response);
           }
-          location.reload();
+          this.$emit("folderMoved");
         })
         .catch((err) => {
           if (err.response) {
@@ -119,8 +124,8 @@ export default {
           }
         });
     },
-    getFolders(path) {
-      FilestorageService.getFoldersOfProject(this.projectid, path)
+    getFolders() {
+      FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
         .then((response) => {
           this.folders = response;
         })
@@ -136,7 +141,7 @@ export default {
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");
-    this.getFolders(this.directorypath);
+    this.getFolders();
   },
 };
 </script>
