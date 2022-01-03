@@ -1,10 +1,13 @@
 import src.config as config
 import connexion
 from ..services.helper_functions import *
+from ..services.permissions import *
 from flask_jwt_extended import get_jwt_identity
 
 
 def read_all():
+
+    user_has_permission(get_jwt_identity(), "READ", "project")
     return query("SELECT projectid, project_name, description, is_archived, created, last_updated FROM projects")
 
 
@@ -96,6 +99,7 @@ def read_announcements(id):
         "WHERE announcements.projectid = %(id)s "
         "ORDER BY announcements.timestamp DESC", {'id': id})
 
+
 def read_announcements_recent(id):
     cutoff_date = config.CUTOFF_DATE
     return query(
@@ -104,6 +108,7 @@ def read_announcements_recent(id):
         "ON announcements.userid = users.userid "
         "WHERE announcements.projectid = %(id)s AND announcements.timestamp > %(cutoff_date)s "
         "ORDER BY announcements.timestamp DESC", {'id': id, 'cutoffdate': cutoff_date})
+
 
 def add_announcement(id):
     is_int(id)
