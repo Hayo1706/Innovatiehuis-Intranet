@@ -1,5 +1,4 @@
-from mysql.connector import Error
-from flask import abort, request
+from flask import request
 from .extensions import db
 import re
 
@@ -23,6 +22,7 @@ def is_int(value):
 def response(message, code=200):
     data = {'response': {'resource': request.path, 'message': message}}
     return data, code
+
 
 def is_boolean(value):
     try:

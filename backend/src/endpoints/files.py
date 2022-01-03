@@ -4,12 +4,10 @@ import json
 
 import connexion
 from flask import Flask, request, send_file, send_from_directory
-from werkzeug.utils import secure_filename
-
-from ..routes.folders import *
-from ..services.helper_functions import response
+from ..endpoints.folders import *
 
 root = '../../../filestorage/root/'
+
 
 def file_exists(path):
     if path_exists(path):
@@ -17,8 +15,10 @@ def file_exists(path):
     else:
         return False
 
+
 def getFullFilePath(path):
     return root + path
+
 
 def secureFileName(filename):
     index_split_name = filename.rfind('.');
@@ -30,6 +30,7 @@ def secureFileName(filename):
     if(len(secure_name) == 0):
         return "New File" + file_type
     return secure_name + file_type
+
 
 def uploadFiles(id):
     files = connexion.request.files
@@ -46,6 +47,7 @@ def isFilePathValid(requested_path):
         return True
     return False
 
+
 def getUniqueFileName(file_name_type, current_path, count):
     index_split_name = file_name_type.rfind('.');
     file_name = file_name_type[0: index_split_name]
@@ -58,6 +60,7 @@ def getUniqueFileName(file_name_type, current_path, count):
         if file_exists(current_path + "/" + file_name  + " (" + str(count) + ")" + file_type):
             return getUniqueFileName(file_name_type, current_path, count + 1)
         return file_name + " (" + str(count) + ")" + file_type
+
 
 def upload_file(file, path):
     if len(file.filename) > 0:
@@ -137,6 +140,7 @@ def deleteFile(id):
 
     return response("Failed to delete file", 400)
 
+
 def renameFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
     requested_path = unquote(requested_path)
@@ -153,7 +157,6 @@ def renameFile(id):
         return response("New name is equal to old name", 400)
 
     return response("Original file path is invalid", 400)
-
 
 
 

@@ -1,4 +1,7 @@
+import src.config as config
+import connexion
 from ..services.helper_functions import *
+from flask_jwt_extended import get_jwt_identity
 
 
 def read_all():
@@ -83,3 +86,36 @@ def read_children(id):
         "ON projects_have_parents.childid = projects.projectid "
         "WHERE parentid = %(id)s",
         {'id': id})
+
+
+def read_announcements(id):
+    return query(
+        "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
+        "users.last_name, announcements.title, announcements.content FROM announcements JOIN users "
+        "ON announcements.userid = users.userid "
+        "WHERE announcements.projectid = %(id)s "
+        "ORDER BY announcements.timestamp DESC", {'id': id})
+
+def read_announcements_recent(id):
+    cutoff_date = config.CUTOFF_DATE
+    return query(
+        "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
+        "users.last_name, announcements.title, announcements.content FROM announcements JOIN users "
+        "ON announcements.userid = users.userid "
+        "WHERE announcements.projectid = %(id)s AND announcements.timestamp > %(cutoff_date)s "
+        "ORDER BY announcements.timestamp DESC", {'id': id, 'cutoffdate': cutoff_date})
+
+def add_announcement(id):
+    is_int(id)
+    try:
+        body = connexion.request.json['announcement']
+        title = body['title']
+        content = body['content']
+    except KeyError:
+        return response("Invalid body", 404)
+
+    query_update(
+        "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, %(id)s, %(title)s, "
+        "%(content)s)",
+        {'userid': get_jwt_identity(), 'id': id, 'content': content, 'title': title})
+    return response("Announcement in project={projectid} successfully posted".format(projectid=str(id)), 200)

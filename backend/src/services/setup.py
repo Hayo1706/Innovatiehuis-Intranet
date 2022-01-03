@@ -1,6 +1,7 @@
 import connexion
+import src.config as config
 from .extensions import db, jwt
-from .JWT import JWT_SECRET
+from src.endpoints.auth import JWT_SECRET
 from flask import request, jsonify
 
 from flask_jwt_extended import verify_jwt_in_request
@@ -28,6 +29,8 @@ def create_app():
 
     @app.app.before_request
     def remove_jwt_if_expired():
+        if config.UI_ENABLED:
+            return
         if not request.path == '/api/auth':
             try:
                 verify_jwt_in_request()
