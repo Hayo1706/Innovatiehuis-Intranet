@@ -180,6 +180,7 @@ export default {
   margin: 20px;
   background-color: var(--gold1);
   border-color: var(--blue1);
+  z-index: 10;
 }
 #littleSpace {
   height: 60px;
