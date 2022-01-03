@@ -4,7 +4,7 @@ import json
 from urllib.parse import unquote
 
 import connexion
-from flask import Flask, render_template, request, send_file, make_response
+from flask import Flask, render_template, request, send_file
 from werkzeug.utils import secure_filename
 
 root = '../../../filestorage/root/'
