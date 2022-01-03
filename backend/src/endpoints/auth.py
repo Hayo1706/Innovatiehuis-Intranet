@@ -50,24 +50,10 @@ def generate_token():
                      "userid = %(userid)s", {'userid': user['userid']})
         return response("Wrong password or username", 401)
     access_token = create_access_token(identity=user['userid'])
-    refresh_token = create_refresh_token(identity=user['userid'])
 
     dict = query("SELECT may_read_all_projects, may_read_all_users, may_delete_all_projects FROM roles where "
                  "roleid=%(roleid)s", {'roleid': user['roleid']})
     dict[0]['userid'] = user['userid']
     resp = jsonify(dict) #TODO meer permissies
-    set_access_cookies(resp, access_token)
-    set_refresh_cookies(resp, refresh_token)
-    return resp, 200
-
-
-def refresh_token():
-    # Create the new access token
-    current_user = get_jwt_identity()
-    access_token = create_access_token(identity=current_user)
-
-    # Set the access JWT and CSRF double submit protection cookies
-    # in this response
-    resp = jsonify({'refresh': True})
     set_access_cookies(resp, access_token)
     return resp, 200

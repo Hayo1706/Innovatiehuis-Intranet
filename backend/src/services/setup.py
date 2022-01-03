@@ -21,6 +21,7 @@ def create_app():
     app.app.config[
         'JWT_COOKIE_CSRF_PROTECT'] = True
     app.app.config['JWT_CSRF_CHECK_FORM'] = True
+    app.app.config['JWT_COOKIE_SECURE'] = False  # TODO Change in production
 
     app.app.config['SQLALCHEMY_POOL_SIZE'] = 20
     app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
