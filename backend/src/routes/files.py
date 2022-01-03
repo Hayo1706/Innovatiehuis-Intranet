@@ -7,6 +7,7 @@ from flask import Flask, request, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 
 from ..routes.folders import *
+from ..services.helper_functions import response
 
 root = '../../../filestorage/root/'
 
@@ -125,6 +126,7 @@ def renameFile(id):
         folder_path = requested_path.rsplit('/', 1)[0]
         old_name = requested_path.rsplit('/', 1)[1]
         new_name = connexion.request.json['name']
+
         if old_name != new_name:
             new_name = getUniqueFileName(new_name, folder_path, 0)
             os.rename(folder_path + "/" + old_name, folder_path + "/" + new_name)

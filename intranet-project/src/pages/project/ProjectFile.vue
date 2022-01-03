@@ -110,7 +110,8 @@ export default {
           FilestorageService.renameFile(this.projectid, this.path, newFileName)
             .then((response) => {
               this.editName = false;
-              alert(response);
+              console.log(response.data);
+              this.$emit("nameChanged");
             })
             .catch((err) => {
               if (err.response) {
