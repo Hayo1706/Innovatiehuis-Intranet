@@ -3,8 +3,6 @@
     <div class="headerText">Project:</div>
     <div class="headerText">Aangemaakt:</div>
     <div class="headerText">Laatste Update:</div>
-    <div class="headerText">Hoofdprojecten</div>
-    <div class="headerText">Sub-projecten:</div>
   </div>
 </template>
 

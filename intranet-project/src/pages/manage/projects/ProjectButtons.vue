@@ -7,16 +7,10 @@
       src="@/assets/images/upload.png"
       class="link"
       @click="handleArchiveProject(project)"
-    >Dearchiveren</a>
-    <a
-      v-else
-      class="link"
-      @click="handleArchiveProject(project)"
-    >Archiveren</a>
-    <a
-      class="link"
-      @click="handleDeleteProject(project)"
-    >Verwijderen</a>
+      >Dearchiveren</a
+    >
+    <a v-else class="link" @click="handleArchiveProject(project)">Archiveren</a>
+    <a class="link" @click="handleDeleteProject(project)">Verwijderen</a>
   </div>
 </template>
 
@@ -63,8 +57,8 @@ export default {
   margin-bottom: 10px;
   text-decoration: none;
 }
-#archivedText{
-    margin-bottom: 10px;
-    color:purple;
+#archivedText {
+  margin-bottom: 10px;
+  color: purple;
 }
 </style>
