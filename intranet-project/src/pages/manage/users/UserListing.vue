@@ -66,7 +66,7 @@
 
       <!-- large screens-->
       <div class="col d-none d-lg-block" @click="onClick()">
-        <div class="userButton">{{ user.first_name + " " + user.last_name }}</div>
+        <div class="full-button">{{ user.first_name + " " + user.last_name }}</div>
       </div>
       <div class="col d-none d-lg-block">
         {{
@@ -125,7 +125,7 @@
       </div>
 
       <div class="col">
-        <a class="link" @click="handleRemoveUser(this.user)">Verwijderen</a>
+        <a class="full-button" @click="handleRemoveUser(this.user)">Verwijderen</a>
       </div>
     </div>
   </div>

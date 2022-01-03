@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <button
         id="actionButton"
-        class="btn pmd-btn-fab pmd-ripple-effect btn-primary"
+        class="full btn pmd-btn-fab pmd-ripple-effect btn-primary"
         data-bs-toggle="modal"
         data-bs-target="#createUserModal"
         type="button"

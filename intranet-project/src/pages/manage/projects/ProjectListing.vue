@@ -38,7 +38,7 @@
 
       <!-- large screens-->
       <div class="col d-none d-lg-block" @click="onClick()">
-        <div class="projectButton">
+        <div class="full-button">
           {{ project.project_name }}
         </div>
       </div>
@@ -64,10 +64,10 @@
         }}
       </div>
       <div class="col d-none d-lg-block">
-        <span @click="onParrentClick()" class="projectButton">Open</span>
+        <span @click="onParrentClick()" class="full-button">Open</span>
       </div>
       <div class="col d-none d-lg-block">
-        <span @click="onParrentClick()" class="projectButton">Open</span>
+        <span @click="onParrentClick()" class="full-button">Open</span>
       </div>
 
       <div class="col">

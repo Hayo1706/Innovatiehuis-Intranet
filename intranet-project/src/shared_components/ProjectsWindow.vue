@@ -1,10 +1,10 @@
 <template>
   <div class="component-container">
-    <div class="component-header">
-      <slot></slot>
-      <div class="full-button" @click="toProjectsPage()">Alle Projecten</div>
-      <div class="full-button" @click="toUsersPage()">Alle Gebruikers</div>
-    </div>
+      <div class="component-header">
+        <slot></slot>
+      </div>
+    <div class="full-button" @click="toProjectsPage()">Alle Projecten</div>
+    <div class="full-button" @click="toUsersPage()">Alle Gebruikers</div>
 
     <div id="projects-window" class="component-body">
       <ProjectButton
@@ -54,21 +54,5 @@ export default {
 </script>
 
 <style scoped>
-#projects-window {
-}
-.full-button {
-  margin-top: 0.8vh;
-  margin-right: 5px;
-  padding: 5px;
-  font-size: 16pt;
-  font-weight: bold;
-  background-color: var(--gold2);
-  color: var(--blue1);
-  height: 4.5vh;
-  align-items: center;
-  display: flex;
-  cursor: pointer;
-  float: right;
-  box-shadow: 1vh 1vh;
-}
+
 </style>
