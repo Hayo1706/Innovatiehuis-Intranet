@@ -4,7 +4,7 @@
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col d-block d-lg-none">
-        <div class="userButton mobileRow" @click="onClick()">
+        <div class="full-button mobileRow" @click="onClick()">
           {{ user.first_name + " " + user.last_name }}
         </div>
         <div class="mobileRow">
@@ -66,7 +66,9 @@
 
       <!-- large screens-->
       <div class="col d-none d-lg-block" @click="onClick()">
-        <div class="full-button">{{ user.first_name + " " + user.last_name }}</div>
+        <div class="full-button">
+          {{ user.first_name + " " + user.last_name }}
+        </div>
       </div>
       <div class="col d-none d-lg-block">
         {{
@@ -125,7 +127,9 @@
       </div>
 
       <div class="col">
-        <a class="full-button" @click="handleRemoveUser(this.user)">Verwijderen</a>
+        <a class="full-button" @click="handleRemoveUser(this.user)"
+          >Verwijderen</a
+        >
       </div>
     </div>
   </div>
@@ -272,7 +276,11 @@ export default {
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
-  background: linear-gradient(to right top, rgba(230,230,230,0.7), rgba(230,230,230,0.9));
+  background: linear-gradient(
+    to right top,
+    rgba(230, 230, 230, 0.7),
+    rgba(230, 230, 230, 0.9)
+  );
   border-radius: 1rem;
   margin-bottom: 1vh;
   font-size: 2vh;
