@@ -45,7 +45,8 @@ def generate_token():
     access_token = create_access_token(identity=user['userid'])
     refresh_token = create_refresh_token(identity=user['userid'])
 
-    resp = jsonify({'login': True})
+    resp = jsonify(query("SELECT may_read_all_projects, may_read_all_users, may_delete_all_projects FROM roles where "
+                 "roleid=%(roleid)s", {'roleid': user['roleid']})) #TODO meer permissies
     set_access_cookies(resp, access_token)
     set_refresh_cookies(resp, refresh_token)
     return resp, 200
