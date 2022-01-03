@@ -17,10 +17,10 @@ def query_update(query, param=None):
 
 def is_int(value):
     if not re.compile("[0-9]").match(value):
-        incorrect_input()
+        response("Incorrect input", 404)
 
 
-def response(message, code):
+def response(message, code=200):
     data = {'response': {'resource': request.path, 'message': message}}
     return data, code
 
@@ -30,8 +30,4 @@ def is_boolean(value):
             return
     except:
         print()
-    incorrect_input()
-
-
-def incorrect_input():
-    abort(404, "Incorrect input")
+    response("Incorrect input", 404)

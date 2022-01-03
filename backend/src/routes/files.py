@@ -3,7 +3,7 @@ import json
 import mimetypes
 
 import connexion
-from flask import Flask, render_template, request, send_file, send_from_directory
+from flask import Flask, request, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 
 from ..routes.folders import *
