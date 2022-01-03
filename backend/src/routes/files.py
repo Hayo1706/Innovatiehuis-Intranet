@@ -1,8 +1,9 @@
 import os
 import json
+import mimetypes
 
 import connexion
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 
 from ..routes.folders import *
@@ -100,8 +101,12 @@ def moveFile(id):
 
 def downloadFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
-    if isFilePathValid(requested_path):
-        return send_file(requested_path, as_attachment=True)
+    file_name = requested_path.rsplit('/', 1)[1]
+    path_in_folder = requested_path.rsplit('/', 1)[0]
+    if os.path.exists(requested_path):
+        if isFilePathValid(requested_path):
+            return send_from_directory(root + path_in_folder, file_name)
+
 
 def deleteFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')

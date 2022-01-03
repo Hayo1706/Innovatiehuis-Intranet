@@ -54,8 +54,13 @@ export default {
       downloadFile(){
         FilestorageService.downloadFile(this.projectid, this.path)
         .then((response) => { 
-          alert(response.data)
-        })
+          const blob = new Blob([response.data], { type: response.headers["content-type"] })
+          const link = document.createElement('a')
+          link.href = URL.createObjectURL(blob)
+          link.download = this.name
+          link.click()
+          URL.revokeObjectURL(link.href)
+        }).catch(console.error)
       },
       deleteFile(){
         FilestorageService.deleteFile(this.projectid, this.path)
