@@ -11,9 +11,10 @@ servers:
 
   # Paths supported by the server application
 paths:
+# ============================================PROJECTS==================================================
   /projects:
     get:
-      operationId: src.routes.projects.read_all
+      operationId: src.endpoints.projects.read_all
       tags:
         - Project
       summary: Read the entire list of projects
@@ -26,7 +27,7 @@ paths:
                 $ref: '#/components/schemas/Project'
   /projects/{id}:
     get:
-      operationId: src.routes.projects.read_one
+      operationId: src.endpoints.projects.read_one
       tags:
         - Project
       summary: Read one project
@@ -40,7 +41,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Project'
     put:
-      operationId: src.routes.projects.update
+      operationId: src.endpoints.projects.update
       tags:
         - Project
       summary: Update a value of project
@@ -55,7 +56,7 @@ paths:
         200:
           description: Project updated
     delete:
-      operationId: src.routes.projects.delete
+      operationId: src.endpoints.projects.delete
       tags:
         - Project
       summary: Deletes the specified project
@@ -66,7 +67,7 @@ paths:
           description: Project deleted
   /projects/{id}/parents:
     get:
-      operationId: src.routes.projects.read_parents
+      operationId: src.endpoints.projects.read_parents
       tags:
         - Project
       summary: Read all projects marked as parent of a specific project
@@ -81,7 +82,7 @@ paths:
                 $ref: '#/components/schemas/Project'
   /projects/{id}/children:
     get:
-      operationId: src.routes.projects.read_children
+      operationId: src.endpoints.projects.read_children
       tags:
         - Project
       summary: Read all projects marked as child of a specific project
@@ -97,7 +98,7 @@ paths:
 
 #  /projects/upload:
 #    post:
-#      operationId: src.routes.files.uploadFiles
+#      operationId: src.endpoints.files.uploadFiles
 #      tags:
 #        - Files
 #      summary: Uploads file(s) to filestorage
@@ -116,7 +117,7 @@ paths:
 
   /projects/{id}/files:
     get:
-      operationId: src.routes.files.getFilesInPath
+      operationId: src.endpoints.files.getFilesInPath
       tags:
         - Files
       summary: Returns file(s) in directory
@@ -127,7 +128,7 @@ paths:
         200:
           description: Successfully retrieved files at given path
     post:
-      operationId: src.routes.files.uploadFiles
+      operationId: src.endpoints.files.uploadFiles
       tags:
         - Files
       summary: Upload file(s) in directory
@@ -147,7 +148,7 @@ paths:
         200:
           description: Succesfully uploaded file
 #    put:
-#      operationId: src.routes.files.???????
+#      operationId: src.endpoints.files.???????
 #      tags:
 #        - Files
 #      summary: Move file to another directory
@@ -169,7 +170,7 @@ paths:
 #          description: Successfully moved file
   /projects/{id}/file:
     get:
-      operationId: src.routes.files.downloadFile
+      operationId: src.endpoints.files.downloadFile
       tags:
         - Files
       summary: Download file
@@ -180,7 +181,7 @@ paths:
         200:
           description: Downloaded file
     delete:
-      operationId: src.routes.files.deleteFile
+      operationId: src.endpoints.files.deleteFile
       tags:
         - Files
       summary: Delete file(s) in directory
@@ -191,7 +192,11 @@ paths:
         200:
           description: Succesfully deleted file
     put:
+<<<<<<< Updated upstream
       operationId: src.routes.files.renameFile
+=======
+      operationId: src.endpoints.files.editFile
+>>>>>>> Stashed changes
       tags:
         - Files
       summary: Update file
@@ -214,7 +219,7 @@ paths:
 
   /projects/{id}/folders:
     get:
-      operationId: src.routes.folders.getFoldersInPath
+      operationId: src.endpoints.folders.getFoldersInPath
       tags:
         - Folders
       summary: Returns folder(s) in directory
@@ -225,7 +230,7 @@ paths:
         200:
           description: Successfully retrieved folders at given path
     put:
-      operationId: src.routes.folders.checkFolderPutRequest
+      operationId: src.endpoints.folders.checkFolderPutRequest
       tags:
         - Folders
       summary: Move folder to another directory
@@ -250,7 +255,7 @@ paths:
         400:
           description: Failed to move folder
     delete:
-      operationId: src.routes.folders.deleteDir
+      operationId: src.endpoints.folders.deleteDir
       tags:
         - Folders
       summary: Delete folder and file(s) in directory
@@ -261,7 +266,7 @@ paths:
         200:
           description: Succesfully delete folder
     post:
-      operationId: src.routes.folders.createDirFromRequest
+      operationId: src.endpoints.folders.createDirFromRequest
       tags:
         - Folders
       summary: Place new folder directory
@@ -283,7 +288,7 @@ paths:
 
   /projects/{id}/announcements:
     get:
-      operationId: src.routes.announcements.read_all
+      operationId: src.endpoints.projects.read_announcements
       tags:
         - Announcements
       summary: Get all announcements from project
@@ -295,7 +300,7 @@ paths:
         404:
           description: Specified project not found
     post:
-      operationId: src.routes.announcements.post
+      operationId: src.endpoints.projects.add_announcement
       tags:
         - Announcements
       summary: Post announcements in project
@@ -304,80 +309,77 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                  content:
-                    type: string
-                  title:
-                    type: string
+              $ref: '#/components/schemas/Announcement'
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         200:
           description: Successfully posted announcement to project
+
+# ================================ANNOUNCEMENTS===================================
   /announcements:
     get:
-      operationId: src.routes.announcements.read_global_announcements
+      operationId: src.endpoints.announcements.read_global
       tags:
         - Global Announcements
-      summary: Reads all global announcements (=those not tied to a project)
+      summary: Reads all global announcements (those not tied to any project)
       responses:
         200:
           description: Successfully retreieved global announcements
     post:
-      operationId: src.routes.announcements.post_global
+      operationId: src.endpoints.announcements.create_global
       tags:
         - Global Announcements
-      summary: Post announcements in global
+      summary: Create a new global announcement (not tied to any project)
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                content:
-                  type: string
-                title:
-                  type: string
+              $ref: '#/components/schemas/Announcement'
       responses:
         200:
           description: Successfully posted announcement to project
   /announcements/{id}:
-    delete:
-      operationId: src.routes.announcements.delete
+    get:
+      operationId: src.endpoints.announcements.read_one
       tags:
         - Announcements
-      summary: Deletes announcement with id
+      summary: Reads a specific announcement
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully retrieved single announcement
+    put:
+      operationId: src.endpoints.announcements.update
+      tags:
+        - Announcements
+      summary: Update title and/or content of a specific announcement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Announcement'
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully posted announcement to project
+    delete:
+      operationId: src.endpoints.announcements.delete
+      tags:
+        - Announcements
+      summary: Deletes specific announcement
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         200:
           description: Successfully removed announcement
-    put:
-      operationId: src.routes.announcements.edit
-      tags:
-        - Announcements
-      summary: Update announcements title/content
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                content:
-                  type: string
-                title:
-                  type: string
-      parameters:
-        - $ref: '#/components/parameters/id'
-      responses:
-        200:
-          description: Successfully posted announcement to project
   /announcements/{id}/replies:
     get:
-      operationId: src.routes.replies.read_all
+      operationId: src.endpoints.announcements.read_replies
       tags:
         - Replies
       summary: Get all replies to an announcement
@@ -387,10 +389,10 @@ paths:
         200:
           description: Successfully retrieved replies to announcements
     post:
-      operationId: src.routes.replies.post
+      operationId: src.endpoints.announcements.add_reply
       tags:
         - Replies
-      summary: Post reply to announcement
+      summary: Post reply to an announcement
       requestBody:
         required: true
         content:
@@ -407,9 +409,12 @@ paths:
       responses:
         200:
           description: Successfully posted reply to announcement
+
+
+# =========================================REPLIES===============================================
   /replies/{id}:
     put:
-      operationId: src.routes.replies.edit
+      operationId: src.endpoints.replies.update
       tags:
         - Replies
       summary: Edit reply message
@@ -428,7 +433,7 @@ paths:
         200:
           description: Successfully edited reply content
     delete:
-      operationId: src.routes.replies.delete
+      operationId: src.endpoints.replies.delete
       tags:
         - Replies
       summary: Delete reply
@@ -438,9 +443,11 @@ paths:
         200:
           description: Successfully deleted reply
 
+
+# ==============================================USERS==================================================
   /users:
     get:
-      operationId: src.routes.users.read_all
+      operationId: src.endpoints.users.read_all
       tags:
         - Users
       summary: Gets all users
@@ -448,7 +455,7 @@ paths:
         200:
           description: Successfully read all users
     post:
-      operationId: src.routes.users.post
+      operationId: src.endpoints.users.create
       tags:
         - Users
       summary: Add user
@@ -457,24 +464,13 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                firstname:
-                  type: string
-                lastname:
-                  type: string
-                email:
-                  type: string
-                roleid:
-                  type: integer
-                screeningstatus:
-                  type: integer
+              $ref: '#/components/schemas/User'
       responses:
         200:
           description: Successfully added user
   /users/{id}:
     get:
-      operationId: src.routes.users.read_one
+      operationId: src.endpoints.users.read_one
       tags:
         - Users
       summary: Get specified user
@@ -483,18 +479,8 @@ paths:
       responses:
         200:
           description: Successfully read user
-    delete:
-      operationId: src.routes.users.delete
-      tags:
-        - Users
-      summary: Delete specified user
-      parameters:
-        - $ref: '#/components/parameters/id'
-      responses:
-        200:
-          description: Successfully delete user
     put:
-      operationId: src.routes.users.put
+      operationId: src.endpoints.users.update
       tags:
         - Users
       summary: Edit user
@@ -503,27 +489,50 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                firstname:
-                  type: string
-                lastname:
-                  type: string
-                email:
-                  type: string
-                roleid:
-                  type: integer
-                screeningstatus:
-                  type: integer
+              $ref: '#/components/schemas/User' # BUT NOT PASSWORD_HASH
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         200:
           description: Successfully edited user
+        403:
+          description: Request denied due to lack of permissions
+    delete:
+      operationId: src.endpoints.users.delete
+      tags:
+        - Users
+      summary: Delete specified user
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully deleted user
+
+  /users/{id}/password:
+    put:
+      operationId: src.endpoints.users.update_password
+      tags:
+        - Users
+      summary: Change password of specified user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully updated password
+        403:
+          description: Request denied due to lack of permissions
+        404:
+          description: Specified user not found
 
   /users/{id}/projects:
     get:
-      operationId: src.routes.users.read_user_projects
+      operationId: src.endpoints.users.read_projects
       tags:
         - Users
       summary: Get projects of specified user
@@ -538,9 +547,34 @@ paths:
                 $ref: '#/components/schemas/Project'
         404:
           description: Specified user not found
+    post:
+      operationId: src.endpoints.users.add_project
+      tags:
+        - Projects, Users
+      summary: Assign a new project to a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: Successfully assigned project to the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        404:
+          description: Specified user or project not found
+
+
+# ========================================AUTH/LOGOUT==================================================
   /auth:
     post:
-      operationId: src.services.JWT.generate_token
+      operationId: src.endpoints.auth.login
       tags:
         - Authorization
       summary: User requests token
@@ -569,7 +603,7 @@ paths:
           description: Unauthorized
   /logout:
     post:
-      operationId: src.services.JWT.logout
+      operationId: src.endpoints.logout.logout
       tags:
         - Authorization
       summary: User logs out and removes cookies
@@ -584,18 +618,21 @@ paths:
               schema:
                 type: string
 
+
+#=========================================================================================================
 components:
   parameters:
     id:
       in: path
       name: id
       required: true
-      description: The id of the object
       schema:
         type: string
+      description: The id number of an object
     path:
       in: query
       name: path
+      required: true
       schema:
         type: string
       description: The path to be used
@@ -614,6 +651,28 @@ components:
           type: string
         last_updated:
           type: string
+    User:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        roleid:
+          type: integer
+        screening_status:
+          type: integer
+        password_hash:
+          type: string
+    Announcement:
+      type: object
+      properties:
+        content:
+          type: string
+        title:
+          type: string
     Files:
       type: object
       required:
@@ -621,11 +680,14 @@ components:
       properties:
         files:
           type: array
+
+
+
 #  securitySchemes:
 #    oAuthSecurity: # <---- arbitrary name
 #      type: oauth2
 #      description: This API uses OAuth 2 with the password grant flow.
-#      x-tokenInfoFunc: src.services.JWT.decode_token
+#      x-tokenInfoFunc: src.endpoints.auth.decode_token
 #      flows:
 #        password: # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
 #          tokenUrl: /api/auth

@@ -1,7 +1,13 @@
 import connexion
 import datetime
+<<<<<<< Updated upstream:backend/src/services/JWT.py
 from flask import abort, make_response, jsonify
 from .helper_functions import query, query_update, response
+=======
+import src.config as config
+from flask import  jsonify
+from src.services.helper_functions import query, query_update, response
+>>>>>>> Stashed changes:backend/src/endpoints/auth.py
 
 from flask_jwt_extended import jwt_required, \
     create_access_token, create_refresh_token, get_jwt_identity, set_access_cookies, \
@@ -9,12 +15,18 @@ from flask_jwt_extended import jwt_required, \
 
 JWT_ISSUER = 'innovatieplatform'
 JWT_SECRET = 'kiZn04wb0XEPfpnkTbgmFtHtNElRThM2nWNdD51KaosfRT8HzVLqPB3UMnKPwb1'  # TODO Change This? Moet Secret om de zo veel tijd gerefreshed worden?
-JWT_LIFETIME_SECONDS = 600
+JWT_LIFETIME_SECONDS = config.SESSION_LIFETIME_SECONDS
 JWT_ALGORITHM = 'HS256'
 
-ATTEMPTS_BEFORE_COOLDOWN = 6
-COOLDOWN_TIME_SECONDS = 60
+ATTEMPTS_BEFORE_COOLDOWN = config.ATTEMPTS_BEFORE_COOLDOWN
+COOLDOWN_TIME_SECONDS = config.COOLDOWN_TIME_SECONDS
 
+
+def login():
+    return generate_token()
+
+
+# TODO: gooi merendeel van deze logica in een JWT service
 
 def generate_token():
     try:
@@ -54,8 +66,7 @@ def generate_token():
     return resp, 200
 
 
-@jwt_required(refresh=True)
-def refresh():
+def refresh_token():
     # Create the new access token
     current_user = get_jwt_identity()
     access_token = create_access_token(identity=current_user)
@@ -64,15 +75,4 @@ def refresh():
     # in this response
     resp = jsonify({'refresh': True})
     set_access_cookies(resp, access_token)
-    return resp, 200
-
-
-# Because the JWTs are stored in an httponly cookie now, we cannot
-# log the user out by simply deleting the cookie in the frontend.
-# We need the backend to send us a response to delete the cookies
-# in order to logout. unset_jwt_cookies is a helper function to
-# do just that.
-def logout():
-    resp = jsonify({'logout': True})
-    unset_jwt_cookies(resp)
     return resp, 200

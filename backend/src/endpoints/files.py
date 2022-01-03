@@ -6,8 +6,12 @@ import connexion
 from flask import Flask, request, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 
+<<<<<<< Updated upstream:backend/src/routes/files.py
 from ..routes.folders import *
 from ..services.helper_functions import response
+=======
+from ..endpoints.folders import *
+>>>>>>> Stashed changes:backend/src/endpoints/files.py
 
 root = '../../../filestorage/root/'
 
@@ -123,6 +127,7 @@ def renameFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
     requested_path = unquote(requested_path)
     if isFilePathValid(requested_path):
+<<<<<<< Updated upstream:backend/src/routes/files.py
         folder_path = requested_path.rsplit('/', 1)[0]
         old_name = requested_path.rsplit('/', 1)[1]
         new_name = connexion.request.json['name']
@@ -136,6 +141,9 @@ def renameFile(id):
 
     return response("Original file path is invalid", 400)
 
+=======
+        return response("This doesn't work yet", 200)
+>>>>>>> Stashed changes:backend/src/endpoints/files.py
 
 
 

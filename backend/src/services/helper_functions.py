@@ -1,5 +1,9 @@
+<<<<<<< Updated upstream
 from mysql.connector import Error
 from flask import abort, request
+=======
+from flask import request
+>>>>>>> Stashed changes
 from .extensions import db
 import re
 
@@ -31,3 +35,11 @@ def is_boolean(value):
     except:
         print()
     response("Incorrect input", 404)
+<<<<<<< Updated upstream
+=======
+
+
+def response(message, code=200):
+    data = {'response': {'resource': request.path, 'message': message}}
+    return data, code
+>>>>>>> Stashed changes
