@@ -1,7 +1,7 @@
 import connexion
 import datetime
 from flask import abort, make_response, jsonify
-from .helper_functions import query, query_update
+from .helper_functions import query, query_update, response
 
 from flask_jwt_extended import jwt_required, \
     create_access_token, create_refresh_token, get_jwt_identity, set_access_cookies, \
@@ -21,12 +21,12 @@ def generate_token():
         email = connexion.request.form['username']
         send_password = connexion.request.form['password']
     except KeyError:
-        return make_response("Invalid body", 404)
+        return response("Invalid body", 404)
 
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})
     if len(user) == 0:
-        return make_response("Wrong password or username", 401)
+        return response("Wrong password or username", 401)
     user = user[0]
 
     if int(user['failed_login_count']) >= ATTEMPTS_BEFORE_COOLDOWN:
@@ -34,18 +34,21 @@ def generate_token():
             query_update("UPDATE users SET failed_login_count = 0 where userid = %(userid)s",
                          {'userid': user['userid']})
         else:
-            return make_response("Acces Denied, your account is blocked for " +
+            return response("Acces Denied, your account is blocked for " +
                                  str(int((datetime.datetime.now() - user[
                                      'last_failed_login']).total_seconds()) - ATTEMPTS_BEFORE_COOLDOWN) +
                                  " more seconds", 401)
     if not user['password_hash'] == send_password:
         query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 where "
                      "userid = %(userid)s", {'userid': user['userid']})
-        return make_response("Wrong password or username", 401)
+        return response("Wrong password or username", 401)
     access_token = create_access_token(identity=user['userid'])
     refresh_token = create_refresh_token(identity=user['userid'])
 
-    resp = jsonify({'login': True})
+    dict = query("SELECT may_read_all_projects, may_read_all_users, may_delete_all_projects FROM roles where "
+                 "roleid=%(roleid)s", {'roleid': user['roleid']})
+    dict[0]['userid'] = user['userid']
+    resp = jsonify(dict) #TODO meer permissies
     set_access_cookies(resp, access_token)
     set_refresh_cookies(resp, refresh_token)
     return resp, 200

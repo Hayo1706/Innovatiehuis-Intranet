@@ -30,7 +30,7 @@ def read_user_projects(id):
 def delete(id):
     is_int(id)
     query_update("DELETE FROM users WHERE userid =%(id)s", {'id': id})
-    return make_response("{id} successfully deleted".format(id=str(id)), 200)
+    return response("{id} successfully deleted".format(id=str(id)), 200)
 
 
 def post():
@@ -43,14 +43,14 @@ def post():
         screening_status = body['screening_status']
         password_hash = "123"  # TODO: dynamic hash creation
     except KeyError:
-        return make_response("Invalid body", 404)
+        return response("Invalid body", 404)
 
     query_update(
         "INSERT INTO users (first_name, last_name, email, roleid, screening_status, password_hash) VALUES (%(first_name)s, "
         "%(last_name)s, %(email)s, %(roleid)s, %(screening_status)s,%(password_hash)s)",
         {'first_name': first_name, 'last_name': last_name, 'email': email, 'roleid': roleid,
          'screening_status': screening_status, 'password_hash': password_hash})
-    return make_response("User successfully added", 200)
+    return response("User successfully added", 200)
 
 
 def put(id):
@@ -63,10 +63,10 @@ def put(id):
         roleid = body['roleid']
         screening_status = body['screening_status']
     except KeyError:
-        return make_response("Invalid body", 404)
+        return response("Invalid body", 404)
 
     query_update(
         "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, roleid=%(roleid)s, screening_status=%(screening_status)s WHERE userid=%(userid)s",
         {'first_name': first_name, 'last_name': last_name, 'email': email, 'roleid': roleid,
          'screening_status': screening_status, "userid": id})
-    return make_response("User successfully updated", 200)
+    return response("User successfully updated", 200)

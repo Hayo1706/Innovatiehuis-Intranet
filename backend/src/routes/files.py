@@ -3,7 +3,7 @@ import os
 import json
 
 import connexion
-from flask import Flask, render_template, request, send_file, send_from_directory
+from flask import Flask, request, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 
 from ..routes.folders import *
@@ -37,7 +37,7 @@ def uploadFiles(id):
     for k, v in files.items():
         upload_file(v, current_path)
 
-    return make_response('file(s) uploaded successfully', 200)
+    return response('file(s) uploaded successfully', 200)
 
 
 def isFilePathValid(requested_path):
@@ -63,11 +63,11 @@ def upload_file(file, path):
         file_name = secureFileName(file.filename)
         new_file_name = getUniqueFileName(file_name, path, 0)
         if not dir_exists(path):
-            return make_response("File upload failed, directory doesn't exist", 400)
+            return response("File upload failed, directory doesn't exist", 400)
         else:
             file.save(os.path.join(path, new_file_name))  # this will save the file
-            return make_response('file uploaded successfully', 200)  # Display message after uploading
-    return make_response('file upload failed, no file was selected', 400)
+            return response('file uploaded successfully', 200)  # Display message after uploading
+    return response('file upload failed, no file was selected', 400)
 
 def getFilesInPath(id):
     folder_path = connexion.request.values.get('path')
@@ -92,11 +92,11 @@ def moveFile(id):
         try:
             shutil.move(source_path, target_path)
         except:
-            return make_response("Failed to move file", 400)
+            return response("Failed to move file", 400)
 
-        return make_response("Succesfully moved file to target folder", 200)
+        return response("Succesfully moved file to target folder", 200)
 
-    return make_response("Failed to move file", 400)
+    return response("Failed to move file", 400)
 
 
 def downloadFile(id):
@@ -114,9 +114,9 @@ def deleteFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
     if isFilePathValid(requested_path):
         os.remove(requested_path)
-        return make_response("Succesfully deleted file", 200)
+        return response("Succesfully deleted file", 200)
 
-    return make_response("Failed to delete file", 400)
+    return response("Failed to delete file", 400)
 
 def renameFile(id):
     requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
@@ -128,11 +128,11 @@ def renameFile(id):
         if old_name != new_name:
             new_name = getUniqueFileName(new_name, folder_path, 0)
             os.rename(folder_path + "/" + old_name, folder_path + "/" + new_name)
-            return make_response("Succesfully updated file name from: " + old_name + " to: " + new_name , 200)
+            return response("Succesfully updated file name from: " + old_name + " to: " + new_name , 200)
 
-        return make_response("New name is equal to old name", 400)
+        return response("New name is equal to old name", 400)
 
-    return make_response("Original file path is invalid", 400)
+    return response("Original file path is invalid", 400)
 
 
 

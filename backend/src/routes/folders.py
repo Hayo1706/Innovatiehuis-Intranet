@@ -4,7 +4,7 @@ import json
 from urllib.parse import unquote
 
 import connexion
-from flask import Flask, render_template, request, send_file, make_response
+from flask import Flask, render_template, request, send_file
 from werkzeug.utils import secure_filename
 
 root = '../../../filestorage/root/'
@@ -79,13 +79,13 @@ def changeFolderName(new_name, path):
         if checkFolderNameValid(sub_path, new_name):
             new_path = sub_path + "/" + new_name
             os.rename(path, new_path)
-            return make_response("Succesfully renamed folder", 200)
+            return response("Succesfully renamed folder", 200)
 
-        return make_response("Failed to rename folder", 400)
+        return response("Failed to rename folder", 400)
 
     else:
 
-        return make_response("Failed to rename folder", 400)
+        return response("Failed to rename folder", 400)
 
 def moveDirFromRequest(source_path, target_path):
     print(source_path)
@@ -94,22 +94,22 @@ def moveDirFromRequest(source_path, target_path):
     if dir_exists(source_path) and dir_exists(target_path):
         if dir_exists(target_path + dir_path):
             print("Failed to move folder, there is a folder with the same name in target directory")
-            return make_response("Failed to move folder, there is a folder with the same name in target directory", 400)
+            return response("Failed to move folder, there is a folder with the same name in target directory", 400)
         else:
             try:
                 print("yes")
                 shutil.move(source_path, target_path, copy_function = shutil.copytree)
                 if dir_exists(target_path + dir_path):
-                    return make_response("Succesfully moved folder", 200)
+                    return response("Succesfully moved folder", 200)
                 else:
-                    return make_response("Something went wrong, please try again", 400)
+                    return response("Something went wrong, please try again", 400)
             except:
                 print("Failed to move folder")
-                return make_response("Failed to move folder", 400)
+                return response("Failed to move folder", 400)
 
-        return make_response("Succesfully move folder", 200)
+        return response("Succesfully move folder", 200)
 
-    return make_response("Failed to moved folder", 400)
+    return response("Failed to moved folder", 400)
 
 
 def getProjectPath(id):
@@ -132,16 +132,16 @@ def createDirFromRequest(id):
 
     if new_dir_path == None or new_dir_name == None:
         print("Failed to create new folder")
-        return make_response("Failed to create new folder", 400)
+        return response("Failed to create new folder", 400)
 
     try:
         print(new_dir_path)
         os.mkdir(new_dir_path)
         print("Succesfully created new folder")
-        return make_response("Succesfully created new folder", 200)
+        return response("Succesfully created new folder", 200)
     except:
         print("Failed to created new folder")
-        return make_response("Failed to created new folder", 400)
+        return response("Failed to created new folder", 400)
 
 
 def deleteDir(id):
@@ -153,13 +153,13 @@ def deleteDir(id):
         try:
             os.rmdir(requested_path)
             print("Succesfully deleted folder")
-            return make_response("Succesfully deleted folder", 200)
+            return response("Succesfully deleted folder", 200)
         except:
             print("An error occured when trying to delete folder")
-            return make_response("An error occured when trying to delete folder, there are folders inside", 400)
+            return response("An error occured when trying to delete folder, there are folders inside", 400)
     else:
         print("Folder could not be deleted, please refresh.")
-        return make_response("Folder could not be deleted, please refresh.", 400)
+        return response("Folder could not be deleted, please refresh.", 400)
 
 def secureFolderName(file_name):
     secure_name = secure_filename(file_name)

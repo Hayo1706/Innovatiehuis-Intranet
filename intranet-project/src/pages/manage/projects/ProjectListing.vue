@@ -4,7 +4,7 @@
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col d-block d-lg-none">
-        <div class="projectButton mobileRow" @click="onClick()">
+        <div class="full-button mobileRow" @click="onClick()">
           {{ project.project_name }}
         </div>
         <div class="mobileRow">
@@ -66,15 +66,17 @@
         ></ProjectButtons>
       </div>
     </div>
+    <ProjectInfo v-bind:project="project"></ProjectInfo>
   </div>
 </template>
 
 <script>
 import VerticalHeader from "./VerticalHeader.vue";
 import ProjectButtons from "./ProjectButtons.vue";
+import ProjectInfo from "./ProjectInfo.vue";
 export default {
   props: ["project"],
-  components: { VerticalHeader, ProjectButtons },
+  components: { VerticalHeader, ProjectButtons, ProjectInfo },
   name: "ProjectListing",
   data: function () {
     return {};
