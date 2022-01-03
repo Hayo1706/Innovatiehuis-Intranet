@@ -49,6 +49,7 @@ export default {
   justify-content: space-between;
   flex-basis: 100%;
   gap: 60px;
+  margin-bottom: 1vh;
 }
 .input-group {
   width: 90%;
