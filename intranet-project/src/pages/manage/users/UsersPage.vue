@@ -24,7 +24,6 @@
           @searchBarChanged="setSearchTerm"
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
-        <hr />
       </div>
     </div>
     <div class="container-fluid">

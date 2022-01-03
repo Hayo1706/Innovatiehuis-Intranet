@@ -303,7 +303,7 @@ export default {
   margin-left: 10px;
 }
 .mobileRow {
-  min-height: 53px;
+  min-height: 50px;
 }
 img {
   width: 30px;

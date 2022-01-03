@@ -52,6 +52,7 @@ export default {
   flex-basis: 100%;
   gap: 60px;
   font-family: Montserrat;
+  margin-bottom: 1vh;
 }
 .input-group {
   width: 90%;

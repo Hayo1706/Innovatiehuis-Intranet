@@ -31,7 +31,6 @@
           @showUnArchivedOnly="setShowUnArchived"
           v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
         ></ProjectsShowUnArchivedOnlyBox>
-        <hr />
       </div>
     </div>
     <div class="container-fluid">

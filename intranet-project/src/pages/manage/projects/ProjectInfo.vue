@@ -85,7 +85,7 @@
           >
             {{ child.project_name }}
           </div>
-          <div v-if="this.parents.length == 0">Geen resultaten</div>
+          <div v-if="this.children.length == 0">Geen resultaten</div>
         </div>
       </div>
     </div>
