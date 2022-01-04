@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  description: This is the openapi file that goes with our server code
-  version: "1.0.0"
-  title: Swagger, Innovatieplatform
+  description: This is the interactive documentation for the Innovatiehuis Intranet RESTful API
+  version: "0.0.0"
+  title: Innovatieplatform REST API
 
 servers:
   - url: http://127.0.0.1:5000/api
@@ -16,7 +16,7 @@ paths:
     get:
       operationId: src.endpoints.projects.read_all
       tags:
-        - Project
+        - Projects
       summary: Read the entire list of projects
       responses:
         200:
@@ -29,7 +29,7 @@ paths:
     get:
       operationId: src.endpoints.projects.read_one
       tags:
-        - Project
+        - Projects
       summary: Read one project
       parameters:
         - $ref: '#/components/parameters/id'
@@ -43,7 +43,7 @@ paths:
     put:
       operationId: src.endpoints.projects.update
       tags:
-        - Project
+        - Projects
       summary: Update a value of project
       parameters:
         - $ref: '#/components/parameters/id'
@@ -58,7 +58,7 @@ paths:
     delete:
       operationId: src.endpoints.projects.delete
       tags:
-        - Project
+        - Projects
       summary: Deletes the specified project
       parameters:
         - $ref: '#/components/parameters/id'
@@ -69,7 +69,7 @@ paths:
     get:
       operationId: src.endpoints.projects.read_parents
       tags:
-        - Project
+        - Projects
       summary: Read all projects marked as parent of a specific project
       parameters:
         - $ref: '#/components/parameters/id'
@@ -84,7 +84,7 @@ paths:
     get:
       operationId: src.endpoints.projects.read_children
       tags:
-        - Project
+        - Projects
       summary: Read all projects marked as child of a specific project
       parameters:
         - $ref: '#/components/parameters/id'
@@ -546,7 +546,7 @@ paths:
     post:
       operationId: src.endpoints.users.add_project
       tags:
-        - Projects, Users
+        - Projects
       summary: Assign a new project to a user
       requestBody:
         required: true
@@ -572,8 +572,8 @@ paths:
     post:
       operationId: src.endpoints.auth.login
       tags:
-        - Authorization
-      summary: User requests token
+        - Authentication
+      summary: Request JSON Web Token
 #      security: [
 #        {}
 #      ]
@@ -590,7 +590,7 @@ paths:
                   type: string
       responses:
         200:
-          description: JWT token
+          description: User is authenticated and receives a JSON Web Token
           content:
             'application/json':
               schema:
@@ -602,13 +602,13 @@ paths:
       operationId: src.endpoints.logout.logout
       tags:
         - Authorization
-      summary: User logs out and removes cookies
+      summary: User requests server to clear the HTTP-only cookie holding the JSON Web Token
 #      security: [
 #        {}
 #      ]
       responses:
         200:
-          description: Unset cookie token
+          description: Server sends a HTTP request that clears the HTTP-only cookie
           content:
             'application/json':
               schema:
