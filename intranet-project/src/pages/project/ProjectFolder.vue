@@ -79,13 +79,29 @@ export default {
   },
   methods: {
     deleteFolder() {
-      FilestorageService.deleteFolder(this.projectid, this.path)
+      FilestorageService.deleteFolder(this.projectid, this.path, false)
         .then(() => {
           this.$emit("folderDeleted");
         })
         .catch((err) => {
+          if(err.response.status === 409){
+            if(confirm("There are elements within this folder, are you sure?")){
+              FilestorageService.deleteFolder(this.projectid, this.path, true)
+              .then(() => {
+                this.$emit("folderDeleted");
+              })
+              .catch((err) => {
+                  if (err.response) {
+                    console.log(err.response);
+                }
+              });
+              console.log(err.response.status)
+            }
+            console.log(err.response.status)
+          }
+
           if (err.response) {
-            console.log(err.response.status);
+            console.log(err.response);
           }
         });
     },

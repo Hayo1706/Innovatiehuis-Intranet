@@ -58,6 +58,7 @@ export default {
       }
       FilestorageService.uploadFiles(this.$route.params.id, this.path, formData)
         .then(() => {
+          document.getElementById("files").value=null;
           this.$emit("newFilesUploaded");
         })
         .catch((err) => {

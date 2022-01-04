@@ -32,9 +32,9 @@ def secureFileName(filename):
     return secure_name + file_type
 
 
-def uploadFiles(id):
+def uploadFiles(project_id):
     files = connexion.request.files
-    current_path = root + getProjectPath(id) + "/" + connexion.request.values.get('path')
+    current_path = root + getProjectPath(project_id) + "/" + connexion.request.values.get('path')
 
     for k, v in files.items():
         upload_file(v, current_path)
@@ -73,9 +73,9 @@ def upload_file(file, path):
             return response('file uploaded successfully', 200)  # Display message after uploading
     return response('file upload failed, no file was selected', 400)
 
-def getFilesInPath(id):
+def getFilesInPath(project_id):
     folder_path = connexion.request.values.get('path')
-    requested_path = root + getProjectPath(id) + folder_path
+    requested_path = root + getProjectPath(project_id) + folder_path
     list_of_files = []
     if path_exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)
@@ -85,14 +85,14 @@ def getFilesInPath(id):
 
     return list_of_files
 
-def moveFile(id):
+def moveFile(project_id):
     source_path = connexion.request.json['from']
     target_path = connexion.request.json['to']
 
-    source_path = root + getProjectPath(id) + "/" + source_path
-    target_path = root + getProjectPath(id) + "/" + target_path
+    source_path = root + getProjectPath(project_id) + "/" + source_path
+    target_path = root + getProjectPath(project_id) + "/" + target_path
 
-    if isFilePathValid(getProjectPath(id) + "/" + source_path) and dir_exists(target_path):
+    if isFilePathValid(getProjectPath(project_id) + "/" + source_path) and dir_exists(target_path):
         try:
             shutil.move(source_path, target_path)
         except:
@@ -103,8 +103,8 @@ def moveFile(id):
     return response("Failed to move file", 400)
 
 
-def downloadFile(id):
-    requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
+def downloadFile(project_id):
+    requested_path = root + getProjectPath(project_id) + connexion.request.values.get('path')
     requested_path = unquote(requested_path)
     file_name = requested_path.rsplit('/', 1)[1]
     path_in_folder = requested_path.rsplit('/', 1)[0]
@@ -113,13 +113,13 @@ def downloadFile(id):
             file_mimetype = mimetypes.guess_type(requested_path)[0]
             return send_from_directory(root + path_in_folder, filename=file_name, mimetype=file_mimetype, as_attachment=True)
 
-def moveFile(id):
+def moveFile(project_id):
     source_path = unquote(connexion.request.json['from'])
-    source_path = root + getProjectPath(id) + source_path
+    source_path = root + getProjectPath(project_id) + source_path
     file_name = source_path.rsplit('/', 1)[1]
 
     target_path = unquote(connexion.request.json['to'])
-    target_folder_path = root + getProjectPath(id) + target_path
+    target_folder_path = root + getProjectPath(project_id) + target_path
     target_path = target_folder_path + "/" + file_name
 
     print(source_path, target_path, target_folder_path)
@@ -132,8 +132,8 @@ def moveFile(id):
 
 
 
-def deleteFile(id):
-    requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
+def deleteFile(project_id):
+    requested_path = root + getProjectPath(project_id) + connexion.request.values.get('path')
     if isFilePathValid(requested_path):
         os.remove(requested_path)
         return response("Succesfully deleted file", 200)
@@ -141,8 +141,8 @@ def deleteFile(id):
     return response("Failed to delete file", 400)
 
 
-def renameFile(id):
-    requested_path = root + getProjectPath(id) + connexion.request.values.get('path')
+def renameFile(project_id):
+    requested_path = root + getProjectPath(project_id) + connexion.request.values.get('path')
     requested_path = unquote(requested_path)
     if isFilePathValid(requested_path):
         folder_path = requested_path.rsplit('/', 1)[0]

@@ -23,9 +23,9 @@ def dir_exists(path):
     else:
         return False
 
-def getFoldersInPath(id):
+def getFoldersInPath(project_id):
     folder_path = connexion.request.values.get('path')
-    requested_path = root + getProjectPath(id) + folder_path
+    requested_path = root + getProjectPath(project_id) + folder_path
     list_of_files = []
     if path_exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)
@@ -53,15 +53,15 @@ def checkFolderNameValid(path, new_name):
 
 
 
-def checkFolderPutRequest(id):
+def checkFolderPutRequest(project_id):
     new_name = connexion.request.json['rename'] # can be any string
     path = connexion.request.json['from'] # must be put as /example/example
     path = unquote(path)
-    path = root + getProjectPath(id) + path
+    path = root + getProjectPath(project_id) + path
 
     target_path = connexion.request.json['to']
     target_path = unquote(target_path)
-    target_path = root + getProjectPath(id) + target_path
+    target_path = root + getProjectPath(project_id) + target_path
 
     if len(new_name) == 0 or new_name == None:
          # must be put as /example/example
@@ -114,18 +114,18 @@ def moveDirFromRequest(source_path, target_path):
     return response("Failed to moved folder", 400)
 
 
-def getProjectPath(id):
-    return str(id)
+def getProjectPath(project_id):
+    return str(project_id)
 
 
 def isDirMoveValid(from_path, to_path):
 
     return
 
-def createDirFromRequest(id):
+def createDirFromRequest(project_id):
     requested_path = connexion.request.values.get('path')
     requested_path = unquote(requested_path)
-    current_path = root + getProjectPath(id) + requested_path
+    current_path = root + getProjectPath(project_id) + requested_path
 
     new_dir_name = connexion.request.json['name']
     new_dir_name = secureFolderName(new_dir_name)
@@ -146,22 +146,43 @@ def createDirFromRequest(id):
         return response("Failed to created new folder", 400)
 
 
-def deleteDir(id):
+def deleteDir(project_id):
     path_to_delete = connexion.request.values.get('path')
     path_to_delete = unquote(path_to_delete)
-    requested_path = root + getProjectPath(id) + path_to_delete
-    print(requested_path)
+
+    confirmation = connexion.request.values.get('conf')
+    print(confirmation)
+
+    requested_path = root + getProjectPath(project_id) + path_to_delete
     if dir_exists(requested_path):
-        try:
-            os.rmdir(requested_path)
-            print("Succesfully deleted folder")
-            return response("Succesfully deleted folder", 200)
-        except:
-            print("An error occured when trying to delete folder")
-            return response("An error occured when trying to delete folder, there are folders inside", 400)
+        if len(os.listdir(requested_path)) > 0:
+            if confirmation != 'true':
+                return response("An error occured when trying to delete folder, there are folders inside", 409)
+            else:
+                deleteElementsInDir(requested_path)
+        else:
+            removeFolder(requested_path)
     else:
         print("Folder could not be deleted, please refresh.")
         return response("Folder could not be deleted, please refresh.", 400)
+
+def removeFolder(folder_path):
+    try:
+        os.rmdir(folder_path)
+        print("Succesfully deleted folder")
+        return response("Succesfully deleted folder", 200)
+    except:
+        print("An error occured when trying to delete folder, there are folders inside")
+        return response("An error occured when trying to delete folder, there are folders inside", 409)
+
+def deleteElementsInDir(dir_path):
+    try:
+        shutil.rmtree(dir_path)
+        print("Succesfully deleted folder")
+        return response("Succesfully deleted folder", 200)
+    except:
+        print("An error occured when trying to delete elements in folder")
+        return response("An error occured when trying to delete elements in folder", 400)
 
 def secureFolderName(file_name):
     secure_name = secure_filename(file_name)

@@ -19,8 +19,8 @@ var FilestorageService = function () {
         return data;
     }
 
-    async function deleteFolder(projectid, path) {
-        const { data } = await axiosClient.delete(`/projects/${projectid}/folders?path=` + path, { timeout: 2000 });
+    async function deleteFolder(projectid, path, conf) {
+        const { data } = await axiosClient.delete(`/projects/${projectid}/folders?path=` + path + `&conf=` + conf, { timeout: 2000 });
         return data;
     }
 
