@@ -25,14 +25,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-  /projects/{id}:
+    post:
+      operationId: src.endpoints.projects.create
+      tags:
+        - Projects
+      summary: Create a new project
+      responses:
+        200:
+          description: Successfully created new project
+  /projects/{project_id}:
     get:
       operationId: src.endpoints.projects.read_one
       tags:
         - Projects
       summary: Read one project
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
       responses:
         200:
           description: Successfully read project operation
@@ -46,7 +54,7 @@ paths:
         - Projects
       summary: Update a value of project
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
         - in: query
           name: is_archived
           required: true
@@ -61,40 +69,173 @@ paths:
         - Projects
       summary: Deletes the specified project
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
       responses:
         200:
           description: Project deleted
-  /projects/{id}/parents:
+  /projects/{project_id}/parents:
     get:
       operationId: src.endpoints.projects.read_parents
       tags:
         - Projects
       summary: Read all projects marked as parent of a specific project
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
       responses:
         200:
-          description: Successfully read project operation
+          description: Successfully read all parent projects for this project
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-  /projects/{id}/children:
+  /projects/{project_id}/parents/{parent_id}:
+    post:
+      operationId: src.endpoints.projects.add_parent
+      tags:
+        - Projects
+      summary: Read all projects marked as parent of a specific project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/parent_id'
+      responses:
+        200:
+          description: Successfully assigned parent project to given project
+    delete:
+      operationId: src.endpoints.projects.remove_parent
+      tags:
+        - Projects
+      summary: Read all projects marked as parent of a specific project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/parent_id'
+      responses:
+        200:
+          description: Successfully broke parent-child relation
+  /projects/{project_id}/children:
     get:
       operationId: src.endpoints.projects.read_children
       tags:
         - Projects
       summary: Read all projects marked as child of a specific project
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
       responses:
         200:
-          description: Successfully read project operation
+          description: Successfully read child projects
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+  /projects/{project_id}/children/{child_id}:
+    post:
+      operationId: src.endpoints.projects.add_child
+      tags:
+        - Projects
+      summary: Mark a project as child to the given project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/child_id'
+      responses:
+        200:
+          description: Successfully marked project as child
+    put:
+      operationId: src.endpoints.projects.update_shared_files
+      tags:
+        - Projects
+      summary: Update what files are shared from parent project to child project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/child_id'
+      responses:
+        200:
+          description: Successfully updated shared files
+    delete:
+      operationId: src.endpoints.projects.remove_child
+      tags:
+        - Projects
+      summary: Remove a project as child from a given project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/child_id'
+      responses:
+        200:
+          description: Successfully broke parent-child relation
+
+  /projects/{project_id}/users:
+    get:
+      operationId: src.endpoints.projects.read_users
+      tags:
+        - Projects
+        - Users
+      summary: Read all users assigned to this project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        200:
+          description: Successfully read users assigned to this project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /projects/{project_id}/users/{user_id}:
+    post:
+      operationId: src.endpoints.projects.add_user
+      tags:
+        - Projects
+        - Users
+      summary: Add a user to a project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/user_id'
+      responses:
+        200:
+          description: Successfully added user to project
+    delete:
+      operationId: src.endpoints.projects.remove_user
+      tags:
+      - Projects
+      - Users
+      summary: Remove a user from a project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/user_id'
+      responses:
+        200:
+          description: Successfully removed user from project
+
+  /projects/{project_id}/announcements:
+    get:
+      operationId: src.endpoints.projects.read_announcements
+      tags:
+      - Projects
+      - Announcements
+      summary: Get all announcements from project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        200:
+          description: Successfully retrieved announcements from project
+        404:
+          description: Specified project not found
+    post:
+      operationId: src.endpoints.projects.add_announcement
+      tags:
+      - Projects
+      - Announcements
+      summary: Post announcements in project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Announcement'
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        200:
+          description: Successfully posted announcement to project
+
+# ========================================FILES/FOLDERS============================================
 
 #  /projects/upload:
 #    post:
@@ -115,14 +256,14 @@ paths:
 #        200:
 #          description: Successfully uploaded a file
 
-  /projects/{id}/files:
+  /projects/{project_id}/files:
     get:
       operationId: src.endpoints.files.getFilesInPath
       tags:
         - Files
       summary: Returns file(s) in directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
       responses:
         200:
@@ -133,7 +274,7 @@ paths:
         - Files
       summary: Upload file(s) in directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
       requestBody:
         required: true
@@ -153,7 +294,7 @@ paths:
         - Files
       summary: Move file to another directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
       requestBody:
         required: true
         content:
@@ -168,14 +309,14 @@ paths:
       responses:
         200:
           description: Successfully moved file
-  /projects/{id}/file:
+  /projects/{project_id}/file:
     get:
       operationId: src.endpoints.files.downloadFile
       tags:
         - Files
       summary: Download file
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
       responses:
         200:
@@ -186,7 +327,7 @@ paths:
         - Files
       summary: Delete file(s) in directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
       responses:
         200:
@@ -197,7 +338,7 @@ paths:
         - Files
       summary: Update file
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
       requestBody:
         required: true
@@ -213,14 +354,14 @@ paths:
         200:
           description: Successfully updated file
 
-  /projects/{id}/folders:
+  /projects/{project_id}/folders:
     get:
       operationId: src.endpoints.folders.getFoldersInPath
       tags:
         - Folders
       summary: Returns folder(s) in directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
       responses:
         200:
@@ -231,7 +372,7 @@ paths:
         - Folders
       summary: Move folder to another directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
       requestBody:
         required: true
         content:
@@ -256,7 +397,7 @@ paths:
         - Folders
       summary: Delete folder and file(s) in directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
       responses:
         200:
@@ -267,7 +408,7 @@ paths:
         - Folders
       summary: Place new folder directory
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
       requestBody:
         required: true
@@ -282,35 +423,6 @@ paths:
         200:
           description: Succesfully add new folder
 
-  /projects/{id}/announcements:
-    get:
-      operationId: src.endpoints.projects.read_announcements
-      tags:
-        - Announcements
-      summary: Get all announcements from project
-      parameters:
-        - $ref: '#/components/parameters/id'
-      responses:
-        200:
-          description: Successfully retrieved announcements from project
-        404:
-          description: Specified project not found
-    post:
-      operationId: src.endpoints.projects.add_announcement
-      tags:
-        - Announcements
-      summary: Post announcements in project
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Announcement'
-      parameters:
-        - $ref: '#/components/parameters/id'
-      responses:
-        200:
-          description: Successfully posted announcement to project
 
 # ================================ANNOUNCEMENTS===================================
   /announcements:
@@ -336,14 +448,14 @@ paths:
       responses:
         200:
           description: Successfully posted announcement to project
-  /announcements/{id}:
+  /announcements/{announcement_id}:
     get:
       operationId: src.endpoints.announcements.read_one
       tags:
         - Announcements
       summary: Reads a specific announcement
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/announcement_id'
       responses:
         200:
           description: Successfully retrieved single announcement
@@ -359,7 +471,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Announcement'
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/announcement_id'
       responses:
         200:
           description: Successfully posted announcement to project
@@ -369,24 +481,30 @@ paths:
         - Announcements
       summary: Deletes specific announcement
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/announcement_id'
       responses:
         200:
           description: Successfully removed announcement
-  /announcements/{id}/replies:
+  /announcements/{announcement_id}/replies:
     get:
       operationId: src.endpoints.announcements.read_replies
       tags:
+        - Announcements
         - Replies
       summary: Get all replies to an announcement
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/announcement_id'
       responses:
         200:
           description: Successfully retrieved replies to announcements
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
     post:
       operationId: src.endpoints.announcements.add_reply
       tags:
+        - Announcements
         - Replies
       summary: Post reply to an announcement
       requestBody:
@@ -401,14 +519,14 @@ paths:
                 title:
                   type: string
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/announcement_id'
       responses:
         200:
           description: Successfully posted reply to announcement
 
 
 # =========================================REPLIES===============================================
-  /replies/{id}:
+  /replies/{reply_id}:
     put:
       operationId: src.endpoints.replies.update
       tags:
@@ -424,7 +542,7 @@ paths:
                 content:
                   type: string
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/reply_id'
       responses:
         200:
           description: Successfully edited reply content
@@ -434,7 +552,7 @@ paths:
         - Replies
       summary: Delete reply
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/reply_id'
       responses:
         200:
           description: Successfully deleted reply
@@ -464,14 +582,14 @@ paths:
       responses:
         200:
           description: Successfully added user
-  /users/{id}:
+  /users/{user_id}:
     get:
       operationId: src.endpoints.users.read_one
       tags:
         - Users
       summary: Get specified user
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/user_id'
       responses:
         200:
           description: Successfully read user
@@ -487,7 +605,7 @@ paths:
             schema:
               $ref: '#/components/schemas/User' # BUT NOT PASSWORD_HASH
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/user_id'
       responses:
         200:
           description: Successfully edited user
@@ -499,12 +617,12 @@ paths:
         - Users
       summary: Delete specified user
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/user_id'
       responses:
         200:
           description: Successfully deleted user
 
-  /users/{id}/password:
+  /users/{user_id}/password:
     put:
       operationId: src.endpoints.users.update_password
       tags:
@@ -517,7 +635,7 @@ paths:
             schema:
               type: string
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/user_id'
       responses:
         200:
           description: Successfully updated password
@@ -526,14 +644,14 @@ paths:
         404:
           description: Specified user not found
 
-  /users/{id}/projects:
+  /users/{user_id}/projects:
     get:
       operationId: src.endpoints.users.read_projects
       tags:
         - Users
       summary: Get projects of specified user
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/user_id'
       responses:
         200:
           description: Successfully read user projects
@@ -555,7 +673,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Project'
       parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/user_id'
       responses:
         200:
           description: Successfully assigned project to the user
@@ -618,13 +736,50 @@ paths:
 #=========================================================================================================
 components:
   parameters:
-    id:
+    project_id:
       in: path
-      name: id
+      name: project_id
       required: true
       schema:
         type: string
-      description: The id number of an object
+      description: The ID number of a project
+    parent_id:
+      in: path
+      name: parent_id
+      required: true
+      schema:
+        type: string
+      description: The ID number of a parent project
+    child_id:
+      in: path
+      name: child_id
+      required: true
+      schema:
+        type: string
+      description: The ID number of a child project
+    user_id:
+      in: path
+      name: user_id
+      required: true
+      schema:
+        type: string
+      description: The ID number of a user
+    announcement_id:
+      in: path
+      name: announcement_id
+      required: true
+      schema:
+        type: string
+      description: The ID number of an announcement
+    reply_id:
+      in: path
+      name: reply_id
+      required: true
+      schema:
+        type: string
+      description: The ID number of a reply
+
+
     path:
       in: query
       name: path
