@@ -28,19 +28,6 @@ def create_app():
     app.app.config['SQLALCHEMY_DATABASE_URI'] = url
     db.init_app(app.app)
 
-    @app.app.before_request
-    def remove_jwt_if_expired():
-        if config.UI_ENABLED:
-            return
-        if not request.path == '/api/auth':
-            try:
-                verify_jwt_in_request()
-            except Exception as e:
-                print(e)
-                resp = jsonify({'logout': True})
-                unset_jwt_cookies(resp)
-                return resp, 401
-
     with app.app.app_context():
         db.create_engine(url, {})
         jwt.init_app(app.app)
