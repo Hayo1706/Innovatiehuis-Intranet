@@ -17,8 +17,12 @@
         v-on:keyup.enter="submit()"
       /><br />
       <button @click="submit()">Verzenden</button><br />
-      <p v-if="this.redirectTarget != '/home/'" id="error-message">
-        Sessie is ongeldig of verlopen. Log in om terug te keren naar de vorige pagina.
+      <p
+        v-if="this.redirectTarget != '/home/' && !enteredWrongPassword"
+        id="error-message"
+      >
+        Sessie is ongeldig of verlopen. Log in om terug te keren naar de vorige
+        pagina.
       </p>
       <p v-if="this.enteredWrongPassword" id="error-message">
         Gebruikersnaam en/of wachtwoord is incorrect.
@@ -37,7 +41,7 @@ export default {
     return {
       enteredWrongPassword: false,
       loginAttempt: { email: "", password: "" },
-      redirectTarget: "/home/"
+      redirectTarget: "/home/",
     };
   },
   methods: {
@@ -49,13 +53,14 @@ export default {
           this.loginAttempt.password
       )
         .then((response) => {
-          console.log(response);
+          console.log(response.status);
 
           localStorage.setItem("loggedIn", true);
 
           this.$router.push(this.redirectTarget);
         })
         .catch((err) => {
+          console.log(err);
           if (err.response) {
             console.log(err.response.status);
           }

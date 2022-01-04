@@ -8,28 +8,29 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(
-    function(config) {
+    function (config) {
         config.headers["X-CSRF-TOKEN"] = document.cookie.match('(^|;)\\s*' + 'csrf_access_token' + '\\s*=\\s*([^;]+)')?.pop();
         return config;
     },
-    function(error) {
+    function (error) {
         return Promise.reject(error);
     }
 );
 
-axiosClient.interceptors.response.use(response => {
-    return response
-},
-    err => {
+axiosClient.interceptors.response.use((config) => {
+    return config;
+}, (error) => {
 
-        //login error
-        if (err.response.status == 401) {
-            localStorage.removeItem("loggedIn");
-            router.push('/login');
+    //login error
+    if (error.response.status == 401 && router.currentRoute.value.fullPath != '/login') {
+        console.log(router.currentRoute.value);
+        localStorage.removeItem("loggedIn");
+        router.push('/login');
 
-        }
     }
+    return Promise.reject(error);
+});
 
-);
+
 export default axiosClient
 
