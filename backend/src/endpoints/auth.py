@@ -46,14 +46,13 @@ def generate_token():
                                      'last_failed_login']).total_seconds()) - ATTEMPTS_BEFORE_COOLDOWN) +
                                  " more seconds", 401)
     if not user['password_hash'] == send_password:
-        query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 where "
+        query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
                      "userid = %(userid)s", {'userid': user['userid']})
         return response("Wrong password or username", 401)
     access_token = create_access_token(identity=user['userid'])
 
-    dict = query("SELECT may_read_all_projects, may_read_all_users, may_delete_all_projects FROM roles where "
-                 "roleid=%(roleid)s", {'roleid': user['roleid']})
+    dict = query("SELECT * FROM roles WHERE roleid=%(roleid)s", {'roleid': user['roleid']})
     dict[0]['userid'] = user['userid']
-    resp = jsonify(dict) #TODO meer permissies
+    resp = jsonify(dict)  # TODO: misschien niet alle permissies dumpen?
     set_access_cookies(resp, access_token)
     return resp, 200
