@@ -98,6 +98,7 @@ input {
 }
 textarea {
   margin-bottom: 10px;
+  height: 20vh;
 }
 #userSearchBar {
   margin-top: 5px;
