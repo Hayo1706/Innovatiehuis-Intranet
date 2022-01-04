@@ -22,13 +22,21 @@
         <div class="modal-body">
           <form>
             <div class="mb-9">
-              <!-- TODO add input here-->
               <input
                 v-model="this.projectname"
                 class="form-control"
-                id="message-text"
-                placeholder="Naam van project"
+                placeholder="Naam"
               />
+              <textarea
+                class="form-control"
+                placeholder="Beschrijving"
+                v-model="this.projectdescription"
+              ></textarea>
+
+              Leden toevoegen
+              <SearchBar id="userSearchBar"></SearchBar>
+              Overkoepelende projecten toevoegen
+              <SearchBar id="parentProjectsSearchBar"></SearchBar>
             </div>
           </form>
         </div>
@@ -54,11 +62,14 @@
   </div>
 </template>
 <script>
+import SearchBar from "@/shared_components/SearchBar.vue";
 export default {
   name: "ProjectCreateModal",
+  components: { SearchBar },
   data: function () {
     return {
       projectname: "",
+      projectdescription: "",
     };
   },
   mounted() {
@@ -70,6 +81,7 @@ export default {
   methods: {
     clearForm() {
       this.projectname = "";
+      this.projectdescription = "";
     },
   },
 };
@@ -80,5 +92,19 @@ export default {
 }
 .modal-title {
   font-family: Montserrat;
+}
+input {
+  margin-bottom: 10px;
+}
+textarea {
+  margin-bottom: 10px;
+}
+#userSearchBar {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+#parentProjectsSearchBar {
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 </style>
