@@ -1,6 +1,6 @@
 import connexion
-from ..services.helper_functions import *
 from flask_jwt_extended import get_jwt_identity
+from ..services.permissions import *
 
 
 def read_one(announcement_id):
@@ -23,17 +23,19 @@ def read_global():
 
 
 def create_global():
-    try:
-        body = connexion.request.json['announcement']
-        title = body['title']
-        content = body['content']
-    except KeyError:
-        return response("Invalid body", 404)
-    query_update(
-        "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
-        "%(content)s)",
-        {'userid': get_jwt_identity(), 'content': content, 'title': title})
-    return response("Global Announcement successfully posted", 200)
+    @any_permission(Announcements().may_create(0))
+    def run():
+        try:
+            body = connexion.request.json['announcement']
+            title = body['title']
+            content = body['content']
+        except KeyError:
+            return response("Invalid body", 404)
+        query_update(
+            "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
+            "%(content)s)",
+            {'userid': get_jwt_identity(), 'content': content, 'title': title})
+        return response("Global Announcement successfully posted", 200)
 
 
 def update(announcement_id):
@@ -62,8 +64,8 @@ def read_replies(announcement_id):
         "SELECT replies.replyid, replies.announcementid, replies.timestamp, replies.userid, users.first_name, "
         "users.last_name, replies.content FROM replies JOIN users "
         "ON replies.userid = users.userid "
-        "WHERE replies.announcementid = %(id)s "
-        "ORDER BY replies.timestamp ASC", {'id': announcement_id})
+        "WHERE replies.announcementid = %(announcementid)s "
+        "ORDER BY replies.timestamp ASC", {'announcementid': announcement_id})
 
 
 def add_reply(announcement_id):
