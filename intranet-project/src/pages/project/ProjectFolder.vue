@@ -1,7 +1,7 @@
 <template>
   <div
     class="projectFolder"
-    @click.right="viewMenu = true"
+    @mouseenter="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
     <div class="container-fluid" @mouseleave="renameFolder()">

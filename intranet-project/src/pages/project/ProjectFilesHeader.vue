@@ -2,7 +2,7 @@
   <div>
     <div id="projectFilesHeader">
       <div class="row">
-        <div class="col-sm-9">Files View</div>
+        <div class="col-sm-9">&nbsp; Bestanden</div>
         <div class="col-sm-2">
           <SearchBar
             @searchBarChanged="
@@ -87,7 +87,7 @@ export default {
   font-size: calc(1vw + 1vh);
   font-family: AddeleSemiBold;
   margin: calc(1vw + 1vh);
-  text-align: center;
+  text-align: left;
   background-color: var(--blue1);
 }
 .iconButton {

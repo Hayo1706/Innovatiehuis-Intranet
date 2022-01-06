@@ -4,7 +4,13 @@
       :path="this.currentPath"
       @newFolderAdded="(id) => setFolders()"
       @searchBarChanged="setSearchTerm"
-    />
+    >&nbsp;
+      <text v-if="this.path == ''">Mappen</text>
+      <text @click="folderPathChanged('')" v-else>.../</text>
+      <span v-for="(path, index) in fullPath = this.path.split('/')" :key="path">
+         <text @click="folderPathChanged(fullPath.slice(1, index+1))" v-if="path != ''">{{ path }}/</text>
+      </span>
+     </ProjectFolderHeader>
     <div class="container-fluid">
       <div class="row">
         <div v-for="folder in folders" :key="folder" class="col-sm-3">
@@ -15,7 +21,7 @@
               :name="folder"
               :path="this.path + '/' + folder"
               :shared="no"
-              @currentPathChanged="folderPathChange"
+              @currentPathChanged="folderPathChanged"
               @folderMoved="setFolders()"
               @folderDeleted="setFolders()"
             />
@@ -62,10 +68,21 @@ export default {
         return false;
       }
     },
-    folderPathChange(path) {
-      this.currentPath = path;
-      this.$router.push("/project/" + this.projectid + path);
-      this.$emit("currentPathChanged", this.currentPath);
+    folderPathChanged(path) {
+      if(Array.isArray(path)){
+        this.currentPath = ""
+        for(var element in path){
+          this.currentPath += "/" + path[element]
+        }
+        this.$router.push("/project/" + this.projectid + this.currentPath);
+        this.$emit("currentPathChanged", this.currentPath);
+      }
+      else{
+        this.currentPath = path;
+        this.$router.push("/project/" + this.projectid + path);
+        this.$emit("currentPathChanged", this.currentPath);
+      }
+      
     },
     setFolders() {
       FilestorageService.getFoldersOfProject(this.projectid, this.path)
