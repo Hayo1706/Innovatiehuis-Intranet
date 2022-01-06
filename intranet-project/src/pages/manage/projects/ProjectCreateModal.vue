@@ -220,7 +220,9 @@ export default {
       this.selectedUsers = this.selectedUsers.filter((item) => {
         return item.userid != userid;
       });
-      this.filteredUsers = this.getFilteredUsers();
+      if (this.userSearchTerm) {
+        this.filteredUsers = this.getFilteredUsers();
+      }
     },
     getFilteredUsers() {
       return this.users.filter((item) => {
@@ -276,7 +278,9 @@ export default {
       this.selectedProjects = this.selectedProjects.filter((item) => {
         return item.projectid != projectid;
       });
-      this.filteredProjects = this.getFilteredProjects();
+      if (this.parentSearchTerm) {
+        this.filteredProjects = this.getFilteredProjects();
+      }
     },
     setFieldEmptyErrorMessage(name) {
       this.errorMessage = 'Het veld "' + name + '" mag niet leeg zijn.';
