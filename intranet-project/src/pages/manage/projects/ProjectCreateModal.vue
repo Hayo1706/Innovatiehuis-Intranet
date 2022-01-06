@@ -40,7 +40,12 @@
                 id="selectedUserList"
                 v-for="user in selectedUsers"
                 v-bind:key="user.userid"
-                >{{ user.first_name }} {{ user.last_name }},&nbsp;</span
+                >{{ user.first_name }} {{ user.last_name }}&nbsp;<button
+                  @click="this.unselectUser(user.userid)"
+                  class="entryDeleteButton"
+                >
+                  x</button
+                >,&nbsp;</span
               >
               <SearchBar
                 id="userSearchBar"
@@ -68,7 +73,12 @@
                 id="selectedParentList"
                 v-for="project in selectedProjects"
                 v-bind:key="project.projectid"
-                >{{ project.project_name }},&nbsp;</span
+                >{{ project.project_name }}&nbsp;<button
+                  @click="this.unselectProject(project.projectid)"
+                  class="entryDeleteButton"
+                >
+                  x</button
+                >,&nbsp;</span
               >
               <SearchBar
                 id="parentProjectsSearchBar"
@@ -205,7 +215,12 @@ export default {
       this.userSearchTerm = "";
       this.filteredUsers = [];
       this.selectedUsers.push(user);
-      console.log(this.selectedUsers);
+    },
+    unselectUser(userid) {
+      this.selectedUsers = this.selectedUsers.filter((item) => {
+        return item.userid != userid;
+      });
+      this.filteredUsers = this.getFilteredUsers();
     },
     getFilteredUsers() {
       return this.users.filter((item) => {
@@ -256,9 +271,13 @@ export default {
       this.parentSearchTerm = "";
       this.filteredProjects = [];
       this.selectedProjects.push(project);
-      console.log(this.selectedProjects);
     },
-
+    unselectProject(projectid) {
+      this.selectedProjects = this.selectedProjects.filter((item) => {
+        return item.projectid != projectid;
+      });
+      this.filteredProjects = this.getFilteredProjects();
+    },
     setFieldEmptyErrorMessage(name) {
       this.errorMessage = 'Het veld "' + name + '" mag niet leeg zijn.';
     },
@@ -322,5 +341,10 @@ textarea {
 #errorMessage {
   margin-bottom: 10px;
   color: red;
+}
+.entryDeleteButton {
+  background-color: red;
+  border-radius: 5px;
+  color: white;
 }
 </style>
