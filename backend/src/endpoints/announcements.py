@@ -1,8 +1,12 @@
 import connexion
-from flask_jwt_extended import get_jwt_identity
-from ..services.permissions import *
+from flask_jwt_extended import get_jwt_identity, jwt_required
+from ..services.helper_functions import *
+
+from ..services.permissions import Announcements
+from ..services.permissions.permissions import check_permissions
 
 
+@check_permissions(Announcements.may_read)
 def read_one(announcement_id):
     is_int(announcement_id)
     return query(
@@ -13,6 +17,7 @@ def read_one(announcement_id):
         "ORDER BY announcements.timestamp DESC", {'id': announcement_id})
 
 
+@jwt_required()
 def read_global():
     return query(
         "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
@@ -22,22 +27,22 @@ def read_global():
         "ORDER BY announcements.timestamp DESC", None)
 
 
+@check_permissions(Announcements.may_create_global)
 def create_global():
-    @any_permission(Announcements().may_create(0))
-    def run():
-        try:
-            body = connexion.request.json['announcement']
-            title = body['title']
-            content = body['content']
-        except KeyError:
-            return response("Invalid body", 404)
-        query_update(
-            "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
-            "%(content)s)",
-            {'userid': get_jwt_identity(), 'content': content, 'title': title})
-        return response("Global Announcement successfully posted", 200)
+    try:
+        body = connexion.request.json['announcement']
+        title = body['title']
+        content = body['content']
+    except KeyError:
+        return response("Invalid body", 404)
+    query_update(
+        "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
+        "%(content)s)",
+        {'userid': get_jwt_identity(), 'content': content, 'title': title})
+    return response("Global Announcement successfully posted", 200)
 
 
+@check_permissions(Announcements.may_update_delete)
 def update(announcement_id):
     is_int(announcement_id)
     try:
@@ -52,12 +57,14 @@ def update(announcement_id):
     return response(f"Announcement {announcement_id} successfully edited", 200)
 
 
+@check_permissions(Announcements.may_update_delete)
 def delete(announcement_id):
     is_int(announcement_id)
     query_update("DELETE FROM announcements WHERE announcementid = %(id)s", {'id': announcement_id})
     return response(f"{announcement_id} successfully deleted", 200)
 
 
+@check_permissions(Announcements.may_read_reply)
 def read_replies(announcement_id):
     is_int(announcement_id)
     return query(
@@ -68,6 +75,7 @@ def read_replies(announcement_id):
         "ORDER BY replies.timestamp ASC", {'announcementid': announcement_id})
 
 
+@check_permissions(Announcements.may_add_reply)
 def add_reply(announcement_id):
     try:
         body = connexion.request.json['reply']

@@ -1,8 +1,13 @@
 import connexion
+from flask_jwt_extended import jwt_required
 
 from ..services.helper_functions import *
 
+from ..services.permissions import Users
+from ..services.permissions.permissions import check_permissions
 
+
+@check_permissions(Users.may_read)
 def read_one(user_id):
     return query(
         "SELECT userid, first_name, last_name, email, roleid, role_name, screening_status, created, "
@@ -12,6 +17,7 @@ def read_one(user_id):
         {'id': user_id})
 
 
+@check_permissions(Users.may_read_all)
 def read_all():
     return query(
         "SELECT userid, first_name, last_name, email, roleid, role_name, screening_status, created, "
@@ -19,6 +25,7 @@ def read_all():
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid")
 
 
+@check_permissions(Users.may_create)
 def create():
     try:
         body = connexion.request.json
@@ -39,12 +46,13 @@ def create():
     return response("User successfully added", 200)
 
 
+@check_permissions(Users.may_update)
 def update(user_id):
     is_int(user_id)
 
-#   1 get current role of user
-#   2 if specified role is changed, check permission using "UPDATE ROLE" OR "UPDATE ROLE PROTECTED"
-#   3 abort immediately if user has no permission!
+    #   1 get current role of user
+    #   2 if specified role is changed, check permission using "UPDATE ROLE" OR "UPDATE ROLE PROTECTED"
+    #   3 abort immediately if user has no permission!
 
     try:
         body = connexion.request.json
@@ -65,6 +73,7 @@ def update(user_id):
     return response(f"User {user_id} successfully updated", 200)
 
 
+@check_permissions(Users.may_delete_user)
 def delete(user_id):
     is_int(user_id)
     query_update("DELETE FROM users WHERE userid = %(id)s", {'id': user_id})
@@ -72,6 +81,7 @@ def delete(user_id):
 
 
 # users/{id}/password
+@check_permissions(Users.may_update_password)
 def update_password(user_id):
     is_int(user_id)
     try:
@@ -79,16 +89,19 @@ def update_password(user_id):
         new_password_hash = body['password_hash']  # TODO: how to hash
     except KeyError:
         return response("Invalid body", 404)
-    query_update("UPDATE users SET password_hash = %(hash)s WHERE userid = %(userid)s", {'hash': new_password_hash, 'userid': user_id})
+    query_update("UPDATE users SET password_hash = %(hash)s WHERE userid = %(userid)s",
+                 {'hash': new_password_hash, 'userid': user_id})
 
 
 # users/{id}/projects
+@check_permissions(Users.may_read_user_projects)
 def read_projects(user_id):
     return query("SELECT * FROM users_have_projects INNER JOIN projects ON "
                  "users_have_projects.projectid = projects.projectid "
                  "WHERE users_have_projects.userid = %(id)s AND projects.is_archived = 0", {'id': user_id})
 
 
+# TODO Welke permissie?
 def add_project(user_id):
     is_int(user_id)
     try:
@@ -97,5 +110,6 @@ def add_project(user_id):
         is_int(project_id)
     except KeyError:
         return response("Invalid body", 404)
-    query_update(f"INSERT INTO users_have_projects (userid, projectid) VALUES (%(userid)s, %(projectid)s)", {'userid': user_id, 'projectid': project_id})
+    query_update(f"INSERT INTO users_have_projects (userid, projectid) VALUES (%(userid)s, %(projectid)s)",
+                 {'userid': user_id, 'projectid': project_id})
     return response(f"Successfully assigned {project_id} to project {project_id}")

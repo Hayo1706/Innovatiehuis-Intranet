@@ -41,7 +41,7 @@ export default {
   border: white 5px solid;
   margin-top: 1vh;
   color: white;
-  font-size: calc(1vh + 1vw);
+  font-size: min(calc(10px + 2vw), 25px);
 
   padding: 20px;
 

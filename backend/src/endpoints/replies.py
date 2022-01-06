@@ -1,7 +1,11 @@
 import connexion
 from ..services.helper_functions import *
 
+from ..services.permissions import Announcements
+from ..services.permissions.permissions import check_permissions
 
+
+@check_permissions(Announcements.may_update_delete_reply)
 def update(reply_id):
     is_int(reply_id)
     try:
@@ -16,6 +20,7 @@ def update(reply_id):
     return response(f"Reply {reply_id} successfully edited", 200)
 
 
+@check_permissions(Announcements.may_update_delete_reply)
 def delete(reply_id):
     is_int(reply_id)
     query_update("DELETE FROM replies WHERE replyid =%(id)s", {'id': id})
