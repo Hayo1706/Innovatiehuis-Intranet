@@ -25,7 +25,7 @@ axiosClient.interceptors.response.use((config) => {
     //login error
     if (error.response.status == 401 && router.currentRoute.value.fullPath != '/login') {
         LoginService.logout();
-        router.push('/login');
+        window.location.reload();
 
     }
     return Promise.reject(error);
