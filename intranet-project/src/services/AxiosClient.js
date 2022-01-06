@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import router from '../main';
+import LoginService from "@/services/LoginService";
 
 const axiosClient = axios.create({
     baseURL: 'http://localhost:8080/api' //TODO Change when in production
@@ -23,9 +24,8 @@ axiosClient.interceptors.response.use((config) => {
 
     //login error
     if (error.response.status == 401 && router.currentRoute.value.fullPath != '/login') {
-        console.log(router.currentRoute.value);
-        localStorage.removeItem("loggedIn");
-        router.push('/login');
+        LoginService.logout();
+        window.location.reload();
 
     }
     return Promise.reject(error);

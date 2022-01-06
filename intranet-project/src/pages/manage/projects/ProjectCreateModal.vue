@@ -20,8 +20,9 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form>
+          <form autocomplete="off">
             <div class="mb-9">
+              <div id="errorMessage">{{ errorMessage }}</div>
               <input
                 v-model="this.projectname"
                 class="form-control"
@@ -34,9 +35,71 @@
               ></textarea>
 
               Leden toevoegen
-              <SearchBar id="userSearchBar"></SearchBar>
+              <br />
+              <span
+                id="selectedUserList"
+                v-for="user in selectedUsers"
+                v-bind:key="user.userid"
+                >{{ user.first_name }} {{ user.last_name }}&nbsp;<button
+                  @click="this.unselectUser(user.userid)"
+                  class="entryDeleteButton"
+                >
+                  x</button
+                >,&nbsp;</span
+              >
+              <SearchBar
+                id="userSearchBar"
+                v-bind:searchTerm="this.userSearchTerm"
+                @searchBarChanged="
+                  (searchTerm) => {
+                    handleSearchUser(searchTerm);
+                  }
+                "
+              ></SearchBar>
+
+              <div class="dropdown-menu" id="userDropdown">
+                <div
+                  class="dropdown-item"
+                  v-for="user in filteredUsers"
+                  v-bind:key="user.userid"
+                  @click="selectUser(user)"
+                >
+                  {{ user.first_name }} {{ user.last_name }}
+                </div>
+              </div>
               Overkoepelende projecten toevoegen
-              <SearchBar id="parentProjectsSearchBar"></SearchBar>
+              <br />
+              <span
+                id="selectedParentList"
+                v-for="project in selectedProjects"
+                v-bind:key="project.projectid"
+                >{{ project.project_name }}&nbsp;<button
+                  @click="this.unselectProject(project.projectid)"
+                  class="entryDeleteButton"
+                >
+                  x</button
+                >,&nbsp;</span
+              >
+              <SearchBar
+                id="parentProjectsSearchBar"
+                v-bind:searchTerm="this.parentSearchTerm"
+                @searchBarChanged="
+                  (searchTerm) => {
+                    handleSearchParent(searchTerm);
+                  }
+                "
+              ></SearchBar>
+
+              <div class="dropdown-menu" id="parentDropdown">
+                <div
+                  class="dropdown-item"
+                  v-for="project in filteredProjects"
+                  v-bind:key="project.projectid"
+                  @click="selectProject(project)"
+                >
+                  {{ project.project_name }}
+                </div>
+              </div>
             </div>
           </form>
         </div>
@@ -44,8 +107,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            data-bs-dismiss="modal"
-            @click="addNewFolder()"
+            @click="addNewProject()"
           >
             Toevoegen
           </button>
@@ -63,13 +125,28 @@
 </template>
 <script>
 import SearchBar from "@/shared_components/SearchBar.vue";
+import UserService from "@/services/UserService.js";
+import ProjectService from "@/services/ProjectService.js";
+import { Modal } from "bootstrap";
 export default {
   name: "ProjectCreateModal",
   components: { SearchBar },
   data: function () {
     return {
+      modal: null,
       projectname: "",
       projectdescription: "",
+      userSearchTerm: "",
+      parentSearchTerm: "",
+      errorMessage: "",
+
+      users: [],
+      filteredUsers: [],
+      selectedUsers: [],
+
+      projects: [],
+      filteredProjects: [],
+      selectedProjects: [],
     };
   },
   mounted() {
@@ -77,11 +154,162 @@ export default {
     myModalEl.addEventListener("hidden.bs.modal", () => {
       this.clearForm();
     });
+    myModalEl.addEventListener("show.bs.modal", () => {
+      UserService.getUsers()
+        .then((response) => {
+          this.users = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+      ProjectService.getProjects()
+        .then((response) => {
+          this.projects = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+    });
+    this.modal = new Modal(myModalEl);
   },
   methods: {
+    closeModal() {
+      this.modal.hide();
+    },
+    fieldEmpty(field) {
+      return field.trim() == "";
+    },
+    addNewProject() {
+      if (!this.validateForm()) {
+        return;
+      }
+      this.closeModal();
+    },
+    validateForm() {
+      let projectNameEmpty = this.fieldEmpty(this.projectname);
+      if (projectNameEmpty) {
+        this.setFieldEmptyErrorMessage("Naam");
+        return false;
+      }
+      let description = this.fieldEmpty(this.projectdescription);
+      if (description) {
+        this.setFieldEmptyErrorMessage("Beschrijving");
+        return false;
+      }
+      return true;
+    },
+
+    handleSearchUser(name) {
+      if (name) {
+        this.userSearchTerm = name;
+        this.filteredUsers = this.getFilteredUsers();
+      } else {
+        this.filteredUsers = [];
+      }
+    },
+    selectUser(user) {
+      this.userSearchTerm = "";
+      this.filteredUsers = [];
+      this.selectedUsers.push(user);
+    },
+    unselectUser(userid) {
+      this.selectedUsers = this.selectedUsers.filter((item) => {
+        return item.userid != userid;
+      });
+      if (this.userSearchTerm) {
+        this.filteredUsers = this.getFilteredUsers();
+      }
+    },
+    getFilteredUsers() {
+      return this.users.filter((item) => {
+        return (
+          (item.first_name + " " + item.last_name)
+            .toLowerCase()
+            .includes(this.userSearchTerm.toLowerCase()) &&
+          !this.selectedUsersContainsUser(item.userid)
+        );
+      });
+    },
+    selectedUsersContainsUser(userid) {
+      for (const user of this.selectedUsers) {
+        if (user.userid == userid) {
+          return true;
+        }
+      }
+      return false;
+    },
+    selectedProjectsContainsProject(projectid) {
+      for (const project of this.selectedProjects) {
+        if (project.projectid == projectid) {
+          return true;
+        }
+      }
+      return false;
+    },
+    handleSearchParent(name) {
+      if (name) {
+        this.parentSearchTerm = name;
+        this.filteredProjects = this.getFilteredProjects();
+      } else {
+        this.filteredProjects = [];
+      }
+    },
+    getFilteredProjects() {
+      return this.projects.filter((item) => {
+        return (
+          item.project_name
+            .toLowerCase()
+            .includes(this.parentSearchTerm.toLowerCase()) &&
+          !this.selectedProjectsContainsProject(item.projectid)
+        );
+      });
+    },
+
+    selectProject(project) {
+      this.parentSearchTerm = "";
+      this.filteredProjects = [];
+      this.selectedProjects.push(project);
+    },
+    unselectProject(projectid) {
+      this.selectedProjects = this.selectedProjects.filter((item) => {
+        return item.projectid != projectid;
+      });
+      if (this.parentSearchTerm) {
+        this.filteredProjects = this.getFilteredProjects();
+      }
+    },
+    setFieldEmptyErrorMessage(name) {
+      this.errorMessage = 'Het veld "' + name + '" mag niet leeg zijn.';
+    },
     clearForm() {
       this.projectname = "";
       this.projectdescription = "";
+      this.userSearchTerm = "";
+      this.parentSearchTerm = "";
+
+      this.selectedUsers = [];
+      this.selectedProjects = [];
+      this.errorMessage = "";
+    },
+  },
+  watch: {
+    filteredUsers: function () {
+      if (this.filteredUsers.length == 0) {
+        document.getElementById("userDropdown").classList.remove("show");
+      } else {
+        document.getElementById("userDropdown").classList.add("show");
+      }
+    },
+    filteredProjects: function () {
+      if (this.filteredProjects.length == 0) {
+        document.getElementById("parentDropdown").classList.remove("show");
+      } else {
+        document.getElementById("parentDropdown").classList.add("show");
+      }
     },
   },
 };
@@ -107,5 +335,20 @@ textarea {
 #parentProjectsSearchBar {
   margin-top: 5px;
   margin-bottom: 10px;
+}
+#selectedUserList {
+  font-family: AddeleThin;
+}
+#selectedParentList {
+  font-family: AddeleThin;
+}
+#errorMessage {
+  margin-bottom: 10px;
+  color: red;
+}
+.entryDeleteButton {
+  background-color: red;
+  border-radius: 5px;
+  color: white;
 }
 </style>
