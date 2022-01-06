@@ -63,16 +63,33 @@
                 </div>
               </div>
               Overkoepelende projecten toevoegen
+              <br />
+              <span
+                id="selectedParentList"
+                v-for="project in selectedProjects"
+                v-bind:key="project.projectid"
+                >{{ project.project_name }},&nbsp;</span
+              >
               <SearchBar
                 id="parentProjectsSearchBar"
                 v-bind:searchTerm="this.parentSearchTerm"
                 @searchBarChanged="
                   (searchTerm) => {
-                    this.parentSearchTerm = searchTerm;
                     handleSearchParent(searchTerm);
                   }
                 "
               ></SearchBar>
+
+              <div class="dropdown-menu" id="parentDropdown">
+                <div
+                  class="dropdown-item"
+                  v-for="project in filteredProjects"
+                  v-bind:key="project.projectid"
+                  @click="selectProject(project)"
+                >
+                  {{ project.project_name }}
+                </div>
+              </div>
             </div>
           </form>
         </div>
@@ -99,6 +116,7 @@
 <script>
 import SearchBar from "@/shared_components/SearchBar.vue";
 import UserService from "@/services/UserService.js";
+import ProjectService from "@/services/ProjectService.js";
 import { Modal } from "bootstrap";
 export default {
   name: "ProjectCreateModal",
@@ -115,6 +133,10 @@ export default {
       users: [],
       filteredUsers: [],
       selectedUsers: [],
+
+      projects: [],
+      filteredProjects: [],
+      selectedProjects: [],
     };
   },
   mounted() {
@@ -126,6 +148,15 @@ export default {
       UserService.getUsers()
         .then((response) => {
           this.users = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+      ProjectService.getProjects()
+        .then((response) => {
+          this.projects = response;
         })
         .catch((err) => {
           if (err.response) {
@@ -194,11 +225,40 @@ export default {
       }
       return false;
     },
+    selectedProjectsContainsProject(projectid) {
+      for (const project of this.selectedProjects) {
+        if (project.projectid == projectid) {
+          return true;
+        }
+      }
+      return false;
+    },
     handleSearchParent(name) {
       if (name) {
-        console.log(name);
+        this.parentSearchTerm = name;
+        this.filteredProjects = this.getFilteredProjects();
+      } else {
+        this.filteredProjects = [];
       }
     },
+    getFilteredProjects() {
+      return this.projects.filter((item) => {
+        return (
+          item.project_name
+            .toLowerCase()
+            .includes(this.parentSearchTerm.toLowerCase()) &&
+          !this.selectedProjectsContainsProject(item.projectid)
+        );
+      });
+    },
+
+    selectProject(project) {
+      this.parentSearchTerm = "";
+      this.filteredProjects = [];
+      this.selectedProjects.push(project);
+      console.log(this.selectedProjects);
+    },
+
     setFieldEmptyErrorMessage(name) {
       this.errorMessage = 'Het veld "' + name + '" mag niet leeg zijn.';
     },
@@ -209,6 +269,7 @@ export default {
       this.parentSearchTerm = "";
 
       this.selectedUsers = [];
+      this.selectedProjects = [];
       this.errorMessage = "";
     },
   },
@@ -218,6 +279,13 @@ export default {
         document.getElementById("userDropdown").classList.remove("show");
       } else {
         document.getElementById("userDropdown").classList.add("show");
+      }
+    },
+    filteredProjects: function () {
+      if (this.filteredProjects.length == 0) {
+        document.getElementById("parentDropdown").classList.remove("show");
+      } else {
+        document.getElementById("parentDropdown").classList.add("show");
       }
     },
   },
@@ -246,6 +314,9 @@ textarea {
   margin-bottom: 10px;
 }
 #selectedUserList {
+  font-family: AddeleThin;
+}
+#selectedParentList {
   font-family: AddeleThin;
 }
 #errorMessage {
