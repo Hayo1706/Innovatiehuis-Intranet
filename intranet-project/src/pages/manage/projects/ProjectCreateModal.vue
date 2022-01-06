@@ -22,6 +22,7 @@
         <div class="modal-body">
           <form>
             <div class="mb-9">
+              <div id="errorMessage">{{ errorMessage }}</div>
               <input
                 v-model="this.projectname"
                 class="form-control"
@@ -79,8 +80,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            data-bs-dismiss="modal"
-            @click="addNewFolder()"
+            @click="addNewProject()"
           >
             Toevoegen
           </button>
@@ -99,15 +99,18 @@
 <script>
 import SearchBar from "@/shared_components/SearchBar.vue";
 import UserService from "@/services/UserService.js";
+import { Modal } from "bootstrap";
 export default {
   name: "ProjectCreateModal",
   components: { SearchBar },
   data: function () {
     return {
+      modal: null,
       projectname: "",
       projectdescription: "",
       userSearchTerm: "",
       parentSearchTerm: "",
+      errorMessage: "",
 
       users: [],
       filteredUsers: [],
@@ -130,8 +133,35 @@ export default {
           }
         });
     });
+    this.modal = new Modal(myModalEl);
   },
   methods: {
+    closeModal() {
+      this.modal.hide();
+    },
+    fieldEmpty(field) {
+      return field.trim() == "";
+    },
+    addNewProject() {
+      if (!this.validateForm()) {
+        return;
+      }
+      this.closeModal();
+    },
+    validateForm() {
+      let projectNameEmpty = this.fieldEmpty(this.projectname);
+      if (projectNameEmpty) {
+        this.setFieldEmptyErrorMessage("Naam");
+        return false;
+      }
+      let description = this.fieldEmpty(this.projectdescription);
+      if (description) {
+        this.setFieldEmptyErrorMessage("Beschrijving");
+        return false;
+      }
+      return true;
+    },
+
     handleSearchUser(name) {
       if (name) {
         this.userSearchTerm = name;
@@ -169,6 +199,9 @@ export default {
         console.log(name);
       }
     },
+    setFieldEmptyErrorMessage(name) {
+      this.errorMessage = 'Het veld "' + name + '" mag niet leeg zijn.';
+    },
     clearForm() {
       this.projectname = "";
       this.projectdescription = "";
@@ -176,6 +209,7 @@ export default {
       this.parentSearchTerm = "";
 
       this.selectedUsers = [];
+      this.errorMessage = "";
     },
   },
   watch: {
@@ -213,5 +247,9 @@ textarea {
 }
 #selectedUserList {
   font-family: AddeleThin;
+}
+#errorMessage {
+  margin-bottom: 10px;
+  color: red;
 }
 </style>
