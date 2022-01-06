@@ -90,8 +90,6 @@ def changeFolderName(new_name, path):
         return response("Failed to rename folder", 400)
 
 def moveDirFromRequest(source_path, target_path):
-    print(source_path)
-    print(target_path)
     dir_path = "/" + source_path.rsplit("/", 1)[1] #this is the path of the directory that's going to move, required to check later if this actually happend or already exists.
     if dir_exists(source_path) and dir_exists(target_path):
         if dir_exists(target_path + dir_path):
@@ -99,7 +97,6 @@ def moveDirFromRequest(source_path, target_path):
             return response("Failed to move folder, there is a folder with the same name in target directory", 400)
         else:
             try:
-                print("yes")
                 shutil.move(source_path, target_path, copy_function = shutil.copytree)
                 if dir_exists(target_path + dir_path):
                     return response("Succesfully moved folder", 200)
@@ -137,7 +134,6 @@ def createDirFromRequest(project_id):
         return response("Failed to create new folder", 400)
 
     try:
-        print(new_dir_path)
         os.mkdir(new_dir_path)
         print("Succesfully created new folder")
         return response("Succesfully created new folder", 200)
@@ -151,7 +147,6 @@ def deleteDir(project_id):
     path_to_delete = unquote(path_to_delete)
 
     confirmation = connexion.request.values.get('conf')
-    print(confirmation)
 
     requested_path = root + getProjectPath(project_id) + path_to_delete
     if dir_exists(requested_path):

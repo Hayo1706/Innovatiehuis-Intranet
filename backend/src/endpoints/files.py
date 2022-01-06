@@ -142,7 +142,6 @@ def moveFile(project_id):
     target_folder_path = root + getProjectPath(project_id) + target_path
     target_path = target_folder_path + "/" + file_name
 
-    print(source_path, target_path, target_folder_path)
     if file_exists(source_path) and dir_exists(target_folder_path):
         if not file_exists(target_path):
             shutil.move(source_path, target_path)
