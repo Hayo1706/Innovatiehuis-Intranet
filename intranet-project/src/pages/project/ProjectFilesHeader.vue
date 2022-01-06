@@ -63,7 +63,6 @@ export default {
         .catch((err) => {
           if(err.response.status === 409){
             var confirmation = confirm(err.response.data.response.message)
-            localStorage.clear();
             FilestorageService.uploadFiles(this.$route.params.id, this.path, formData, confirmation)
             .then(() => {
               this.$emit("newFilesUploaded")
