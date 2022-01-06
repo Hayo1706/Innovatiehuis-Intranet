@@ -109,9 +109,9 @@ export default {
           const link = document.createElement('a')
           link.href = url;
           link.setAttribute('download', this.name);
-          document.body.appendChild(link)
+          document.body.appendChild(link);
           link.click();
-          link.remove();
+          link.href = window.URL.createObjectURL(new Blob());
         }).catch(console.error)
       },
       deleteFile(){

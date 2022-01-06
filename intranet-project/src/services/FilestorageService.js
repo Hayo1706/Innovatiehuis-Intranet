@@ -47,7 +47,7 @@ var FilestorageService = function () {
     }
 
     async function downloadFile(projectid, path) {
-       const data = await axiosClient.get(`/projects/${projectid}/file?path=` + path, { responseType: "blob", timeout: 2000 })
+       const data = await axiosClient.get(`/projects/${projectid}/file?path=` + path + `&randomized=` + Math.random(), { responseType: "blob", timeout: 2000 })
        return data
     }
 
