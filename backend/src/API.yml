@@ -250,13 +250,14 @@ paths:
         200:
           description: Successfully retrieved files at given path
     post:
-      operationId: src.endpoints.files.uploadFiles
+      operationId: src.endpoints.files.requestToUploadFile
       tags:
         - Files
       summary: Upload file(s) in directory
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
+        - $ref: '#/components/parameters/conf'
       requestBody:
         required: true
         content:
@@ -269,6 +270,10 @@ paths:
       responses:
         200:
           description: Succesfully uploaded file
+        409:
+          description: A file with the same name already exists
+        400:
+          description: Failed to upload files
     put:
       operationId: src.endpoints.files.moveFile
       tags:

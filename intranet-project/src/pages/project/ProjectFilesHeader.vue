@@ -52,21 +52,32 @@ export default {
   methods: {
     uploadFiles(e) {
       var files = e.target.files;
-      var formData = new FormData();
       for (let i = 0; i < files.length; i++) {
+        var formData = new FormData();
         formData.append(files[i].name, files[i]);
-      }
-      FilestorageService.uploadFiles(this.$route.params.id, this.path, formData)
+
+        FilestorageService.uploadFiles(this.$route.params.id, this.path, formData)
         .then(() => {
-          document.getElementById("files").value=null;
-          this.$emit("newFilesUploaded");
+          this.$emit("newFilesUploaded")
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
+          if(err.response.status === 409){
+            var confirmation = confirm(err.response.data.response.message)
+            localStorage.clear();
+            FilestorageService.uploadFiles(this.$route.params.id, this.path, formData, confirmation)
+            .then(() => {
+              this.$emit("newFilesUploaded")
+            })
+            .catch((err) => {
+              if (err.response) {
+                console.log(err.response.status);
+              }
+            });
           }
         });
-    },
+      }
+      document.getElementById("files").value=null;
+    }    
   },
 };
 </script>

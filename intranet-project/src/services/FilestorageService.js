@@ -36,8 +36,8 @@ var FilestorageService = function () {
         return data;
     }
 
-    async function uploadFiles(projectid, path, files) {
-        const { data } = await axiosClient.post(`/projects/${projectid}/files?path=` + path, files , { timeout: 20000 })
+    async function uploadFiles(projectid, path, file, conf) {
+        const { data } = await axiosClient.post(`/projects/${projectid}/files?path=` + path + `&conf=` + conf, file , { timeout: 20000 })
         return data
     }
 
