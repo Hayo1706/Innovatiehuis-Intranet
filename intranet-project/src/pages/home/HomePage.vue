@@ -3,7 +3,6 @@
     <div class="row">
       <div class="col-sm-6">
         <ProjectsWindow>Mijn Projecten</ProjectsWindow>
-        <router-link  to="/manage/resetpassword">Wachtwoord resetten</router-link>
       </div>
       <div class="col-sm-6">
         <AnnouncementWindow
