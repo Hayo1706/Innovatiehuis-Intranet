@@ -32,6 +32,7 @@ def secureFileName(filename):
         return "New File" + file_type
     return secure_name + file_type
 
+
 def requestToUploadFile(project_id):
 
     files = connexion.request.files
@@ -74,6 +75,7 @@ def upload_file(file, path, confirmation):
 
     return response("Failed to upload file", 400)
 
+
 def isFilePathValid(requested_path):
     if path_exists(requested_path) and not os.path.isdir(requested_path):
         return True
@@ -93,6 +95,7 @@ def getUniqueFileName(file_name_type, current_path, count):
             return getUniqueFileName(file_name_type, current_path, count + 1)
         return file_name + " (" + str(count) + ")" + file_type
 
+
 def getFilesInPath(project_id):
     folder_path = connexion.request.values.get('path')
     requested_path = root + getProjectPath(project_id) + folder_path
@@ -104,6 +107,7 @@ def getFilesInPath(project_id):
                 list_of_files.append(path)
 
     return list_of_files
+
 
 def moveFile(project_id):
     source_path = connexion.request.json['from']
@@ -133,6 +137,7 @@ def downloadFile(project_id):
             file_mimetype = mimetypes.guess_type(requested_path)[0]
             return send_from_directory(root + path_in_folder, filename=file_name, mimetype=file_mimetype, as_attachment=True)
 
+
 def moveFile(project_id):
     source_path = unquote(connexion.request.json['from'])
     source_path = root + getProjectPath(project_id) + source_path
@@ -147,8 +152,6 @@ def moveFile(project_id):
             shutil.move(source_path, target_path)
             return response("Succesfully moved file", 200)
     return response("Failed to move file", 400)
-
-
 
 
 def deleteFile(project_id):
@@ -176,7 +179,3 @@ def renameFile(project_id):
         return response("New name is equal to old name", 400)
 
     return response("Original file path is invalid", 400)
-
-
-
-

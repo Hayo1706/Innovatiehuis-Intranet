@@ -50,7 +50,7 @@ export default {
       this.editing = false;
       AnnouncementService.editReply(this.id, this.editData)
         .then((response) => {
-          console.log("API RESPONDS: " + response);
+          console.log("API RESPONDS: " + JSON.stringify(response));
           this.$emit("reload");
         })
         .catch((err) => {
@@ -63,7 +63,7 @@ export default {
       AnnouncementService.deleteReply(this.id)
         .then((response) => {
           alert("Reactie is verwijderd!");
-          console.log("API RESPONDS: " + response);
+          console.log("API RESPONDS: " + JSON.stringify(response));
           this.$emit("reload"); // TODO: verwijder reactie uit scherm
         })
         .catch((err) => {

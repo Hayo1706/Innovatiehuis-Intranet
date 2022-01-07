@@ -8,25 +8,26 @@
         type="text"
         placeholder="e-mail"
         v-on:keyup.enter="submit()"
-      /><br />
+      />
+      <br />
       <input
         v-model="this.loginAttempt.password"
         style="text-align: center"
         type="password"
         placeholder="wachtwoord"
         v-on:keyup.enter="submit()"
-      /><br />
-      <button @click="submit()">Verzenden</button><br />
-      <p
-        v-if="this.redirectTarget != '/home/' && !enteredWrongPassword"
-        id="error-message"
-      >
+      />
+      <br />
+      <button @click="submit()">Verzenden</button>
+      <br />
+      <p v-if="this.redirectTarget != '/home/' && !enteredWrongPassword" id="error-message">
         Sessie is ongeldig of verlopen. Log in om terug te keren naar de vorige
         pagina.
       </p>
-      <p v-if="this.enteredWrongPassword" id="error-message">
-        Gebruikersnaam en/of wachtwoord is incorrect.
-      </p>
+      <p
+        v-if="this.enteredWrongPassword"
+        id="error-message"
+      >Gebruikersnaam en/of wachtwoord is incorrect.</p>
     </div>
   </div>
 </template>
@@ -48,13 +49,17 @@ export default {
     submit() {
       LoginService.attemptLogin(
         "username=" +
-          this.loginAttempt.email +
-          "&password=" +
-          this.loginAttempt.password
+        this.loginAttempt.email +
+        "&password=" +
+        this.loginAttempt.password
       )
         .then((response) => {
           console.log(response.status);
 
+          //set user id and user permission data retrieved from API
+          for (var property in response.data[0]) {
+            localStorage.setItem(property, response.data[0][property]);
+          }
           localStorage.setItem("loggedIn", true);
 
           this.$router.push(this.redirectTarget);

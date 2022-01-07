@@ -53,6 +53,8 @@ def generate_token():
 
     dict = query("SELECT * FROM roles WHERE roleid=%(roleid)s", {'roleid': user['roleid']})
     dict[0]['userid'] = user['userid']
+    dict[0]['first_name'] = user['first_name']
+    dict[0]['last_name'] = user['last_name']
     resp = jsonify(dict)  # TODO: misschien niet alle permissies dumpen?
     set_access_cookies(resp, access_token)
     return resp, 200

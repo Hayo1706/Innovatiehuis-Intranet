@@ -12,7 +12,7 @@ var LoginService = function () {
     }
 
     async function logout() {
-        localStorage.removeItem("loggedIn");
+        localStorage.clear();
         return await axiosClient.post('/logout', null, { timeout: 2000 });
     }
 

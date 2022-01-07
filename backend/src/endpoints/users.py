@@ -11,8 +11,8 @@ from ..services.permissions.permissions import check_permissions
 def read_one(user_id):
     return query(
         "SELECT userid, first_name, last_name, email, roleid, role_name, screening_status, created, "
-        "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "
-        "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid "
+        "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen), created) AS last_seen FROM (SELECT * FROM users "
+        "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) "
         "WHERE userid= %(id)s",
         {'id': user_id})
 

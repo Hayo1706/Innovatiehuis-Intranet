@@ -3,7 +3,7 @@
     <div class="component-header">
       <slot></slot>
     </div>
-    <div class="full-button" @click="toProjectsPage()">Alle Projecten</div>
+    <div class="full-button" @click="toProjectsPage()" v-if="this.archivePermission">Alle Projecten</div>
     <div class="full-button" @click="toUsersPage()">Alle Gebruikers</div>
 
     <div id="projects-window" class="component-body">
@@ -27,13 +27,17 @@ export default {
   name: "ProjectsWindow",
   props: [],
   data: function () {
-    return { projects: [] };
+    return { 
+      projects: [],
+      archivePermission: false
+      };
   },
   async created() {
+    this.archivePermission = localStorage.getItem('may_archive_any_project') == "1";
     ProjectService.getProjectsByUser(1) //TODO: get user id from session data/JWT
       .then((response) => {
         this.projects = response;
-        console.log("API RESPONDS: " + response);
+        console.log("API RESPONDS: " + JSON.stringify(response));
       })
       .catch((err) => {
         if (err.response) {

@@ -138,17 +138,6 @@ paths:
       responses:
         200:
           description: Successfully marked project as child
-    put:
-      operationId: src.endpoints.projects.update_shared_files
-      tags:
-        - Projects
-      summary: Update what files are shared from parent project to child project
-      parameters:
-        - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/child_id'
-      responses:
-        200:
-          description: Successfully updated shared files
     delete:
       operationId: src.endpoints.projects.remove_child
       tags:
@@ -160,6 +149,19 @@ paths:
       responses:
         200:
           description: Successfully broke parent-child relation
+  /projects/{project_id}/children/{child_id}/shared_files:
+    put:
+      operationId: src.endpoints.projects.update_shared_files
+      tags:
+        - Projects
+        - Files
+      summary: Update what files are shared from parent project to child project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/child_id'
+      responses:
+        200:
+          description: Successfully updated shared files
 
   /projects/{project_id}/users:
     get:
@@ -167,7 +169,7 @@ paths:
       tags:
         - Projects
         - Users
-      summary: Read all users assigned to this project
+      summary: Get IDs of all users assigned to this project, as well as the time they last accessed it
       parameters:
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -177,6 +179,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+    put:
+      operationId: src.endpoints.projects.update_users
+      tags:
+        - Projects
+        - Users
+      summary: Change the users in this project by supplying a list of user IDs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDs'
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        200:
+          description: Successfully updated list of users assigned to this project
   /projects/{project_id}/users/{user_id}:
     post:
       operationId: src.endpoints.projects.add_user
@@ -202,6 +221,18 @@ paths:
       responses:
         200:
           description: Successfully removed user from project
+  /projects/{project_id}/users/last_seen:
+    patch:
+      operationId: src.endpoints.projects.update_last_seen
+      tags:
+        - Projects
+        - Users
+      summary: Lets the data model know when a user has last accessed the contents of a Project.
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        200:
+          description: Successfully updated the time when the given User last saw this Project.
 
   /projects/{project_id}/announcements:
     get:
@@ -710,7 +741,7 @@ paths:
     post:
       operationId: src.endpoints.logout.logout
       tags:
-        - Authorization
+        - Authentication
       summary: User requests server to clear the HTTP-only cookie holding the JSON Web Token
 #      security: [
 #        {}
@@ -829,6 +860,11 @@ components:
         - files
       properties:
         files:
+          type: array
+    IDs:
+      type: object
+      properties:
+        IDs:
           type: array
 
 
