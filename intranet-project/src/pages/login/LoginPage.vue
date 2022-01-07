@@ -20,7 +20,7 @@
       <br />
       <button @click="submit()">Verzenden</button>
       <br />
-      <p v-if="this.redirectTarget != '/home/' && !enteredWrongPassword" id="error-message">
+      <p v-if="this.redirectTarget != '/home' && !enteredWrongPassword" id="error-message">
         Sessie is ongeldig of verlopen. Log in om terug te keren naar de vorige
         pagina.
       </p>
@@ -42,7 +42,7 @@ export default {
     return {
       enteredWrongPassword: false,
       loginAttempt: { email: "", password: "" },
-      redirectTarget: "/home/",
+      redirectTarget: "/home",
     };
   },
   methods: {
@@ -74,6 +74,10 @@ export default {
     },
   },
   created() {
+    if(localStorage.getItem("loggedIn")){
+      this.$router.push("/home");
+      return;
+    }
     this.$emit("newHeaderTitle", "Innovatiehuis Intranet");
     const previousRoute = localStorage.getItem("previousRoute");
     if (previousRoute) {
