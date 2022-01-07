@@ -737,9 +737,9 @@ paths:
                 type: string
         401:
           description: Unauthorized
-  /logout:
+  /auth/logout:
     post:
-      operationId: src.endpoints.logout.logout
+      operationId: src.endpoints.auth.logout
       tags:
         - Authentication
       summary: User requests server to clear the HTTP-only cookie holding the JSON Web Token

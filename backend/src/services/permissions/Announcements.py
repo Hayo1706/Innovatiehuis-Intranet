@@ -7,7 +7,7 @@ def may_read(user_perm, announcement_id):
 
 
 def may_read_all_from_project(user_perm, project_id):
-    permissions.user_owns_project(project_id)
+    return permissions.user_owns_project(project_id)
 
 
 def may_create_in_project(user_perm, project_id):

@@ -1,29 +1,15 @@
 import connexion
 import datetime
 import src.config as config
-from flask import  jsonify
+from flask import jsonify
 from src.services.helper_functions import query, query_update, response
-
 from flask_jwt_extended import jwt_required, \
     create_access_token, create_refresh_token, get_jwt_identity, set_access_cookies, \
     set_refresh_cookies, unset_jwt_cookies, verify_jwt_in_request
-
-JWT_ISSUER = 'innovatieplatform'
-JWT_SECRET = 'kiZn04wb0XEPfpnkTbgmFtHtNElRThM2nWNdD51KaosfRT8HzVLqPB3UMnKPwb1'  # TODO Change This? Moet Secret om de zo veel tijd gerefreshed worden?
-JWT_LIFETIME_SECONDS = config.SESSION_LIFETIME_SECONDS
-JWT_ALGORITHM = 'HS256'
-
-ATTEMPTS_BEFORE_COOLDOWN = config.ATTEMPTS_BEFORE_COOLDOWN
-COOLDOWN_TIME_SECONDS = config.COOLDOWN_TIME_SECONDS
+from src.services.permissions.permissions import check_jwt
 
 
 def login():
-    return generate_token()
-
-
-# TODO: gooi merendeel van deze logica in een JWT service
-
-def generate_token():
     try:
         email = connexion.request.form['username']
         send_password = connexion.request.form['password']
@@ -36,15 +22,15 @@ def generate_token():
         return response("Wrong password or username", 401)
     user = user[0]
 
-    if int(user['failed_login_count']) >= ATTEMPTS_BEFORE_COOLDOWN:
-        if int((datetime.datetime.now() - user['failed_login_count']).total_seconds()) > COOLDOWN_TIME_SECONDS:
+    if int(user['failed_login_count']) >= config.ATTEMPTS_BEFORE_COOLDOWN:
+        if int((datetime.datetime.now() - user['failed_login_count']).total_seconds()) > config.COOLDOWN_TIME_SECONDS:
             query_update("UPDATE users SET failed_login_count = 0 where userid = %(userid)s",
                          {'userid': user['userid']})
         else:
             return response("Acces Denied, your account is blocked for " +
-                                 str(int((datetime.datetime.now() - user[
-                                     'last_failed_login']).total_seconds()) - ATTEMPTS_BEFORE_COOLDOWN) +
-                                 " more seconds", 401)
+                            str(int((datetime.datetime.now() - user[
+                                'last_failed_login']).total_seconds()) - config.ATTEMPTS_BEFORE_COOLDOWN) +
+                            " more seconds", 401)
     if not user['password_hash'] == send_password:
         query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
                      "userid = %(userid)s", {'userid': user['userid']})
@@ -58,3 +44,16 @@ def generate_token():
     resp = jsonify(dict)  # TODO: misschien niet alle permissies dumpen?
     set_access_cookies(resp, access_token)
     return resp, 200
+
+
+@check_jwt()
+def logout():
+    resp = jsonify({'logout': True})
+    unset_jwt_cookies(resp)
+    return resp, 200
+
+# Because the JWTs are stored in an httponly cookie now, we cannot
+# log the user out by simply deleting the cookie in the frontend.
+# We need the backend to send us a response to delete the cookies
+# in order to logout. unset_jwt_cookies is a helper function to
+# do just that.
