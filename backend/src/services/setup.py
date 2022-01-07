@@ -36,5 +36,5 @@ def create_app():
     with app.app.app_context():
         db.create_engine(config.DATABASE_URL, {})
         jwt.init_app(app.app)
-        bcrypt.init_app(app)
+        bcrypt.init_app(app.app)
         return app

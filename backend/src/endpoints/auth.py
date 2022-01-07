@@ -59,7 +59,7 @@ def change_password():
     password = connexion.request.form['password']
     if len(password) > config.MAX_PASSWORD_LENGTH:
         response('Password length exceeded max length of'+ config.MAX_PASSWORD_LENGTH, 400)
-    password = bcrypt.generate_password_hash(password)
+    password = bcrypt.generate_password_hash(password).decode('utf-8')
     user_id = get_jwt_identity()
     query_update(
         "UPDATE users SET password=%(password)s"
