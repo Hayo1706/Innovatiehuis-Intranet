@@ -1,5 +1,6 @@
 DEBUG_MODE = False  # IF TRUE, JWT VERIFICATION AND PERMISSION CHECKING ARE DISABLED!!!
 DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
+FILE_STORAGE_ROOT = '../filestorage/root/'
 
 JWT_ISSUER = 'innovatieplatform'
 JWT_SECRET = 'kiZn04wb0XEPfpnkTbgmFtHtNElRThM2nWNdD51KaosfRT8HzVLqPB3UMnKPwb1'  # TODO Change This? Moet Secret om de zo veel tijd gerefreshed worden?
