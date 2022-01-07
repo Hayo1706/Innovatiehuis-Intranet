@@ -3,7 +3,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from ..services.helper_functions import *
 
 from ..services.permissions import Announcements
-from ..services.permissions.permissions import check_permissions
+from ..services.permissions.permissions import check_permissions, check_jwt
 
 
 @check_permissions(Announcements.may_read)
@@ -17,7 +17,7 @@ def read_one(announcement_id):
         "ORDER BY announcements.timestamp DESC", {'id': announcement_id})
 
 
-@jwt_required()
+@check_jwt()
 def read_global():
     return query(
         "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "

@@ -13,7 +13,7 @@ var LoginService = function () {
 
     async function logout() {
         localStorage.clear();
-        return await axiosClient.post('/logout', null, { timeout: 2000 });
+        return await axiosClient.post('/auth/logout', null, { timeout: 2000 });
     }
 
     return {

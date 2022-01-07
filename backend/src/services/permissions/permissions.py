@@ -48,10 +48,22 @@ def check_permissions(rule, *parameters):
     return wrapper
 
 
+def check_jwt():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            if not config.DEBUG_MODE:
+                verify_jwt_in_request()
+            return fn(*args, **kwargs)
+
+        return decorator
+
+    return wrapper
+
+
 def user_owns_project(resource_id):
-    return len(
-        query("SELECT userid FROM users_have_projects WHERE userid = %(userid)s AND projectid = %(projectid)s",
-              {'userid': get_jwt_identity(), 'projectid': resource_id})) > 0
+    return len(query("SELECT userid FROM users_have_projects WHERE userid = %(userid)s AND projectid = %(projectid)s",
+                       {'userid': get_jwt_identity(), 'projectid': resource_id})) > 0
 
 
 def user_owns_announcement_associated_project(announcement_id):

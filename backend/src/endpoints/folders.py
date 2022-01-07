@@ -187,8 +187,8 @@ def secureFolderName(file_name):
 
 # TODO os.path.join("c:\\", "temp", "new folder") Joins zijn Safer nog naar kijken !
 if not dir_exists(root):
-    if not dir_exists("../../filestorage"):
-        os.mkdir("../../filestorage");
-    if not dir_exists("../../filestorage/root"):
-        os.mkdir("../../filestorage/root")
+    if not dir_exists("../../../filestorage"):
+        os.mkdir("../../../filestorage");
+    if not dir_exists("../../../filestorage/root"):
+        os.mkdir("../../../filestorage/root")
 
