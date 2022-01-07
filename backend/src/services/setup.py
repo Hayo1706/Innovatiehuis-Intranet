@@ -1,6 +1,8 @@
 import connexion
 import src.config as config
-from .extensions import db, jwt
+from flask_bcrypt import Bcrypt
+
+from .extensions import db, jwt, bcrypt
 import src.config as config
 from flask import request, jsonify
 
@@ -27,9 +29,12 @@ def create_app():
     app.app.config['SQLALCHEMY_POOL_SIZE'] = 20
     app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URL
+
+    app.app.config['BCRYPT_HANDLE_LONG_PASSWORDS '] = True
     db.init_app(app.app)
 
     with app.app.app_context():
         db.create_engine(config.DATABASE_URL, {})
         jwt.init_app(app.app)
+        bcrypt.init_app(app)
         return app
