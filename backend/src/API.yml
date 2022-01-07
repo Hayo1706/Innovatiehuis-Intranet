@@ -270,7 +270,7 @@ paths:
 
   /projects/{project_id}/files:
     get:
-      operationId: src.endpoints.files.getFilesInPath
+      operationId: src.endpoints.files.get_files_in_path
       tags:
         - Files
       summary: Returns file(s) in directory
@@ -281,7 +281,7 @@ paths:
         200:
           description: Successfully retrieved files at given path
     post:
-      operationId: src.endpoints.files.requestToUploadFile
+      operationId: src.endpoints.files.request_to_upload_file
       tags:
         - Files
       summary: Upload file(s) in directory
@@ -306,7 +306,7 @@ paths:
         400:
           description: Failed to upload files
     put:
-      operationId: src.endpoints.files.moveFile
+      operationId: src.endpoints.files.move_file
       tags:
         - Files
       summary: Move file to another directory
@@ -328,7 +328,7 @@ paths:
           description: Successfully moved file
   /projects/{project_id}/file:
     get:
-      operationId: src.endpoints.files.downloadFile
+      operationId: src.endpoints.files.download_file
       tags:
         - Files
       summary: Download file
@@ -339,7 +339,7 @@ paths:
         200:
           description: Downloaded file
     delete:
-      operationId: src.endpoints.files.deleteFile
+      operationId: src.endpoints.files.delete_file
       tags:
         - Files
       summary: Delete file(s) in directory
@@ -350,7 +350,7 @@ paths:
         200:
           description: Succesfully deleted file
     put:
-      operationId: src.endpoints.files.renameFile
+      operationId: src.endpoints.files.rename_file
       tags:
         - Files
       summary: Update file
@@ -373,7 +373,7 @@ paths:
 
   /projects/{project_id}/folders:
     get:
-      operationId: src.endpoints.folders.getFoldersInPath
+      operationId: src.endpoints.folders.get_folders_in_path
       tags:
         - Folders
       summary: Returns folder(s) in directory
@@ -384,7 +384,7 @@ paths:
         200:
           description: Successfully retrieved folders at given path
     put:
-      operationId: src.endpoints.folders.checkFolderPutRequest
+      operationId: src.endpoints.folders.check_folder_put_request
       tags:
         - Folders
       summary: Move folder to another directory
@@ -409,7 +409,7 @@ paths:
         400:
           description: Failed to move folder
     delete:
-      operationId: src.endpoints.folders.deleteDir
+      operationId: src.endpoints.folders.delete_dir
       tags:
         - Folders
       summary: Delete folder and file(s) in directory
@@ -425,7 +425,7 @@ paths:
         409: 
           description: There are files or folders in this folder, requires confirmation
     post:
-      operationId: src.endpoints.folders.createDirFromRequest
+      operationId: src.endpoints.folders.create_dir_from_request
       tags:
         - Folders
       summary: Place new folder directory
