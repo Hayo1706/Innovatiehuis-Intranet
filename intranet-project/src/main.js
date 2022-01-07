@@ -17,7 +17,7 @@ import LoginPage from './pages/login/LoginPage.vue';
 import NotFoundPage from './pages/notfound/NotFoundPage.vue';
 
 const routes = [
-  { path: '', redirect: '/home' },
+  { path: '', redirect: '/login' },
   { path: '/manage/projects', component: ProjectsPage },
   { path: '/manage/users', component: UsersPage },
   { path: '/project/:id', component: ProjectPage },
