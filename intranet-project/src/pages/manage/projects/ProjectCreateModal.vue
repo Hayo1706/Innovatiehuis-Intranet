@@ -71,10 +71,10 @@
               <br />
               <span
                 id="selectedParentList"
-                v-for="project in selectedProjects"
+                v-for="project in selectedParents"
                 v-bind:key="project.projectid"
                 >{{ project.project_name }}&nbsp;<button
-                  @click="this.unselectProject(project.projectid)"
+                  @click="this.unselectParent(project.projectid)"
                   class="entryDeleteButton"
                 >
                   x</button
@@ -93,12 +93,49 @@
               <div class="dropdown-menu" id="parentDropdown">
                 <div
                   class="dropdown-item"
-                  v-for="project in filteredProjects"
+                  v-for="project in filteredParents"
                   v-bind:key="project.projectid"
-                  @click="selectProject(project)"
+                  @click="selectParent(project)"
                 >
                   {{ project.project_name }}
                 </div>
+
+                
+              </div>
+                            Sub-projecten toevoegen
+              <br />
+              <span
+                id="selectedChildList"
+                v-for="project in selectedChildren"
+                v-bind:key="project.projectid"
+                >{{ project.project_name }}&nbsp;<button
+                  @click="this.unselectChild(project.projectid)"
+                  class="entryDeleteButton"
+                >
+                  x</button
+                >,&nbsp;</span
+              >
+              <SearchBar
+                id="childProjectsSearchBar"
+                v-bind:searchTerm="this.childSearchTerm"
+                @searchBarChanged="
+                  (searchTerm) => {
+                    handleSearchChild(searchTerm);
+                  }
+                "
+              ></SearchBar>
+
+              <div class="dropdown-menu" id="childDropdown">
+                <div
+                  class="dropdown-item"
+                  v-for="project in filteredChildren"
+                  v-bind:key="project.projectid"
+                  @click="selectChild(project)"
+                >
+                  {{ project.project_name }}
+                </div>
+
+                
               </div>
             </div>
           </form>
@@ -138,15 +175,20 @@ export default {
       projectdescription: "",
       userSearchTerm: "",
       parentSearchTerm: "",
+      childSearchTerm: "",
       errorMessage: "",
 
       users: [],
       filteredUsers: [],
       selectedUsers: [],
 
-      projects: [],
-      filteredProjects: [],
-      selectedProjects: [],
+      parents: [],
+      filteredParents: [],
+      selectedParents: [],
+
+      children: [],
+      filteredChildren: [],
+      selectedChildren: []
     };
   },
   mounted() {
@@ -166,7 +208,8 @@ export default {
         });
       ProjectService.getProjects()
         .then((response) => {
-          this.projects = response;
+          this.parents = response;
+          this.children = response;
         })
         .catch((err) => {
           if (err.response) {
@@ -242,8 +285,17 @@ export default {
       }
       return false;
     },
-    selectedProjectsContainsProject(projectid) {
-      for (const project of this.selectedProjects) {
+    selectedParentsContainsParent(projectid) {
+      for (const project of this.selectedParents) {
+        if (project.projectid == projectid) {
+          return true;
+        }
+      }
+      return false;
+    },
+    
+    selectedChildrenContainsChild(projectid){
+       for (const project of this.selectedChildren) {
         if (project.projectid == projectid) {
           return true;
         }
@@ -253,34 +305,65 @@ export default {
     handleSearchParent(name) {
       if (name) {
         this.parentSearchTerm = name;
-        this.filteredProjects = this.getFilteredProjects();
+        this.filteredParents = this.getFilteredParents();
       } else {
-        this.filteredProjects = [];
+        this.filteredParents = [];
       }
     },
-    getFilteredProjects() {
-      return this.projects.filter((item) => {
+    getFilteredParents() {
+      return this.parents.filter((item) => {
         return (
           item.project_name
             .toLowerCase()
             .includes(this.parentSearchTerm.toLowerCase()) &&
-          !this.selectedProjectsContainsProject(item.projectid)
+          !this.selectedParentsContainsParent(item.projectid)
         );
       });
     },
 
-    selectProject(project) {
+    selectParent(project) {
       this.parentSearchTerm = "";
-      this.filteredProjects = [];
-      this.selectedProjects.push(project);
+      this.filteredParents = [];
+      this.selectedParents.push(project);
     },
-    unselectProject(projectid) {
-      this.selectedProjects = this.selectedProjects.filter((item) => {
+    unselectParent(projectid) {
+      this.selectedParents = this.selectedParents.filter((item) => {
         return item.projectid != projectid;
       });
       if (this.parentSearchTerm) {
-        this.filteredProjects = this.getFilteredProjects();
+        this.filteredParents = this.getFilteredParents();
       }
+    },
+    handleSearchChild(name) {
+      if (name) {
+        this.childSearchTerm = name;
+        this.filteredChildren = this.getFilteredChildren();
+      } else {
+        this.filteredChildren = [];
+      }
+    },
+    selectChild(project) {
+      this.childSearchTerm = "";
+      this.filteredChildren = [];
+      this.selectedChildren.push(project);
+    },
+    unselectChild(projectid) {
+      this.selectedChildren = this.selectedChildren.filter((item) => {
+        return item.projectid != projectid;
+      });
+      if (this.childSearchTerm) {
+        this.filteredChildren = this.getFilteredChildren();
+      }
+    },
+    getFilteredChildren() {
+      return this.children.filter((item) => {
+        return (
+          item.project_name
+            .toLowerCase()
+            .includes(this.childSearchTerm.toLowerCase()) &&
+          !this.selectedChildrenContainsChild(item.projectid)
+        );
+      });
     },
     setFieldEmptyErrorMessage(name) {
       this.errorMessage = 'Het veld "' + name + '" mag niet leeg zijn.';
@@ -290,9 +373,11 @@ export default {
       this.projectdescription = "";
       this.userSearchTerm = "";
       this.parentSearchTerm = "";
+      this.childSearchTerm = "";
 
       this.selectedUsers = [];
       this.selectedProjects = [];
+      this.selectedChildren = [];
       this.errorMessage = "";
     },
   },
@@ -304,11 +389,18 @@ export default {
         document.getElementById("userDropdown").classList.add("show");
       }
     },
-    filteredProjects: function () {
-      if (this.filteredProjects.length == 0) {
+    filteredParents: function () {
+      if (this.filteredParents.length == 0) {
         document.getElementById("parentDropdown").classList.remove("show");
       } else {
         document.getElementById("parentDropdown").classList.add("show");
+      }
+    },
+    filteredChildren: function () {
+      if (this.filteredChildren.length == 0) {
+        document.getElementById("childDropdown").classList.remove("show");
+      } else {
+        document.getElementById("childDropdown").classList.add("show");
       }
     },
   },
@@ -336,11 +428,18 @@ textarea {
   margin-top: 5px;
   margin-bottom: 10px;
 }
+#childProjectsSearchBar{
+    margin-top: 5px;
+  margin-bottom: 10px;
+}
 #selectedUserList {
   font-family: AddeleThin;
 }
 #selectedParentList {
   font-family: AddeleThin;
+}
+#selectedChildList{
+   font-family: AddeleThin;
 }
 #errorMessage {
   margin-bottom: 10px;
