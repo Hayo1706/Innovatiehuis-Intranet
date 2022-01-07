@@ -15,7 +15,7 @@ def login():
         email = connexion.request.form['username']
         send_password = connexion.request.form['password']
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
 
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})

@@ -44,7 +44,7 @@
     <div class="container" v-if="moveMenu == true">
       <div v-if="this.folders.length > 1">
         <div class="row" v-for="folder in this.folders" :key="folder">
-          <button v-if="folder != this.name" @click="moveToFolder(folder)">
+          <button v-if="folder != this.name" @click="confirmMove(folder)">
             {{ folder }}
           </button>
         </div>
@@ -140,6 +140,11 @@ export default {
           }
         });
     },
+    confirmMove(folder){
+      if(confirm("Are you sure you want to move " + this.name + " to " + folder + "?")){
+        this.moveToFolder(folder)
+      }
+    },
     getFolders() {
       FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
         .then((response) => {
@@ -152,7 +157,7 @@ export default {
         });
     },
     goToFolder() {
-      this.$emit("currentPathChanged", this.path);
+      this.$emit("currentPathChanged", this.directorypath + "/" + this.folderName);
     },
   },
   async created() {

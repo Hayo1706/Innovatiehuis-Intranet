@@ -36,7 +36,7 @@ def create():
         screening_status = body['screening_status']
         password_hash = "123"  # TODO: dynamic hash creation
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
 
     query_update(
         "INSERT INTO users (first_name, last_name, email, roleid, screening_status, password_hash) "
@@ -62,7 +62,7 @@ def update(user_id):
         roleid = body['roleid']
         screening_status = body['screening_status']
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
 
     query_update(
         "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, roleid=%(roleid)s, "
@@ -88,7 +88,7 @@ def update_password(user_id):
         body = connexion.request.json
         new_password_hash = body['password_hash']  # TODO: how to hash
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
     query_update("UPDATE users SET password_hash = %(hash)s WHERE userid = %(userid)s",
                  {'hash': new_password_hash, 'userid': user_id})
 
@@ -109,7 +109,7 @@ def add_project(user_id):
         project_id = body['projectid']
         is_int(project_id)
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
     query_update(f"INSERT INTO users_have_projects (userid, projectid) VALUES (%(userid)s, %(projectid)s)",
                  {'userid': user_id, 'projectid': project_id})
     return response(f"Successfully assigned {project_id} to project {project_id}")
