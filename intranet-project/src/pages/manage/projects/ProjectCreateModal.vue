@@ -230,7 +230,33 @@ export default {
       if (!this.validateForm()) {
         return;
       }
-      this.closeModal();
+            const memberIds = this.getUserIds(this.selectedUsers);
+            const parentIds = this.getProjectIds(this.selectedParents);
+            const childIds = this.getProjectIds(this.selectedChildren);
+
+            console.log(memberIds);
+            console.log(parentIds);
+            console.log(childIds);
+
+            const project = {"project_name": this.projectname, "description":this.projectdescription};
+       ProjectService.addProject(project)
+        .then(() => {
+          alert("Het project \""+this.projectname+"\" is aangemaakt!");
+          window.location.reload();
+          
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+            this.closeModal();
+
+          alert("Er ging iets mis bij het aanmaken van een project, probeer later weer");
+        });
+
+
+
+        
     },
     validateForm() {
       let projectNameEmpty = this.fieldEmpty(this.projectname);
@@ -364,6 +390,20 @@ export default {
           !this.selectedChildrenContainsChild(item.projectid)
         );
       });
+    },
+    getProjectIds(projectList){
+        let ids = [];
+        for (let project of projectList){
+          ids.push(project.projectid)
+        }
+        return ids;
+    },
+        getUserIds(userList){
+        let ids = [];
+        for (let user of userList){
+          ids.push(user.userid)
+        }
+        return ids;
     },
     setFieldEmptyErrorMessage(name) {
       this.errorMessage = 'Het veld "' + name + '" mag niet leeg zijn.';
