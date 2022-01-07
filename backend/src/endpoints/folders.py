@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 
 from src.services.helper_functions import response
 
-root = '../../../filestorage/root/'
+root = '../../filestorage/root/'
 
 def path_exists(path):
     if os.path.exists(path):

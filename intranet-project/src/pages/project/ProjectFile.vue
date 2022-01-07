@@ -55,7 +55,7 @@
       <div class="container" v-if="moveMenu == true">
         <div v-if="this.folders.length > 0">
           <div class="row" v-for="folder in this.folders" :key="folder">
-            <button @click="moveFile(this.directorypath + '/' + folder)">
+            <button @click="confirmMove(folder)">
               {{ folder }}
             </button>
           </div>
@@ -124,52 +124,58 @@ export default {
             console.log(err.response.status);
           }
         });
-    },
-    renameFile() {
-      if (this.editName == true) {
-        var newFileName = this.fileName + "." + this.fileType
-        if(this.name != newFileName){
-          FilestorageService.renameFile(this.projectid, this.path, newFileName)
-            .then((response) => {
-              this.editName = false;
-              console.log(response.data);
-              this.$emit("nameChanged");
-            })
-            .catch((err) => {
-              if (err.response) {
-                console.log(err.response.status);
-              }
-            });
+      },
+      renameFile() {
+        if (this.editName == true) {
+          var newFileName = this.fileName + "." + this.fileType
+          if(this.name != newFileName){
+            FilestorageService.renameFile(this.projectid, this.path, newFileName)
+              .then((response) => {
+                this.editName = false;
+                console.log(response.data);
+                this.$emit("nameChanged");
+              })
+              .catch((err) => {
+                if (err.response) {
+                  console.log(err.response.status);
+                }
+              });
+          }
         }
-      }
-    },
-    setFolders() {
-      FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
-        .then((response) => {
-          this.folders = response;
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-        });
-    },
-    moveFile(target_path) {
-      FilestorageService.moveFile(this.projectid, this.path, target_path)
-      .then(() => {
-          this.$emit("fileMoved");
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-        });
-    },
-    getTypeImage() {
-      if (this.fileType in this.dictType) {
-        alert("yes");
-      }
-    },
+      },
+      setFolders() {
+        FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
+          .then((response) => {
+            this.folders = response;
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      },
+      confirmMove(target_path, target_name){
+        if(confirm("Are you sure you want to move " + this.name + " to " + target_name + "?")){
+          this.moveFile(target_path)
+        }
+      },
+      moveFile(folder) {
+        var target_path = this.directorypath + '/' + folder
+        FilestorageService.moveFile(this.projectid, this.path, target_path)
+        .then(() => {
+            this.$emit("fileMoved");
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      },
+      getTypeImage() {
+        if (this.fileType in this.dictType) {
+          alert("yes");
+        }
+      },
   },
 };
 </script>

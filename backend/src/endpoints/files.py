@@ -7,7 +7,7 @@ import connexion
 from flask import Flask, request, send_file, send_from_directory
 from ..endpoints.folders import *
 
-root = '../../../filestorage/root/'
+root = '../../filestorage/root/'
 
 
 def file_exists(path):
