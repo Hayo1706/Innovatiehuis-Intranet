@@ -117,23 +117,20 @@ def is_dir_move_valid(from_path, to_path):
     return
 
 def create_dir_from_request(project_id):
-    requested_path = connexion.request.values.get('path')
-    requested_path = unquote(requested_path)
-    current_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + requested_path
-
-    new_dir_name = connexion.request.json['name']
-    new_dir_name = secure_folder_name(new_dir_name)
-
-    new_dir_path = get_unique_dir_path(new_dir_name, current_path, 0)
-
-    if new_dir_path == None or new_dir_name == None:
-        print("Failed to create new folder")
-        return response("Failed to create new folder", 400)
-
     try:
+        requested_path = connexion.request.values.get('path')
+        requested_path = unquote(requested_path)
+        current_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + requested_path
+        new_dir_name = connexion.request.json['name']
+        new_dir_name = secure_folder_name(new_dir_name)
+
+        new_dir_path = get_unique_dir_path(new_dir_name, current_path, 0)
         os.mkdir(new_dir_path)
         print("Successfully created new folder")
         return response("Successfully created new folder", 200)
+    except KeyError as e:
+        print("Failed to created new folder: " + str(e))
+        return response("Invalid body", 400)
     except Exception as e:
         print("Failed to created new folder: " + str(e))
         return response("Failed to created new folder", 400)

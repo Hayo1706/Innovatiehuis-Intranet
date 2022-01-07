@@ -27,7 +27,7 @@ def create():
         project_name = body['project_name']
         description = body['description']
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
     query_update(
         "INSERT INTO projects (project_name, description) VALUES (%(project_name)s, %(description)s)",
         {'project_name': project_name, 'description': description}
@@ -44,7 +44,7 @@ def update(project_id):
         description = body['description']
         is_archived = body['is_archived']
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
 
     is_boolean(is_archived)
     query_update("UPDATE projects "
@@ -83,7 +83,7 @@ def update_users(project_id):
         body = connexion.request.json['project']
         new_ids = body['userids']
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
 
     # 1 get all userids for project
     old_ids = [result["userid"] for result in query(
@@ -201,7 +201,7 @@ def update_shared_files(project_id, child_id):
         body = connexion.request.json['project']
         shared_files_string = body['shared_files']
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
     is_int(project_id)
     is_int(child_id)
     query_update(
@@ -253,7 +253,7 @@ def add_announcement(project_id):
         title = body['title']
         content = body['content']
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) "
         "VALUES (%(userid)s, %(id)s, %(title)s, %(content)s)",

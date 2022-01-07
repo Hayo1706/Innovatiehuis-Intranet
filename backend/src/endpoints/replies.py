@@ -12,7 +12,7 @@ def update(reply_id):
         body = connexion.request.json['reply']
         content = body['content']
     except KeyError:
-        return response("Invalid body", 404)
+        return response("Invalid body", 400)
 
     query_update(
         "UPDATE replies SET content=%(content)s WHERE replyid=%(id)s",
