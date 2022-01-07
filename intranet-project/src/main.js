@@ -41,11 +41,17 @@ router.beforeEach((to, from, next) => {
   if (!localStorage.getItem("loggedIn") && to.fullPath != "/login") {
     next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." }});
   } else {
+        //TODO 404 on acces with wrong role
+        if (to.fullPath == "/manage/projects" && localStorage.getItem("may_read_any_project") != 1) {
+          next({ path: '/404'});
+          return;
+        }
+        if(to.fullPath == "/manage/users" && localStorage.getItem("may_read_any_user") != 1){
+          next({ path: '/404'});
+          return;
+        }
     next();
-    //TODO 404 on acces with wrong role
-    if (to.fullPath == "/manage/projects" || to.fullPath == "/manage/projects") {
-      return;
-    }
+
   }
 })
 const app = createApp(App);
