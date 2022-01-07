@@ -34,7 +34,7 @@ export default {
   },
   async created() {
     this.archivePermission = localStorage.getItem('may_archive_any_project') == "1";
-    ProjectService.getProjectsByUser(1) //TODO: get user id from session data/JWT
+    ProjectService.getProjectsByUser(localStorage.getItem('userid'))
       .then((response) => {
         this.projects = response;
         console.log("API RESPONDS: " + JSON.stringify(response));

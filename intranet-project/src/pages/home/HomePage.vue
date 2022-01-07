@@ -33,7 +33,7 @@ export default {
     }
   },
   created() {
-    this.$emit('newHeaderTitle', 'Hoofdpagina');
+    this.$emit('newHeaderTitle', 'Welkom, ' + localStorage.getItem('first_name'));
   }
 };
 </script>

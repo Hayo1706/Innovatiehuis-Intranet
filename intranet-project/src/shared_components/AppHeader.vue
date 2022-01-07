@@ -35,7 +35,7 @@ export default {
       this.$router.push("/home");
     },
     userClick() {
-      this.$router.push("/user/1"); //TODO: dynamic
+      this.$router.push("/user/" + localStorage.getItem('userid'));
     },
     logout() {
       LoginService.logout();
