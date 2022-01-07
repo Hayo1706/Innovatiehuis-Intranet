@@ -26,6 +26,9 @@ def create():
         body = connexion.request.json['project']
         project_name = body['project_name']
         description = body['description']
+        memberIds = body['memberids']
+        parentIds = body['parentids']
+        childIds = body['childids']
     except KeyError:
         return response("Invalid body", 400)
     query_update(

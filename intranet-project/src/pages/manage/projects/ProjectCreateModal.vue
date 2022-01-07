@@ -238,7 +238,8 @@ export default {
             console.log(parentIds);
             console.log(childIds);
 
-            const project = {"project_name": this.projectname, "description":this.projectdescription};
+            const project = {"project_name": this.projectname, "description":this.projectdescription, "memberids": memberIds,
+            "parentids": parentIds, "childids":childIds };
        ProjectService.addProject(project)
         .then(() => {
           alert("Het project \""+this.projectname+"\" is aangemaakt!");
