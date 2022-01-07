@@ -41,6 +41,10 @@ var ProjectService = function () {
         data.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
         return data;
     }
+    async function addProject(project){
+        const { data } = await axiosClient.post(`/projects`,{project},{ timeout: 2000 });
+        return data;
+    }
 
     return {
         getProjects,
@@ -49,7 +53,8 @@ var ProjectService = function () {
         updateProject,
         getProjectsByUser,
         getParentsById,
-        getChildrenById
+        getChildrenById,
+        addProject,
     }
 
 

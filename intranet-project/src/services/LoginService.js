@@ -11,13 +11,24 @@ var LoginService = function () {
         });
     }
 
+    async function changePassword(loginAttempt) {
+        return await axiosClient.put(`/auth/password`, loginAttempt, { timeout: 2000 }, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        });
+    }
+
     async function logout() {
         localStorage.clear();
         return await axiosClient.post('/auth/logout', null, { timeout: 2000 });
     }
 
+
+
     return {
         attemptLogin,
+        changePassword,
         logout
     }
 

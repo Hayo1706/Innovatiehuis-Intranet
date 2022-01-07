@@ -714,9 +714,6 @@ paths:
       tags:
         - Authentication
       summary: Request JSON Web Token
-#      security: [
-#        {}
-#      ]
       requestBody:
         required: true
         content:
@@ -728,6 +725,21 @@ paths:
                   type: string
                 password:
                   type: string
+      responses:
+        200:
+          description: User is authenticated and receives a JSON Web Token
+          content:
+            'application/json':
+              schema:
+                type: string
+        401:
+          description: Unauthorized
+  /auth/password:
+    put:
+      operationId: src.endpoints.auth.change_password
+      tags:
+        - Authentication
+      summary: Request JSON Web Token
       responses:
         200:
           description: User is authenticated and receives a JSON Web Token

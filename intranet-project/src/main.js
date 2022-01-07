@@ -15,11 +15,12 @@ import UserPage from './pages/user/UserPage.vue';
 import HomePage from './pages/home/HomePage.vue';
 import LoginPage from './pages/login/LoginPage.vue';
 import NotFoundPage from './pages/notfound/NotFoundPage.vue';
-
+import ResetPasswordPage from './pages/manage/reset_password/ResetPasswordPage.vue';
 const routes = [
   { path: '', redirect: '/login' },
   { path: '/manage/projects', component: ProjectsPage },
   { path: '/manage/users', component: UsersPage },
+  { path: '/manage/resetpassword', component: ResetPasswordPage },
   { path: '/project/:id', component: ProjectPage },
   { path: '/project/:id/:catchAll(.*)', component: ProjectPage },
   { path: '/project/:id/settings', component: ProjectSettingsPage },

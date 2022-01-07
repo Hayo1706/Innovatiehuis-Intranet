@@ -7,6 +7,7 @@ from flask_jwt_extended import jwt_required, \
     create_access_token, create_refresh_token, get_jwt_identity, set_access_cookies, \
     set_refresh_cookies, unset_jwt_cookies, verify_jwt_in_request
 from src.services.permissions.permissions import check_jwt
+from ..services.extensions import bcrypt
 
 
 def login():
@@ -52,8 +53,16 @@ def logout():
     unset_jwt_cookies(resp)
     return resp, 200
 
-# Because the JWTs are stored in an httponly cookie now, we cannot
-# log the user out by simply deleting the cookie in the frontend.
-# We need the backend to send us a response to delete the cookies
-# in order to logout. unset_jwt_cookies is a helper function to
-# do just that.
+
+@check_jwt()
+def change_password():
+    password = connexion.request.form['password']
+    if len(password) > config.MAX_PASSWORD_LENGTH:
+        response('Password length exceeded max length of'+ config.MAX_PASSWORD_LENGTH, 400)
+    password = bcrypt.generate_password_hash(password).decode('utf-8')
+    user_id = get_jwt_identity()
+    query_update(
+        "UPDATE users SET password=%(password)s"
+        "WHERE userid=%(userid)s",
+        {"password": password, "userid": user_id})
+    return response(f"User {user_id} successfully updated", 200)
