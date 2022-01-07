@@ -31,12 +31,12 @@ export default {
   },
   methods: {
     submit() {
-      LoginService.attemptLogin(
+      LoginService.changePassword(
         "&password=" +
         this.password
       )
         .then(() => {
- 
+          console.log("Password changed");
         })
         .catch((err) => {
           console.log(err);
