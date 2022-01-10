@@ -24,27 +24,28 @@ def login():
     user = user[0]
 
     if int(user['failed_login_count']) >= config.ATTEMPTS_BEFORE_COOLDOWN:
-        if int((datetime.datetime.now() - user['failed_login_count']).total_seconds()) > config.COOLDOWN_TIME_SECONDS:
+        if int((datetime.datetime.now() - user['last_failed_login']).total_seconds()) > config.COOLDOWN_TIME_SECONDS:
             query_update("UPDATE users SET failed_login_count = 0 where userid = %(userid)s",
                          {'userid': user['userid']})
         else:
             return response("Acces Denied, your account is blocked for " +
-                            str(int((datetime.datetime.now() - user[
-                                'last_failed_login']).total_seconds()) - config.ATTEMPTS_BEFORE_COOLDOWN) +
+                            str(config.COOLDOWN_TIME_SECONDS - int((datetime.datetime.now() - user[
+                                'last_failed_login']).total_seconds())) +
                             " more seconds", 401)
-    if not user['password_hash'] == send_password:
-        query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
-                     "userid = %(userid)s", {'userid': user['userid']})
-        return response("Wrong password or username", 401)
-    access_token = create_access_token(identity=user['userid'])
 
-    dict = query("SELECT * FROM roles WHERE roleid=%(roleid)s", {'roleid': user['roleid']})
-    dict[0]['userid'] = user['userid']
-    dict[0]['first_name'] = user['first_name']
-    dict[0]['last_name'] = user['last_name']
-    resp = jsonify(dict)  # TODO: misschien niet alle permissies dumpen?
-    set_access_cookies(resp, access_token)
-    return resp, 200
+    if user['password_hash'] == send_password:
+        access_token = create_access_token(identity=user['userid'])
+        dict = query("SELECT * FROM roles WHERE roleid=%(roleid)s", {'roleid': user['roleid']})
+        dict[0]['userid'] = user['userid']
+        dict[0]['first_name'] = user['first_name']
+        dict[0]['last_name'] = user['last_name']
+        resp = jsonify(dict)  # TODO: misschien niet alle permissies dumpen?
+        set_access_cookies(resp, access_token)
+        return resp, 200
+
+    query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
+                 "userid = %(userid)s", {'userid': user['userid']})
+    return response("Wrong password or username", 401)
 
 
 @check_jwt()
