@@ -3,31 +3,20 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-8">
-          <div class="row">
-            <div class="col-sm">
               <FoldersView
                 :path="this.path"
                 @currentPathChanged="pathChanged"
               />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm">
               <FilesView :path="this.path" />
-            </div>
-          </div>
         </div>
         <div class="col-sm-4">
-          <div class="row">
             <AnnouncementWindow
               @reload="reloadAnnouncementWindow()"
               :key="this.announcementWindowKey"
               >Mededelingen</AnnouncementWindow
             >
-          </div>
-          <div class="row">
             <ChatWindow></ChatWindow>
-          </div>
+
         </div>
       </div>
     </div>
