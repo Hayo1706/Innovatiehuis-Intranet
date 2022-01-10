@@ -5,7 +5,7 @@ from ..services.helper_functions import *
 
 from ..services.permissions import Users
 from ..services.permissions.permissions import check_permissions
-
+from ..services.extensions import bcrypt
 
 @check_permissions(Users.may_read)
 def read_one(user_id):
@@ -34,7 +34,7 @@ def create():
         email = body['email']
         roleid = body['roleid']
         screening_status = body['screening_status']
-        password_hash = "123"  # TODO: dynamic hash creation
+        password_hash = bcrypt.generate_password_hash('123').decode('utf-8')
     except KeyError:
         return response("Invalid body", 400)
 

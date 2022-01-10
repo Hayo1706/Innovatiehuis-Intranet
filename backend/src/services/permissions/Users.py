@@ -13,7 +13,7 @@ def may_read_all(user_perm):
 
 
 def may_create(user_perm):
-    return user_perm["may_create_user"]
+    return user_perm["may_create_users"]
 
 
 def may_update(user_perm, user_id):
