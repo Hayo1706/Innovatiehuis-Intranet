@@ -2,12 +2,18 @@
    <div id="login" class="component-container">
     <div class="component-header"></div>
     <div style="text-align: center" class="component-body">
-
       <input
-        v-model="this.password"
+          v-model="this.old_password"
+          style="text-align: center"
+          type="password"
+          placeholder="Oude wachtwoord"
+          v-on:keyup.enter="submit()"
+      />
+      <input
+        v-model="this.new_password"
         style="text-align: center"
         type="password"
-        placeholder="wachtwoord"
+        placeholder="Nieuwe wachtwoord"
         v-on:keyup.enter="submit()"
       />
       <br/>
@@ -25,19 +31,23 @@ export default {
   name: "ResetPasswordPage",
   data: function () {
     return {
-      password: "",
-    
+      old_password: "",
+      new_password: "",
+      redirectTarget: "/login",
     };
   },
   methods: {
     submit() {
       LoginService.changePassword(
-        "&password=" +
-        this.password
+          "old_password=" +
+          this.old_password +
+          "&new_password=" +
+          this.new_password
       )
-        .then(() => {
-          console.log("Password changed");
-        })
+      .then(() => {
+        console.log("Password changed");
+        this.$router.push(this.redirectTarget);
+      })
         .catch((err) => {
           console.log(err);
           if (err.response) {
