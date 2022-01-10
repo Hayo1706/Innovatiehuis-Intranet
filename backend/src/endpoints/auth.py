@@ -59,13 +59,22 @@ def logout():
 
 @check_jwt()
 def change_password():
-    password = connexion.request.form['password']
-    if len(password) > config.MAX_PASSWORD_LENGTH:
-        response('Password length exceeded max length of '+ config.MAX_PASSWORD_LENGTH, 400)
-    password = bcrypt.generate_password_hash(password).decode('utf-8')
     user_id = get_jwt_identity()
-    query_update(
-        "UPDATE users SET password_hash=%(password_hash)s "
-        "WHERE userid=%(userid)s",
-        {"password_hash": password, "userid": user_id})
-    return response(f"User {user_id} successfully updated", 200)
+    user = query("SELECT * FROM users WHERE userid =%(userid)s", {'userid': user_id()})[0]
+    if bcrypt.check_password_hash(user['password_hash'], connexion.request.form['old_password']):
+        password = connexion.request.form['new_password']
+        validate_password(password)
+        password = bcrypt.generate_password_hash(password).decode('utf-8')
+        query_update(
+            "UPDATE users SET password_hash=%(password_hash)s "
+            "WHERE userid=%(userid)s",
+            {"password_hash": password, "userid": user_id})
+        return response(f"User {user_id} successfully updated", 200)
+    return response("Incorrect current password", 401)
+
+
+def validate_password(password):
+    if len(password) > config.MAX_PASSWORD_LENGTH:
+        response('Password length exceeded max length of ' + config.MAX_PASSWORD_LENGTH, 400)
+    if len(password) < config.MIN_PASSWORD_LENGTH:
+        response('Password must be at least ' + config.MAX_PASSWORD_LENGTH + "characters long", 400)
