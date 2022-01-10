@@ -1,5 +1,5 @@
 DEBUG_MODE = False  # IF TRUE, JWT VERIFICATION AND PERMISSION CHECKING ARE DISABLED!!!
-DATABASE_URL = 'mariadb+mariadbconnector://root:admin@192.168.2.10:3306/innovatieplatform'
+DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
 FILE_STORAGE_ROOT = '../filestorage/root/'
 
 JWT_ISSUER = 'innovatieplatform'
