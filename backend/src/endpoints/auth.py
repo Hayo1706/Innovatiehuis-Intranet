@@ -32,17 +32,18 @@ def login():
                             str(config.COOLDOWN_TIME_SECONDS - int((datetime.datetime.now() - user[
                                 'last_failed_login']).total_seconds())) +
                             " more seconds", 401)
-
-    if user['password_hash'] == send_password:
-        access_token = create_access_token(identity=user['userid'])
-        dict = query("SELECT * FROM roles WHERE roleid=%(roleid)s", {'roleid': user['roleid']})
-        dict[0]['userid'] = user['userid']
-        dict[0]['first_name'] = user['first_name']
-        dict[0]['last_name'] = user['last_name']
-        resp = jsonify(dict)  # TODO: misschien niet alle permissies dumpen?
-        set_access_cookies(resp, access_token)
-        return resp, 200
-
+    try:
+        if bcrypt.check_password_hash(user['password_hash'], send_password):
+            access_token = create_access_token(identity=user['userid'])
+            dict = query("SELECT * FROM roles WHERE roleid=%(roleid)s", {'roleid': user['roleid']})
+            dict[0]['userid'] = user['userid']
+            dict[0]['first_name'] = user['first_name']
+            dict[0]['last_name'] = user['last_name']
+            resp = jsonify(dict)  # TODO: misschien niet alle permissies dumpen?
+            set_access_cookies(resp, access_token)
+            return resp, 200
+    except ValueError:
+        print('Password format incorrect')
     query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
                  "userid = %(userid)s", {'userid': user['userid']})
     return response("Wrong password or username", 401)
