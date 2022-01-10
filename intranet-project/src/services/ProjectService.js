@@ -20,8 +20,8 @@ var ProjectService = function () {
         const { data } = await axiosClient.delete(`/projects/${id}`, { timeout: 2000 });
         return data;
     }
-    async function updateProject(project) {
-        const { data } = await axiosClient.put(`/projects/${project.projectid}?is_archived=${project.is_archived}`, { timeout: 2000 });
+    async function archiveProject(project) {
+        const { data } = await axiosClient.put(`/projects/${project.projectid}/archive`, { project }, { timeout: 2000 });
         return data;
     }
     async function getProjectsByUser(userid) {
@@ -41,8 +41,8 @@ var ProjectService = function () {
         data.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
         return data;
     }
-    async function addProject(project){
-        const { data } = await axiosClient.post(`/projects`,{project},{ timeout: 2000 });
+    async function addProject(project) {
+        const { data } = await axiosClient.post(`/projects`, { project }, { timeout: 2000 });
         return data;
     }
 
@@ -50,7 +50,7 @@ var ProjectService = function () {
         getProjects,
         getProjectById,
         deleteProject,
-        updateProject,
+        archiveProject,
         getProjectsByUser,
         getParentsById,
         getChildrenById,

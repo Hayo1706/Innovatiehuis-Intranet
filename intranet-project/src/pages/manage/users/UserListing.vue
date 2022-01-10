@@ -32,7 +32,7 @@
           }}
         </div>
         <div class="mobileRow">
-          <select v-model="selectedRole">
+          <select v-model="selectedRole" :disabled="!canUpdateUserRole()">
             <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
               {{ role }}
             </option>
@@ -40,7 +40,7 @@
         </div>
         <div class="mobileRow">{{ user.amountprojects }}</div>
         <div class="mobileRow">
-          <select v-model="screeningstate">
+          <select v-model="screeningstate" :disabled="!canUpdateUser()">
             <option
               v-for="screeningstate in Object.keys(this.screeningstates)"
               v-bind:key="screeningstate"
@@ -95,7 +95,7 @@
         }}
       </div>
       <div class="col d-none d-lg-block">
-        <select v-model="selectedRole">
+        <select v-model="selectedRole" :disabled="!canUpdateUserRole()">
           <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
             {{ role }}
           </option>
@@ -103,7 +103,7 @@
       </div>
       <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
       <div class="col d-none d-lg-block" id="screening">
-        <select v-model="screeningstate">
+        <select v-model="screeningstate" :disabled="!canUpdateUser()">
           <option
             v-for="screeningstate in Object.keys(this.screeningstates)"
             v-bind:key="screeningstate"
@@ -127,7 +127,10 @@
       </div>
 
       <div class="col">
-        <a class="full-button" @click="handleRemoveUser(this.user)"
+        <a
+          class="full-button"
+          @click="handleRemoveUser(this.user)"
+          v-show="canDelete()"
           >Verwijderen</a
         >
       </div>
@@ -138,6 +141,7 @@
 <script>
 import VerticalHeader from "./VerticalHeader.vue";
 import UserService from "@/services/UserService.js";
+import PermissionService from "@/services/PermissionService.js";
 export default {
   props: ["user"],
   components: { VerticalHeader },
@@ -240,6 +244,15 @@ export default {
     );
   },
   methods: {
+    canDelete() {
+      return PermissionService.userHasPermission("may_delete_any_user");
+    },
+    canUpdateUserRole() {
+      return PermissionService.userHasPermission("may_update_any_user_role");
+    },
+    canUpdateUser() {
+      return PermissionService.userHasPermission("may_update_any_user_account");
+    },
     onClick() {
       this.$router.push("/user/" + this.user.userid);
     },

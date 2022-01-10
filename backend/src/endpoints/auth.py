@@ -61,16 +61,19 @@ def logout():
 def change_password():
     user_id = get_jwt_identity()
     user = query("SELECT * FROM users WHERE userid =%(userid)s", {'userid': user_id()})[0]
-    if bcrypt.check_password_hash(user['password_hash'], connexion.request.form['old_password']):
-        password = connexion.request.form['new_password']
-        validate_password(password)
-        password = bcrypt.generate_password_hash(password).decode('utf-8')
-        query_update(
-            "UPDATE users SET password_hash=%(password_hash)s "
-            "WHERE userid=%(userid)s",
-            {"password_hash": password, "userid": user_id})
-        return response(f"User {user_id} successfully updated", 200)
-    return response("Incorrect current password", 401)
+    try:
+        if bcrypt.check_password_hash(user['password_hash'], connexion.request.form['old_password']):
+            password = connexion.request.form['new_password']
+            validate_password(password)
+            password = bcrypt.generate_password_hash(password).decode('utf-8')
+            query_update(
+                "UPDATE users SET password_hash=%(password_hash)s "
+                "WHERE userid=%(userid)s",
+                {"password_hash": password, "userid": user_id})
+            return response(f"User {user_id} successfully updated", 200)
+        return response("Incorrect current password", 401)
+    except KeyError:
+        return response("Invalid body", 400)
 
 
 def validate_password(password):

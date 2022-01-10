@@ -1,13 +1,14 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-6">
-              
-        <PersonalDetails />
-        <router-link  to="/manage/resetpassword">Wachtwoord resetten</router-link>
+      <div class="col-sm-6">
+
+        <PersonalDetails @getUserEvent="(name) => {
+          this.$emit('newHeaderTitle', name)
+        }" />
       </div>
-      <div class="col-6">
-        <ProjectsWindow />
+      <div class="col-sm-6">
+        <ProjectsWindow>Gebruikers Projecten</ProjectsWindow>
       </div>
     </div>
   </div>
@@ -24,9 +25,6 @@ export default {
     return {
     };
   },
- created(){
-    this.$emit('newHeaderTitle', 'Profiel: NAAM VAN USER #' + this.$route.params.id)
- }
 };
 </script>
 
