@@ -2,19 +2,26 @@
   <div class="col">
     <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
     <a class="link" @click="gotoMembers()">Leden</a>
-    <a
-      v-if="project.is_archived"
-      src="@/assets/images/upload.png"
-      class="link"
-      @click="handleArchiveProject(project)"
-      >Dearchiveren</a
+    <span v-show="canArchive()">
+      <a
+        v-if="project.is_archived"
+        src="@/assets/images/upload.png"
+        class="link"
+        @click="handleArchiveProject(project)"
+        >Dearchiveren</a
+      >
+      <a v-else class="link" @click="handleArchiveProject(project)"
+        >Archiveren</a
+      >
+    </span>
+    <a class="link" v-show="canDelete()" @click="handleDeleteProject(project)"
+      >Verwijderen</a
     >
-    <a v-else class="link" @click="handleArchiveProject(project)">Archiveren</a>
-    <a class="link" @click="handleDeleteProject(project)">Verwijderen</a>
   </div>
 </template>
 
 <script>
+import PermissionService from "@/services/PermissionService.js";
 export default {
   props: ["project"],
   components: {},
@@ -23,6 +30,12 @@ export default {
     return {};
   },
   methods: {
+    canArchive() {
+      return PermissionService.userHasPermission("may_archive_any_project");
+    },
+    canDelete() {
+      return PermissionService.userHasPermission("may_delete_any_project");
+    },
     gotoMembers() {
       this.$router.push({ path: `/project/${this.project.projectid}/members` });
     },

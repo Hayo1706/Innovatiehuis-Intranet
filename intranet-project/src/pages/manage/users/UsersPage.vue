@@ -6,6 +6,7 @@
       data-bs-toggle="modal"
       data-bs-target="#createUserModal"
       type="button"
+      v-show="canCreateUser()"
     >
       <i class="material-icons pmd-sm">Gebruiker toevoegen</i>
     </button>
@@ -47,6 +48,7 @@ import UsersHeader from "./UsersHeader.vue";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import UserListing from "./UserListing.vue";
 import UserCreateModal from "./UserCreateModal.vue";
+import PermissionService from "@/services/PermissionService.js";
 export default {
   components: {
     UsersHeader,
@@ -62,6 +64,9 @@ export default {
     };
   },
   methods: {
+    canCreateUser() {
+      return PermissionService.userHasPermission("may_create_users");
+    },
     setSearchTerm(value) {
       this.searchTerm = value;
     },

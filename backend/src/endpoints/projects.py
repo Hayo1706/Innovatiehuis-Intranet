@@ -45,17 +45,34 @@ def update(project_id):
         body = connexion.request.json['project']
         project_name = body['project_name']
         description = body['description']
+    except KeyError:
+        return response("Invalid body", 400)
+
+    query_update("UPDATE projects "
+                 "SET project_name = %(project_name)s, description = %(description)s, is_archived = %(is_archived)s "
+                 "WHERE projectid = %(id)s",
+                 {'project_name': project_name, 'description': description,
+                  'id': project_id})
+    return response(f"Project {project_id} successfully updated", 200)
+
+
+# projects/{id}/archive
+@check_permissions(Projects.may_archive)
+def update_archive(project_id):
+    is_int(project_id)
+    try:
+        body = connexion.request.json['project']
         is_archived = body['is_archived']
     except KeyError:
         return response("Invalid body", 400)
 
     is_boolean(is_archived)
     query_update("UPDATE projects "
-                 "SET project_name = %(project_name)s, description = %(description)s, is_archived = %(is_archived)s "
+                 "SET is_archived = %(is_archived)s "
                  "WHERE projectid = %(id)s",
-                 {'project_name': project_name, 'description': description, 'is_archived': str(int(is_archived)),
+                 {'is_archived': str(int(is_archived)),
                   'id': project_id})
-    return response(f"Project {project_id} successfully updated", 200)
+    return response(f"Archive status of Project {project_id} successfully updated", 200)
 
 
 @check_permissions(Projects.may_delete)
@@ -188,6 +205,7 @@ def read_children(project_id):  # returns array of id/name/shared_files combinat
         {'projectid': project_id})
 
 
+# projects/{id}/children/{id}
 @check_permissions(Projects.may_update)  # TODO: placeholder for more specific permissions?
 def add_child(project_id, child_id):
     is_int(project_id)

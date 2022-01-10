@@ -16,6 +16,7 @@ import HomePage from './pages/home/HomePage.vue';
 import LoginPage from './pages/login/LoginPage.vue';
 import NotFoundPage from './pages/notfound/NotFoundPage.vue';
 import ResetPasswordPage from './pages/manage/reset_password/ResetPasswordPage.vue';
+import PermissionService from './services/PermissionService'
 const routes = [
   { path: '', redirect: '/login' },
   { path: '/manage/projects', component: ProjectsPage },
@@ -44,17 +45,17 @@ router.beforeEach((to, from, next) => {
     localStorage.setItem("previousRoute", to.fullPath);
   }
   if (!localStorage.getItem("loggedIn") && to.fullPath != "/login") {
-    next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." }});
+    next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." } });
   } else {
-        //TODO 404 on acces with wrong role
-        if (to.fullPath == "/manage/projects" && localStorage.getItem("may_read_any_project") != 1) {
-          next({ path: '/404'});
-          return;
-        }
-        if(to.fullPath == "/manage/users" && localStorage.getItem("may_read_any_user") != 1){
-          next({ path: '/404'});
-          return;
-        }
+
+    if (to.fullPath == "/manage/projects" && !PermissionService.userHasPermission("may_read_any_project")) {
+      next({ path: '/404' });
+      return;
+    }
+    if (to.fullPath == "/manage/users" && !PermissionService.userHasPermission("may_read_any_user")) {
+      next({ path: '/404' });
+      return;
+    }
     next();
 
   }

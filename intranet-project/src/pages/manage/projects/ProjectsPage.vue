@@ -6,6 +6,7 @@
       data-bs-toggle="modal"
       data-bs-target="#createProjectModal"
       type="button"
+      v-show="canCreate()"
     >
       <i class="material-icons pmd-sm">Project toevoegen</i>
     </button>
@@ -51,6 +52,7 @@
 </template>
 
 <script>
+import PermissionService from "@/services/PermissionService.js";
 import ProjectService from "@/services/ProjectService.js";
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
@@ -74,6 +76,9 @@ export default {
     };
   },
   methods: {
+    canCreate() {
+      return PermissionService.userHasPermission("may_create_project");
+    },
     gotoCreateProject() {
       this.$router.push({ path: "/manage/projects/create" });
     },
@@ -101,7 +106,7 @@ export default {
     archiveProject(project) {
       let projectCopy = JSON.parse(JSON.stringify(project));
       projectCopy.is_archived = !projectCopy.is_archived;
-      ProjectService.updateProject(projectCopy)
+      ProjectService.archiveProject(projectCopy)
         .then(() => {
           project.is_archived = !project.is_archived;
           project.last_updated = new Date();
