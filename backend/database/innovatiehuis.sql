@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `projects_have_parents` (
 DELETE FROM `projects_have_parents`;
 /*!40000 ALTER TABLE `projects_have_parents` DISABLE KEYS */;
 INSERT INTO `projects_have_parents` (`parentid`, `childid`, `shared_files`) VALUES
-	(7, 8, NULL),
+	(7, 8, 'porno.txt meerporno.txt'),
 	(7, 9, NULL),
 	(9, 13, NULL),
 	(1, 2, NULL),
@@ -192,6 +192,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `may_update_own_user_password` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_any_user_account` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_own_user_account` tinyint(1) NOT NULL DEFAULT 0,
+  `may_update_any_user_screening_status` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_any_user_role` tinyint(1) NOT NULL DEFAULT 0,
   `may_elevate_to_protected_role` tinyint(1) NOT NULL DEFAULT 0,
   `may_delete_any_user` tinyint(1) NOT NULL DEFAULT 0,
@@ -206,11 +207,11 @@ CREATE TABLE IF NOT EXISTS `roles` (
 -- Dumping data for table innovatieplatform.roles: ~4 rows (approximately)
 DELETE FROM `roles`;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` (`roleid`, `role_name`, `is_protected`, `may_create_project`, `may_read_any_project`, `may_read_own_project`, `may_update_any_project`, `may_update_own_project`, `may_archive_any_project`, `may_delete_any_project`, `may_update_any_file`, `may_update_file_in_own_project`, `may_create_announcement_anywhere`, `may_create_announcement_in_own_project`, `may_update_any_announcement`, `may_create_reply_anywhere`, `may_create_reply_in_own_project`, `may_update_any_reply`, `may_update_own_content`, `may_create_users`, `may_read_any_user`, `may_read_user_in_own_project`, `may_update_any_user_password`, `may_update_own_user_password`, `may_update_any_user_account`, `may_update_own_user_account`, `may_update_any_user_role`, `may_elevate_to_protected_role`, `may_delete_any_user`, `may_crud_roles`, `may_create_chat_message_anywhere`, `may_create_chat_message_in_own_project`, `may_update_any_chat_message`, `may_update_own_chat_message`) VALUES
-	(1, 'observer', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1),
-	(2, 'student', 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1),
-	(3, 'moderator', 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1),
-	(4, 'admin', 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1);
+INSERT INTO `roles` (`roleid`, `role_name`, `is_protected`, `may_create_project`, `may_read_any_project`, `may_read_own_project`, `may_update_any_project`, `may_update_own_project`, `may_archive_any_project`, `may_delete_any_project`, `may_update_any_file`, `may_update_file_in_own_project`, `may_create_announcement_anywhere`, `may_create_announcement_in_own_project`, `may_update_any_announcement`, `may_create_reply_anywhere`, `may_create_reply_in_own_project`, `may_update_any_reply`, `may_update_own_content`, `may_create_users`, `may_read_any_user`, `may_read_user_in_own_project`, `may_update_any_user_password`, `may_update_own_user_password`, `may_update_any_user_account`, `may_update_own_user_account`, `may_update_any_user_screening_status`, `may_update_any_user_role`, `may_elevate_to_protected_role`, `may_delete_any_user`, `may_crud_roles`, `may_create_chat_message_anywhere`, `may_create_chat_message_in_own_project`, `may_update_any_chat_message`, `may_update_own_chat_message`) VALUES
+	(1, 'observer', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1),
+	(2, 'student', 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1),
+	(3, 'moderator', 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1),
+	(4, 'admin', 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.users
@@ -237,13 +238,13 @@ CREATE TABLE IF NOT EXISTS `users` (
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`, `password_hash`, `roleid`, `screening_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`, `last_timeout_started`) VALUES
-	(1, 'Hayo', 'Riem', 'hayoriem@mail.com', '123', 4, 0, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2021-12-30 19:26:59', 1, NULL),
-	(2, 'Peter', 'Beens', 'peterbeens@mail.com', '123', 2, 0, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0, NULL),
-	(3, 'Singh', 'van Offeren', 'singhvano@mail.com', '123', 2, 0, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0, NULL),
-	(4, 'Jochem', 'Hoekstra', 'joja@mail.com', '123', 2, 0, '2021-11-30 17:48:47', '2021-11-30 17:48:47', NULL, 0, NULL),
-	(5, 'Niels', 'Doornbos', 'nielsprikkelbos@mail.com', '123', 4, 0, '2021-11-30 17:49:09', '2021-11-30 17:49:09', NULL, 0, NULL),
-	(6, 'Jan', 'Baljé', 'janbal@mail.com', '123', 1, 0, '2021-11-30 17:49:49', '2021-11-30 17:49:49', NULL, 0, NULL),
-	(7, 'Tim', 'Dronebos', 'tim@mail.com', '123', 3, 0, '2021-11-30 17:51:50', '2021-11-30 17:51:50', NULL, 0, NULL),
+	(1, 'Hayo', 'Riem', 'hayoriem@mail.com', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK', 4, 1, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2, NULL),
+	(2, 'Peter', 'Beens', 'peterbeens@mail.com', '123', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0, NULL),
+	(3, 'Singh', 'van Offeren', 'singhvano@mail.com', '123', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0, NULL),
+	(4, 'Jochem', 'Hoekstra', 'joja@mail.com', '123', 2, 1, '2021-11-30 17:48:47', '2021-11-30 17:48:47', NULL, 0, NULL),
+	(5, 'Niels', 'Doornbos', 'nielsprikkelbos@mail.com', '123', 4, 2, '2021-11-30 17:49:09', '2021-11-30 17:49:09', NULL, 0, NULL),
+	(6, 'Jan', 'Baljé', 'janbal@mail.com', '123', 1, 2, '2021-11-30 17:49:49', '2021-11-30 17:49:49', NULL, 0, NULL),
+	(7, 'Tim', 'Dronebos', 'tim@mail.com', '123', 3, 2, '2021-11-30 17:51:50', '2021-11-30 17:51:50', NULL, 0, NULL),
 	(8, 'pieter', 'van rosmalen', 'pvr@mail.com', '123458', 3, 0, '2021-12-02 19:09:21', '2021-12-02 19:09:21', NULL, 0, NULL),
 	(9, 'Anna', 'van Rosmalen', 'anna3@mail.com', '123', 2, 2, '2022-01-02 16:41:35', '2022-01-02 16:41:35', NULL, 0, NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
