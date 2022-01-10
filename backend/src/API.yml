@@ -86,14 +86,6 @@ paths:
       summary: Archive or de-archive a project
       parameters:
         - $ref: '#/components/parameters/project_id'
-        - in: query
-          name: project
-          required: true
-          schema:
-            type: object
-            properties:
-              is_archived:
-                type: boolean
       responses:
         200:
           description: Project archive status updated
