@@ -1,4 +1,6 @@
 import mimetypes
+from os.path import abspath
+
 import src.config as config
 import os
 import json
@@ -106,40 +108,25 @@ def get_files_in_path(project_id):
 
     return list_of_files
 
-
-def move_file(project_id):
-    source_path = connexion.request.json['from']
-    target_path = connexion.request.json['to']
-
-    source_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + "/" + source_path
-    target_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + "/" + target_path
-
-    if is_file_path_valid(get_project_path(project_id) + "/" + source_path) and dir_exists(target_path):
-        try:
-            shutil.move(source_path, target_path)
-        except:
-            return response("Failed to move file", 400)
-
-        return response("Successfully moved file to target folder", 200)
-
-    return response("Failed to move file", 400)
-
-
 def download_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
     requested_path = unquote(requested_path)
-    file_name = requested_path.rsplit('/', 1)[1]
-    path_in_folder = requested_path.rsplit('/', 1)[0]
+    [path_in_folder, file_name] = requested_path.rsplit('/', 1)
+    path_in_folder = abspath(path_in_folder)
+
     if os.path.exists(requested_path):
         if is_file_path_valid(requested_path):
+            print(requested_path)
             file_mimetype = mimetypes.guess_type(requested_path)[0]
-            return send_from_directory(config.FILE_STORAGE_ROOT + path_in_folder, filename=file_name, mimetype=file_mimetype, as_attachment=True)
+            return send_from_directory(path_in_folder, filename=file_name, mimetype=file_mimetype, as_attachment=True)
+
+    return response("Failed to download file", 400)
 
 
-def move_file_2(project_id):
+def move_file(project_id):
     source_path = unquote(connexion.request.json['from'])
-    source_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + source_path
     file_name = source_path.rsplit('/', 1)[1]
+    source_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + source_path
 
     target_path = unquote(connexion.request.json['to'])
     target_folder_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + target_path
@@ -147,8 +134,12 @@ def move_file_2(project_id):
 
     if file_exists(source_path) and dir_exists(target_folder_path):
         if not file_exists(target_path):
-            shutil.move(source_path, target_path)
-            return response("Successfully moved file", 200)
+            try:
+                shutil.move(source_path, target_path)
+                return response("Successfully moved file to target folder", 200)
+            except:
+                return response("Failed to move file", 400)
+
     return response("Failed to move file", 400)
 
 

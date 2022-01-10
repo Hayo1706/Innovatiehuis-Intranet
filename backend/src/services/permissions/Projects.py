@@ -19,11 +19,11 @@ def may_update(user_perm, resource_id):
             user_perm["may_update_own_project"] and permissions.user_owns_project(resource_id))
 
 
-def may_archive(user_perm):
+def may_archive(user_perm, project_id):
     return user_perm["may_archive_any_project"]
 
 
-def may_delete(user_perm):
+def may_delete(user_perm, project_id):
     return user_perm["may_delete_any_project"]
 
 

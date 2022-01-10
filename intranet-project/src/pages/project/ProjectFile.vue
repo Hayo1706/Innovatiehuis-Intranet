@@ -47,7 +47,7 @@
     </div>
     <div class="container" v-if="viewMenu == true">
       <div class="row"><button @click="downloadFile()">Download</button></div>
-      <div class="row"><button @click="deleteFile()">Verwijder</button></div>
+      <div class="row"><button @click="confirmDelete(this.name)">Verwijder</button></div>
       <div class="row"><button @click="moveMenu = true; setFolders()">Verplaats</button></div>
 
 
@@ -154,13 +154,8 @@ export default {
             }
           });
       },
-      confirmMove(target_path, target_name){
-        if(confirm("Are you sure you want to move " + this.name + " to " + target_name + "?")){
-          this.moveFile(target_path)
-        }
-      },
-      moveFile(folder) {
-        var target_path = this.directorypath + '/' + folder
+      moveFile(target_folder) {
+        var target_path = this.directorypath + '/' + target_folder
         FilestorageService.moveFile(this.projectid, this.path, target_path)
         .then(() => {
             this.$emit("fileMoved");
@@ -176,6 +171,16 @@ export default {
           alert("yes");
         }
       },
+      confirmMove(target_folder){
+        if(confirm("Are you sure you want to move " + this.name + " to " + target_folder + "?")){
+          this.moveFile(target_folder)
+        }
+      },
+      confirmDelete(file_name){
+        if(confirm("Are you sure you want to delete " + file_name + "?")){
+          this.deleteFile()
+        }
+      }
   },
 };
 </script>

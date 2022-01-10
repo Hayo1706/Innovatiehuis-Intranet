@@ -34,14 +34,17 @@ def check_permissions(rule, *parameters):
                 resp = jsonify({'logout': True})
                 unset_jwt_cookies(resp)
                 return resp, 401
-            user_perm = \
-                query("SELECT roles.* FROM users JOIN roles ON users.roleid = roles.roleid WHERE userid = %(user_id)s",
-                      {'user_id': get_jwt_identity()})[0]
-            compare = parameters if len(parameters) > 0 else kwargs
-            if rule(user_perm, *[kwargs[v] for v in compare]) or config.DEBUG_MODE:
-                return fn(*args, **kwargs)
-            else:
-                return response("No permission", 403)
+            screening_status = query("SELECT screening_status FROM users WHERE userid = %(user_id)s",
+                                     {'user_id': get_jwt_identity()})[0]
+            if screening_status['screening_status'] == 2:
+                user_perm = \
+                    query("SELECT roles.* FROM users JOIN roles ON users.roleid = roles.roleid WHERE userid = %(user_id)s",
+                          {'user_id': get_jwt_identity()})[0]
+                compare = parameters if len(parameters) > 0 else kwargs
+                if rule(user_perm, *[kwargs[v] for v in compare]) or config.DEBUG_MODE:
+                    return fn(*args, **kwargs)
+
+            return response("No permission", 403)
 
         return decorator
 
