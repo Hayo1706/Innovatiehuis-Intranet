@@ -56,10 +56,15 @@ paths:
       parameters:
         - $ref: '#/components/parameters/project_id'
         - in: query
-          name: is_archived
+          name: project
           required: true
           schema:
-            type: boolean
+            type: object
+            properties:
+              project_name:
+                type: string
+              description:
+                type: string
       responses:
         200:
           description: Project updated
@@ -73,6 +78,26 @@ paths:
       responses:
         200:
           description: Project deleted
+  /projects/{project_id}/archive:
+    put:
+      operationId: src.endpoints.projects.update_archive
+      tags:
+        - Projects
+      summary: Archive or de-archive a project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - in: query
+          name: project
+          required: true
+          schema:
+            type: object
+            properties:
+              is_archived:
+                type: boolean
+      responses:
+        200:
+          description: Project archive status updated
+
   /projects/{project_id}/parents:
     get:
       operationId: src.endpoints.projects.read_parents
