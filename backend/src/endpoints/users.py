@@ -50,9 +50,11 @@ def create():
 def update(user_id):
     is_int(user_id)
 
-    #   1 get current role of user
+    # TODO:
+    #   1 get current role and screening status of user
     #   2 if specified role is changed, check permission using "UPDATE ROLE" OR "UPDATE ROLE PROTECTED"
     #   3 abort immediately if user has no permission!
+    #   4 if screening status is changed and role is protected, abort! admin should not be able to disable their own account...
 
     try:
         body = connexion.request.json
