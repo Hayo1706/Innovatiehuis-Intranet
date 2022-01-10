@@ -101,7 +101,7 @@ export default {
     archiveProject(project) {
       let projectCopy = JSON.parse(JSON.stringify(project));
       projectCopy.is_archived = !projectCopy.is_archived;
-      ProjectService.updateProject(projectCopy)
+      ProjectService.archiveProject(projectCopy)
         .then(() => {
           project.is_archived = !project.is_archived;
           project.last_updated = new Date();
