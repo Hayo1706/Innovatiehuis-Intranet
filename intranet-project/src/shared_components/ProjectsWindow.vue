@@ -3,8 +3,16 @@
     <div class="component-header">
       <slot></slot>
     </div>
-    <div class="full-button" @click="toProjectsPage()" v-if="this.archivePermission">Alle Projecten</div>
-    <div class="full-button" @click="toUsersPage()">Alle Gebruikers</div>
+    <div
+      class="full-button"
+      v-show="canReadAllProjects()"
+      @click="toProjectsPage()"
+    >
+      Alle Projecten
+    </div>
+    <div class="full-button" v-show="canReadAllUsers()" @click="toUsersPage()">
+      Alle Gebruikers
+    </div>
 
     <div id="projects-window" class="component-body">
       <ProjectButton
@@ -22,19 +30,18 @@
 <script>
 import ProjectButton from "./ProjectButton.vue";
 import ProjectService from "@/services/ProjectService.js";
+import PermissionService from "@/services/PermissionService";
 export default {
   components: { ProjectButton },
   name: "ProjectsWindow",
   props: [],
   data: function () {
-    return { 
+    return {
       projects: [],
-      archivePermission: false
-      };
+    };
   },
   async created() {
-    this.archivePermission = localStorage.getItem('may_archive_any_project') == "1";
-    ProjectService.getProjectsByUser(localStorage.getItem('userid'))
+    ProjectService.getProjectsByUser(localStorage.getItem("userid"))
       .then((response) => {
         this.projects = response;
         console.log("API RESPONDS: " + JSON.stringify(response));
@@ -46,6 +53,12 @@ export default {
       });
   },
   methods: {
+    canReadAllProjects() {
+      return PermissionService.userHasPermission("may_read_any_project");
+    },
+    canReadAllUsers() {
+      return PermissionService.userHasPermission("may_read_any_user");
+    },
     toProjectsPage() {
       this.$router.push("/manage/projects");
     },

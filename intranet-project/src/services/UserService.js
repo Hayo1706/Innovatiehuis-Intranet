@@ -12,6 +12,16 @@ var UserService = function () {
         });
         return data;
     }
+    async function getUsersByProject(projectid) {
+
+        const { data } = await axiosClient.get(`/projects/${projectid}/users`, { timeout: 2000 });
+        data.forEach(user => { user.created = jsonToJsDate(user.created) });
+        data.forEach(user => {
+            user.last_seen = jsonToJsDate(user.last_seen)
+        });
+        return data;
+
+    }
     async function getUserById(userid) {
         const { data } = await axiosClient.get(`/users/${userid}`, { timeout: 2000 });
         data.forEach(user => { user.created = jsonToJsDate(user.created) });
@@ -28,6 +38,14 @@ var UserService = function () {
         const { data } = await axiosClient.post(`/users`, user, { timeout: 2000 });
         return data;
     }
+    async function addUserToProject(projectid, userid) {
+        const { data } = await axiosClient.post(`/projects/${projectid}/users/${userid}`, { timeout: 2000 });
+        return data;
+    }
+    async function removeUserFromProject(projectid, userid) {
+        const { data } = await axiosClient.delete(`/projects/${projectid}/users/${userid}`, { timeout: 2000 });
+        return data;
+    }
     async function updateUser(user, userid) {
         const { data } = await axiosClient.put(`/users/${userid}`, user, { timeout: 2000 });
         return data;
@@ -37,7 +55,10 @@ var UserService = function () {
         getUserById,
         addUser,
         deleteUser,
-        updateUser
+        updateUser,
+        getUsersByProject,
+        addUserToProject,
+        removeUserFromProject
     }
 
 }

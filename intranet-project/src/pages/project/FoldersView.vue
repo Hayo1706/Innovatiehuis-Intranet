@@ -1,19 +1,21 @@
 <template>
-  <div>
-    <ProjectFolderHeader
-      :path="this.currentPath"
-      @newFolderAdded="(id) => setFolders()"
-      @searchBarChanged="setSearchTerm"
-    >&nbsp;
-      <text v-if="this.path == ''">Mappen</text>
-      <text @click="folderPathChanged('')" v-else>.../</text>
-      <span v-for="(path, index) in fullPath = this.path.split('/')" :key="path">
-         <text @click="folderPathChanged(fullPath.slice(1, index+1))" v-if="path != ''">{{ path }}/</text>
-      </span>
-     </ProjectFolderHeader>
-    <div class="container-fluid">
+  <div class="component-container">
+    <div class="component-header">
+      <ProjectFolderHeader
+          :path="this.currentPath"
+          @newFolderAdded="(id) => setFolders()"
+          @searchBarChanged="setSearchTerm">
+          &nbsp;
+          <text v-if="this.path == ''">Mappen</text>
+          <text @click="folderPathChanged('')" v-else>.../</text>
+          <span v-for="(path, index) in fullPath = this.path.split('/')" :key="path">
+            <text @click="folderPathChanged(fullPath.slice(1, index+1))" v-if="path != ''">{{ path }}/</text>
+          </span>
+        </ProjectFolderHeader>
+    </div>
+    <div>
       <div class="row">
-        <div v-for="folder in folders" :key="folder" class="col-sm-3">
+        <div v-for="folder in searched_folders" :key="folder" class="col-sm-3">
           <div v-if="folderNameInSearchTerm(folder)">
             <ProjectFolder
               :directorypath="this.path"
@@ -24,11 +26,12 @@
               @currentPathChanged="folderPathChanged"
               @folderMoved="setFolders()"
               @folderDeleted="setFolders()"
+              @nameChanged="setFolders()"
             />
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -52,17 +55,19 @@ export default {
   data: function () {
     return {
       folders: [],
-      searchTerm: "",
+      searched_folders: [],
+      search_term: "",
       currentPath: this.path,
       projectid: this.$route.params.id,
     };
   },
   methods: {
     setSearchTerm(value) {
-      this.searchTerm = value;
+      this.search_term = value;
+      this.setSearchedFolders(value);
     },
-    folderNameInSearchTerm(name) {
-      if (name.includes(this.searchTerm) || this.searchTerm == null) {
+    folderNameInSearchTerm(folder_name, search_term) {
+      if (folder_name.includes(search_term) || search_term == null) {
         return true;
       } else {
         return false;
@@ -88,6 +93,7 @@ export default {
       FilestorageService.getFoldersOfProject(this.projectid, this.path)
         .then((response) => {
           this.folders = response;
+          this.setSearchedFolders(this.searchTerm);
         })
         .catch((err) => {
           if (err.response) {
@@ -95,6 +101,19 @@ export default {
           }
         });
     },
+    setSearchedFolders(search_term){
+      if(search_term == "" || search_term == null){
+          this.searched_folders = this.folders  
+      }
+      else{
+        this.searched_folders = []
+        for(var folder_index in this.folders){
+          if(this.folderNameInSearchTerm(this.folders[folder_index], search_term)){
+            this.searched_folders.push(this.folders[folder_index])
+          }
+        }
+      }
+    }
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");
@@ -106,7 +125,10 @@ export default {
 
 <style scoped>
 .row {
-  font-size: calc(0.7vw + 0.7vh);
-  text-align: left;
+  margin-top: 1vh;
+}
+.component-container{
+  height: auto;
+  min-height: auto;
 }
 </style>

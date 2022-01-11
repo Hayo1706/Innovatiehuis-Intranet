@@ -1,58 +1,50 @@
 <template>
   <div
     class="projectFolder"
-    @mouseenter="viewMenu = true"
+    @mousemove="set_coordinates"
+    @contextmenu="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
-    <div class="container-fluid" @mouseleave="renameFolder()">
+    <div class="container-fluid"  @click="goToFolder()">
       <div class="row">
-        <div class="col-sm-3">
+        <div class="col-3">
           <img
             class="foldersImage"
-            @click="goToFolder()"
             v-if="this.shared != 'yes'"
             src=".\..\..\assets\images\folder.png"
           />
           <img
             class="foldersImage"
-            @click="goToFolder()"
             v-if="this.shared == 'yes'"
             src=".\..\..\assets\images\shared_folder.png"
           />
         </div>
-        <div class="col-sm-9" @dblclick="editName = true">
+        <div class="col-9">
           <input
+            v-on:keyup.enter="renameFolder()"
             class="folderName"
-            v-if="this.editName == true"
             v-model="newName"
-          />
-          <input
-            class="folderName"
+            v-bind:id="this.name"
             disabled
-            v-if="this.editName == false"
-            v-model="folderName"
           />
         </div>
       </div>
     </div>
-    <div class="container" v-if="viewMenu == true">
-      <div class="row"><button @click="deleteFolder()">Verwijder</button></div>
-      <div class="row">
-        <button @click="moveMenu = true; getFolders()">Verplaats</button>
-      </div>
-    </div>
-    <div class="container" v-if="moveMenu == true">
-      <div v-if="this.folders.length > 1">
-        <div class="row" v-for="folder in this.folders" :key="folder">
-          <button v-if="folder != this.name" @click="confirmMove(folder)">
+
+    <ul id="drop-down-menu" v-if="viewMenu == true">
+        <li @click="enableInput()">Wijzig Naam</li>
+        <li v-if="this.folders.length > 0" @click="moveMenu = true; getFolders(); viewMenu = false;">Verplaats</li>
+        <li @click="deleteFolder()">Verwijder</li>
+    </ul>
+
+    <ul id="drop-down-menu" v-if="moveMenu == true">
+        <li>Verplaatsen naar:</li>
+        <ul id="drop-down-menu">
+          <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">
             {{ folder }}
-          </button>
-        </div>
-      </div>
-      <div v-else>
-        <h9>There are no folders to move to</h9>
-      </div>
-    </div>
+          </li>
+        </ul>
+    </ul>
   </div>
 </template>
 
@@ -73,8 +65,9 @@ export default {
       moveMenu: false,
       folderName: this.name,
       newName: this.name,
-      editName: false,
       folders: [],
+      x: '0px',
+      y: '0px'
     };
   },
   methods: {
@@ -105,9 +98,13 @@ export default {
           }
         });
     },
+    set_coordinates(e){
+      this.x = String(e.x)
+      this.y = String(e.y)
+    },
     renameFolder() {
-      this.editName = false;
-      if (!(this.newName == this.folderName)) {
+      this.disableInput();
+      if (!(this.newName == this.folderName) || this.newName == '') {
         FilestorageService.renameFolder(
           this.projectid,
           this.path,
@@ -115,7 +112,6 @@ export default {
           this.newName
         )
           .then(() => {
-            this.editName = false;
             this.folderName = this.newName;
           })
           .catch((err) => {
@@ -123,7 +119,19 @@ export default {
               console.log(err.response.status);
             }
           });
+          this.$emit("nameChanged");
       }
+      else this.newName = this.folderName
+    },
+    enableInput(){
+      var inputName = document.getElementById(this.name)
+      inputName.removeAttribute("disabled")
+      inputName.select();
+      this.viewMenu = false;
+    },
+    disableInput(){
+      var inputName = document.getElementById(this.name)
+      inputName.setAttribute("disabled", "")
     },
     moveToFolder(folder) {
       var folder_path = this.directorypath + "/" + folder;
@@ -148,13 +156,21 @@ export default {
     getFolders() {
       FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
         .then((response) => {
-          this.folders = response;
+          this.folders = []
+          for(var folder in response){
+            if(response[folder] != this.name){
+              this.folders.push(response[folder])
+            }
+          }
         })
         .catch((err) => {
           if (err.response) {
             console.log(err.response.status);
           }
         });
+    },
+    changeDropDown(){
+      
     },
     goToFolder() {
       this.$emit("currentPathChanged", this.directorypath + "/" + this.folderName);
@@ -167,9 +183,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .projectFolder {
-  color: white;
+  color: var(--blue1);
   width: 100%;
   min-height: calc(1.5vw + 1.5vh);
   font-size: calc(0.5vh + 0.5vw);
@@ -179,14 +195,39 @@ export default {
 }
 .folderName {
   background-color: transparent;
-  color: white;
+  color: var(--blue1);
   border: 0px;
 }
 .container {
   margin-top: 2vh;
 }
-h5,
-h9 {
+h5 {
   color: black;
+}
+#drop-down-menu{
+    background: #FAFAFA;
+    border: 1px solid var(--blue1);
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 250px;
+    z-index: 999999;
+}
+
+#drop-down-menu li {
+    border-bottom: 1px solid #E0E0E0;
+    margin: 0;
+    padding: 5px 35px;
+}
+
+#drop-down-menu li:last-child {
+    border-bottom: none;
+}
+
+#drop-down-menu li:hover {
+    background: var(--blue3);
+    color: #FAFAFA;
 }
 </style>

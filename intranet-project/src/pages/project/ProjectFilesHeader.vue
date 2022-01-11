@@ -1,9 +1,10 @@
 <template>
   <div>
+
     <div id="projectFilesHeader">
       <div class="row">
-        <div class="col-sm-9">&nbsp; Bestanden</div>
-        <div class="col-sm-2">
+        <div class="col-sm-8"><slot></slot></div>
+        <div class="col-sm-3">
           <SearchBar
             @searchBarChanged="
               (searchTerm) => $emit('searchBarChanged', searchTerm)
@@ -29,6 +30,7 @@
               />
             </label>
           </button>
+          
         </div>
       </div>
     </div>
@@ -82,14 +84,6 @@ export default {
 </script>
 
 <style scoped>
-#projectFilesHeader {
-  color: white;
-  font-size: calc(1vw + 1vh);
-  font-family: AddeleSemiBold;
-  margin: calc(1vw + 1vh);
-  text-align: left;
-  background-color: var(--blue1);
-}
 .iconButton {
   border: 0;
   background-color: transparent;

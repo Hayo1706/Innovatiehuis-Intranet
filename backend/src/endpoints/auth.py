@@ -8,6 +8,7 @@ from flask_jwt_extended import jwt_required, \
     set_refresh_cookies, unset_jwt_cookies, verify_jwt_in_request
 from src.services.permissions.permissions import check_jwt
 from ..services.extensions import bcrypt
+from itsdangerous import URLSafeSerializer
 
 
 def login():
@@ -57,19 +58,36 @@ def logout():
     return resp, 200
 
 
-@check_jwt()
 def change_password():
+    token = connexion.request.args.get('resettoken')
+    old_password = connexion.request.form['old_password']
+    new_password = connexion.request.form['new_password']
+    if len(old_password) == 0 and len(token) > 0:
+        serializer = URLSafeSerializer(config.PASSWORD_CHANGE_SECRET_KEY)
+        data = serializer.loads(token)
+        try:
+            first_time_password(data[1], new_password, data[0])
+        except Exception:
+            response('invalid token', 400)
+    else:
+        change_existing_password(old_password, new_password)
+
+
+def first_time_password(old_password, new_password, user_id):
+    user = query("SELECT * FROM users WHERE userid =%(userid)s", {'userid': user_id})[0]
+    if user['password_hash'] == old_password:
+        set_password(bcrypt.generate_password_hash(new_password).decode('utf-8'), user_id)
+        return response(f"User {user_id} successfully updated", 200)
+    return response("Token invalid", 401)
+
+
+@check_jwt()
+def change_existing_password(old_password, new_password):
     user_id = get_jwt_identity()
-    user = query("SELECT * FROM users WHERE userid =%(userid)s", {'userid': user_id()})[0]
     try:
-        if bcrypt.check_password_hash(user['password_hash'], connexion.request.form['old_password']):
-            password = connexion.request.form['new_password']
-            validate_password(password)
-            password = bcrypt.generate_password_hash(password).decode('utf-8')
-            query_update(
-                "UPDATE users SET password_hash=%(password_hash)s "
-                "WHERE userid=%(userid)s",
-                {"password_hash": password, "userid": user_id})
+        user = query("SELECT * FROM users WHERE userid =%(userid)s", {'userid': user_id})[0]
+        if bcrypt.check_password_hash(user['password_hash'], old_password):
+            set_password(bcrypt.generate_password_hash(new_password).decode('utf-8'), user_id)
             return response(f"User {user_id} successfully updated", 200)
         return response("Incorrect current password", 401)
     except KeyError:
@@ -81,3 +99,11 @@ def validate_password(password):
         response('Password length exceeded max length of ' + config.MAX_PASSWORD_LENGTH, 400)
     if len(password) < config.MIN_PASSWORD_LENGTH:
         response('Password must be at least ' + config.MAX_PASSWORD_LENGTH + "characters long", 400)
+
+
+def set_password(password, user_id):
+    validate_password(password)
+    query_update(
+        "UPDATE users SET password_hash=%(password_hash)s "
+        "WHERE userid=%(userid)s",
+        {"password_hash": password, "userid": user_id})

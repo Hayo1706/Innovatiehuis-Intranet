@@ -19,8 +19,10 @@ def is_int(value):
         response("Incorrect input", 404)
 
 
-def response(message, code=200):
+def response(message, code=200, **arguments):
     data = {'response': {'resource': request.path, 'message': message}}
+    for key, value in arguments.items():
+        data['response'][key] = value
     return data, code
 
 

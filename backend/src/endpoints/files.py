@@ -30,7 +30,7 @@ def secure_file_name(filename):
 
     #file_type in allowed_extentions, option
     if(len(secure_name) == 0):
-        return "New File" + file_type
+        return "New_File" + file_type
     return secure_name + file_type
 
 
@@ -158,7 +158,7 @@ def rename_file(project_id):
     if is_file_path_valid(requested_path):
         folder_path = requested_path.rsplit('/', 1)[0]
         old_name = requested_path.rsplit('/', 1)[1]
-        new_name = connexion.request.json['name']
+        new_name = secure_file_name(connexion.request.json['name'])
 
         if old_name != new_name:
             new_name = get_unique_file_name(new_name, folder_path, 0)

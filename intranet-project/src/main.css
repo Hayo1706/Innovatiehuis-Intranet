@@ -48,7 +48,7 @@ p {
     /*background: linear-gradient(to left top, rgba(50,50,80,0.8), rgba(225,225,225,1));*/
     background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
     border: solid var(--gold1) 2px;
-    backdrop-filter: blur(1rem);
+    /*backdrop-filter: blur(1rem);*/
     min-height: 500px;
     max-height: 80vh;
     overflow-y: scroll;

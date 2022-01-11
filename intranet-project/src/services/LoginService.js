@@ -11,8 +11,8 @@ var LoginService = function () {
         });
     }
 
-    async function changePassword(loginAttempt) {
-        return await axiosClient.put(`/auth/password`, loginAttempt, { timeout: 2000 }, {
+    async function changePassword(loginAttempt,token) {
+        return await axiosClient.put(`/auth/password?resettoken=` + token, loginAttempt, { timeout: 2000 }, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             }

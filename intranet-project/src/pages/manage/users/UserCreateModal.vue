@@ -138,7 +138,7 @@ export default {
         roleid: this.selectedRoleId,
         screening_status: this.selectedScreeningStateId,
       })
-        .then(() => {
+        .then((respsonse) => {
           this.closeModal();
           alert(
             "De gebruiker '" +
@@ -146,6 +146,8 @@ export default {
               " " +
               this.last_name +
               "' is toegevoegd!"
+              +"\nMail de volgende link naar "+this.first_name +
+              " zodat hij zijn wachtwoord kan instellen:\n"+respsonse.response.link
           );
           window.location.reload();
         })

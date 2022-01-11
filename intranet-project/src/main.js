@@ -9,7 +9,6 @@ import "bootstrap"
 import ProjectsPage from './pages/manage/projects/ProjectsPage.vue';
 import UsersPage from './pages/manage/users/UsersPage.vue';
 import ProjectPage from './pages/project/ProjectPage.vue';
-import ProjectMembersPage from './pages/project/members/ProjectMembersPage.vue';
 import ProjectSettingsPage from './pages/project/settings/ProjectSettingsPage.vue';
 import UserPage from './pages/user/UserPage.vue';
 import HomePage from './pages/home/HomePage.vue';
@@ -25,7 +24,6 @@ const routes = [
   { path: '/project/:id', component: ProjectPage },
   { path: '/project/:id/:catchAll(.*)', component: ProjectPage },
   { path: '/project/:id/settings', component: ProjectSettingsPage },
-  { path: '/project/:id/members', component: ProjectMembersPage },
   { path: '/user/:id', component: UserPage },
   { path: '/home', component: HomePage },
   { path: '/login', component: LoginPage },
@@ -36,12 +34,16 @@ const router = createRouter({
   routes
 })
 
+window.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+}, false);
+
 router.beforeEach((to, from, next) => {
-  if (to.fullPath != "/login") {
+  if (to.fullPath !== "/login") {
     localStorage.setItem("previousRoute", to.fullPath);
   }
-  if (!localStorage.getItem("loggedIn") && to.fullPath != "/login") {
-    next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." } });
+  if (!localStorage.getItem("loggedIn") && to.fullPath !== "/login" && to.path !== "/manage/resetpassword") {
+      next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." } });
   } else {
 
     if (to.fullPath == "/manage/projects" && !PermissionService.userHasPermission("may_read_any_project")) {
