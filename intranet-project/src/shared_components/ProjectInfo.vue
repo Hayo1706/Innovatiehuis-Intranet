@@ -373,6 +373,7 @@ export default {
         this.parentToAdd.projectid
       )
         .then(() => {
+          this.closeAllAcordeons();
           this.parentToAdd = null;
           this.loadParents();
         })
@@ -390,6 +391,7 @@ export default {
         this.childToAdd.projectid
       )
         .then(() => {
+          this.closeAllAcordeons();
           this.childToAdd = null;
           this.loadChildren();
         })
@@ -404,6 +406,7 @@ export default {
     removeChild(childid) {
       ProjectService.removeChildFromProject(this.project.projectid, childid)
         .then(() => {
+          this.closeAllAcordeons();
           this.loadChildren();
         })
         .catch((err) => {
@@ -417,6 +420,7 @@ export default {
     removeParent(parentid) {
       ProjectService.removeParentFromProject(this.project.projectid, parentid)
         .then(() => {
+          this.closeAllAcordeons();
           this.loadParents();
         })
         .catch((err) => {
@@ -638,7 +642,21 @@ export default {
           .attributes.getNamedItem("aria-expanded").value == "true"
       );
     },
+    closeAllAcordeons() {
+      var arr = document.getElementsByClassName("accordion-button");
+      for (let j = 0; j < arr.length; j++) {
+        if (
+          !arr[j].attributes[0].value.includes(
+            this.project.projectid.toString()
+          ) &&
+          !arr[j].classList.contains("collapsed")
+        ) {
+          arr[j].click();
+        }
+      }
+    },
   },
+
   watch: {
     filteredUsers: function () {
       if (this.filteredUsers.length == 0) {
