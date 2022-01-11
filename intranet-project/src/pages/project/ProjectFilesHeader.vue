@@ -12,7 +12,7 @@
             v-bind:searchTerm="this.searchTerm"
           ></SearchBar>
         </div>
-        <div class="col-sm-1">
+        <div v-show="canUploadFile()" class="col-sm-1">
           <input
             @change="uploadFiles"
             type="file"
@@ -39,6 +39,7 @@
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
+import PermissionService from "@/services/PermissionService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 export default {
   name: "ProjectFilesHeader",
@@ -78,7 +79,10 @@ export default {
         });
       }
       document.getElementById("files").value=null;
-    }    
+    },
+    canUploadFile(){
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },    
   },
 };
 </script>
