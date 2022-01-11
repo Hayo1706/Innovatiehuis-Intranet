@@ -3,7 +3,7 @@
     <div class="component-header"></div>
     <div style="text-align: center" class="component-body">
       <input
-          v-model="this.old_password"
+          v-model="this.old_password" v-if="this.$route.query.resettoken === undefined"
           style="text-align: center"
           type="password"
           placeholder="Oude wachtwoord"
@@ -42,7 +42,8 @@ export default {
           "old_password=" +
           this.old_password +
           "&new_password=" +
-          this.new_password
+          this.new_password,
+          ((this.$route.query.resettoken !== undefined) ? this.$route.query.resettoken: '')
       )
       .then(() => {
         console.log("Password changed");

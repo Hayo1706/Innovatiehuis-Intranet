@@ -30,6 +30,39 @@
           class="accordion-button collapsed"
           type="button"
           data-bs-toggle="collapse"
+          :data-bs-target="'#collapseMembers' + this.project.projectid"
+          aria-expanded="false"
+          :aria-controls="'collapseMembers' + this.project.projectid"
+          @click="this.onMembersClick()"
+        >
+          Leden
+        </button>
+      </h2>
+      <div
+        :id="'collapseMembers' + this.project.projectid"
+        class="accordion-collapse collapse"
+        aria-labelledby="heading"
+      >
+        <div class="accordion-body">
+          <div
+            class="full-button"
+            v-for="member in this.members"
+            v-bind:key="member.userid"
+            @click="navigateUser(member.userid)"
+          >
+            {{ member.first_name }} {{ member.last_name }}
+          </div>
+          <div v-if="this.members.length == 0">Geen resultaten</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
           :data-bs-target="'#collapseParents' + this.project.projectid"
           aria-expanded="false"
           :aria-controls="'collapseParents' + this.project.projectid"
@@ -94,6 +127,7 @@
 
 <script>
 import ProjectService from "@/services/ProjectService.js";
+import UserService from "@/services/UserService.js";
 export default {
   props: ["project"],
   components: {},
@@ -102,8 +136,10 @@ export default {
     return {
       parents: [],
       children: [],
+      members: [],
       parentsOpen: false,
       childrenOpen: false,
+      membersOpen: false,
     };
   },
   methods: {
@@ -139,8 +175,27 @@ export default {
       }
       this.childrenOpen = !this.childrenOpen;
     },
+    onMembersClick() {
+      if (!this.membersOpen) {
+        UserService.getUsersByProject(this.project.projectid)
+          .then((response) => {
+            //remove the project from the view
+            this.members = response;
+          })
+          .catch((err) => {
+            //invalid operation on server
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      }
+      this.mebersOpen = !this.membersOpen;
+    },
     navigate(projectid) {
       this.$router.push("/project/" + projectid);
+    },
+    navigateUser(userid) {
+      this.$router.push("/user/" + userid);
     },
   },
 };

@@ -60,7 +60,7 @@ export default {
     };
   },
   async created() {
-    UserService.getUserById(1)
+    UserService.getUserById(this.$route.params.id)
       .then((response) => {
         this.user = response[0];
         this.created = this.user.created.toLocaleString();
