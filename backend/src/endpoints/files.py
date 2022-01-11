@@ -25,7 +25,8 @@ def get_full_file_path(path):
 def secure_file_name(filename):
     index_split_name = filename.rfind('.');
     file_type = filename[index_split_name::]
-    file_name = filename[0: index_split_name]
+    file_name = filename[0: index_split_name].replace('.', '')
+
     secure_name = secure_filename(file_name)
 
     #file_type in allowed_extentions, option
