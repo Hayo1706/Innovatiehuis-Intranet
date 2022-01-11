@@ -2,36 +2,30 @@
   <header v-if="this.$route.path !== '/login'">
     <div id="header_title_text">
       <div class="doubleimage">
-        <img class="logo"
-             @click="logoClick()"
-             src=".\..\assets\images\logo\square.png"
+        <img
+          class="logo"
+          @click="logoClick()"
+          src=".\..\assets\images\logo\square.png"
         />
-        <img class="options"
-             @click="settingClick()"
-             src=".\..\assets\images\gear_icon2.png"
-             v-if="this.$route.path.indexOf('/project') > -1 && canSeeGear()"
+        <img
+          class="options"
+          @click="settingClick()"
+          src=".\..\assets\images\gear_icon2.png"
+          v-if="this.$route.path.indexOf('/project') > -1 && canSeeGear()"
         />
-
       </div>
       <slot></slot>
       <div class="doubleimage">
-        <img
-            @click="userClick()"
-            src=".\..\assets\images\profile_icon.png"
-        />
-        <img
-            @click="logout()"
-            src=".\..\assets\images\logout-icon.png"
-        />
+        <img @click="userClick()" src=".\..\assets\images\profile_icon.png" />
+        <img @click="logout()" src=".\..\assets\images\logout-icon.png" />
       </div>
     </div>
   </header>
-
 </template>
 
 <script>
 import LoginService from "../services/LoginService";
-import PermissionService from '@/services/PermissionService';
+import PermissionService from "@/services/PermissionService";
 
 export default {
   name: "AppHeader",
@@ -44,19 +38,23 @@ export default {
       this.$router.push("/home");
     },
     userClick() {
-      this.$router.push("/user/" + localStorage.getItem('userid'));
+      this.$router.go("/user/" + localStorage.getItem("userid"));
     },
     logout() {
       LoginService.logout();
       this.$router.push("/login");
     },
-    settingClick(){
-      this.$router.push("/project/" + this.$route.params.id + "/projectsettings")
+    settingClick() {
+      this.$router.push(
+        "/project/" + this.$route.params.id + "/projectsettings"
+      );
     },
-    canSeeGear(){
-      return PermissionService.userHasPermission('may_update_any_project') ||
-      PermissionService.userHasPermission('may_update_own_project')
-    }
+    canSeeGear() {
+      return (
+        PermissionService.userHasPermission("may_update_any_project") ||
+        PermissionService.userHasPermission("may_update_own_project")
+      );
+    },
   },
 };
 </script>
@@ -74,14 +72,13 @@ header {
   margin-bottom: 2vh;
   /*background-color: var(--blue1);*/
   background: linear-gradient(
-      to bottom right,
-      rgba(255, 255, 255, 0.8),
-      rgba(225, 225, 225, 0.9)
+    to bottom right,
+    rgba(255, 255, 255, 0.8),
+    rgba(225, 225, 225, 0.9)
   );
   backdrop-filter: blur(1rem);
   border-bottom: solid 2px var(--gold1);
 }
-
 
 #header_title_text {
   color: var(--blue1);
@@ -93,15 +90,14 @@ header {
   margin: auto;
   height: 9vh;
 }
-.doubleimage{
+.doubleimage {
   padding: 0;
   margin: 0;
   height: 100%;
   align-items: center;
   display: flex;
-
 }
-.options{
+.options {
   height: 70%;
 }
 </style>
