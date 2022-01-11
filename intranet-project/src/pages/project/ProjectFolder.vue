@@ -1,28 +1,25 @@
 <template>
   <div
-    type="test"
     class="projectFolder"
     @mousemove="set_coordinates"
     @contextmenu="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
-    <div class="container-fluid" @mouseleave="renameFolder()">
+    <div class="container-fluid"  @click="goToFolder()" @mouseleave="renameFolder()">
       <div class="row">
-        <div class="col-sm-3">
+        <div class="col-3">
           <img
             class="foldersImage"
-            @click="goToFolder()"
             v-if="this.shared != 'yes'"
             src=".\..\..\assets\images\folder.png"
           />
           <img
             class="foldersImage"
-            @click="goToFolder()"
             v-if="this.shared == 'yes'"
             src=".\..\..\assets\images\shared_folder.png"
           />
         </div>
-        <div class="col-sm-9">
+        <div class="col-9">
           <input
             class="folderName"
             v-model="newName"
@@ -106,7 +103,7 @@ export default {
     },
     renameFolder() {
       this.disableInput();
-      if (!(this.newName == this.folderName)) {
+      if (!(this.newName == this.folderName) || this.newName == '') {
         FilestorageService.renameFolder(
           this.projectid,
           this.path,
@@ -123,6 +120,7 @@ export default {
           });
           this.$emit("nameChanged");
       }
+      else this.newName = this.folderName
     },
     enableInput(){
       var inputName = document.getElementById(this.name)
@@ -184,7 +182,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .projectFolder {
   color: var(--blue1);
   width: 100%;

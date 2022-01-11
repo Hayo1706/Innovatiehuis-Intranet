@@ -1,11 +1,14 @@
 <template>
-  <div>
-    <ProjectFilesHeader
-      :path="this.path"
-      @searchBarChanged="setSearchTerm"
-      @newFilesUploaded="setFiles()"
-    />
-
+  <div class="component-container">
+    <div class="component-header">
+        <ProjectFilesHeader
+          :path="this.path"
+          @searchBarChanged="setSearchTerm"
+          @newFilesUploaded="setFiles()"
+        >
+        <text>Bestanden</text>
+        </ProjectFilesHeader>
+    </div>
     <div class="container-fluid">
       <div class="row">
         <div v-for="file in files" :key="file" class="col-sm-2">
@@ -25,6 +28,7 @@
             />
           </div>
         </div>
+        
       </div>
     </div>
   </div>
@@ -88,21 +92,11 @@ export default {
 </script>
 
 <style scoped>
-p {
-  background-color: var(--blue1);
-}
-.filesview {
-  color: white;
-  font-size: calc(1vw + 1vh);
-  height: 100%;
-  margin: calc(1vw + 1vh);
-  text-align: center;
-}
-.container-fluid {
-  color: black;
-}
 .row {
-  font-size: calc(0.7vw + 0.7vh);
-  text-align: left;
+  margin-top: 1vh;
+}
+.component-container{
+  height: auto;
+  min-height: auto;
 }
 </style>

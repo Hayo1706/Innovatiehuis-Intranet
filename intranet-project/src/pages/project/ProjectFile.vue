@@ -1,78 +1,43 @@
 <template>
   <div
     class="projectFile"
-    @click.right="viewMenu = true"
+    @contextmenu="viewMenu = true"
+    @mouseenter="this.getTypeImage()"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
-    <div>
-      <div class="row">
-        <img
-          v-if="this.type == 'pdf'"
-          src=".\..\..\assets\images\pdficon.png"
-        />
-        <img
-          v-if="this.type == 'txt'"
-          src=".\..\..\assets\images\txticon.png"
-        />
-        <img
-          v-if="this.type == 'docx'"
-          src=".\..\..\assets\images\wordicon.jpg"
-        />
-        <img
-          v-if="this.type == 'pptx'"
-          src=".\..\..\assets\images\powerpointicon.png"
-        />
-        <img
-          v-if="this.type == 'xlsx'"
-          src=".\..\..\assets\images\excelicon.png"
-        />
-      </div>
+    <div class="row">
+       <img src=".\..\..\assets\images\file_icons\Unknown.png" v-bind:id="this.type"/>
     </div>
-    <div class="box" @mouseleave="editName = false">
-      <div
-        class="content"
-        @dblclick="editName = true"
+    <div class="row">
+      <input
         @mouseleave="renameFile()"
-      >
-        <!--- Position of content is absolute --->
-        <input
-          v-if="editName == false"
-          class="fileName"
-          v-model="fileName"
-          disabled
+        class="fileName"
+        v-model="fileName"
+        v-bind:id="this.name"
+        disabled
         />
-        <input v-if="editName == true" class="fileName" v-model="fileName" />
-        .{{ this.fileType }}
-      </div>
-    </div>
-    <div class="container" v-if="viewMenu == true">
-      <div class="row"><button @click="downloadFile()">Download</button></div>
-      <div class="row"><button @click="confirmDelete(this.name)">Verwijder</button></div>
-      <div class="row"><button @click="moveMenu = true; setFolders()">Verplaats</button></div>
+    </div> 
+      <ul id="drop-down-menu" v-if="viewMenu == true">
+          <li @click="enableInput()">Wijzig Naam</li>
+          <li @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
+          <li @click="downloadFile()">Download</li>
+          <li @click="deleteFile()">Verwijder</li>
+      </ul>
 
-
-
-      <div class="container" v-if="moveMenu == true">
-        <div v-if="this.folders.length > 0">
-          <div class="row" v-for="folder in this.folders" :key="folder">
-            <button @click="confirmMove(folder)">
+      <ul id="drop-down-menu" v-if="moveMenu == true">
+          <li>Verplaatsen naar:</li>
+          <ul id="drop-down-menu">
+            <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">
               {{ folder }}
-            </button>
-          </div>
-        </div>
-        <div v-else>
-          <h9>There are no folders to move to</h9>
-        </div>
-      </div>
-
-
-
-    </div>
+            </li>
+          </ul>
+      </ul>
   </div>
 </template>
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
+
 export default {
   name: "ProjectFile",
   props: {
@@ -87,17 +52,16 @@ export default {
     return {
       viewMenu: false,
       moveMenu: false,
-      fileName: this.name.split(".")[0],
-      editName: false,
+      fileName: this.name,
       folders: [],
       fileType: this.type,
-      dictType: {
-        pdf: "pdficon.png",
-        docx: "wordicon.jpg",
-        xlsx: "excelicon.png",
-        pptx: "powerpointicon.png",
-        txt: "txticon.png",
-        unknown: "unknownfile.png",
+      fileTypes: {
+        pdf: require("./../../assets/images/file_icons/Pdf.png"),
+        docx: require("./../../assets/images/file_icons/Word.png"),
+        xlsx: require("./../../assets/images/file_icons/Excel.png"),
+        pptx: require("./../../assets/images/file_icons/PowerPoint.png"),
+        txt: require("./../../assets/images/file_icons/Text.png"),
+        unknown: require("./../../assets/images/file_icons/Unknown.png"),
       },
     };
   },
@@ -126,22 +90,32 @@ export default {
         });
       },
       renameFile() {
-        if (this.editName == true) {
-          var newFileName = this.fileName + "." + this.fileType
-          if(this.name != newFileName){
-            FilestorageService.renameFile(this.projectid, this.path, newFileName)
-              .then((response) => {
-                this.editName = false;
-                console.log(response.data);
-                this.$emit("nameChanged");
-              })
-              .catch((err) => {
-                if (err.response) {
-                  console.log(err.response.status);
-                }
-              });
-          }
+        this.disableInput();
+        var newFileName = this.fileName + "." + this.fileType
+        if(this.name != newFileName){
+          FilestorageService.renameFile(this.projectid, this.path, newFileName)
+            .then((response) => {
+              console.log(response.data);
+              this.$emit("nameChanged");
+            })
+            .catch((err) => {
+              if (err.response) {
+                console.log(err.response.status);
+              }
+            });
         }
+      },
+      enableInput(){
+      this.fileName = this.name.split(".")[0]
+      var inputName = document.getElementById(this.name)
+      inputName.removeAttribute("disabled")
+      
+      this.viewMenu = false;
+      inputName.select();
+      },
+      disableInput(){
+        var inputName = document.getElementById(this.name)
+        inputName.setAttribute("disabled", "")
       },
       setFolders() {
         FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
@@ -167,9 +141,11 @@ export default {
           });
       },
       getTypeImage() {
-        if (this.fileType in this.dictType) {
-          alert("yes");
-        }
+        var result = this.fileTypes[this.type];
+        var imageElement = document.getElementById(this.type)
+        result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
+        imageElement.src = result;
+        console.log(result)
       },
       confirmMove(target_folder){
         if(confirm("Are you sure you want to move " + this.name + " to " + target_folder + "?")){
@@ -187,21 +163,14 @@ export default {
 
 <style scoped>
 .projectFile {
-  color: white;
+  color: var(--blue1);
   width: 100%;
   min-height: calc(1.5vw + 1.5vh);
   font-size: calc(0.5vh + 0.5vw);
 }
 .fileName {
   background-color: transparent;
-  color: white;
+  color: var(--blue1);
   border: 0px;
-  width: 70%;
-}
-.content {
-  position: absolute;
-}
-.container {
-  margin-top: 2vh;
 }
 </style>
