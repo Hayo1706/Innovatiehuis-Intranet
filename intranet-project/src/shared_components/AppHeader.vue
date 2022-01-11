@@ -38,7 +38,7 @@ export default {
       this.$router.push("/home");
     },
     userClick() {
-      this.$router.go("/user/" + localStorage.getItem("userid"));
+      this.$router.push("/user/" + localStorage.getItem("userid"));
     },
     logout() {
       LoginService.logout();

@@ -15,7 +15,10 @@
         <div>Laatst gezien:</div>
         <div class="item-text">{{ this.last_seen }}</div>
         <div v-if="show_password">Wachtwoord:</div>
-        <router-link v-if="show_password" class="button" to="/manage/resetpassword"
+        <router-link
+          v-if="show_password"
+          class="button"
+          to="/manage/resetpassword"
           >Wachtwoord resetten</router-link
         >
       </div>
@@ -36,7 +39,10 @@
         <div class="item-text">{{ this.created }}</div>
         <div class="item-text">{{ this.last_seen }}</div>
         <div class="item-text">
-          <router-link v-if="show_password" class="button" to="/manage/resetpassword"
+          <router-link
+            v-if="show_password"
+            class="button"
+            to="/manage/resetpassword"
             >Wachtwoord resetten</router-link
           >
         </div>
@@ -61,24 +67,33 @@ export default {
     };
   },
   async created() {
-    UserService.getUserById(this.$route.params.id)
-      .then((response) => {
-        this.user = response[0];
-        this.created = this.user.created.toLocaleString();
-        this.last_seen = this.user.last_seen.toLocaleString();
-        this.$emit(
-          "getUserEvent",
-          this.user.first_name + " " + this.user.last_name
-
-        );
-        if (localStorage.getItem('userid') === this.$route.params.id)
-          this.show_password = true
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-      });
+    this.getUser();
+  },
+  methods: {
+    getUser() {
+      UserService.getUserById(this.$route.params.id)
+        .then((response) => {
+          this.user = response[0];
+          this.created = this.user.created.toLocaleString();
+          this.last_seen = this.user.last_seen.toLocaleString();
+          this.$emit(
+            "getUserEvent",
+            this.user.first_name + " " + this.user.last_name
+          );
+          if (localStorage.getItem("userid") === this.$route.params.id)
+            this.show_password = true;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+    },
+  },
+  watch: {
+    $route() {
+      this.getUser();
+    },
   },
 };
 </script>

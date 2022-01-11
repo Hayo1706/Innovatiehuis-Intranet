@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
     localStorage.setItem("previousRoute", to.fullPath);
   }
   if (!localStorage.getItem("loggedIn") && to.fullPath !== "/login" && to.path !== "/manage/resetpassword") {
-      next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." } });
+    next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." } });
   } else {
 
     if (to.fullPath == "/manage/projects" && !PermissionService.userHasPermission("may_read_any_project")) {
