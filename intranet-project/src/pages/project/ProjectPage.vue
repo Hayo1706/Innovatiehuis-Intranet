@@ -50,12 +50,12 @@ export default {
   async created() {
     ProjectService.getProjectById(this.$route.params.id)
       .then((response) => {
-        this.$emit("newHeaderTitle", "Project: " + response[0].project_name);
+        this.$emit("newHeaderTitle", response[0].project_name);
       })
       .catch((err) => {
         if (err.response) {
           console.log(err.response.status);
-          this.$emit("newHeaderTitle", "Project: #" + this.$route.params.id);
+          this.$emit("newHeaderTitle", "Project #" + this.$route.params.id);
         }
       });
   },
