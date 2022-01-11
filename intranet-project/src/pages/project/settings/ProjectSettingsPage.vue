@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <ProjectInfo v-bind:project="this.project"></ProjectInfo>
+    <ProjectInfo v-bind:project="project"></ProjectInfo>
   </div>
 </template>
 
@@ -12,10 +12,10 @@ export default {
   name: "ProjectSettings",
   data: function () {
     return {
-      project: null,
+      project: {},
     };
   },
-  async created() {
+  created() {
     ProjectService.getProjectById(this.$route.params.id)
       .then((response) => {
         this.$emit(
