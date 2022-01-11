@@ -8,16 +8,7 @@
     <div class="row">
        <img :src="this.getTypeImage()" v-bind:id="this.type"/>
     </div>
-    <div class="row">
-      <input
-        @mouseleave="renameFile()"
-        class="fileName"
-        v-model="fileName"
-        v-bind:id="this.name"
-        disabled
-        />
-    </div> 
-      <ul id="drop-down-menu" v-if="viewMenu == true">
+     <ul id="drop-down-menu" v-if="viewMenu == true">
           <li @click="enableInput()">Wijzig Naam</li>
           <li @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
           <li @click="downloadFile()">Download</li>
@@ -32,6 +23,15 @@
             </li>
           </ul>
       </ul>
+    <div class="row">
+      <input
+        @mouseleave="renameFile()"
+        class="fileName"
+        v-model="fileName"
+        v-bind:id="this.name"
+        disabled
+        />
+    </div> 
   </div>
 </template>
 
