@@ -9,9 +9,8 @@
         <text>Bestanden</text>
         </ProjectFilesHeader>
     </div>
-    <div class="container-fluid">
       <div class="row">
-        <div v-for="file in files" :key="file" class="col-sm-2">
+        <div v-for="file in files" :key="file" class="col-sm-4">
           <!--- Determine size of each Column --->
           <div v-if="fileNameInSearchterm(file)">
             <!--- Ensures that height is equal to width --->
@@ -31,7 +30,7 @@
         
       </div>
     </div>
-  </div>
+
 </template>
 
 <script>

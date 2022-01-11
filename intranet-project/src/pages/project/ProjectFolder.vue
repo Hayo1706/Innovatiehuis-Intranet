@@ -6,32 +6,25 @@
     @long-press="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
-    <div class="container-fluid"  @click="goToFolder()">
-      <div class="row">
-        <div class="col-3">
-          <img
-            class="foldersImage"
-            v-if="this.shared != 'yes'"
-            src=".\..\..\assets\images\folder.png"
-          />
-          <img
-            class="foldersImage"
-            v-if="this.shared == 'yes'"
-            src=".\..\..\assets\images\shared_folder.png"
-          />
-        </div>
-        <div class="col-9">
-          <input
-            v-on:keyup.enter="renameFolder()"
-            class="folderName"
-            v-model="newName"
-            v-bind:id="this.name"
-            disabled
-          />
-        </div>
-      </div>
+    <div class="button"  @click="goToFolder()">
+      <img
+        class="foldersImage"
+        v-if="this.shared != 'yes'"
+        src=".\..\..\assets\images\folder.png"
+      />
+      <img
+        class="foldersImage"
+        v-if="this.shared == 'yes'"
+        src=".\..\..\assets\images\shared_folder.png"
+      />
+      <input
+        v-on:keyup.enter="renameFolder()"
+        class="folderName"
+        v-model="newName"
+        v-bind:id="this.name"
+        disabled
+      />
     </div>
-
     <ul v-show="canSeeMenu()" id="drop-down-menu" v-if="viewMenu == true">
         <li v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</li>
         <li v-show="canMoveFolder()" v-if="this.folders.length > 0" @click="moveMenu = true; getFolders(); viewMenu = false;">Verplaats</li>
@@ -201,14 +194,26 @@ export default {
   width: 100%;
   min-height: calc(1.5vw + 1.5vh);
   font-size: calc(0.5vh + 0.5vw);
+  padding: 2px;
+  margin-bottom: 1vh;
 }
 .foldersImage {
-  width: calc(1.5vw + 1.5vh);
+  width: min(calc(30px + 2vw), 50px);
+  margin-bottom: 1vh;
+
 }
 .folderName {
   background-color: transparent;
   color: var(--blue1);
-  border: 0px;
+  width: 100%;
+}
+.button{
+  margin-left: 10px;
+  padding: 15px
+}
+.button:hover{
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+  border-radius: 10px;
 }
 .container {
   margin-top: 2vh;
