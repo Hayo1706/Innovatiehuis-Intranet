@@ -14,9 +14,9 @@ def may_create(user_perm):
     return user_perm["may_create_project"]
 
 
-def may_update(user_perm, resource_id):
+def may_update(user_perm, project_id, user_id):
     return user_perm["may_update_any_project"] or (
-            user_perm["may_update_own_project"] and permissions.user_owns_project(resource_id))
+            user_perm["may_update_own_project"] and permissions.user_owns_project(project_id))
 
 
 def may_archive(user_perm, project_id):
