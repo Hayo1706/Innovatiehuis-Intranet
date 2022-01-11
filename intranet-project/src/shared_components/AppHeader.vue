@@ -36,6 +36,7 @@
 
 <script>
 import LoginService from "../services/LoginService";
+import PermissionService from "../services/PermissionService";
 
 export default {
   name: "AppHeader",
