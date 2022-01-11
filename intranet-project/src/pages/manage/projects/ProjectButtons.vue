@@ -1,7 +1,6 @@
 <template>
   <div class="col">
     <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
-    <a class="link" @click="gotoMembers()">Leden</a>
     <span v-show="canArchive()">
       <a
         v-if="project.is_archived"
@@ -35,9 +34,6 @@ export default {
     },
     canDelete() {
       return PermissionService.userHasPermission("may_delete_any_project");
-    },
-    gotoMembers() {
-      this.$router.push({ path: `/project/${this.project.projectid}/members` });
     },
     async handleDeleteProject(project) {
       let answer = confirm(
