@@ -73,7 +73,7 @@ p {
 
 .component-header {
   color: #101936;
-  font-size: 3.2vh;
+  font-size: min(calc(10px + 2vw), 36px);
   height: 5vh;
   padding-left: 10px;
   overflow: hidden;
