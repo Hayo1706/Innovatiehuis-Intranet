@@ -47,6 +47,7 @@
         <div class="accordion-body">
           <form autocomplete="off">
             <SearchBar
+              v-show="canUpdateProject()"
               v-bind:searchTerm="this.userSearchTerm"
               :id="'searchUsersBar' + this.project.projectid"
               autocomplete="off"
@@ -85,7 +86,11 @@
             <span class="full-button" @click="navigateUser(member.userid)">
               {{ member.first_name }} {{ member.last_name }}
             </span>
-            <button class="userDeleteButton" @click="removeUser(member.userid)">
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeUser(member.userid)"
+            >
               x
             </button>
           </div>
@@ -169,6 +174,7 @@
 import ProjectService from "@/services/ProjectService.js";
 import UserService from "@/services/UserService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
+import PermissionService from "@/services/PermissionService.js";
 export default {
   props: ["project"],
   components: { SearchBar },
@@ -324,6 +330,9 @@ export default {
     },
     navigateUser(userid) {
       this.$router.push("/user/" + userid);
+    },
+    canUpdateProject() {
+      return PermissionService.userHasPermission("may_update_any_project");
     },
     accordeonIsOpen(idName) {
       return (
