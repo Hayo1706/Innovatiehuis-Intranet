@@ -59,6 +59,14 @@ var ProjectService = function () {
         return data;
     }
 
+    async function addChildToProject(projectid, childid) {
+        const { data } = await axiosClient.post(`/projects/${projectid}/children/${childid}`, { timeout: 2000 });
+        return data;
+    }
+    async function removeChildFromProject(projectid, childid) {
+        const { data } = await axiosClient.delete(`/projects/${projectid}/children/${childid}`, { timeout: 2000 });
+        return data;
+    }
     return {
         getProjects,
         getProjectById,
@@ -70,7 +78,9 @@ var ProjectService = function () {
         addProject,
         updateProjectNameDescription,
         addParentToProject,
-        removeParentFromProject
+        removeParentFromProject,
+        addChildToProject,
+        removeChildFromProject
     }
 
 

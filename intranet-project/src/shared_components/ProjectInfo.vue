@@ -231,13 +231,57 @@
         aria-labelledby="heading"
       >
         <div class="accordion-body">
+          <form autocomplete="off">
+            <SearchBar
+              v-show="canUpdateProject()"
+              v-bind:searchTerm="this.childSearchTerm"
+              :id="'searchParentsBar' + this.project.projectid"
+              autocomplete="off"
+              class="searchbar"
+              @searchBarChanged="
+                (searchTerm) => {
+                  handleSearchChild(searchTerm);
+                }
+              "
+            ></SearchBar>
+          </form>
           <div
-            class="full-button"
-            v-for="child in this.children"
-            v-bind:key="child.projectid"
-            @click="navigate(child.projectid)"
+            class="dropdown-menu"
+            :id="'childSearchDropdown' + this.project.projectid"
           >
-            {{ child.project_name }}
+            <div
+              class="dropdown-item"
+              v-for="child in filteredChildren"
+              v-bind:key="child.projectid"
+              @click="selectChild(child)"
+            >
+              {{ child.project_name }}
+            </div>
+          </div>
+          <div v-if="childToAdd">
+            {{ this.childToAdd.project_name }}
+            <button
+              @click="addChild()"
+              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+            >
+              toevoegen
+            </button>
+          </div>
+
+          <div v-for="child in this.children" v-bind:key="child.projectid">
+            <span
+              class="full-button"
+              @click="navigateProject(parent.projectid)"
+            >
+              {{ child.project_name }}
+            </span>
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeChild(child.projectid)"
+            >
+              x
+            </button>
           </div>
           <div v-if="this.children.length == 0">Geen resultaten</div>
         </div>
@@ -274,6 +318,10 @@ export default {
       parentToAdd: null,
       parentSearchTerm: "",
       filteredParents: [],
+
+      childToAdd: null,
+      childSearchTerm: "",
+      filteredChildren: [],
     };
   },
   methods: {
@@ -302,6 +350,10 @@ export default {
       this.parentToAdd = project;
       this.parentSearchTerm = "";
     },
+    selectChild(project) {
+      this.childToAdd = project;
+      this.childSearchTerm = "";
+    },
     addUser() {
       UserService.addUserToProject(
         this.project.projectid,
@@ -327,6 +379,36 @@ export default {
         .then(() => {
           this.parentToAdd = null;
           this.loadParents();
+        })
+        .catch((err) => {
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert("Er ging wat mis, probeer later opnieuw");
+        });
+    },
+    addChild() {
+      ProjectService.addChildToProject(
+        this.project.projectid,
+        this.childToAdd.projectid
+      )
+        .then(() => {
+          this.childToAdd = null;
+          this.loadChildren();
+        })
+        .catch((err) => {
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert("Er ging wat mis, probeer later opnieuw");
+        });
+    },
+    removeChild(childid) {
+      ProjectService.removeChildFromProject(this.project.projectid, childid)
+        .then(() => {
+          this.loadChildren();
         })
         .catch((err) => {
           //invalid operation on server
@@ -400,10 +482,36 @@ export default {
       if (name) {
         this.parentSearchTerm = name;
         this.filteredParents = this.getFilteredParents();
-        console.log(this.filteredParents);
       } else {
         this.filteredParents = [];
       }
+    },
+    handleSearchChild(name) {
+      if (name) {
+        this.childSearchTerm = name;
+        this.filteredChildren = this.getFilteredChildren();
+      } else {
+        this.filteredChildren = [];
+      }
+    },
+    getFilteredChildren() {
+      return this.projects.filter((item) => {
+        return (
+          item.project_name
+            .toLowerCase()
+            .includes(this.childSearchTerm.toLowerCase()) &&
+          !this.childrenContainsProject(item.projectid) &&
+          item.projectid != this.project.projectid
+        );
+      });
+    },
+    childrenContainsProject(projectid) {
+      for (const child of this.children) {
+        if (child.projectid == projectid) {
+          return true;
+        }
+      }
+      return false;
     },
     getFilteredParents() {
       return this.projects.filter((item) => {
@@ -463,6 +571,18 @@ export default {
     onChildrenClick() {
       if (this.accordeonIsOpen("collapseChildrenButton")) {
         this.loadChildren();
+        ProjectService.getProjects()
+          .then((response) => {
+            this.projects = response;
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      } else {
+        this.childToAdd = null;
+        this.childSearchTerm = "";
       }
     },
     onMembersClick() {
@@ -537,6 +657,17 @@ export default {
       } else {
         document
           .getElementById("parentSearchDropdown" + this.project.projectid)
+          .classList.toggle("show");
+      }
+    },
+    filteredChildren: function () {
+      if (this.filteredChildren.length == 0) {
+        document
+          .getElementById("childSearchDropdown" + this.project.projectid)
+          .classList.remove("show");
+      } else {
+        document
+          .getElementById("childSearchDropdown" + this.project.projectid)
           .classList.toggle("show");
       }
     },
