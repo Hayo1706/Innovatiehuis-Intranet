@@ -29,7 +29,7 @@
     >
       <div class="accordion-body">
         <strong>
-          <router-link :to="'/user/' + this.id">
+          <router-link :to="'/user/' + this.userid">
             {{ this.username }}
           </router-link>
         </strong>
