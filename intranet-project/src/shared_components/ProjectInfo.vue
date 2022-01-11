@@ -3,27 +3,28 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading">
         <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            :data-bs-target="'#collapseName' + this.project.projectid"
-            aria-expanded="false"
-            :aria-controls="'collapseName' + this.project.projectid"
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          :data-bs-target="'#collapseName' + this.project.projectid"
+          aria-expanded="false"
+          :aria-controls="'collapseName' + this.project.projectid"
         >
           Naam
         </button>
       </h2>
       <div
-          :id="'collapseName' + this.project.projectid"
-          class="accordion-collapse collapse"
-          aria-labelledby="heading"
+        :id="'collapseName' + this.project.projectid"
+        class="accordion-collapse collapse"
+        aria-labelledby="heading"
       >
         <div v-if="canUpdateProject()" class="accordion-body">
-          <textarea class="area" v-model="projectname"/><hr>
+          <textarea class="area" v-model="projectname" />
+          <hr />
           <button @click="updateNameDescription()">Update</button>
         </div>
         <div v-else class="accordion-body">
-          {{project.project_name}}
+          {{ project.project_name }}
         </div>
       </div>
     </div>
@@ -47,10 +48,11 @@
         aria-labelledby="heading"
       >
         <div v-if="canUpdateProject()" class="accordion-body">
-          <textarea class="area" v-model="projectdescription"/><hr>
+          <textarea class="area" v-model="projectdescription" />
+          <hr />
           <button @click="updateNameDescription()">Update</button>
         </div>
-        <div v-else class="accordion-body">{{project.description}}</div>
+        <div v-else class="accordion-body">{{ project.description }}</div>
       </div>
     </div>
 
@@ -275,9 +277,15 @@ export default {
     };
   },
   methods: {
-    updateNameDescription(){
-      const project = {"project_name": this.projectname, "description":this.projectdescription};
-      ProjectService.updateProjectNameDescription(this.project.projectid,project)
+    updateNameDescription() {
+      const project = {
+        project_name: this.projectname,
+        description: this.projectdescription,
+      };
+      ProjectService.updateProjectNameDescription(
+        this.project.projectid,
+        project
+      );
     },
     getUserIds(userList) {
       let ids = [];
@@ -311,8 +319,36 @@ export default {
           alert("Er ging wat mis, probeer later opnieuw");
         });
     },
-    addParent() {},
-    removeParent() {},
+    addParent() {
+      ProjectService.addParentToProject(
+        this.project.projectid,
+        this.parentToAdd.projectid
+      )
+        .then(() => {
+          this.parentToAdd = null;
+          this.loadParents();
+        })
+        .catch((err) => {
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert("Er ging wat mis, probeer later opnieuw");
+        });
+    },
+    removeParent(parentid) {
+      ProjectService.removeParentFromProject(this.project.projectid, parentid)
+        .then(() => {
+          this.loadParents();
+        })
+        .catch((err) => {
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert("Er ging wat mis, probeer later opnieuw");
+        });
+    },
     removeUser(userid) {
       UserService.removeUserFromProject(this.project.projectid, userid)
         .then(() => {
@@ -375,7 +411,8 @@ export default {
           item.project_name
             .toLowerCase()
             .includes(this.parentSearchTerm.toLowerCase()) &&
-          !this.parentsContainsProject(item.projectid)
+          !this.parentsContainsProject(item.projectid) &&
+          item.projectid != this.project.projectid
         );
       });
     },
@@ -467,8 +504,10 @@ export default {
       this.$router.push("/user/" + userid);
     },
     canUpdateProject() {
-      return PermissionService.userHasPermission("may_update_any_project") ||
-          PermissionService.userHasPermission("may_update_own_project");
+      return (
+        PermissionService.userHasPermission("may_update_any_project") ||
+        PermissionService.userHasPermission("may_update_own_project")
+      );
     },
     accordeonIsOpen(idName) {
       return (
@@ -530,7 +569,7 @@ button {
   margin-left: 10px;
 }
 
-.area{
+.area {
   width: 100%;
 }
 
