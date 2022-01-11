@@ -25,7 +25,7 @@
       </ul>
     <div class="row">
       <input
-        @mouseleave="renameFile()"
+        v-on:keyup.enter="renameFile()"
         class="fileName"
         v-model="fileName"
         v-bind:id="this.name"

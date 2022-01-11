@@ -5,7 +5,7 @@
     @contextmenu="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
-    <div class="container-fluid"  @click="goToFolder()" @mouseleave="renameFolder()">
+    <div class="container-fluid"  @click="goToFolder()">
       <div class="row">
         <div class="col-3">
           <img
@@ -21,6 +21,7 @@
         </div>
         <div class="col-9">
           <input
+            v-on:keyup.enter="renameFolder()"
             class="folderName"
             v-model="newName"
             v-bind:id="this.name"
