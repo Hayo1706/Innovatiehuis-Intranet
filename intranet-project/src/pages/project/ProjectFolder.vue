@@ -3,6 +3,7 @@
     class="projectFolder"
     @mousemove="set_coordinates"
     @contextmenu="viewMenu = true"
+    @long-press="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
     <div class="container-fluid"  @click="goToFolder()">
@@ -31,13 +32,13 @@
       </div>
     </div>
 
-    <ul id="drop-down-menu" v-if="viewMenu == true">
-        <li @click="enableInput()">Wijzig Naam</li>
-        <li v-if="this.folders.length > 0" @click="moveMenu = true; getFolders(); viewMenu = false;">Verplaats</li>
-        <li @click="deleteFolder()">Verwijder</li>
+    <ul v-show="canSeeMenu()" id="drop-down-menu" v-if="viewMenu == true">
+        <li v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</li>
+        <li v-show="canMoveFolder()" v-if="this.folders.length > 0" @click="moveMenu = true; getFolders(); viewMenu = false;">Verplaats</li>
+        <li v-show="canDeleteFolder()" @click="deleteFolder()">Verwijder</li>
     </ul>
 
-    <ul id="drop-down-menu" v-if="moveMenu == true">
+    <ul v-show="canSeeMenu()" id="drop-down-menu" v-if="moveMenu == true">
         <li>Verplaatsen naar:</li>
         <ul id="drop-down-menu">
           <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">
@@ -50,6 +51,8 @@
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
+import PermissionService from "@/services/PermissionService.js";
+
 export default {
   name: "ProjectFolder",
   props: {
@@ -169,11 +172,20 @@ export default {
           }
         });
     },
-    changeDropDown(){
-      
-    },
     goToFolder() {
       this.$emit("currentPathChanged", this.directorypath + "/" + this.folderName);
+    },
+    canDeleteFolder(){
+    return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canMoveFolder(){
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canRenameFolder(){
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canSeeMenu(){
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
     },
   },
   async created() {

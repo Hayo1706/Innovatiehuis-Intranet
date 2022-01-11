@@ -12,7 +12,7 @@
             v-bind:searchTerm="this.searchTerm"
           ></SearchBar>
         </div>
-        <div class="col-sm-1">
+        <div v-show="canAddFolder()" class="col-sm-1">
           <button
             class="iconButton"
             data-bs-toggle="modal"
@@ -81,6 +81,7 @@
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
+import PermissionService from "@/services/PermissionService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 export default {
   name: "ProjectFolderHeader",
@@ -113,10 +114,9 @@ export default {
           }
         });
     },
-    reload() {
-      console.log("updating key");
-      this.$emit("reload");
-    },
+    canAddFolder(){
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    }
   },
 };
 </script>
