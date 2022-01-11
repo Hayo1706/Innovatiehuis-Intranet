@@ -644,11 +644,12 @@ export default {
     },
     closeAllAcordeons() {
       var arr = document.getElementsByClassName("accordion-button");
+
       for (let j = 0; j < arr.length; j++) {
         if (
-          !arr[j].attributes[0].value.includes(
-            this.project.projectid.toString()
-          ) &&
+          !arr[j]
+            .getAttribute("aria-controls")
+            .includes(this.project.projectid.toString()) &&
           !arr[j].classList.contains("collapsed")
         ) {
           arr[j].click();
