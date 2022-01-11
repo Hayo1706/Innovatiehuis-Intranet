@@ -2,17 +2,17 @@
   <div
     class="projectFile"
     @contextmenu="viewMenu = true"
-    @mouseenter="this.getTypeImage()"
+    @long-press="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
     <div class="row">
        <img :src="this.getTypeImage()" v-bind:id="this.type"/>
     </div>
-     <ul id="drop-down-menu" v-if="viewMenu == true">
-          <li @click="enableInput()">Wijzig Naam</li>
-          <li @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
-          <li @click="downloadFile()">Download</li>
-          <li @click="deleteFile()">Verwijder</li>
+     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
+          <li v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
+          <li v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
+          <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
+          <li v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
       </ul>
 
       <ul id="drop-down-menu" v-if="moveMenu == true">
@@ -37,6 +37,7 @@
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
+import PermissionService from "@/services/PermissionService.js";
 
 export default {
   name: "ProjectFile",
@@ -92,7 +93,7 @@ export default {
       renameFile() {
         this.disableInput();
         var newFileName = this.fileName + "." + this.fileType
-        if(this.name != newFileName){
+        if(this.name != newFileName && newFileName != this.name + this.type){
           FilestorageService.renameFile(this.projectid, this.path, newFileName)
             .then((response) => {
               console.log(response.data);
@@ -104,6 +105,9 @@ export default {
                 console.log(err.response.status);
               }
             });
+        }
+        else{
+          this.fileName = this.name
         }
       },
       enableInput(){
@@ -155,6 +159,18 @@ export default {
         if(confirm("Are you sure you want to delete " + file_name + "?")){
           this.deleteFile()
         }
+      },
+      canDeleteFile(){
+        return PermissionService.userHasPermission("may_update_file_in_own_project");
+      },
+      canMoveFile(){
+        return PermissionService.userHasPermission("may_update_file_in_own_project");
+      },
+      canRenameFile(){
+        return PermissionService.userHasPermission("may_update_file_in_own_project");
+      },
+      canDownloadFile(){
+        return PermissionService.userHasPermission("may_read_own_project");
       }
   },
 };
