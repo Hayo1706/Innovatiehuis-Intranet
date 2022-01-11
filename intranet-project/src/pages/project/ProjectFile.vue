@@ -6,7 +6,7 @@
     @mouseleave="viewMenu = false; moveMenu = false"
   >
     <div class="row">
-       <img src=".\..\..\assets\images\file_icons\Unknown.png" v-bind:id="this.type"/>
+       <img :src="this.getTypeImage()" v-bind:id="this.type"/>
     </div>
     <div class="row">
       <input
@@ -100,6 +100,7 @@ export default {
             })
             .catch((err) => {
               if (err.response) {
+                this.fileName = this.name
                 console.log(err.response.status);
               }
             });
@@ -142,10 +143,8 @@ export default {
       },
       getTypeImage() {
         var result = this.fileTypes[this.type];
-        var imageElement = document.getElementById(this.type)
         result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
-        imageElement.src = result;
-        console.log(result)
+        return result
       },
       confirmMove(target_folder){
         if(confirm("Are you sure you want to move " + this.name + " to " + target_folder + "?")){
