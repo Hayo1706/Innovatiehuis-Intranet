@@ -15,8 +15,6 @@
               :key="this.announcementWindowKey"
               >Mededelingen</AnnouncementWindow
             >
-            <ChatWindow></ChatWindow>
-
         </div>
       </div>
     </div>
@@ -26,12 +24,11 @@
 <script>
 import FilesView from "./FilesView.vue";
 import FoldersView from "./FoldersView.vue";
-import ChatWindow from "./ChatWindow.vue";
 import AnnouncementWindow from "../../shared_components/AnnouncementWindow.vue";
 import ProjectService from "../../services/ProjectService.js";
 
 export default {
-  components: { FilesView, FoldersView, AnnouncementWindow, ChatWindow },
+  components: { FilesView, FoldersView, AnnouncementWindow },
   name: "ProjectPage",
   data: function () {
     return {

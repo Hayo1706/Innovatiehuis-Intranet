@@ -57,6 +57,9 @@ export default {
       folders: [],
       fileType: this.type,
       fileTypes: {
+        jpg: require("./../../assets/images/file_icons/Jpg.png"),
+        jpeg: require("./../../assets/images/file_icons/Jpeg.png"),
+        png: require("./../../assets/images/file_icons/Png.png"),
         pdf: require("./../../assets/images/file_icons/Pdf.png"),
         docx: require("./../../assets/images/file_icons/Word.png"),
         xlsx: require("./../../assets/images/file_icons/Excel.png"),
