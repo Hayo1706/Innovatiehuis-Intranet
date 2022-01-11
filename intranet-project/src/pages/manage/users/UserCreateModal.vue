@@ -140,15 +140,11 @@ export default {
       })
         .then((respsonse) => {
           this.closeModal();
-          alert(
-            "De gebruiker '" +
-              this.first_name +
-              " " +
-              this.last_name +
-              "' is toegevoegd!"
-              +"\nMail de volgende link naar "+this.first_name +
-              " zodat hij zijn wachtwoord kan instellen:\n"+respsonse.response.link
-          );
+          var message = "De gebruiker '" + this.first_name + " " + this.last_name + "' is toegevoegd!" +
+          "\nMail de volgende link naar " + this.first_name + " zodat ze hun wachtwoord kunnen instellen:" + 
+          "\n" + respsonse.response.link
+          console.log(message);
+          alert(message);
           window.location.reload();
         })
         .catch((err) => {

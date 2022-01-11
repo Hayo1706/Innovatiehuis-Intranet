@@ -1,6 +1,6 @@
 <template>
   <header v-if="this.$route.path !== '/login'">
-    <div id="header_title_text">
+    <div id="header-container">
       <div class="image-container">
         <img class="logo" @click="logoClick()" src=".\..\assets\images\logo\square.png" />
         <img
@@ -17,13 +17,13 @@
         />
       </div>
       <div class="image-container">
-        <slot></slot>
         <img
           class="header-icon"
           @click="settingClick()"
           src=".\..\assets\images\gear_icon3.png"
           v-if="this.$route.path.indexOf('/project/') > -1"
         />
+        <slot style="margin: 10vw;"></slot>
       </div>
 
       <div class="image-container">
@@ -101,7 +101,7 @@ header {
   border-bottom: solid 2px var(--gold1);
 }
 
-#header_title_text {
+#header-container {
   color: var(--blue1);
   font-size: min(calc(10px + 2vw), 36px);
   display: flex;

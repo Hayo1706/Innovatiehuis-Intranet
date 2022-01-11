@@ -29,7 +29,7 @@ def login():
             query_update("UPDATE users SET failed_login_count = 0 where userid = %(userid)s",
                          {'userid': user['userid']})
         else:
-            return response("Acces Denied, your account is blocked for " +
+            return response("Access Denied, your account is blocked for " +
                             str(config.COOLDOWN_TIME_SECONDS - int((datetime.datetime.now() - user[
                                 'last_failed_login']).total_seconds())) +
                             " more seconds", 401)

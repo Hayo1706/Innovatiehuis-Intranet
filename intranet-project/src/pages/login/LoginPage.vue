@@ -25,9 +25,8 @@
         pagina.
       </p>
       <p
-        v-if="this.enteredWrongPassword"
         id="error-message"
-      >Gebruikersnaam en/of wachtwoord is incorrect.</p>
+      >{{this.error}}</p>
     </div>
   </div>
 </template>
@@ -40,9 +39,9 @@ export default {
   name: "LoginPage",
   data: function () {
     return {
-      enteredWrongPassword: false,
       loginAttempt: { email: "", password: "" },
       redirectTarget: "/home",
+      error: ""
     };
   },
   methods: {
@@ -69,7 +68,8 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          this.enteredWrongPassword = true;
+          this.error = err.response.data.response.message;
+          console.log(this.err.response.data.response.message);
         });
     },
   },
