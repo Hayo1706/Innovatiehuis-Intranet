@@ -3,6 +3,34 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading">
         <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            :data-bs-target="'#collapseName' + this.project.projectid"
+            aria-expanded="false"
+            :aria-controls="'collapseName' + this.project.projectid"
+        >
+          Naam
+        </button>
+      </h2>
+      <div
+          :id="'collapseName' + this.project.projectid"
+          class="accordion-collapse collapse"
+          aria-labelledby="heading"
+      >
+        <div v-if="canUpdateProject()" class="accordion-body">
+          <textarea class="area" v-model="projectname"/><hr>
+          <button @click="updateNameDescription()">Update</button>
+        </div>
+        <div v-else class="accordion-body">
+          {{project.project_name}}
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading">
+        <button
           class="accordion-button collapsed"
           type="button"
           data-bs-toggle="collapse"
@@ -18,9 +46,11 @@
         class="accordion-collapse collapse"
         aria-labelledby="heading"
       >
-        <div class="accordion-body">
-          {{ project.description }}
+        <div v-if="canUpdateProject()" class="accordion-body">
+          <textarea class="area" v-model="projectdescription"/><hr>
+          <button @click="updateNameDescription()">Update</button>
         </div>
+        <div v-else class="accordion-body">{{project.description}}</div>
       </div>
     </div>
 
@@ -231,7 +261,8 @@ export default {
       parentsOpen: false,
       childrenOpen: false,
       membersOpen: false,
-
+      projectname: this.project.project_name,
+      projectdescription: this.project.description,
       memberToAdd: null,
       userSearchTerm: "",
       users: [],
@@ -244,6 +275,10 @@ export default {
     };
   },
   methods: {
+    updateNameDescription(){
+      const project = {"project_name": this.projectname, "description":this.projectdescription};
+      ProjectService.updateProjectNameDescription(this.project.projectid,project)
+    },
     getUserIds(userList) {
       let ids = [];
       for (let user of userList) {
@@ -432,7 +467,8 @@ export default {
       this.$router.push("/user/" + userid);
     },
     canUpdateProject() {
-      return PermissionService.userHasPermission("may_update_any_project");
+      return PermissionService.userHasPermission("may_update_any_project") ||
+          PermissionService.userHasPermission("may_update_own_project");
     },
     accordeonIsOpen(idName) {
       return (
@@ -492,6 +528,10 @@ button {
   margin-top: 10px;
   margin-bottom: 20px;
   margin-left: 10px;
+}
+
+.area{
+  width: 100%;
 }
 
 .searchbar {

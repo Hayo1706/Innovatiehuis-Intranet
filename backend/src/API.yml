@@ -55,16 +55,18 @@ paths:
       summary: Update a value of project
       parameters:
         - $ref: '#/components/parameters/project_id'
-        - in: query
-          name: project
-          required: true
-          schema:
-            type: object
-            properties:
-              project_name:
-                type: string
-              description:
-                type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project_name:
+                  type: string
+                description:
+                  type: string
+
       responses:
         200:
           description: Project updated

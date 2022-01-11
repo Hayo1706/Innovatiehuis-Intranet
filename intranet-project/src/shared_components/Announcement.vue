@@ -47,8 +47,8 @@
         </div>
         <div v-else>
           <p>{{ this.content }}</p>
-          <button @click="remove()">Verwijderen</button>
-          <button @click="toggleEdit()">Aanpassen</button>
+          <button v-if="canEditDelete()" @click="remove()">Verwijderen</button>
+          <button v-if="canEditDelete()" @click="toggleEdit()">Aanpassen</button>
           <button
             data-bs-toggle="modal"
             :data-bs-target="'#repliesModal' + this.id"
@@ -84,10 +84,12 @@
 <script>
 import AnnouncementService from "@/services/AnnouncementService.js";
 import RepliesModal from "@/shared_components/RepliesModal.vue";
+import PermissionService from "@/services/PermissionService";
 
 export default {
   name: "Announcement",
   components: { RepliesModal },
+  loggedInUser: 0,
   props: {
     id: { type: Number, required: true },
     timestamp: { type: Date, required: true },
@@ -98,7 +100,7 @@ export default {
   },
   data: function () {
     return {
-      repliesModalKey: 0,
+      repliesModalKey: { type: Number},
       editData: { title: this.title + "", content: this.content + "" },
       editing: false,
       replies: [],
@@ -106,7 +108,7 @@ export default {
     };
   },
   async created() {
-    console.log("load replies for announcement " + this.id);
+    this.loggedInUser = localStorage.getItem('userid')
     AnnouncementService.getRepliesByAnnouncement(this.id)
       .then((response) => {
         this.replies = response;
@@ -122,6 +124,10 @@ export default {
       AnnouncementService.deleteAnnouncement(this.id);
       alert("Mededeling is verwijderd!");
       this.$emit("reload");
+    },
+    canEditDelete(){
+      return PermissionService.userHasPermission("may_update_any_announcement") ||
+          (PermissionService.userHasPermission("may_update_own_content") &&  this.loggedInUser == this.userid)
     },
     toggleEdit() {
       this.editing = !this.editing;

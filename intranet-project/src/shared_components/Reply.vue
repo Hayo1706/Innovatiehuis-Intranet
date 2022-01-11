@@ -13,8 +13,8 @@
       </div>
       <div v-else>
         <p>{{ this.content }}</p>
-        <button @click="toggleEdit()">Wijzigen</button>
-        <button @click="remove()">Verwijderen</button>
+        <button v-if="canEditDelete()" @click="toggleEdit()">Wijzigen</button>
+        <button v-if="canEditDelete()" @click="remove()">Verwijderen</button>
       </div>
     </div>
     <p style="text-align: right">
@@ -25,9 +25,11 @@
 
 <script>
 import AnnouncementService from "@/services/AnnouncementService.js";
+import PermissionService from "@/services/PermissionService";
 
 export default {
   name: "Reply",
+  loggedInUser: 0,
   props: {
     id: { type: Number, required: true },
     announcementid: { type: Number, required: true },
@@ -42,9 +44,16 @@ export default {
       editing: false,
     };
   },
+  async created() {
+    this.loggedInUser = localStorage.getItem('userid')
+  },
   methods: {
     toggleEdit() {
       this.editing = !this.editing;
+    },
+    canEditDelete(){
+      return PermissionService.userHasPermission("may_update_any_reply") ||
+          (PermissionService.userHasPermission("may_update_own_content") &&  this.loggedInUser == this.userid)
     },
     saveEdits() {
       this.editing = false;

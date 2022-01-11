@@ -11,7 +11,7 @@
           class="options"
           @click="settingClick()"
           src=".\..\assets\images\gear_icon2.png"
-          v-if="this.$route.path.indexOf('/project') > -1 && canSeeGear()"
+          v-if="this.$route.path.indexOf('/project/') > -1"
         />
       </div>
       <slot></slot>
@@ -25,7 +25,6 @@
 
 <script>
 import LoginService from "../services/LoginService";
-import PermissionService from "@/services/PermissionService";
 
 export default {
   name: "AppHeader",
@@ -47,12 +46,6 @@ export default {
     settingClick() {
       this.$router.push(
         "/project/" + this.$route.params.id + "/projectsettings"
-      );
-    },
-    canSeeGear() {
-      return (
-        PermissionService.userHasPermission("may_update_any_project") ||
-        PermissionService.userHasPermission("may_update_own_project")
       );
     },
   },
