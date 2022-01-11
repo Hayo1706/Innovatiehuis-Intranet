@@ -56,10 +56,10 @@ def update(project_id):
         return response("Invalid body", 400)
 
     query_update("UPDATE projects "
-                 "SET project_name = %(project_name)s, description = %(description)s, is_archived = %(is_archived)s "
-                 "WHERE projectid = %(id)s",
+                 "SET project_name = %(project_name)s, description = %(description)s "
+                 "WHERE projectid = %(projectid)s",
                  {'project_name': project_name, 'description': description,
-                  'id': project_id})
+                  'projectid': project_id})
     return response(f"Project {project_id} successfully updated", 200)
 
 

@@ -45,6 +45,10 @@ var ProjectService = function () {
         const { data } = await axiosClient.post(`/projects`, { project }, { timeout: 2000 });
         return data;
     }
+    async function updateProjectNameDescription(id, project) {
+        const { data } = await axiosClient.put(`/projects/${id}`, { project }, { timeout: 2000 });
+        return data;
+    }
 
     return {
         getProjects,
@@ -55,6 +59,7 @@ var ProjectService = function () {
         getParentsById,
         getChildrenById,
         addProject,
+        updateProjectNameDescription,
     }
 
 

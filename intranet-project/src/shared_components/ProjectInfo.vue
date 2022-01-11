@@ -3,6 +3,34 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading">
         <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            :data-bs-target="'#collapseName' + this.project.projectid"
+            aria-expanded="false"
+            :aria-controls="'collapseName' + this.project.projectid"
+        >
+          Naam
+        </button>
+      </h2>
+      <div
+          :id="'collapseName' + this.project.projectid"
+          class="accordion-collapse collapse"
+          aria-labelledby="heading"
+      >
+        <div v-if="canUpdateProject()" class="accordion-body">
+          <textarea class="area" v-model="projectname"/><hr>
+          <button @click="updateNameDescription()">Update</button>
+        </div>
+        <div v-else class="accordion-body">
+          {{project.project_name}}
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading">
+        <button
           class="accordion-button collapsed"
           type="button"
           data-bs-toggle="collapse"
@@ -18,9 +46,11 @@
         class="accordion-collapse collapse"
         aria-labelledby="heading"
       >
-        <div class="accordion-body">
-          {{ project.description }}
+        <div v-if="canUpdateProject()" class="accordion-body">
+          <textarea class="area" v-model="projectdescription"/><hr>
+          <button @click="updateNameDescription()">Update</button>
         </div>
+        <div v-else class="accordion-body">{{project.description}}</div>
       </div>
     </div>
 
@@ -121,13 +151,57 @@
         aria-labelledby="heading"
       >
         <div class="accordion-body">
+          <form autocomplete="off">
+            <SearchBar
+              v-show="canUpdateProject()"
+              v-bind:searchTerm="this.parentSearchTerm"
+              :id="'searchParentsBar' + this.project.projectid"
+              autocomplete="off"
+              class="searchbar"
+              @searchBarChanged="
+                (searchTerm) => {
+                  handleSearchParent(searchTerm);
+                }
+              "
+            ></SearchBar>
+          </form>
           <div
-            class="full-button"
-            v-for="parent in this.parents"
-            v-bind:key="parent.projectid"
-            @click="navigate(parent.projectid)"
+            class="dropdown-menu"
+            :id="'parentSearchDropdown' + this.project.projectid"
           >
-            {{ parent.project_name }}
+            <div
+              class="dropdown-item"
+              v-for="parent in filteredParents"
+              v-bind:key="parent.projectid"
+              @click="selectParent(parent)"
+            >
+              {{ parent.project_name }}
+            </div>
+          </div>
+          <div v-if="parentToAdd">
+            {{ this.parentToAdd.project_name }}
+            <button
+              @click="addParent()"
+              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+            >
+              toevoegen
+            </button>
+          </div>
+
+          <div v-for="parent in this.parents" v-bind:key="parent.projectid">
+            <span
+              class="full-button"
+              @click="navigateProject(parent.projectid)"
+            >
+              {{ parent.project_name }}
+            </span>
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeParent(parent.projectid)"
+            >
+              x
+            </button>
           </div>
           <div v-if="this.parents.length == 0">Geen resultaten</div>
         </div>
@@ -187,15 +261,24 @@ export default {
       parentsOpen: false,
       childrenOpen: false,
       membersOpen: false,
-
+      projectname: this.project.project_name,
+      projectdescription: this.project.description,
       memberToAdd: null,
       userSearchTerm: "",
       users: [],
       filteredUsers: [],
       projects: [],
+
+      parentToAdd: null,
+      parentSearchTerm: "",
+      filteredParents: [],
     };
   },
   methods: {
+    updateNameDescription(){
+      const project = {"project_name": this.projectname, "description":this.projectdescription};
+      ProjectService.updateProjectNameDescription(this.project.projectid,project)
+    },
     getUserIds(userList) {
       let ids = [];
       for (let user of userList) {
@@ -206,6 +289,10 @@ export default {
     selectUser(user) {
       this.memberToAdd = user;
       this.userSearchTerm = "";
+    },
+    selectParent(project) {
+      this.parentToAdd = project;
+      this.parentSearchTerm = "";
     },
     addUser() {
       UserService.addUserToProject(
@@ -224,6 +311,8 @@ export default {
           alert("Er ging wat mis, probeer later opnieuw");
         });
     },
+    addParent() {},
+    removeParent() {},
     removeUser(userid) {
       UserService.removeUserFromProject(this.project.projectid, userid)
         .then(() => {
@@ -263,37 +352,81 @@ export default {
         this.filteredUsers = [];
       }
     },
+    parentsContainsProject(projectid) {
+      for (const parent of this.parents) {
+        if (parent.projectid == projectid) {
+          return true;
+        }
+      }
+      return false;
+    },
+    handleSearchParent(name) {
+      if (name) {
+        this.parentSearchTerm = name;
+        this.filteredParents = this.getFilteredParents();
+        console.log(this.filteredParents);
+      } else {
+        this.filteredParents = [];
+      }
+    },
+    getFilteredParents() {
+      return this.projects.filter((item) => {
+        return (
+          item.project_name
+            .toLowerCase()
+            .includes(this.parentSearchTerm.toLowerCase()) &&
+          !this.parentsContainsProject(item.projectid)
+        );
+      });
+    },
+    loadParents() {
+      ProjectService.getParentsById(this.project.projectid)
+        .then((response) => {
+          //remove the project from the view
+          this.parents = response;
+        })
+        .catch((err) => {
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+    },
+
     onParentsClick() {
       if (this.accordeonIsOpen("collapseParentsButton")) {
-        ProjectService.getParentsById(this.project.projectid)
+        this.loadParents();
+        ProjectService.getProjects()
           .then((response) => {
-            //remove the project from the view
-            this.parents = response;
+            this.projects = response;
           })
           .catch((err) => {
-            //invalid operation on server
             if (err.response) {
               console.log(err.response.status);
             }
           });
+      } else {
+        this.parentToAdd = null;
+        this.parentSearchTerm = "";
       }
-      this.parentsOpen = !this.parentsOpen;
+    },
+    loadChildren() {
+      ProjectService.getChildrenById(this.project.projectid)
+        .then((response) => {
+          //remove the project from the view
+          this.children = response;
+        })
+        .catch((err) => {
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
     },
     onChildrenClick() {
       if (this.accordeonIsOpen("collapseChildrenButton")) {
-        ProjectService.getChildrenById(this.project.projectid)
-          .then((response) => {
-            //remove the project from the view
-            this.children = response;
-          })
-          .catch((err) => {
-            //invalid operation on server
-            if (err.response) {
-              console.log(err.response.status);
-            }
-          });
+        this.loadChildren();
       }
-      this.childrenOpen = !this.childrenOpen;
     },
     onMembersClick() {
       if (this.accordeonIsOpen("collapseMembersButton")) {
@@ -334,7 +467,8 @@ export default {
       this.$router.push("/user/" + userid);
     },
     canUpdateProject() {
-      return PermissionService.userHasPermission("may_update_any_project");
+      return PermissionService.userHasPermission("may_update_any_project") ||
+          PermissionService.userHasPermission("may_update_own_project");
     },
     accordeonIsOpen(idName) {
       return (
@@ -353,6 +487,17 @@ export default {
       } else {
         document
           .getElementById("userSearchDropdown" + this.project.projectid)
+          .classList.toggle("show");
+      }
+    },
+    filteredParents: function () {
+      if (this.filteredParents.length == 0) {
+        document
+          .getElementById("parentSearchDropdown" + this.project.projectid)
+          .classList.remove("show");
+      } else {
+        document
+          .getElementById("parentSearchDropdown" + this.project.projectid)
           .classList.toggle("show");
       }
     },
@@ -383,6 +528,10 @@ button {
   margin-top: 10px;
   margin-bottom: 20px;
   margin-left: 10px;
+}
+
+.area{
+  width: 100%;
 }
 
 .searchbar {

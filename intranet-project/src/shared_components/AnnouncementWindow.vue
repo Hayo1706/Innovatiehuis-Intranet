@@ -8,6 +8,7 @@
         src="./../assets/images/add_icon.png"
         data-bs-toggle="modal"
         data-bs-target="#announcementModal"
+        v-if="canAddAnnouncement()"
       />
     </div>
     <div class="component-body">
@@ -101,6 +102,7 @@
 import Announcement from "./Announcement.vue";
 import { getPathArguments } from "@/services/DataConverter.js";
 import AnnouncementService from "@/services/AnnouncementService.js";
+import PermissionService from "@/services/PermissionService";
 
 export default {
   components: { Announcement },
@@ -125,6 +127,10 @@ export default {
             console.log(err.response.status);
           }
         });
+    },
+    canAddAnnouncement(){
+      return PermissionService.userHasPermission("may_create_announcement_anywhere") ||
+          (PermissionService.userHasPermission("may_create_announcement_in_own_project") && this.$route.path.indexOf('/project') > -1)
     },
     addAnnouncement() {
       AnnouncementService.postAnnouncement(
