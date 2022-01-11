@@ -250,6 +250,7 @@ export default {
     canUpdateUserRole() {
       return PermissionService.userHasPermission("may_update_any_user_role");
     },
+    //TODO change to screening permission instead of this one, when screening permission is available
     canUpdateUser() {
       return PermissionService.userHasPermission("may_update_any_user_account");
     },
