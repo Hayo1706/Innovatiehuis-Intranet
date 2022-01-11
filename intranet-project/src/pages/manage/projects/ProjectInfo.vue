@@ -81,14 +81,15 @@
             </button>
           </div>
 
-          <div
-            class="full-button"
-            v-for="member in this.members"
-            v-bind:key="member.userid"
-            @click="navigateUser(member.userid)"
-          >
-            {{ member.first_name }} {{ member.last_name }}
+          <div v-for="member in this.members" v-bind:key="member.userid">
+            <span class="full-button" @click="navigateUser(member.userid)">
+              {{ member.first_name }} {{ member.last_name }}
+            </span>
+            <button class="userDeleteButton" @click="removeUser(member.userid)">
+              x
+            </button>
           </div>
+
           <div v-if="this.members.length == 0">Geen resultaten</div>
         </div>
       </div>
@@ -207,6 +208,18 @@ export default {
       )
         .then(() => {
           this.memberToAdd = null;
+          this.loadMembers();
+        })
+        .catch((err) => {
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+    },
+    removeUser(userid) {
+      UserService.removeUserFromProject(this.project.projectid, userid)
+        .then(() => {
           this.loadMembers();
         })
         .catch((err) => {
@@ -347,6 +360,8 @@ button {
 }
 .full-button {
   width: fit-content;
+  display: inline-block;
+  margin-bottom: 5px;
 }
 
 .addButton {
@@ -362,5 +377,10 @@ button {
 .searchbar {
   width: 50%;
   margin-bottom: 10px;
+}
+.userDeleteButton {
+  background-color: red;
+  border-radius: 5px;
+  color: white;
 }
 </style>

@@ -143,7 +143,7 @@ def remove_user(project_id, user_id):
     is_int(project_id)
     is_int(user_id)
     query_update(
-        "DELETE FROM users_have_projects WHERE userid = %(id)s AND projectid = %(projectid)s);",
+        "DELETE FROM users_have_projects WHERE userid = %(id)s AND projectid = %(projectid)s;",
         {'id': user_id, 'projectid': project_id}
     )
     return response(f"Successfully removed user {user_id} from Project {project_id}", 200)
