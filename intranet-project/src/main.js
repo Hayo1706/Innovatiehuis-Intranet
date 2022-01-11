@@ -9,7 +9,6 @@ import "bootstrap"
 import ProjectsPage from './pages/manage/projects/ProjectsPage.vue';
 import UsersPage from './pages/manage/users/UsersPage.vue';
 import ProjectPage from './pages/project/ProjectPage.vue';
-import ProjectMembersPage from './pages/project/members/ProjectMembersPage.vue';
 import ProjectSettingsPage from './pages/project/settings/ProjectSettingsPage.vue';
 import UserPage from './pages/user/UserPage.vue';
 import HomePage from './pages/home/HomePage.vue';
@@ -25,7 +24,6 @@ const routes = [
   { path: '/project/:id', component: ProjectPage },
   { path: '/project/:id/:catchAll(.*)', component: ProjectPage },
   { path: '/project/:id/settings', component: ProjectSettingsPage },
-  { path: '/project/:id/members', component: ProjectMembersPage },
   { path: '/user/:id', component: UserPage },
   { path: '/home', component: HomePage },
   { path: '/login', component: LoginPage },
@@ -36,8 +34,8 @@ const router = createRouter({
   routes
 })
 
-window.addEventListener('contextmenu', function (e) { 
-  e.preventDefault(); 
+window.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
 }, false);
 
 router.beforeEach((to, from, next) => {
