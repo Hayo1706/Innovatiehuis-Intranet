@@ -40,7 +40,10 @@
         </div>
         <div class="mobileRow">{{ user.amountprojects }}</div>
         <div class="mobileRow">
-          <select v-model="screeningstate" :disabled="!canUpdateUser()">
+          <select
+            v-model="screeningstate"
+            :disabled="!canUpdateUserScreening()"
+          >
             <option
               v-for="screeningstate in Object.keys(this.screeningstates)"
               v-bind:key="screeningstate"
@@ -103,7 +106,7 @@
       </div>
       <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
       <div class="col d-none d-lg-block" id="screening">
-        <select v-model="screeningstate" :disabled="!canUpdateUser()">
+        <select v-model="screeningstate" :disabled="!canUpdateUserScreening()">
           <option
             v-for="screeningstate in Object.keys(this.screeningstates)"
             v-bind:key="screeningstate"
@@ -250,9 +253,10 @@ export default {
     canUpdateUserRole() {
       return PermissionService.userHasPermission("may_update_any_user_role");
     },
-    //TODO change to screening permission instead of this one, when screening permission is available
-    canUpdateUser() {
-      return PermissionService.userHasPermission("may_update_any_user_account");
+    canUpdateUserScreening() {
+      return PermissionService.userHasPermission(
+        "may_update_any_user_screening_status"
+      );
     },
     onClick() {
       this.$router.push("/user/" + this.user.userid);
