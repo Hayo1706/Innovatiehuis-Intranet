@@ -39,11 +39,11 @@ window.addEventListener('contextmenu', function (e) {
 }, false);
 
 router.beforeEach((to, from, next) => {
-  if (to.fullPath != "/login") {
+  if (to.fullPath !== "/login") {
     localStorage.setItem("previousRoute", to.fullPath);
   }
-  if (!localStorage.getItem("loggedIn") && to.fullPath != "/login") {
-    next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." } });
+  if (!localStorage.getItem("loggedIn") && to.fullPath !== "/login" && to.path !== "/manage/resetpassword") {
+      next({ path: '/login', params: { redirectMessage: "Uw sessie is verlopen, log opnieuw in." } });
   } else {
 
     if (to.fullPath == "/manage/projects" && !PermissionService.userHasPermission("may_read_any_project")) {
