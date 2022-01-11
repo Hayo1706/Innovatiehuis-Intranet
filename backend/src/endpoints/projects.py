@@ -8,7 +8,6 @@ from ..services.permissions.permissions import check_permissions
 
 @check_permissions(Projects.may_read)
 def read_one(project_id):
-    is_int(project_id)
     return query(
         "SELECT projectid, project_name, description, is_archived, created, last_updated "
         "FROM projects WHERE projectid = %(id)s",
@@ -39,17 +38,16 @@ def create():
         "SELECT projectid FROM projects ORDER BY created DESC LIMIT 1"
     )[0]["projectid"]
     for id in memberIds:
-        add_user(projectid, id)
+        add_user(project_id=projectid, user_id=id)
     for id in parentIds:
-        add_parent(projectid, id)
+        add_parent(project_id=projectid, parent_id=id)
     for id in childIds:
-        add_child(projectid, id)
+        add_child(project_id=projectid, child_id=id)
     return response(f"New project '{project_name}' successfully created", 200)
 
 
 @check_permissions(Projects.may_update)
 def update(project_id):
-    is_int(project_id)
     try:
         body = connexion.request.json['project']
         project_name = body['project_name']
@@ -68,7 +66,6 @@ def update(project_id):
 # projects/{id}/archive
 @check_permissions(Projects.may_archive)
 def update_archive(project_id):
-    is_int(project_id)
     try:
         body = connexion.request.json['project']
         is_archived = body['is_archived']
@@ -86,7 +83,6 @@ def update_archive(project_id):
 
 @check_permissions(Projects.may_delete)
 def delete(project_id):
-    is_int(project_id)
     query_update("DELETE FROM projects WHERE projectid = %(id)s", {'id': project_id})
     return response(f"Project {project_id} successfully deleted", 200)
 
@@ -94,7 +90,6 @@ def delete(project_id):
 # projects/{id}/users
 @check_permissions(Projects.may_read)   # TODO: placeholder for more specific permissions?
 def read_users(project_id):
-    is_int(project_id)
     return query(
         "SELECT userid, last_seen, first_name, last_name, email, roleid, role_name, screening_status, created "
         "FROM users_have_projects "
@@ -107,7 +102,7 @@ def read_users(project_id):
 
 @check_permissions(Projects.may_update)
 def update_users(project_id):
-    is_int(project_id)
+    
     try:
         body = connexion.request.json['project']
         new_ids = body['userids']
@@ -138,8 +133,6 @@ def update_users(project_id):
 
 @check_permissions(Projects.may_update)
 def add_user(project_id, user_id):
-    is_int(project_id)
-    is_int(user_id)
     query_update(
         "INSERT INTO users_have_projects (userid, projectid) VALUES (%(id)s, %(projectid)s);",
         {'id': user_id, 'projectid': project_id}
@@ -149,8 +142,6 @@ def add_user(project_id, user_id):
 
 @check_permissions(Projects.may_update)
 def remove_user(project_id, user_id):
-    is_int(project_id)
-    is_int(user_id)
     query_update(
         "DELETE FROM users_have_projects WHERE userid = %(id)s AND projectid = %(projectid)s;",
         {'id': user_id, 'projectid': project_id}
@@ -171,7 +162,6 @@ def update_last_seen(project_id):
 # projects/{id}/parents
 @check_permissions(Projects.may_read)  # TODO: placeholder for more specific permissions?
 def read_parents(project_id):
-    is_int(project_id)
     return query(
         "SELECT projectid, project_name, description, is_archived, created, last_updated "
         "FROM projects_have_parents "
@@ -183,8 +173,6 @@ def read_parents(project_id):
 
 @check_permissions(Projects.may_update)  # TODO: placeholder for more specific permissions?
 def add_parent(project_id, parent_id):
-    is_int(project_id)
-    is_int(parent_id)
     query_update(
         "INSERT INTO projects_have_parents (childid, parentid) VALUES (%(projectid)s, %(parentid)s)",
         {'projectid': project_id, 'parentid': parent_id})
@@ -193,8 +181,6 @@ def add_parent(project_id, parent_id):
 
 @check_permissions(Projects.may_update)  # TODO: placeholder for more specific permissions?
 def remove_parent(project_id, parent_id):
-    is_int(project_id)
-    is_int(parent_id)
     query_update(
         "DELETE FROM projects_have_parents WHERE childid = %(projectid)s AND parentid = %(parentid)s",
         {'projectid': project_id, 'parentid': parent_id})
@@ -204,7 +190,6 @@ def remove_parent(project_id, parent_id):
 # projects/{id}/children
 @check_permissions(Projects.may_read)  # TODO: placeholder for more specific permissions?
 def read_children(project_id):  # returns array of id/name/shared_files combinations
-    is_int(project_id)
     return query(
         "SELECT projectid, project_name, description, is_archived, created, projects.last_updated "
         "FROM projects_have_parents "
@@ -217,8 +202,6 @@ def read_children(project_id):  # returns array of id/name/shared_files combinat
 # projects/{id}/children/{id}
 @check_permissions(Projects.may_update)  # TODO: placeholder for more specific permissions?
 def add_child(project_id, child_id):
-    is_int(project_id)
-    is_int(child_id)
     query_update(
         "INSERT INTO projects_have_parents (childid, parentid) VALUES (%(childid)s, %(projectid)s)",
         {'projectid': project_id, 'childid': child_id})
@@ -232,8 +215,8 @@ def update_shared_files(project_id, child_id):
         shared_files_string = body['shared_files']
     except KeyError:
         return response("Invalid body", 400)
-    is_int(project_id)
-    is_int(child_id)
+    
+    
     query_update(
         "UPDATE projects_have_parents "
         "SET shared_files = %(shared_files)s "
@@ -245,8 +228,6 @@ def update_shared_files(project_id, child_id):
 
 @check_permissions(Projects.may_update)  # TODO: placeholder for more specific permissions?
 def remove_child(project_id, child_id):
-    is_int(project_id)
-    is_int(child_id)
     query_update(
         "DELETE FROM projects_have_parents WHERE childid = %(childid)s AND parentid = %(projectid)s",
         {'projectid': project_id, 'childid': child_id})
@@ -277,7 +258,6 @@ def read_announcements_recent(project_id):
 
 @check_permissions(Announcements.may_create_in_project)
 def add_announcement(project_id):
-    is_int(project_id)
     try:
         body = connexion.request.json['announcement']
         title = body['title']

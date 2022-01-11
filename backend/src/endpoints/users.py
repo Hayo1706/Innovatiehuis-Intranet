@@ -56,7 +56,7 @@ def create():
 
 @check_permissions(Users.may_update)
 def update(user_id):
-    is_int(user_id)
+    
 
     # TODO:
     #   1 get current role and screening status of user
@@ -85,7 +85,7 @@ def update(user_id):
 
 @check_permissions(Users.may_delete_user)
 def delete(user_id):
-    is_int(user_id)
+    
     query_update("DELETE FROM users WHERE userid = %(id)s", {'id': user_id})
     return response(f"User {user_id} successfully deleted", 200)
 
@@ -93,7 +93,7 @@ def delete(user_id):
 # users/{id}/password
 @check_permissions(Users.may_update_password)
 def update_password(user_id):
-    is_int(user_id)
+    
     try:
         body = connexion.request.json
         new_password_hash = body['password_hash']  # TODO: how to hash
@@ -113,11 +113,11 @@ def read_projects(user_id):
 
 # TODO Welke permissie?
 def add_project(user_id):
-    is_int(user_id)
+    
     try:
         body = connexion.request.json
         project_id = body['projectid']
-        is_int(project_id)
+        
     except KeyError:
         return response("Invalid body", 400)
     query_update(f"INSERT INTO users_have_projects (userid, projectid) VALUES (%(userid)s, %(projectid)s)",
