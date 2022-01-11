@@ -73,7 +73,7 @@
 <script>
 import VerticalHeader from "./VerticalHeader.vue";
 import ProjectButtons from "./ProjectButtons.vue";
-import ProjectInfo from "./ProjectInfo.vue";
+import ProjectInfo from "@/shared_components/ProjectInfo.vue";
 export default {
   props: ["project"],
   components: { VerticalHeader, ProjectButtons, ProjectInfo },
