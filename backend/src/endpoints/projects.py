@@ -35,6 +35,15 @@ def create():
         "INSERT INTO projects (project_name, description) VALUES (%(project_name)s, %(description)s)",
         {'project_name': project_name, 'description': description}
     )
+    projectid = query(
+        "SELECT projectid FROM projects ORDER BY created DESC LIMIT 1"
+    )[0]["projectid"]
+    for id in memberIds:
+        add_user(projectid, id)
+    for id in parentIds:
+        add_parent(projectid, id)
+    for id in childIds:
+        add_child(projectid, id)
     return response(f"New project '{project_name}' successfully created", 200)
 
 
