@@ -9,6 +9,7 @@
           :data-bs-target="'#collapseName' + this.project.projectid"
           aria-expanded="false"
           :aria-controls="'collapseName' + this.project.projectid"
+          @click="onNameOrDescriptionClick()"
         >
           Naam
         </button>
@@ -21,7 +22,9 @@
         <div v-if="canUpdateProject()" class="accordion-body">
           <textarea class="area" v-model="projectname" />
           <hr />
-          <button @click="updateNameDescription()">Update</button>
+          <button class="addButton" @click="updateNameDescription()">
+            Wijzigen
+          </button>
         </div>
         <div v-else class="accordion-body">
           {{ project.project_name }}
@@ -38,6 +41,7 @@
           :data-bs-target="'#collapseDescription' + this.project.projectid"
           aria-expanded="false"
           :aria-controls="'collapseDescription' + this.project.projectid"
+          @click="onNameOrDescriptionClick()"
         >
           Beschrijving
         </button>
@@ -50,7 +54,9 @@
         <div v-if="canUpdateProject()" class="accordion-body">
           <textarea class="area" v-model="projectdescription" />
           <hr />
-          <button @click="updateNameDescription()">Update</button>
+          <button class="addButton" @click="updateNameDescription()">
+            Wijzigen
+          </button>
         </div>
         <div v-else class="accordion-body">{{ project.description }}</div>
       </div>
@@ -269,10 +275,7 @@
           </div>
 
           <div v-for="child in this.children" v-bind:key="child.projectid">
-            <span
-              class="full-button"
-              @click="navigateProject(parent.projectid)"
-            >
+            <span class="full-button" @click="navigateProject(child.projectid)">
               {{ child.project_name }}
             </span>
             <button
@@ -307,8 +310,8 @@ export default {
       parentsOpen: false,
       childrenOpen: false,
       membersOpen: false,
-      projectname: this.project.project_name,
-      projectdescription: this.project.description,
+      projectname: "",
+      projectdescription: "",
       memberToAdd: null,
       userSearchTerm: "",
       users: [],
@@ -334,13 +337,6 @@ export default {
         this.project.projectid,
         project
       );
-    },
-    getUserIds(userList) {
-      let ids = [];
-      for (let user of userList) {
-        ids.push(user.userid);
-      }
-      return ids;
     },
     selectUser(user) {
       this.memberToAdd = user;
@@ -537,7 +533,10 @@ export default {
           }
         });
     },
-
+    onNameOrDescriptionClick() {
+      this.projectdescription = this.project.description;
+      this.projectname = this.project.project_name;
+    },
     onParentsClick() {
       if (this.accordeonIsOpen("collapseParentsButton")) {
         this.loadParents();
@@ -622,6 +621,9 @@ export default {
     },
     navigateUser(userid) {
       this.$router.push("/user/" + userid);
+    },
+    navigateProject(projectid) {
+      this.$router.push("/project/" + projectid);
     },
     canUpdateProject() {
       return (
