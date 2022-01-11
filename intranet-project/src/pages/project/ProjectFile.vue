@@ -5,33 +5,30 @@
     @long-press="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
-    <div class="row">
-       <img :src="this.getTypeImage()" v-bind:id="this.type"/>
-    </div>
-     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
-          <li v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
-          <li v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
-          <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
-          <li v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
+  <div class="button">
+    <img class="fileImage" :src="this.getTypeImage()" v-bind:id="this.type"/>
+    <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
+      <li v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
+      <li v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
+      <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
+      <li v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
+    </ul>
+    <ul id="drop-down-menu" v-if="moveMenu == true">
+      <li>Verplaatsen naar:</li>
+      <ul id="drop-down-menu">
+        <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">
+          {{ folder }}
+        </li>
       </ul>
-
-      <ul id="drop-down-menu" v-if="moveMenu == true">
-          <li>Verplaatsen naar:</li>
-          <ul id="drop-down-menu">
-            <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">
-              {{ folder }}
-            </li>
-          </ul>
-      </ul>
-    <div class="row">
-      <input
+    </ul>
+    <input
         v-on:keyup.enter="renameFile()"
         class="fileName"
         v-model="fileName"
         v-bind:id="this.name"
         disabled
-        />
-    </div> 
+    />
+    </div>
   </div>
 </template>
 
@@ -185,10 +182,24 @@ export default {
   width: 100%;
   min-height: calc(1.5vw + 1.5vh);
   font-size: calc(0.5vh + 0.5vw);
+  padding: 2px;
+  margin-bottom: 1vh;
+}
+
+.button{
+  margin-left: 10px;
+  padding: 15px
+}
+.button:hover{
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+  border-radius: 10px;
+}
+.fileImage {
+  width: min(calc(80px + 2vw), 1000px);
 }
 .fileName {
   background-color: transparent;
   color: var(--blue1);
-  border: 0px;
+  width: min(100px, 100%);
 }
 </style>

@@ -15,7 +15,7 @@
     </div>
     <div>
       <div class="row">
-        <div v-for="folder in searched_folders" :key="folder" class="col-sm-3">
+        <div v-for="folder in searched_folders" :key="folder" class="col-sm-4">
           <div v-if="folderNameInSearchTerm(folder)">
             <ProjectFolder
               :directorypath="this.path"
