@@ -653,6 +653,9 @@ export default {
           !arr[j].classList.contains("collapsed")
         ) {
           arr[j].click();
+          setTimeout(() => {
+            arr[j].click();
+          }, 500);
         }
       }
     },
