@@ -47,6 +47,7 @@
         <div class="accordion-body">
           <form autocomplete="off">
             <SearchBar
+              v-show="canUpdateProject()"
               v-bind:searchTerm="this.userSearchTerm"
               :id="'searchUsersBar' + this.project.projectid"
               autocomplete="off"
@@ -81,14 +82,19 @@
             </button>
           </div>
 
-          <div
-            class="full-button"
-            v-for="member in this.members"
-            v-bind:key="member.userid"
-            @click="navigateUser(member.userid)"
-          >
-            {{ member.first_name }} {{ member.last_name }}
+          <div v-for="member in this.members" v-bind:key="member.userid">
+            <span class="full-button" @click="navigateUser(member.userid)">
+              {{ member.first_name }} {{ member.last_name }}
+            </span>
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeUser(member.userid)"
+            >
+              x
+            </button>
           </div>
+
           <div v-if="this.members.length == 0">Geen resultaten</div>
         </div>
       </div>
@@ -168,6 +174,7 @@
 import ProjectService from "@/services/ProjectService.js";
 import UserService from "@/services/UserService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
+import PermissionService from "@/services/PermissionService.js";
 export default {
   props: ["project"],
   components: { SearchBar },
@@ -214,6 +221,20 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
+          alert("Er ging wat mis, probeer later opnieuw");
+        });
+    },
+    removeUser(userid) {
+      UserService.removeUserFromProject(this.project.projectid, userid)
+        .then(() => {
+          this.loadMembers();
+        })
+        .catch((err) => {
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert("Er ging wat mis, probeer later opnieuw");
         });
     },
     membersContainsUser(userid) {
@@ -312,6 +333,9 @@ export default {
     navigateUser(userid) {
       this.$router.push("/user/" + userid);
     },
+    canUpdateProject() {
+      return PermissionService.userHasPermission("may_update_any_project");
+    },
     accordeonIsOpen(idName) {
       return (
         document
@@ -347,6 +371,8 @@ button {
 }
 .full-button {
   width: fit-content;
+  display: inline-block;
+  margin-bottom: 5px;
 }
 
 .addButton {
@@ -362,5 +388,10 @@ button {
 .searchbar {
   width: 50%;
   margin-bottom: 10px;
+}
+.userDeleteButton {
+  background-color: red;
+  border-radius: 5px;
+  color: white;
 }
 </style>

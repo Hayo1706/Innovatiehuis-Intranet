@@ -3,7 +3,7 @@
 
     <div id="projectFilesHeader">
       <div class="row">
-        <div class="col-sm-8"><slot></slot></div>
+        <div class="col-sm-8"><slot class="header"></slot></div>
         <div class="col-sm-3">
           <SearchBar
             @searchBarChanged="
@@ -94,6 +94,7 @@ export default {
 }
 .iconImage {
   height: calc(1vw + 1vh);
+  font-size: min(calc(10px + 2vw), 36px);
   margin: 0 auto;
   display: block;
 }
@@ -101,4 +102,5 @@ export default {
   margin: 0.5vh auto;
   height: 80%;
 }
+
 </style>

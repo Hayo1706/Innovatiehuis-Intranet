@@ -42,7 +42,10 @@ var UserService = function () {
         const { data } = await axiosClient.post(`/projects/${projectid}/users/${userid}`, { timeout: 2000 });
         return data;
     }
-
+    async function removeUserFromProject(projectid, userid) {
+        const { data } = await axiosClient.delete(`/projects/${projectid}/users/${userid}`, { timeout: 2000 });
+        return data;
+    }
     async function updateUser(user, userid) {
         const { data } = await axiosClient.put(`/users/${userid}`, user, { timeout: 2000 });
         return data;
@@ -54,7 +57,8 @@ var UserService = function () {
         deleteUser,
         updateUser,
         getUsersByProject,
-        addUserToProject
+        addUserToProject,
+        removeUserFromProject
     }
 
 }
