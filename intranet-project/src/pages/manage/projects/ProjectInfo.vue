@@ -221,6 +221,7 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
+          alert("Er ging wat mis, probeer later opnieuw");
         });
     },
     removeUser(userid) {
@@ -233,6 +234,7 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
+          alert("Er ging wat mis, probeer later opnieuw");
         });
     },
     membersContainsUser(userid) {
