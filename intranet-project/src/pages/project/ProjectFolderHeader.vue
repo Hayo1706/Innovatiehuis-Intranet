@@ -3,8 +3,8 @@
     
     <div id="projectFolderHeader">
       <div class="row">
-        <div class="col-sm-9"><slot></slot></div>
-        <div class="col-sm-2">
+        <div class="col-sm-8"><slot></slot></div>
+        <div class="col-sm-3">
           <SearchBar
             @searchBarChanged="
               (searchTerm) => $emit('searchBarChanged', searchTerm)
@@ -122,14 +122,6 @@ export default {
 </script>
 
 <style scoped>
-#projectFolderHeader {
-  color: white;
-  font-size: calc(1vw + 1vh);
-  font-family: AddeleSemiBold;
-  margin: calc(1vw + 1vh);
-  text-align: left;
-  background-color: var(--blue1);
-}
 .iconButton {
   border: 0;
   background-color: transparent;

@@ -36,6 +36,10 @@ const router = createRouter({
   routes
 })
 
+window.addEventListener('contextmenu', function (e) { 
+  e.preventDefault(); 
+}, false);
+
 router.beforeEach((to, from, next) => {
   if (to.fullPath != "/login") {
     localStorage.setItem("previousRoute", to.fullPath);
