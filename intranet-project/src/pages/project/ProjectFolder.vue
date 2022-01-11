@@ -16,7 +16,7 @@
         class="foldersImage"
         v-if="this.shared == 'yes'"
         src=".\..\..\assets\images\shared_folder.png"
-      />
+      /><hr style="color: transparent;height: 0">
       <input
         v-on:keyup.enter="renameFolder()"
         class="folderName"
