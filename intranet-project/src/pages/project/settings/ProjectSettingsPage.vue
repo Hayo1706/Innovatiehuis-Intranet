@@ -1,5 +1,5 @@
 <template>
-    <div />
+    <div>Pieter is een hond</div>
 </template>
 
 <script>
