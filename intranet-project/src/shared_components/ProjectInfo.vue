@@ -1,5 +1,5 @@
 <template>
-  <div class="accordion" :id="'accordion' + this.project.projectid">
+  <div class="accordion" :id="'accordion' + project.projectid">
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading">
         <button
