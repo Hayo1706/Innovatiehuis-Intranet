@@ -757,6 +757,12 @@ paths:
       tags:
         - Authentication
       summary: Request JSON Web Token
+      parameters:
+        - in: query
+          name: resettoken
+          schema:
+            type: string
+          required: true
       responses:
         200:
           description: User is authenticated and receives a JSON Web Token

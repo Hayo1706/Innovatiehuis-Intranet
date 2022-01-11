@@ -1,11 +1,15 @@
+import secrets
+from datetime import date
+
 import connexion
 from flask_jwt_extended import jwt_required
-
+from ..config import PASSWORD_CHANGE_SECRET_KEY, DOMAIN_NAME
 from ..services.helper_functions import *
-
+from itsdangerous import URLSafeSerializer
 from ..services.permissions import Users
 from ..services.permissions.permissions import check_permissions
 from ..services.extensions import bcrypt
+
 
 @check_permissions(Users.may_read)
 def read_one(user_id):
@@ -34,7 +38,7 @@ def create():
         email = body['email']
         roleid = body['roleid']
         screening_status = body['screening_status']
-        password_hash = bcrypt.generate_password_hash('123').decode('utf-8')
+        password_hash = bcrypt.generate_password_hash(secrets.token_urlsafe(16)).decode('utf-8')
     except KeyError:
         return response("Invalid body", 400)
 
@@ -43,7 +47,11 @@ def create():
         "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(roleid)s, %(screening_status)s,%(password_hash)s)",
         {'first_name': first_name, 'last_name': last_name, 'email': email, 'roleid': roleid,
          'screening_status': screening_status, 'password_hash': password_hash})
-    return response("User successfully added", 200)
+    serializer = URLSafeSerializer(PASSWORD_CHANGE_SECRET_KEY)
+    d1 = date.today().strftime("%d/%m/%Y")
+    userid = query("SELECT userid FROM users WHERE email=%(email)s", {'email': email})[0]['userid']
+    return response("User successfully added", 200, link=
+        DOMAIN_NAME + "/manage/resetpassword?resettoken=" + serializer.dumps([userid, password_hash]))
 
 
 @check_permissions(Users.may_update)
