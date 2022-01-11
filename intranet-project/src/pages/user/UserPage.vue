@@ -8,7 +8,7 @@
         }" />
       </div>
       <div class="col-sm-6">
-        <ProjectsWindow>Gebruikers Projecten</ProjectsWindow>
+        <ProjectsWindow>Projecten van gebruiker</ProjectsWindow>
       </div>
     </div>
   </div>

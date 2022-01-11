@@ -1,23 +1,34 @@
 <template>
   <header v-if="this.$route.path !== '/login'">
     <div id="header_title_text">
-      <div class="doubleimage">
+      <div class="image-container">
+        <img class="logo" @click="logoClick()" src=".\..\assets\images\logo\square.png" />
         <img
-          class="logo"
-          @click="logoClick()"
-          src=".\..\assets\images\logo\square.png"
+          class="header-icon"
+          @click="projectsClick()"
+          src=".\..\assets\images\projects_icon.png"
+          v-if="this.canSeeProjects()"
         />
         <img
-          class="options"
+          class="header-icon"
+          @click="usersClick()"
+          src=".\..\assets\images\users_icon.png"
+          v-if="this.canSeeUsers()"
+        />
+      </div>
+      <div class="image-container">
+        <slot></slot>
+        <img
+          class="header-icon"
           @click="settingClick()"
-          src=".\..\assets\images\gear_icon2.png"
+          src=".\..\assets\images\gear_icon3.png"
           v-if="this.$route.path.indexOf('/project') > -1 && canSeeGear()"
         />
       </div>
-      <slot></slot>
-      <div class="doubleimage">
-        <img @click="userClick()" src=".\..\assets\images\profile_icon.png" />
-        <img @click="logout()" src=".\..\assets\images\logout-icon.png" />
+
+      <div class="image-container">
+        <img class="header-icon" @click="profileClick()" src=".\..\assets\images\profile_icon.png" />
+        <img class="header-icon" @click="logout()" src=".\..\assets\images\logout-icon.png" />
       </div>
     </div>
   </header>
@@ -37,7 +48,13 @@ export default {
     logoClick() {
       this.$router.push("/home");
     },
-    userClick() {
+    projectsClick() {
+      this.$router.push("/manage/projects");
+    },
+    usersClick() {
+      this.$router.push("/manage/users");
+    },
+    profileClick() {
       this.$router.push("/user/" + localStorage.getItem("userid"));
     },
     logout() {
@@ -55,6 +72,16 @@ export default {
         PermissionService.userHasPermission("may_update_own_project")
       );
     },
+    canSeeProjects() {
+      return (
+        PermissionService.userHasPermission('may_read_any_project')
+      )
+    },
+    canSeeUsers() {
+      return (
+        PermissionService.userHasPermission('may_read_any_user')
+      )
+    }
   },
 };
 </script>
@@ -90,7 +117,7 @@ header {
   margin: auto;
   height: 9vh;
 }
-.doubleimage {
+.image-container {
   padding: 0;
   margin: 0;
   height: 100%;
@@ -99,5 +126,13 @@ header {
 }
 .options {
   height: 70%;
+}
+.header-icon {
+  border-style: outset;
+  border-radius: 50%;
+}
+
+.header-icon:hover {
+  border-style: ridge;
 }
 </style>

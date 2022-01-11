@@ -3,17 +3,6 @@
     <div class="component-header">
       <slot></slot>
     </div>
-    <div
-      class="full-button"
-      v-show="canReadAllProjects()"
-      @click="toProjectsPage()"
-    >
-      Alle Projecten
-    </div>
-    <div class="full-button" v-show="canReadAllUsers()" @click="toUsersPage()">
-      Alle Gebruikers
-    </div>
-
     <div id="projects-window" class="component-body">
       <ProjectButton
         v-for="project of projects"

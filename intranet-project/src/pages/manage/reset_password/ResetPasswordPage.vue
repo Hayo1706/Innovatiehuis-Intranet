@@ -1,24 +1,37 @@
 <template>
-   <div id="login" class="component-container">
+  <div id="login" class="component-container">
     <div class="component-header"></div>
     <div style="text-align: center" class="component-body">
+      <Label>Oud wachtwoord:</Label>
+      <br />
       <input
-          v-model="this.old_password" v-if="this.$route.query.resettoken === undefined"
-          style="text-align: center"
-          type="password"
-          placeholder="Oude wachtwoord"
-          v-on:keyup.enter="submit()"
-      />
-      <input
-        v-model="this.new_password"
+        v-model="this.old_password"
+        v-if="this.$route.query.resettoken === undefined"
         style="text-align: center"
         type="password"
-        placeholder="Nieuwe wachtwoord"
         v-on:keyup.enter="submit()"
       />
-      <br/>
-          <button @click="submit()">Verzenden</button>
-      
+      <br />
+      <Label>Nieuw wachtwoord:</Label>
+      <br />
+      <input
+        v-model="this.new_password1"
+        style="text-align: center"
+        type="password"
+        v-on:keyup.enter="submit()"
+      />
+      <br />
+      <Label>Herhaal nieuw wachtwoord:</Label>
+      <br />
+      <input
+        v-model="this.new_password2"
+        style="text-align: center"
+        type="password"
+        v-on:keyup.enter="submit()"
+      />
+      <br />
+      <br />
+      <button class="full-button" style="margin: auto;" @click="submit()">Wijzig wachtwoord</button>
     </div>
   </div>
 </template>
@@ -38,28 +51,31 @@ export default {
   },
   methods: {
     submit() {
-      LoginService.changePassword(
+      if (this.new_password1 == this.new_password2) {
+        LoginService.changePassword(
           "old_password=" +
           this.old_password +
           "&new_password=" +
-          this.new_password,
-          ((this.$route.query.resettoken !== undefined) ? this.$route.query.resettoken: '')
-      )
-      .then(() => {
-        console.log("Password changed");
-        this.$router.push(this.redirectTarget);
-      })
-        .catch((err) => {
-          console.log(err);
-          if (err.response) {
-            console.log(err.response.status);
-          }
-        });
+          this.new_password1,
+          ((this.$route.query.resettoken !== undefined) ? this.$route.query.resettoken : '')
+        )
+          .then(() => {
+            console.log("Password changed");
+            this.$router.push(this.redirectTarget);
+          }).catch((err) => {
+            console.log(err);
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      } else {
+        alert("De twee opgegeven nieuwe wachtwoorden komen niet overeen.")
+      }
     },
   },
   created() {
 
-    this.$emit("newHeaderTitle", "Wachtwoord herstellen");
+    this.$emit("newHeaderTitle", "Wachtwoord wijzigen");
   },
 };
 </script>
@@ -72,5 +88,4 @@ export default {
 #center {
   margin: auto;
 }
-
 </style>

@@ -8,7 +8,7 @@ from ..services.permissions.permissions import check_permissions, check_jwt
 
 @check_permissions(Announcements.may_read)
 def read_one(announcement_id):
-    is_int(announcement_id)
+    
     return query(
         "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
         "users.last_name, announcements.title, announcements.content "
@@ -44,7 +44,7 @@ def create_global():
 
 @check_permissions(Announcements.may_update_delete)
 def update(announcement_id):
-    is_int(announcement_id)
+    
     try:
         body = connexion.request.json['announcement']
         title = body['title']
@@ -59,14 +59,14 @@ def update(announcement_id):
 
 @check_permissions(Announcements.may_update_delete)
 def delete(announcement_id):
-    is_int(announcement_id)
+    
     query_update("DELETE FROM announcements WHERE announcementid = %(id)s", {'id': announcement_id})
     return response(f"{announcement_id} successfully deleted", 200)
 
 
 @check_permissions(Announcements.may_read_reply)
 def read_replies(announcement_id):
-    is_int(announcement_id)
+    
     return query(
         "SELECT replies.replyid, replies.announcementid, replies.timestamp, replies.userid, users.first_name, "
         "users.last_name, replies.content FROM replies JOIN users "

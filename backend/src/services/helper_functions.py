@@ -14,11 +14,6 @@ def query_update(query, param=None):
         connection.exec_driver_sql(query, param)
 
 
-def is_int(value):
-    if not re.compile("[0-9]").match(value):
-        response("Incorrect input", 404)
-
-
 def response(message, code=200, **arguments):
     data = {'response': {'resource': request.path, 'message': message}}
     for key, value in arguments.items():
