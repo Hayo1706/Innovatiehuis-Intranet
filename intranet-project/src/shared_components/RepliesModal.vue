@@ -30,7 +30,7 @@
           />
         </div>
 
-        <form>
+        <form v-if="canAddReply()">
           <div class="mb-3">
             <label for="message-text" class="col-form-label"
               >Laat een reactie achter:</label
@@ -44,7 +44,7 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer">
+      <div v-if="canAddReply()" class="modal-footer">
         <button type="button" class="btn btn-primary" @click="addReply()">
           Plaats reactie
         </button>
@@ -56,6 +56,7 @@
 <script>
 import AnnouncementService from "@/services/AnnouncementService.js";
 import Reply from "@/shared_components/Reply.vue";
+import PermissionService from "@/services/PermissionService";
 
 export default {
   name: "RepliesModal",
@@ -76,6 +77,11 @@ export default {
   },
   async created() {},
   methods: {
+    canAddReply(){
+      return PermissionService.userHasPermission("may_create_reply_anywhere") ||
+          PermissionService.userHasPermission("may_create_reply_in_own_project")
+
+    },
     addReply() {
       console.log("current announcement id = " + this.id);
       AnnouncementService.addReply(this.id, this.newReply)
