@@ -2,7 +2,7 @@
   <div id="login" class="component-container">
     <div class="component-header"></div>
     <div style="text-align: center" class="component-body">
-      <Label>Oud wachtwoord:</Label>
+      <Label v-if="this.$route.query.resettoken === undefined">Oud wachtwoord:</Label>
       <br />
       <input
         v-model="this.old_password"
