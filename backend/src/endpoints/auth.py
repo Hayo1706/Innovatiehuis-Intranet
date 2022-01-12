@@ -96,9 +96,9 @@ def change_existing_password(old_password, new_password):
 
 def validate_password(password):
     if len(password) > config.MAX_PASSWORD_LENGTH:
-        response('Password length exceeded max length of ' + config.MAX_PASSWORD_LENGTH, 400)
+        return response('Password length exceeded max length of ' + config.MAX_PASSWORD_LENGTH, 400)
     if len(password) < config.MIN_PASSWORD_LENGTH:
-        response('Password must be at least ' + config.MAX_PASSWORD_LENGTH + "characters long", 400)
+        return response('Password must be at least ' + config.MAX_PASSWORD_LENGTH + "characters long", 400)
 
 
 def set_password(password, user_id):
