@@ -168,7 +168,7 @@ export default {
     screeningstate: function (val) {
       if (val != this.previousScreeningstate) {
         let answer = confirm(
-          'Wil je de screening_status van de gebruiker "' +
+          'Wil je de screening status van de gebruiker "' +
             this.user.first_name +
             " " +
             this.user.last_name +
