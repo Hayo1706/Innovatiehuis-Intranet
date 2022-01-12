@@ -31,12 +31,12 @@
       </div>
 
       <!-- large screens-->
-      <div class="col d-none d-lg-block" @click="onClick()">
+      <div class="col d-none d-lg-flex align-items-center" @click="onClick()">
         <div class="full-button">
           {{ project.project_name }}
         </div>
       </div>
-      <div class="col d-none d-lg-block">
+      <div class="col d-none d-lg-flex align-items-center">
         {{
           project.created.toLocaleString("nl-NL", {
             day: "numeric",
@@ -45,7 +45,7 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-block">
+      <div class="col d-none d-lg-flex align-items-center">
         {{
           project.last_updated.toLocaleString("nl-NL", {
             day: "numeric",

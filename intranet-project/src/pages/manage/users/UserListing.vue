@@ -77,12 +77,12 @@
       </div>
 
       <!-- large screens-->
-      <div class="col d-none d-lg-block" @click="onClick()">
+      <div class="col d-none d-lg-flex align-items-center" @click="onClick()">
         <div class="full-button">
           {{ user.first_name + " " + user.last_name }}
         </div>
       </div>
-      <div class="col d-none d-lg-block">
+      <div class="col d-none d-lg-flex align-items-center">
         {{
           user.created.toLocaleString("nl-NL", {
             day: "numeric",
@@ -91,7 +91,7 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-block">
+      <div class="col d-none d-lg-flex align-items-center">
         {{
           user.last_seen.toLocaleString("nl-NL", {
             day: "numeric",
@@ -103,15 +103,17 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-block">
+      <div class="col d-none d-lg-flex align-items-center">
         <select v-model="selectedRole" :disabled="!canUpdateUserRole()">
           <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
             {{ role }}
           </option>
         </select>
       </div>
-      <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
-      <div class="col d-none d-lg-block" id="screening">
+      <div class="col d-none d-lg-flex align-items-center">
+        {{ user.amountprojects }}
+      </div>
+      <div class="col d-none d-lg-flex align-items-center" id="screening">
         <div class="dropdown">
           <button
             class="btn dropdown-toggle"
@@ -150,7 +152,7 @@
         </div>
       </div>
 
-      <div class="col">
+      <div class="col d-lg-flex align-items-center">
         <a
           class="full-button"
           @click="handleRemoveUser(this.user)"
