@@ -37,30 +37,42 @@
         </div>
         <div class="mobileRow">{{ user.amountprojects }}</div>
         <div class="mobileRow">
-          <select
-            v-model="screeningstate"
-            :disabled="!canUpdateUserScreening()"
-          >
-            <option
-              v-for="screeningstate in Object.keys(this.screeningstates)"
-              v-bind:key="screeningstate"
+          <div class="dropdown">
+            <button
+              class="btn dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton1"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              {{ screeningstate }}
-            </option>
-          </select>
-          <br />
-          <img
-            src="@\assets\images\exclamation.png"
-            v-if="screeningstate == 'nog niet in behandeling'"
-          />
-          <img
-            src="@\assets\images\waiting.png"
-            v-if="screeningstate == 'in behandeling'"
-          />
-          <img
-            src="@\assets\images\check.png"
-            v-if="screeningstate == 'voltooid'"
-          />
+              <img
+                src="@\assets\images\exclamation.png"
+                v-if="screeningstate == 'nog niet in behandeling'"
+              />
+              <img
+                src="@\assets\images\waiting.png"
+                v-if="screeningstate == 'in behandeling'"
+              />
+              <img
+                src="@\assets\images\check.png"
+                v-if="screeningstate == 'voltooid'"
+              />
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <select
+                class="dropdown-item"
+                v-model="screeningstate"
+                :disabled="!canUpdateUserScreening()"
+              >
+                <option
+                  v-for="screeningstate in Object.keys(this.screeningstates)"
+                  v-bind:key="screeningstate"
+                >
+                  {{ screeningstate }}
+                </option>
+              </select>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -100,27 +112,42 @@
       </div>
       <div class="col d-none d-lg-block">{{ user.amountprojects }}</div>
       <div class="col d-none d-lg-block" id="screening">
-        <select v-model="screeningstate" :disabled="!canUpdateUserScreening()">
-          <option
-            v-for="screeningstate in Object.keys(this.screeningstates)"
-            v-bind:key="screeningstate"
+        <div class="dropdown">
+          <button
+            class="btn dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
           >
-            {{ screeningstate }}
-          </option>
-        </select>
-        <br />
-        <img
-          src="@\assets\images\exclamation.png"
-          v-if="screeningstate == 'nog niet in behandeling'"
-        />
-        <img
-          src="@\assets\images\waiting.png"
-          v-if="screeningstate == 'in behandeling'"
-        />
-        <img
-          src="@\assets\images\check.png"
-          v-if="screeningstate == 'voltooid'"
-        />
+            <img
+              src="@\assets\images\exclamation.png"
+              v-if="screeningstate == 'nog niet in behandeling'"
+            />
+            <img
+              src="@\assets\images\waiting.png"
+              v-if="screeningstate == 'in behandeling'"
+            />
+            <img
+              src="@\assets\images\check.png"
+              v-if="screeningstate == 'voltooid'"
+            />
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <select
+              class="dropdown-item"
+              v-model="screeningstate"
+              :disabled="!canUpdateUserScreening()"
+            >
+              <option
+                v-for="screeningstate in Object.keys(this.screeningstates)"
+                v-bind:key="screeningstate"
+              >
+                {{ screeningstate }}
+              </option>
+            </select>
+          </ul>
+        </div>
       </div>
 
       <div class="col">
@@ -319,8 +346,6 @@ export default {
 }
 img {
   width: 30px;
-  margin-right: 2px;
-  margin-top: 10px;
 }
 .link {
   cursor: pointer;
@@ -331,8 +356,13 @@ img {
 }
 select {
   border-radius: 0.25rem;
+  padding: 3px;
 }
 .full-button {
   width: fit-content;
+}
+.dropdown-toggle {
+  padding: 0px;
+  margin: 0px;
 }
 </style>
