@@ -13,9 +13,6 @@
               day: "numeric",
               month: "numeric",
               year: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-              second: "numeric",
             })
           }}
         </div>
@@ -79,9 +76,6 @@
             day: "numeric",
             month: "numeric",
             year: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
           })
         }}
       </div>
