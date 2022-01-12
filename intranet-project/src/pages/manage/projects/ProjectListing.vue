@@ -28,6 +28,10 @@
             })
           }}
         </div>
+        <div class="mobileRow">
+          <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
+          <div v-else>Niet gearchiveerd</div>
+        </div>
       </div>
 
       <!-- large screens-->
@@ -56,6 +60,10 @@
             second: "numeric",
           })
         }}
+      </div>
+      <div class="col d-none d-lg-flex align-items-center">
+        <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
+        <div v-else>Niet gearchiveerd</div>
       </div>
 
       <div class="col">
@@ -133,5 +141,8 @@ export default {
 }
 .mobileRow {
   height: 50px;
+}
+#archivedText {
+  color: purple;
 }
 </style>

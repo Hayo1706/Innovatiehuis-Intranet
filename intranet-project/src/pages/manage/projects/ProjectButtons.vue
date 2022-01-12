@@ -1,6 +1,5 @@
 <template>
   <div class="col">
-    <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
     <span v-show="canArchive()">
       <a
         v-if="project.is_archived"
@@ -65,9 +64,5 @@ export default {
   display: block;
   margin-bottom: 10px;
   text-decoration: none;
-}
-#archivedText {
-  margin-bottom: 10px;
-  color: purple;
 }
 </style>
