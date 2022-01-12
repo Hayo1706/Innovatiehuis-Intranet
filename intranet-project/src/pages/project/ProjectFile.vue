@@ -5,8 +5,19 @@
     @long-press="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
-  <div class="button">
-    <img class="fileImage" :src="this.getTypeImage()" v-bind:id="this.type"/>
+    <div class="row">
+      <div class="col s10">
+        <img class="fileImage" :src="this.getTypeImage()" v-bind:id="this.type"/>
+        <input
+        v-on:keyup.enter="renameFile()"
+        class="fileName"
+        v-model="fileName"
+        v-bind:id="this.name"
+        disabled
+        />
+      </div>
+    </div>
+      
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
       <li v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
       <li v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
@@ -21,14 +32,6 @@
         </li>
       </ul>
     </ul>
-    <input
-        v-on:keyup.enter="renameFile()"
-        class="fileName"
-        v-model="fileName"
-        v-bind:id="this.name"
-        disabled
-    />
-    </div>
   </div>
 </template>
 
@@ -180,26 +183,54 @@ export default {
 .projectFile {
   color: var(--blue1);
   width: 100%;
-  min-height: calc(1.5vw + 1.5vh);
-  font-size: calc(0.5vh + 0.5vw);
-  padding: 2px;
-  margin-bottom: 1vh;
-}
-
-.button{
-  margin-left: 10px;
-  padding: 15px
-}
-.button:hover{
-  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+  border: solid;
   border-radius: 10px;
+  border-width: 1px;
+  margin-top: 1vh;
 }
-.fileImage {
-  width: min(calc(80px + 2vw), 1000px);
+.row {
+  margin: 0;
 }
 .fileName {
   background-color: transparent;
   color: var(--blue1);
-  width: min(100px, 100%);
+  border: 0px;
+  width: 90%
+}
+.fileImage {
+  margin:0 auto;
+  display: block;
+  overflow: hidden;
+  width: min(80%, 150px);
+}
+.projectFile:hover{
+  background: linear-gradient(to bottom, rgba(94, 124, 223, 0.8), rgba(225,225,225,0.9));
+  border-radius: 10px;
+}
+#drop-down-menu{
+    background: #FAFAFA;
+    border: 1px solid var(--blue1);
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 250px;
+    z-index: 99;
+}
+
+#drop-down-menu li {
+    border-bottom: 1px solid #E0E0E0;
+    margin: 0;
+    padding: 5px 35px;
+}
+
+#drop-down-menu li:last-child {
+    border-bottom: none;
+}
+
+#drop-down-menu li:hover {
+    background: var(--blue3);
+    color: #FAFAFA;
 }
 </style>
