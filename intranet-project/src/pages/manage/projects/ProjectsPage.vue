@@ -1,5 +1,9 @@
 <template>
   <div class="container-fluid">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
     <button
       id="actionButton"
       class="btn pmd-btn-fab pmd-ripple-effect btn-primary"
@@ -12,11 +16,51 @@
     </button>
 
     <ProjectsHeader
+      v-bind:sortingMethod="this.sortingMethod"
+      v-bind:ascending="this.ascending"
+      @sortEvent="
+        (sortingTerm) => {
+          sort(sortingTerm);
+        }
+      "
       @searchBarChanged="setSearchTerm"
       @showUnArchivedOnly="setShowUnArchived"
       v-bind:searchTerm="this.searchTerm"
       v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
     ></ProjectsHeader>
+
+    <div class="container-fluid d-sm-block d-lg-none" id="sorting_space">
+      <p>Sorteren op:</p>
+      <div class="row">
+        <button class="full-button col-3" @click="sort('name')">
+          Naam
+          <span v-if="sortingMethod == 'name'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span></button
+        ><button class="full-button col-3" @click="sort('created')">
+          Aanmaakdatum
+          <span v-if="sortingMethod == 'created'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('last_updated')">
+          Laatste update
+          <span v-if="sortingMethod == 'last_updated'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('archive_status')">
+          Archiveerstatus
+          <span v-if="sortingMethod == 'archive_status'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+      </div>
+    </div>
     <ProjectCreateModal></ProjectCreateModal>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
@@ -73,6 +117,8 @@ export default {
       projects: [],
       searchTerm: null,
       showUnArchivedOnly: false,
+      sortingMethod: "name",
+      ascending: true,
     };
   },
   methods: {
@@ -103,6 +149,7 @@ export default {
           }
         });
     },
+
     archiveProject(project) {
       let projectCopy = JSON.parse(JSON.stringify(project));
       projectCopy.is_archived = !projectCopy.is_archived;
@@ -142,13 +189,66 @@ export default {
         return project.is_archived == false;
       }
     },
+    sort(method) {
+      if (this.sortingMethod != method) {
+        this.sortingMethod = method;
+        this.ascending = true;
+      } else {
+        this.ascending = !this.ascending;
+      }
+    },
+    sortingFunction(a, b) {
+      if (this.ascending) {
+        if (a < b) {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+      } else {
+        if (a > b) {
+          return -1;
+        }
+        if (a < b) {
+          return 1;
+        }
+      }
+      return 0;
+    },
   },
 
   computed: {
     filteredProjects() {
-      return this.projects.filter((project) => {
+      let filteredProjects = this.projects.filter((project) => {
         return this.shouldShow(project);
       });
+
+      if (this.sortingMethod == "name") {
+        filteredProjects = filteredProjects.sort((a, b) => {
+          let fa = a.project_name.toLowerCase(),
+            fb = b.project_name.toLowerCase();
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "created") {
+        filteredProjects = filteredProjects.sort((a, b) => {
+          let fa = a.created,
+            fb = b.created;
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "last_updated") {
+        filteredProjects = filteredProjects.sort((a, b) => {
+          let fa = a.last_updated,
+            fb = b.last_updated;
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "archive_status") {
+        filteredProjects = filteredProjects.sort((a, b) => {
+          let fa = a.is_archived,
+            fb = b.is_archived;
+          return this.sortingFunction(fa, fb);
+        });
+      }
+      return filteredProjects;
     },
   },
   async created() {
@@ -194,5 +294,33 @@ export default {
 #showunarchivedonlyboxMobile {
   margin-top: 10px;
   color: white;
+}
+p {
+  font-family: AddeleSemiBold;
+  font-size: 20px;
+}
+.bi-caret-down-fill {
+  margin-left: 5px;
+}
+.bi-caret-up-fill {
+  margin-left: 5px;
+}
+#sorting_space {
+  padding: 20px;
+  box-sizing: border-box;
+  color: var(--blue1);
+  overflow: visible;
+  background: linear-gradient(
+    to right top,
+    rgba(230, 230, 230, 0.7),
+    rgba(230, 230, 230, 0.9)
+  );
+  border-radius: 1rem;
+  margin-bottom: 1vh;
+  font-size: 1.7vh;
+  border: solid var(--gold1) 2px;
+}
+.full-button {
+  width: fit-content;
 }
 </style>

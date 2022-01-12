@@ -1,10 +1,41 @@
 <template>
   <div id="projectsHeader" class="container-fluid d-none d-lg-block">
     <div class="row">
-      <div class="col">Project</div>
-      <div class="col">Aangemaakt</div>
-      <div class="col">Laatste Update</div>
-      <div class="col">Archiveerstatus</div>
+      <div class="full-button col" @click="this.$emit('sortEvent', 'name')">
+        Project
+        <span v-if="sortingMethod == 'name'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span>
+      </div>
+
+      <div class="full-button col" @click="this.$emit('sortEvent', 'created')">
+        Aangemaakt
+        <span v-if="sortingMethod == 'created'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span>
+      </div>
+      <div
+        class="full-button col"
+        @click="this.$emit('sortEvent', 'last_updated')"
+      >
+        Laatst aangepast
+        <span v-if="sortingMethod == 'last_updated'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span>
+      </div>
+      <div
+        class="full-button col"
+        @click="this.$emit('sortEvent', 'archive_status')"
+      >
+        Archiveerstatus
+        <span v-if="sortingMethod == 'archive_status'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span>
+      </div>
       <div class="col">
         <SearchBar
           @searchBarChanged="
@@ -27,7 +58,7 @@ import ProjectsShowUnArchivedOnlyBox from "./ProjectsShowUnArchivedOnlyBox.vue";
 export default {
   components: { SearchBar, ProjectsShowUnArchivedOnlyBox },
   name: "ProjectsHeader",
-  props: ["searchTerm", "showUnArchivedOnly"],
+  props: ["searchTerm", "showUnArchivedOnly", "sortingMethod", "ascending"],
   data: function () {
     return {};
   },
@@ -60,5 +91,17 @@ img {
   padding-bottom: 10px;
   padding-left: 10px;
   cursor: pointer;
+}
+.bi-caret-down-fill {
+  margin-left: 5px;
+}
+.bi-caret-up-fill {
+  margin-left: 5px;
+}
+.col {
+  font-family: AddeleSemiBold;
+}
+.full-button {
+  height: fit-content;
 }
 </style>
