@@ -279,8 +279,10 @@ export default {
       return PermissionService.userHasPermission("may_update_any_user_role");
     },
     canUpdateUserScreening() {
-      return PermissionService.userHasPermission(
-        "may_update_any_user_screening_status"
+      return (
+        PermissionService.userHasPermission(
+          "may_update_any_user_screening_status"
+        ) && this.user.userid != localStorage.getItem("userid")
       );
     },
     onClick() {

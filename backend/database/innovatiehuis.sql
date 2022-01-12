@@ -211,7 +211,7 @@ INSERT INTO `roles` (`roleid`, `role_name`, `is_protected`, `may_create_project`
 	(1, 'observer', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1),
 	(2, 'student', 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1),
 	(3, 'moderator', 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1),
-	(4, 'admin', 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1);
+	(4, 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.users
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`,`phonenumber`, `password_hash`, `roleid`, `screening_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
-	(1, 'Hayo', 'Riem', 'hayoriem@mail.com','06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK', 4, 1, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
+	(1, 'Hayo', 'Riem', 'hayoriem@mail.com','06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK', 4, 2, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
 	(2, 'Peter', 'Beens', 'peterbeens@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0),
 	(3, 'Singh', 'van Offeren', 'singhvano@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0),
 	(4, 'Jochem', 'Hoekstra', 'joja@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:48:47', '2021-11-30 17:48:47', NULL, 0),
