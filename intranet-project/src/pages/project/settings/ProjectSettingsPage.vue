@@ -1,6 +1,16 @@
 <template>
   <div class="container-fluid">
-    <ProjectInfo v-bind:project="project"></ProjectInfo>
+    <ProjectInfo
+      @nameOrDescriptionChanged="
+        (project_obb) => {
+          this.$emit(
+            'newHeaderTitle',
+            project_obb.project_name + ': Instellingen'
+          );
+        }
+      "
+      v-bind:project="project"
+    ></ProjectInfo>
   </div>
 </template>
 
