@@ -1,5 +1,9 @@
 <template>
   <div class="container-fluid">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
     <button
       id="actionButton"
       class="full btn pmd-btn-fab pmd-ripple-effect btn-primary"
@@ -16,6 +20,51 @@
       @searchBarChanged="setSearchTerm"
       v-bind:searchTerm="this.searchTerm"
     ></UsersHeader>
+    <div class="container-fluid" id="sorting_space">
+      <h2>Sorteren op:</h2>
+
+      <button class="full-button" @click="sort('name')">
+        Naam
+        <span v-if="sortingMethod == 'name'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span></button
+      ><button class="full-button" @click="sort('created')">
+        Registreerdatum
+        <span v-if="sortingMethod == 'created'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span>
+      </button>
+      <button class="full-button" @click="sort('last_seen')">
+        Laatst gezien
+        <span v-if="sortingMethod == 'last_seen'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span>
+      </button>
+      <button class="full-button" @click="sort('role')">
+        Rol
+        <span v-if="sortingMethod == 'role'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span>
+      </button>
+      <button class="full-button" @click="sort('amountprojects')">
+        Aantal projecten
+        <span v-if="sortingMethod == 'amountprojects'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span>
+      </button>
+      <button class="full-button" @click="sort('screening')">
+        Screening
+        <span v-if="sortingMethod == 'screening'"
+          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+          ><i v-else class="bi-caret-up-fill"></i
+        ></span>
+      </button>
+    </div>
     <UserCreateModal></UserCreateModal>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
@@ -61,9 +110,19 @@ export default {
     return {
       users: [],
       searchTerm: null,
+      sortingMethod: "name",
+      ascending: true,
     };
   },
   methods: {
+    sort(method) {
+      if (this.sortingMethod != method) {
+        this.sortingMethod = method;
+        this.ascending = true;
+      } else {
+        this.ascending = !this.ascending;
+      }
+    },
     canCreateUser() {
       return PermissionService.userHasPermission("may_create_users");
     },
@@ -89,13 +148,69 @@ export default {
         return item.userid !== userid;
       });
     },
+    sortingFunction(a, b) {
+      if (this.ascending) {
+        if (a < b) {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+      } else {
+        if (a > b) {
+          return -1;
+        }
+        if (a < b) {
+          return 1;
+        }
+      }
+      return 0;
+    },
   },
 
   computed: {
     filteredUsers() {
-      return this.users.filter((item) => {
+      let filteredUsers = this.users.filter((item) => {
         return this.shouldShow(item);
       });
+      if (this.sortingMethod == "name") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.first_name.toLowerCase(),
+            fb = b.first_name.toLowerCase();
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "created") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.created,
+            fb = b.created;
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "last_seen") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.last_seen,
+            fb = b.last_seen;
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "role") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.roleid,
+            fb = b.roleid;
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "amountprojects") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.amountprojects,
+            fb = b.amountprojects;
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "screening") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.screening_status,
+            fb = b.screening_status;
+          return this.sortingFunction(fa, fb);
+        });
+      }
+      return filteredUsers;
     },
   },
   async created() {
@@ -114,6 +229,21 @@ export default {
 </script>
 
 <style scoped>
+#sorting_space {
+  padding: 10px;
+  box-sizing: border-box;
+  color: var(--blue1);
+  overflow: visible;
+  background: linear-gradient(
+    to right top,
+    rgba(230, 230, 230, 0.7),
+    rgba(230, 230, 230, 0.9)
+  );
+  border-radius: 1rem;
+  margin-bottom: 1vh;
+  font-size: 1.7vh;
+  border: solid var(--gold1) 2px;
+}
 #searchBarMobile {
   padding-top: 5px;
   margin-top: 5px;
@@ -135,5 +265,8 @@ export default {
 #littleSpace {
   height: 60px;
   width: 100%;
+}
+.full-button {
+  display: inline;
 }
 </style>
