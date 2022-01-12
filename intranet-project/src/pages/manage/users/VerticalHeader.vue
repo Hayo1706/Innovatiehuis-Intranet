@@ -1,6 +1,6 @@
 <template>
   <div class="col">
-    <div class="headerText">Gebruiker</div>
+    <div class="headerText extraLarge">Gebruiker</div>
     <div class="headerText">Geregistreerd</div>
     <div class="headerText">Laatst gezien</div>
     <div class="headerText">Rol</div>
@@ -27,5 +27,8 @@ export default {
   font-family: Montserrat;
   height: 50px;
   font-size: calc(1vw + 1vh);
+}
+.extraLarge {
+  height: 70px;
 }
 </style>

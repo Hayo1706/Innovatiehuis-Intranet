@@ -4,7 +4,7 @@
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col d-block d-lg-none">
-        <div class="full-button mobileRow" @click="onClick()">
+        <div class="full-button mobileRow extraLarge" @click="onClick()">
           {{ user.first_name + " " + user.last_name }}
         </div>
         <div class="mobileRow">
@@ -349,6 +349,9 @@ export default {
 }
 .mobileRow {
   min-height: 50px;
+}
+.extraLarge {
+  height: 70px;
 }
 img {
   width: 30px;
