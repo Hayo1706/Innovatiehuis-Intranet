@@ -3,8 +3,8 @@
 
     <div id="projectFilesHeader">
       <div class="row">
-        <div class="col-sm-8"><slot class="header"></slot></div>
-        <div class="col-sm-3">
+        <div class="col-8"><slot class="header"></slot></div>
+        <div class="col-3">
           <SearchBar
             @searchBarChanged="
               (searchTerm) => $emit('searchBarChanged', searchTerm)
@@ -12,7 +12,7 @@
             v-bind:searchTerm="this.searchTerm"
           ></SearchBar>
         </div>
-        <div v-show="canUploadFile()" class="col-sm-1">
+        <div v-show="canUploadFile()" class="col-1">
           <input
             @change="uploadFiles"
             type="file"

@@ -10,7 +10,7 @@
         </ProjectFilesHeader>
     </div>
       <div class="row">
-        <div v-for="file in files" :key="file" class="col-sm-4">
+        <div v-for="file in files" :key="file" class="col-sm-2">
           <!--- Determine size of each Column --->
           <div v-if="fileNameInSearchterm(file)">
             <!--- Ensures that height is equal to width --->
@@ -27,7 +27,6 @@
             />
           </div>
         </div>
-        
       </div>
     </div>
 
@@ -91,9 +90,6 @@ export default {
 </script>
 
 <style scoped>
-.row {
-  margin-top: 1vh;
-}
 .component-container{
   height: auto;
   min-height: auto;

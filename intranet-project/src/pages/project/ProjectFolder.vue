@@ -6,24 +6,30 @@
     @long-press="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
-    <div class="button"  @click="goToFolder()">
-      <img
-        class="foldersImage"
-        v-if="this.shared != 'yes'"
-        src=".\..\..\assets\images\folder.png"
-      />
-      <img
-        class="foldersImage"
-        v-if="this.shared == 'yes'"
-        src=".\..\..\assets\images\shared_folder.png"
-      /><hr style="color: transparent;height: 0">
-      <input
-        v-on:keyup.enter="renameFolder()"
-        class="folderName"
-        v-model="newName"
-        v-bind:id="this.name"
-        disabled
-      />
+     <div class="container"  @click="goToFolder()">
+      <div class="row">
+        <div class="col-5">
+          <img
+            class="foldersImage"
+            v-if="this.shared != 'yes'"
+            src=".\..\..\assets\images\folder.png"
+          />
+          <img
+            class="foldersImage"
+            v-if="this.shared == 'yes'"
+            src=".\..\..\assets\images\shared_folder.png"
+          />
+        </div>
+        <div class="col-7">
+          <input
+            v-on:keyup.enter="renameFolder()"
+            class="folderName"
+            v-model="newName"
+            v-bind:id="this.name"
+            disabled
+          />
+        </div>
+      </div>
     </div>
     <ul v-show="canSeeMenu()" id="drop-down-menu" v-if="viewMenu == true">
         <li v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</li>
@@ -188,39 +194,7 @@ export default {
 };
 </script>
 
-<style>
-.projectFolder {
-  color: var(--blue1);
-  width: 100%;
-  min-height: calc(1.5vw + 1.5vh);
-  font-size: calc(0.5vh + 0.5vw);
-  padding: 2px;
-  margin-bottom: 1vh;
-}
-.foldersImage {
-  width: min(calc(30px + 2vw), 50px);
-  margin-bottom: 1vh;
-
-}
-.folderName {
-  background-color: transparent;
-  color: var(--blue1);
-  width: 100%;
-}
-.button{
-  margin-left: 10px;
-  padding: 15px
-}
-.button:hover{
-  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
-  border-radius: 10px;
-}
-.container {
-  margin-top: 2vh;
-}
-h5 {
-  color: black;
-}
+<style scoped>
 #drop-down-menu{
     background: #FAFAFA;
     border: 1px solid var(--blue1);
@@ -230,7 +204,7 @@ h5 {
     padding: 0;
     position: absolute;
     width: 250px;
-    z-index: 999999;
+    z-index: 99;
 }
 
 #drop-down-menu li {
@@ -246,5 +220,36 @@ h5 {
 #drop-down-menu li:hover {
     background: var(--blue3);
     color: #FAFAFA;
+}
+.projectFolder {
+ color: var(--blue1);
+  width: 100%;
+  border: solid;
+  border-radius: 10px;
+  border-width: 1px;
+  margin-top: 1vh;
+}
+.container {
+  position: relative;
+}
+.foldersImage {
+  margin:10px auto;
+  top: 50%;
+  overflow: hidden;
+  width: max(80%, 30px);
+}
+.folderName {
+  margin: 0;
+  position: absolute;
+  top: 35%;
+  background-color: transparent;
+  overflow: hidden;
+  color: var(--blue1);
+  border: 0px;
+  width: 50%;
+}
+.projectFolder:hover{
+  background: linear-gradient(to bottom, rgba(94, 124, 223, 0.8), rgba(225,225,225,0.9));
+  border-radius: 10px;
 }
 </style>
