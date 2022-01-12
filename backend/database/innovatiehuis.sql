@@ -221,6 +221,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `first_name` varchar(40) NOT NULL,
   `last_name` varchar(40) NOT NULL,
   `email` tinytext NOT NULL,
+  `phonenumber` varchar(40) NOT NULL,
   `password_hash` tinytext NOT NULL,
   `roleid` int(11) NOT NULL DEFAULT 0,
   `screening_status` tinyint(1) NOT NULL DEFAULT 0,
@@ -236,16 +237,16 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table innovatieplatform.users: ~9 rows (approximately)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`, `password_hash`, `roleid`, `screening_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
-	(1, 'Hayo', 'Riem', 'hayoriem@mail.com', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK', 4, 1, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
-	(2, 'Peter', 'Beens', 'peterbeens@mail.com', '123', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0),
-	(3, 'Singh', 'van Offeren', 'singhvano@mail.com', '123', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0),
-	(4, 'Jochem', 'Hoekstra', 'joja@mail.com', '123', 2, 1, '2021-11-30 17:48:47', '2021-11-30 17:48:47', NULL, 0),
-	(5, 'Niels', 'Doornbos', 'nielsprikkelbos@mail.com', '123', 4, 2, '2021-11-30 17:49:09', '2021-11-30 17:49:09', NULL, 0),
-	(6, 'Jan', 'Baljé', 'janbal@mail.com', '123', 1, 2, '2021-11-30 17:49:49', '2021-11-30 17:49:49', NULL, 0),
-	(7, 'Tim', 'Dronebos', 'tim@mail.com', '123', 3, 2, '2021-11-30 17:51:50', '2021-11-30 17:51:50', NULL, 0),
-	(8, 'pieter', 'van rosmalen', 'pvr@mail.com', '123458', 3, 0, '2021-12-02 19:09:21', '2021-12-02 19:09:21', NULL, 0),
-	(9, 'Anna', 'van Rosmalen', 'anna3@mail.com', '123', 2, 2, '2022-01-02 16:41:35', '2022-01-02 16:41:35', NULL, 0);
+INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`,`phonenumber`, `password_hash`, `roleid`, `screening_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
+	(1, 'Hayo', 'Riem', 'hayoriem@mail.com','06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK', 4, 1, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
+	(2, 'Peter', 'Beens', 'peterbeens@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0),
+	(3, 'Singh', 'van Offeren', 'singhvano@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0),
+	(4, 'Jochem', 'Hoekstra', 'joja@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:48:47', '2021-11-30 17:48:47', NULL, 0),
+	(5, 'Niels', 'Doornbos', 'nielsprikkelbos@mail.com','06123456789', '123', 4, 2, '2021-11-30 17:49:09', '2021-11-30 17:49:09', NULL, 0),
+	(6, 'Jan', 'Baljé', 'janbal@mail.com','06123456789', '123', 1, 2, '2021-11-30 17:49:49', '2021-11-30 17:49:49', NULL, 0),
+	(7, 'Tim', 'Dronebos', 'tim@mail.com','06123456789', '123', 3, 2, '2021-11-30 17:51:50', '2021-11-30 17:51:50', NULL, 0),
+	(8, 'pieter', 'van rosmalen', 'pvr@mail.com','06123456789', '123458', 3, 0, '2021-12-02 19:09:21', '2021-12-02 19:09:21', NULL, 0),
+	(9, 'Anna', 'van Rosmalen', 'anna3@mail.com','06123456789', '123', 2, 2, '2022-01-02 16:41:35', '2022-01-02 16:41:35', NULL, 0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 -- Dumping structure for table innovatieplatform.users_have_projects
