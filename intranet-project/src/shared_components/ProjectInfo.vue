@@ -336,7 +336,17 @@ export default {
       ProjectService.updateProjectNameDescription(
         this.project.projectid,
         project
-      );
+      )
+        .then(() => {
+          this.$emit("nameOrDescriptionChanged", project);
+        })
+        .catch((err) => {
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          alert("Er ging wat mis, probeer later opnieuw");
+        });
     },
     selectUser(user) {
       this.memberToAdd = user;

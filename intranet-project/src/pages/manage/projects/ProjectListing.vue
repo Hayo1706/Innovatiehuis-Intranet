@@ -5,7 +5,7 @@
       <!-- small screens-->
       <div class="col d-block d-lg-none">
         <div class="full-button mobileRow" @click="onClick()">
-          {{ project.project_name }}
+          {{ projectname }}
         </div>
         <div class="mobileRow">
           {{
@@ -33,7 +33,7 @@
       <!-- large screens-->
       <div class="col d-none d-lg-flex align-items-center" @click="onClick()">
         <div class="full-button">
-          {{ project.project_name }}
+          {{ projectname }}
         </div>
       </div>
       <div class="col d-none d-lg-flex align-items-center">
@@ -66,7 +66,14 @@
         ></ProjectButtons>
       </div>
     </div>
-    <ProjectInfo v-bind:project="project"></ProjectInfo>
+    <ProjectInfo
+      @nameOrDescriptionChanged="
+        (project_obb) => {
+          this.projectname = project_obb.project_name;
+        }
+      "
+      v-bind:project="project"
+    ></ProjectInfo>
   </div>
 </template>
 
@@ -79,7 +86,12 @@ export default {
   components: { VerticalHeader, ProjectButtons, ProjectInfo },
   name: "ProjectListing",
   data: function () {
-    return {};
+    return {
+      projectname: "",
+    };
+  },
+  mounted() {
+    this.projectname = this.project.project_name;
   },
   methods: {
     onClick() {
