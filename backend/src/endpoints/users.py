@@ -14,7 +14,7 @@ from ..services.extensions import bcrypt
 @check_permissions(Users.may_read)
 def read_one(user_id):
     return query(
-        "SELECT userid, first_name, last_name, email, roleid, role_name, screening_status, created, "
+        "SELECT userid, first_name, last_name, email, phonenumber, roleid, role_name, screening_status, created, "
         "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen), created) AS last_seen FROM (SELECT * FROM users "
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) "
         "WHERE userid= %(id)s",
@@ -24,7 +24,7 @@ def read_one(user_id):
 @check_permissions(Users.may_read_all)
 def read_all():
     return query(
-        "SELECT userid, first_name, last_name, email, roleid, role_name, screening_status, created, "
+        "SELECT userid, first_name, last_name, email,phonenumber, roleid, role_name, screening_status, created, "
         "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid")
 
