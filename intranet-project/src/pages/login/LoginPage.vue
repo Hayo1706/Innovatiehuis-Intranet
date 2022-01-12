@@ -20,13 +20,14 @@
       <br />
       <button @click="submit()">Verzenden</button>
       <br />
-      <p v-if="this.redirectTarget != '/home' && !enteredWrongPassword" id="error-message">
+      <p
+        v-if="this.redirectTarget != '/home' && !this.enteredWrongPassword"
+        id="error-message"
+      >
         Sessie is ongeldig of verlopen. Log in om terug te keren naar de vorige
         pagina.
       </p>
-      <p
-        id="error-message"
-      >{{this.error}}</p>
+      <p id="error-message">{{ this.error }}</p>
     </div>
   </div>
 </template>
@@ -41,16 +42,17 @@ export default {
     return {
       loginAttempt: { email: "", password: "" },
       redirectTarget: "/home",
-      error: ""
+      error: "",
+      enteredWrongPassword: false,
     };
   },
   methods: {
     submit() {
       LoginService.attemptLogin(
         "username=" +
-        this.loginAttempt.email +
-        "&password=" +
-        this.loginAttempt.password
+          this.loginAttempt.email +
+          "&password=" +
+          this.loginAttempt.password
       )
         .then((response) => {
           console.log(response.status);
@@ -70,11 +72,12 @@ export default {
           }
           this.error = err.response.data.response.message;
           console.log(this.err.response.data.response.message);
+          this.enteredWrongPassword = true;
         });
     },
   },
   created() {
-    if(localStorage.getItem("loggedIn")){
+    if (localStorage.getItem("loggedIn")) {
       this.$router.push("/home");
       return;
     }
