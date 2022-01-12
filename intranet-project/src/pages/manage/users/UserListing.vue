@@ -356,13 +356,16 @@ img {
 }
 select {
   border-radius: 0.25rem;
-  padding: 3px;
+  width: fit-content;
 }
 .full-button {
-  width: fit-content;
+  min-width: fit-content;
 }
 .dropdown-toggle {
   padding: 0px;
   margin: 0px;
+}
+.dropdown-item {
+  margin-right: 20px;
 }
 </style>
