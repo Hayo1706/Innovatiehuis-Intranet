@@ -267,7 +267,7 @@ export default {
           user.first_name +
           " " +
           user.last_name +
-          " echt verwijderen ?"
+          '" echt verwijderen ?'
       );
       if (answer) {
         UserService.deleteUser(user.userid)
