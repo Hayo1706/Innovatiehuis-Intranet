@@ -16,54 +16,62 @@
     </button>
 
     <UsersHeader
+      v-bind:sortingMethod="this.sortingMethod"
+      v-bind:ascending="this.ascending"
+      @sortEvent="
+        (sortingTerm) => {
+          sort(sortingTerm);
+        }
+      "
       class="component-header"
       @searchBarChanged="setSearchTerm"
       v-bind:searchTerm="this.searchTerm"
     ></UsersHeader>
-    <div class="container-fluid" id="sorting_space">
-      <h2>Sorteren op:</h2>
-
-      <button class="full-button" @click="sort('name')">
-        Naam
-        <span v-if="sortingMethod == 'name'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span></button
-      ><button class="full-button" @click="sort('created')">
-        Registreerdatum
-        <span v-if="sortingMethod == 'created'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
-      </button>
-      <button class="full-button" @click="sort('last_seen')">
-        Laatst gezien
-        <span v-if="sortingMethod == 'last_seen'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
-      </button>
-      <button class="full-button" @click="sort('role')">
-        Rol
-        <span v-if="sortingMethod == 'role'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
-      </button>
-      <button class="full-button" @click="sort('amountprojects')">
-        Aantal projecten
-        <span v-if="sortingMethod == 'amountprojects'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
-      </button>
-      <button class="full-button" @click="sort('screening')">
-        Screening
-        <span v-if="sortingMethod == 'screening'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
-      </button>
+    <div class="container-fluid d-sm-block d-lg-none" id="sorting_space">
+      <p>Sorteren op:</p>
+      <div class="row">
+        <button class="full-button col-3" @click="sort('name')">
+          Naam
+          <span v-if="sortingMethod == 'name'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span></button
+        ><button class="full-button col-3" @click="sort('created')">
+          Registreerdatum
+          <span v-if="sortingMethod == 'created'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('last_seen')">
+          Laatst gezien
+          <span v-if="sortingMethod == 'last_seen'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('role')">
+          Rol
+          <span v-if="sortingMethod == 'role'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('amountprojects')">
+          Aantal projecten
+          <span v-if="sortingMethod == 'amountprojects'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('screening')">
+          Screening
+          <span v-if="sortingMethod == 'screening'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+      </div>
     </div>
     <UserCreateModal></UserCreateModal>
     <div class="container-fluid d-sm-block d-lg-none">
@@ -230,7 +238,7 @@ export default {
 
 <style scoped>
 #sorting_space {
-  padding: 10px;
+  padding: 20px;
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
@@ -268,5 +276,16 @@ export default {
 }
 .full-button {
   display: inline;
+  width: fit-content;
+}
+p {
+  font-family: AddeleSemiBold;
+  font-size: 20px;
+}
+.bi-caret-down-fill {
+  margin-left: 5px;
+}
+.bi-caret-up-fill {
+  margin-left: 5px;
 }
 </style>

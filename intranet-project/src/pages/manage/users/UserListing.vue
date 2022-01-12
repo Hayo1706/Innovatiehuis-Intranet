@@ -328,7 +328,7 @@ export default {
   );
   border-radius: 1rem;
   margin-bottom: 1vh;
-  font-size: 1.7vh;
+  font-size: 1.6vh;
   border: solid var(--gold1) 2px;
 }
 
