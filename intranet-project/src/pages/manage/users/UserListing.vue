@@ -211,13 +211,15 @@ export default {
             this.user.userid
           )
             .then(() => {
-              this.previousRole = this.selectedRole;
+              this.previousScreeningstate = val;
               return;
             })
             .catch(() => {
-              this.selectedRole = this.previousRole;
+              this.screeningstate = this.previousScreeningstate;
               alert("Er ging iets mis!");
             });
+        } else {
+          this.screeningstate = this.previousScreeningstate;
         }
       }
     },
@@ -253,6 +255,8 @@ export default {
               this.selectedRole = this.previousRole;
               alert("Er ging iets mis!");
             });
+        } else {
+          this.selectedRole = this.previousRole;
         }
       }
     },
@@ -366,6 +370,7 @@ select {
   margin: 0px;
 }
 .dropdown-item {
-  margin-right: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 </style>
