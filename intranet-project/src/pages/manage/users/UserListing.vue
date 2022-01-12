@@ -263,7 +263,7 @@ export default {
     },
     async handleRemoveUser(user) {
       let answer = confirm(
-        'Wil je het project  de gebruiker "' +
+        'Wil je de gebruiker "' +
           user.first_name +
           " " +
           user.last_name +
