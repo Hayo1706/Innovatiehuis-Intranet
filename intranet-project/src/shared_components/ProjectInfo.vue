@@ -3,6 +3,7 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading">
         <button
+          ref="btn"
           :id="'collapseDetailsButton' + this.project.projectid"
           class="accordion-button collapsed"
           type="button"
@@ -11,6 +12,7 @@
           aria-expanded="false"
           :aria-controls="'collapseName' + this.project.projectid"
           @click="openDetails()"
+          :disabled="disabled"
         >
           Details
         </button>
@@ -387,7 +389,7 @@ import UserService from "@/services/UserService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import PermissionService from "@/services/PermissionService.js";
 export default {
-  props: ["project"],
+  props: ["project", "open"],
   components: { SearchBar },
   name: "ProjectInfo",
   data: function () {
@@ -413,9 +415,22 @@ export default {
       childToAdd: null,
       childSearchTerm: "",
       filteredChildren: [],
+      disabled: false,
     };
   },
-
+  mounted() {
+    if (this.open) {
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.$refs.btn.click();
+          this.disabled = true;
+          document.getElementById(
+            "collapseDetailsButton" + this.project.projectid
+          ).textContent = "";
+        }, 500);
+      });
+    }
+  },
   methods: {
     updateNameDescription() {
       const project = {
@@ -472,7 +487,7 @@ export default {
         this.parentToAdd.projectid
       )
         .then(() => {
-          this.closeAllAcordeons();
+          this.refreshAllAcordeons();
           this.parentToAdd = null;
           this.loadParents();
         })
@@ -490,7 +505,7 @@ export default {
         this.childToAdd.projectid
       )
         .then(() => {
-          this.closeAllAcordeons();
+          this.refreshAllAcordeons();
           this.childToAdd = null;
           this.loadChildren();
         })
@@ -505,7 +520,7 @@ export default {
     removeChild(childid) {
       ProjectService.removeChildFromProject(this.project.projectid, childid)
         .then(() => {
-          this.closeAllAcordeons();
+          this.refreshAllAcordeons();
           this.loadChildren();
         })
         .catch((err) => {
@@ -519,7 +534,7 @@ export default {
     removeParent(parentid) {
       ProjectService.removeParentFromProject(this.project.projectid, parentid)
         .then(() => {
-          this.closeAllAcordeons();
+          this.refreshAllAcordeons();
           this.loadParents();
         })
         .catch((err) => {
@@ -747,7 +762,7 @@ export default {
           .attributes.getNamedItem("aria-expanded").value == "true"
       );
     },
-    closeAllAcordeons() {
+    refreshAllAcordeons() {
       var arr = document.getElementsByClassName("accordion-button");
 
       for (let j = 0; j < arr.length; j++) {
@@ -767,11 +782,6 @@ export default {
   },
 
   watch: {
-    open: function () {
-      if (open) {
-        this.openDetails();
-      }
-    },
     filteredUsers: function () {
       if (this.filteredUsers.length == 0) {
         document
@@ -832,10 +842,21 @@ button {
   margin-top: 10px;
   margin-bottom: 20px;
   margin-left: 10px;
+
+  border-radius: 1rem;
+  margin: 5px;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  font-size: 14pt;
+  color: white;
+  padding: 6px;
+  text-decoration: none;
 }
 
 .area {
-  width: 100%;
+  width: 70%;
+  display: block;
 }
 
 .searchbar {

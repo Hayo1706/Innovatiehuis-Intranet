@@ -45,5 +45,8 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style scoped>
+div {
+  padding-bottom: 5vh;
+}
+</style>>
