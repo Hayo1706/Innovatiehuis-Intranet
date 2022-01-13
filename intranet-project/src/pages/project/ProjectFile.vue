@@ -3,16 +3,23 @@
     class="projectFile"
     @contextmenu="viewMenu = true"
     @long-press="viewMenu = true"
-    @mouseleave="viewMenu = false; moveMenu = false"
+    @mouseleave="viewMenu = false;
+    moveMenu = false"
   >
     <div class="row">
       <div class="col s10">
-        <img class="fileImage" :src="this.getTypeImage()" v-bind:id="this.type"/>
+        <img
+            draggable="false"
+            class="fileImage"
+            :src="this.getTypeImage()"
+            v-bind:id="this.type"/>
         <input
         v-on:keyup.enter="renameFile()"
         class="fileName"
         v-model="fileName"
         v-bind:id="this.name"
+        draggable="false"
+
         disabled
         />
       </div>
@@ -114,12 +121,11 @@ export default {
         }
       },
       enableInput(){
-      this.fileName = this.name.split(".")[0]
-      var inputName = document.getElementById(this.name)
-      inputName.removeAttribute("disabled")
-      
-      this.viewMenu = false;
-      inputName.select();
+        this.fileName = this.name.split(".")[0]
+        var inputName = document.getElementById(this.name)
+        inputName.removeAttribute("disabled")
+        this.viewMenu = false;
+        inputName.select();
       },
       disableInput(){
         var inputName = document.getElementById(this.name)
@@ -194,8 +200,9 @@ export default {
 .fileName {
   background-color: transparent;
   color: var(--blue1);
-  border: 0px;
-  width: 90%
+  border: 0;
+  width: 90%;
+  pointer-events: none
 }
 .fileImage {
   margin:0 auto;
@@ -204,9 +211,10 @@ export default {
   width: min(80%, 150px);
 }
 .projectFile:hover{
-  background: linear-gradient(to bottom, rgba(94, 124, 223, 0.8), rgba(225,225,225,0.9));
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
   border-radius: 10px;
 }
+
 #drop-down-menu{
     background: #FAFAFA;
     border: 1px solid var(--blue1);

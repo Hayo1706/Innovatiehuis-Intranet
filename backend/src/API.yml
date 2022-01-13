@@ -403,7 +403,7 @@ paths:
         200:
           description: Successfully retrieved folders at given path
     put:
-      operationId: src.endpoints.folders.check_folder_put_request
+      operationId: src.endpoints.folders.update_dir
       tags:
         - Folders
       summary: Move folder to another directory
@@ -444,7 +444,7 @@ paths:
         409: 
           description: There are files or folders in this folder, requires confirmation
     post:
-      operationId: src.endpoints.folders.create_dir_from_request
+      operationId: src.endpoints.folders.create_dir
       tags:
         - Folders
       summary: Place new folder directory

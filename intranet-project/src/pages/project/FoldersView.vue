@@ -22,11 +22,16 @@
               :projectid="this.$route.params.id"
               :name="folder"
               :path="this.path + '/' + folder"
-              :shared="no"
+              :shared="'no'"
               @currentPathChanged="folderPathChanged"
               @folderMoved="setFolders()"
               @folderDeleted="setFolders()"
               @nameChanged="setFolders()"
+              @drop="onDrop($event, this.path + '/' + folder)"
+              @dragenter.prevent
+              @dragover.prevent
+              draggable="true"
+              @dragstart="startDrag($event, this.path + '/' + folder)"
             />
             </div>
           </div>
@@ -40,6 +45,18 @@ import FilestorageService from "@/services/FilestorageService.js";
 import ProjectFolderHeader from "./ProjectFolderHeader.vue";
 import ProjectFolder from "./ProjectFolder.vue";
 export default {
+  setup(){
+    const startDrag = (event, path) => {
+      event.dataTransfer.dropEffect = 'move'
+      event.dataTransfer.effectAllowed = 'move'
+      event.dataTransfer.setData('path', path)
+      event.dataTransfer.setData('type', 'folder')
+    }
+
+    return{
+      startDrag,
+    }
+  },
   components: {
     ProjectFolderHeader,
     ProjectFolder,
@@ -66,12 +83,37 @@ export default {
       this.search_term = value;
       this.setSearchedFolders(value);
     },
-    folderNameInSearchTerm(folder_name, search_term) {
-      if (folder_name.includes(search_term) || search_term == null) {
-        return true;
-      } else {
-        return false;
+    onDrop(event, to) {
+      const path = event.dataTransfer.getData('path')
+      let id = this.projectid
+      if (event.dataTransfer.getData('type') === 'file') {
+        FilestorageService.moveFile(id, path, to)
+            .then(() => {
+              console.log("1.Moving File...")
+              this.$emit("fileMoved");
+            })
+            .catch((err) => {
+              if (err.response) {
+                console.log(err.response.status);
+              }
+            });
       }
+      else{
+        FilestorageService.moveFolder(id ,path,to, '')
+            .then(() => {
+              console.log('1.Moving Folder')
+              console.log(2)
+              this.setFolders()
+            })
+            .catch((err) => {
+              if (err.response) {
+                console.log(err.response.status);
+              }
+            });
+      }
+    },
+    folderNameInSearchTerm(folder_name, search_term) {
+      return folder_name.includes(search_term) || search_term == null;
     },
     folderPathChanged(path) {
       if(Array.isArray(path)){
@@ -89,13 +131,16 @@ export default {
       }
       
     },
-    setFolders() {
-      FilestorageService.getFoldersOfProject(this.projectid, this.path)
+    setFolders(path=this.path) {
+      console.log(path)
+      FilestorageService.getFoldersOfProject(this.projectid, path)
         .then((response) => {
+          console.log('Resetting Folders')
           this.folders = response;
           this.setSearchedFolders(this.searchTerm);
         })
         .catch((err) => {
+          console.log('resetting Folders Failed')
           if (err.response) {
             console.log(err.response.status);
           }
