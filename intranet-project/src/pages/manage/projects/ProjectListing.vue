@@ -36,7 +36,7 @@
 
       <!-- large screens-->
       <div
-        class="col d-none d-lg-flex align-items-center justify-content-start"
+        class="col d-none d-lg-flex align-items-center justify-content-center"
         @click="onClick()"
       >
         <div class="full-button">
