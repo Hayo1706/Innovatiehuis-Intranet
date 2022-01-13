@@ -77,12 +77,17 @@
       </div>
 
       <!-- large screens-->
-      <div class="col d-none d-lg-flex align-items-center" @click="onClick()">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-start"
+        @click="onClick()"
+      >
         <div class="full-button">
           {{ user.first_name + " " + user.last_name }}
         </div>
       </div>
-      <div class="col d-none d-lg-flex align-items-center">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
         {{
           user.created.toLocaleString("nl-NL", {
             day: "numeric",
@@ -91,7 +96,9 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-flex align-items-center">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
         {{
           user.last_seen.toLocaleString("nl-NL", {
             day: "numeric",
@@ -103,17 +110,24 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-flex align-items-center">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
         <select v-model="selectedRole" :disabled="!canUpdateUserRole()">
           <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
             {{ role }}
           </option>
         </select>
       </div>
-      <div class="col d-none d-lg-flex align-items-center">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
         {{ user.amountprojects }}
       </div>
-      <div class="col d-none d-lg-flex align-items-center" id="screening">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+        id="screening justify-content-center"
+      >
         <div class="dropdown">
           <button
             class="btn dropdown-toggle"
@@ -152,7 +166,7 @@
         </div>
       </div>
 
-      <div class="col d-lg-flex align-items-center">
+      <div class="col d-lg-flex align-items-center justify-content-center">
         <a
           class="full-button"
           @click="handleRemoveUser(this.user)"
