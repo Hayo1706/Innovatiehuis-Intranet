@@ -295,10 +295,16 @@ export default {
   },
   methods: {
     canDelete() {
-      return PermissionService.userHasPermission("may_delete_any_user");
+      return (
+        PermissionService.userHasPermission("may_delete_any_user") &&
+        this.user.userid != localStorage.getItem("userid")
+      );
     },
     canUpdateUserRole() {
-      return PermissionService.userHasPermission("may_update_any_user_role");
+      return (
+        PermissionService.userHasPermission("may_update_any_user_role") &&
+        this.user.userid != localStorage.getItem("userid")
+      );
     },
     canUpdateUserScreening() {
       return (

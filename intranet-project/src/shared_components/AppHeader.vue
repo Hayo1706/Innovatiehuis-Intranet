@@ -2,14 +2,21 @@
   <header v-if="this.$route.path !== '/login'">
     <div id="header-container">
       <div class="image-container">
-        <img class="logo" @click="logoClick()" src=".\..\assets\images\logo\square.png" />
-        <img
+        <img 
+          title="Hoofdpagina"
+          class="logo" 
+          @click="logoClick()" 
+          src=".\..\assets\images\logo\square.png" 
+        />
+        <img 
+          data-toggle="tooltip" data-placement="bottom" title="Projectenoverzicht"
           class="header-icon"
           @click="projectsClick()"
           src=".\..\assets\images\projects_icon.png"
           v-if="this.canSeeProjects()"
         />
         <img
+          title="Gebruikersoverzicht"
           class="header-icon"
           @click="usersClick()"
           src=".\..\assets\images\users_icon.png"
@@ -18,6 +25,7 @@
       </div>
       <div class="image-container">
         <img
+          title="Projectgegevens"
           class="header-icon"
           @click="settingClick()"
           src=".\..\assets\images\gear_icon3.png"
@@ -27,8 +35,18 @@
       </div>
 
       <div class="image-container">
-        <img class="header-icon" @click="profileClick()" src=".\..\assets\images\profile_icon.png" />
-        <img class="header-icon" @click="logout()" src=".\..\assets\images\logout-icon.png" />
+        <img 
+          title="Profiel"
+          class="header-icon" 
+          @click="profileClick()" 
+          src=".\..\assets\images\profile_icon.png" 
+        />
+        <img 
+          title="Uitloggen"
+          class="header-icon" 
+          @click="logout()" 
+          src=".\..\assets\images\logout-icon.png" 
+        />
       </div>
     </div>
   </header>

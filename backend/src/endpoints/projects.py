@@ -102,7 +102,6 @@ def read_users(project_id):
 
 @check_permissions(Projects.may_update)
 def update_users(project_id):
-    
     try:
         body = connexion.request.json['project']
         new_ids = body['userids']
@@ -215,8 +214,6 @@ def update_shared_files(project_id, child_id):
         shared_files_string = body['shared_files']
     except KeyError:
         return response("Invalid body", 400)
-    
-    
     query_update(
         "UPDATE projects_have_parents "
         "SET shared_files = %(shared_files)s "

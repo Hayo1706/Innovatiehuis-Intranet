@@ -3,7 +3,9 @@
     
     <div id="projectFolderHeader">
       <div class="row">
-        <div class="col-sm-8"><slot></slot></div>
+        <div class="col-sm-8">
+          <slot></slot>
+        </div>
         <div class="col-sm-3">
           <SearchBar
             @searchBarChanged="
@@ -12,14 +14,16 @@
             v-bind:searchTerm="this.searchTerm"
           ></SearchBar>
         </div>
-        <div v-show="canAddFolder()" class="col-sm-1">
-          <button
-            class="iconButton"
+
+        <div class="col-sm-1">
+          <img
+            data-toggle="tooltip" data-placement="bottom" title="Map aanmaken"
+            class="component-header-button"
+            src=".\..\..\assets\images\add_icon.png" 
             data-bs-toggle="modal"
             data-bs-target="#folderModal"
-          >
-            <img class="iconImage" src=".\..\..\assets\images\add_icon.png" />
-          </button>
+            v-if="canAddFolder()"
+          />
         </div>
       </div>
     </div>
@@ -120,19 +124,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.iconButton {
-  border: 0;
-  background-color: transparent;
-}
-.iconImage {
-  height: calc(1vw + 1vh);
-  margin: 0 auto;
-  display: block;
-}
-.input-group {
-  margin: 0.5vh auto;
-  height: 80%;
-}
-</style>

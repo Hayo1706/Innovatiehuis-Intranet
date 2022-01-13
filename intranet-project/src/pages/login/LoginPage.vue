@@ -4,7 +4,7 @@
     <div style="text-align: center" class="component-body">
       <input
         v-model="this.loginAttempt.email"
-        style="text-align: center"
+        style="text-align: center; width: 100%;"
         type="text"
         placeholder="e-mail"
         v-on:keyup.enter="submit()"
@@ -12,13 +12,15 @@
       <br />
       <input
         v-model="this.loginAttempt.password"
-        style="text-align: center"
+        style="text-align: center; width: 100%;"
         type="password"
         placeholder="wachtwoord"
         v-on:keyup.enter="submit()"
       />
       <br />
-      <button @click="submit()">Verzenden</button>
+      <div style="text-align: center;">
+        <div class="full-button" @click="submit()">Aanmelden</div>
+      </div>
       <br />
       <p
         v-if="this.redirectTarget != '/home' && !this.enteredWrongPassword"

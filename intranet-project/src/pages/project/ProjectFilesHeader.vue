@@ -1,9 +1,10 @@
 <template>
   <div>
-
     <div id="projectFilesHeader">
       <div class="row">
-        <div class="col-8"><slot class="header"></slot></div>
+        <div class="col-8">
+          <slot class="header"></slot>
+        </div>
         <div class="col-3">
           <SearchBar
             @searchBarChanged="
@@ -13,24 +14,14 @@
           ></SearchBar>
         </div>
         <div v-show="canUploadFile()" class="col-1">
-          <input
-            @change="uploadFiles"
-            type="file"
-            id="files"
-            name="files"
-            multiple
-            hidden
-          />
-
-          <button class="iconButton">
-            <label for="files" refs="files" class="file-btn">
-              <img
-                class="iconImage"
-                src=".\..\..\assets\images\new_upload.png"
-              />
-            </label>
-          </button>
-          
+          <input @change="uploadFiles" type="file" id="files" name="files" multiple hidden />
+          <label for="files" refs="files" class="file-btn">
+            <img 
+              title="Upload bestand"
+              class="component-header-button" 
+              src=".\..\..\assets\images\new_upload.png" 
+            />
+          </label>
         </div>
       </div>
     </div>
@@ -60,47 +51,29 @@ export default {
         formData.append(files[i].name, files[i]);
 
         FilestorageService.uploadFiles(this.$route.params.id, this.path, formData)
-        .then(() => {
-          this.$emit("newFilesUploaded")
-        })
-        .catch((err) => {
-          if(err.response.status === 409){
-            var confirmation = confirm(err.response.data.response.message)
-            FilestorageService.uploadFiles(this.$route.params.id, this.path, formData, confirmation)
-            .then(() => {
-              this.$emit("newFilesUploaded")
-            })
-            .catch((err) => {
-              if (err.response) {
-                console.log(err.response.status);
-              }
-            });
-          }
-        });
+          .then(() => {
+            this.$emit("newFilesUploaded")
+          })
+          .catch((err) => {
+            if (err.response.status === 409) {
+              var confirmation = confirm(err.response.data.response.message)
+              FilestorageService.uploadFiles(this.$route.params.id, this.path, formData, confirmation)
+                .then(() => {
+                  this.$emit("newFilesUploaded")
+                })
+                .catch((err) => {
+                  if (err.response) {
+                    console.log(err.response.status);
+                  }
+                });
+            }
+          });
       }
-      document.getElementById("files").value=null;
+      document.getElementById("files").value = null;
     },
-    canUploadFile(){
+    canUploadFile() {
       return PermissionService.userHasPermission("may_update_file_in_own_project");
-    },    
+    },
   },
 };
 </script>
-
-<style scoped>
-.iconButton {
-  border: 0;
-  background-color: transparent;
-}
-.iconImage {
-  height: calc(1vw + 1vh);
-  font-size: min(calc(10px + 2vw), 36px);
-  margin: 0 auto;
-  display: block;
-}
-.input-group {
-  margin: 0.5vh auto;
-  height: 80%;
-}
-
-</style>

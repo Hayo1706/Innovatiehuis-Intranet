@@ -8,6 +8,8 @@
         </div>
         <div>Email:</div>
         <div class="item-text">{{ this.user.email }}</div>
+        <div>Telefoonnummer:</div>
+        <div class="item-text">{{ this.user.phone_number }}</div>
         <div>Rol:</div>
         <div class="item-text">{{ this.user.role_name }}</div>
         <div>Aanmaakdatum:</div>
@@ -25,26 +27,22 @@
       <div class="col-6 d-none d-lg-block">
         <div class="item">Naam:</div>
         <div class="item">Email:</div>
+        <div class="item">Telefoonnummer:</div>
         <div class="item">Rol:</div>
         <div class="item">Aanmaakdatum:</div>
         <div class="item">Laatst gezien:</div>
-        <div v-if="show_password" class="item">Wachtwoord:</div>
+        <div v-if="show_password" class="full-button" @click="toResetPassword()">Wachtwoord wijzigen</div>
       </div>
       <div class="col-6 d-none d-lg-block">
         <div class="item-text">
           {{ this.user.first_name }} {{ this.user.last_name }}
         </div>
         <div class="item-text">{{ this.user.email }}</div>
+        <div class="item-text">{{ this.user.phone_number }}</div>
         <div class="item-text">{{ this.user.role_name }}</div>
         <div class="item-text">{{ this.created }}</div>
         <div class="item-text">{{ this.last_seen }}</div>
         <div class="item-text">
-          <router-link
-            v-if="show_password"
-            class="button"
-            to="/manage/resetpassword"
-            >Wachtwoord resetten</router-link
-          >
         </div>
       </div>
     </div>
@@ -89,11 +87,15 @@ export default {
           }
         });
     },
+    toResetPassword() {
+      this.$router.push("/manage/resetpassword");
+    }
   },
   watch: {
     $route() {
       this.getUser();
     },
+    
   },
 };
 </script>

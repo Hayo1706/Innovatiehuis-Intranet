@@ -3,15 +3,18 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading">
         <button
+          ref="btn"
+          :id="'collapseDetailsButton' + this.project.projectid"
           class="accordion-button collapsed"
           type="button"
           data-bs-toggle="collapse"
           :data-bs-target="'#collapseName' + this.project.projectid"
           aria-expanded="false"
           :aria-controls="'collapseName' + this.project.projectid"
-          @click="onNameOrDescriptionClick()"
+          @click="openDetails()"
+          :disabled="disabled"
         >
-          Naam
+          Details
         </button>
       </h2>
       <div
@@ -20,69 +23,19 @@
         aria-labelledby="heading"
       >
         <div v-if="canUpdateProject()" class="accordion-body">
+          Naam:
           <textarea class="area" v-model="projectname" />
-          <hr />
           <button class="addButton" @click="updateNameDescription()">
             Wijzigen
           </button>
-        </div>
-        <div v-else class="accordion-body">
-          {{ project.project_name }}
-        </div>
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="heading">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          :data-bs-target="'#collapseDescription' + this.project.projectid"
-          aria-expanded="false"
-          :aria-controls="'collapseDescription' + this.project.projectid"
-          @click="onNameOrDescriptionClick()"
-        >
-          Beschrijving
-        </button>
-      </h2>
-      <div
-        :id="'collapseDescription' + this.project.projectid"
-        class="accordion-collapse collapse"
-        aria-labelledby="heading"
-      >
-        <div v-if="canUpdateProject()" class="accordion-body">
+          <br />
+          Beschrijving:
           <textarea class="area" v-model="projectdescription" />
-          <hr />
           <button class="addButton" @click="updateNameDescription()">
             Wijzigen
           </button>
-        </div>
-        <div v-else class="accordion-body">{{ project.description }}</div>
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="heading">
-        <button
-          class="accordion-button collapsed"
-          :id="'collapseMembersButton' + this.project.projectid"
-          type="button"
-          data-bs-toggle="collapse"
-          :data-bs-target="'#collapseMembers' + this.project.projectid"
-          aria-expanded="false"
-          :aria-controls="'collapseMembers' + this.project.projectid"
-          @click="this.onMembersClick()"
-        >
-          Leden
-        </button>
-      </h2>
-      <div
-        :id="'collapseMembers' + this.project.projectid"
-        class="accordion-collapse collapse"
-        aria-labelledby="heading"
-      >
-        <div class="accordion-body">
+          <br />
+          Leden toevoegen:
           <form autocomplete="off">
             <SearchBar
               v-show="canUpdateProject()"
@@ -133,32 +86,11 @@
             </button>
           </div>
 
-          <div v-if="this.members.length == 0">Geen resultaten</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="heading">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          :data-bs-target="'#collapseParents' + this.project.projectid"
-          aria-expanded="false"
-          :aria-controls="'collapseParents' + this.project.projectid"
-          :id="'collapseParentsButton' + this.project.projectid"
-          @click="this.onParentsClick()"
-        >
-          Overkoepelende projecten
-        </button>
-      </h2>
-      <div
-        :id="'collapseParents' + this.project.projectid"
-        class="accordion-collapse collapse"
-        aria-labelledby="heading"
-      >
-        <div class="accordion-body">
+          <div v-if="this.members.length == 0" class="text">
+            Geen resultaten
+          </div>
+          <br />
+          Overkoepelende projecten toevoegen:
           <form autocomplete="off">
             <SearchBar
               v-show="canUpdateProject()"
@@ -211,32 +143,11 @@
               x
             </button>
           </div>
-          <div v-if="this.parents.length == 0">Geen resultaten</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="heading">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          :data-bs-target="'#collapseChildren' + this.project.projectid"
-          aria-expanded="false"
-          :aria-controls="'collapseChildren' + this.project.projectid"
-          :id="'collapseChildrenButton' + this.project.projectid"
-          @click="this.onChildrenClick()"
-        >
-          Sub-projecten
-        </button>
-      </h2>
-      <div
-        :id="'collapseChildren' + this.project.projectid"
-        class="accordion-collapse collapse"
-        aria-labelledby="heading"
-      >
-        <div class="accordion-body">
+          <div v-if="this.parents.length == 0" class="text">
+            Geen resultaten
+          </div>
+          <br />
+          Sub-projecten toevoegen:
           <form autocomplete="off">
             <SearchBar
               v-show="canUpdateProject()"
@@ -286,7 +197,186 @@
               x
             </button>
           </div>
-          <div v-if="this.children.length == 0">Geen resultaten</div>
+          <div v-if="this.children.length == 0" class="text">
+            Geen resultaten
+          </div>
+        </div>
+        <div v-else class="accordion-body">
+          Naam:
+          <br />
+          <span class="text">{{ project.project_name }}</span>
+          <br />
+          <br />
+          beschrijving:
+          <br />
+          <span class="text">{{ project.description }}</span>
+          <br />
+          <br />
+          Leden:
+          <form autocomplete="off">
+            <SearchBar
+              v-show="canUpdateProject()"
+              v-bind:searchTerm="this.userSearchTerm"
+              :id="'searchUsersBar' + this.project.projectid"
+              autocomplete="off"
+              class="searchbar"
+              @searchBarChanged="
+                (searchTerm) => {
+                  handleSearchUser(searchTerm);
+                }
+              "
+            ></SearchBar>
+          </form>
+          <div
+            class="dropdown-menu"
+            :id="'userSearchDropdown' + this.project.projectid"
+          >
+            <div
+              class="dropdown-item"
+              v-for="user in filteredUsers"
+              v-bind:key="user.userid"
+              @click="selectUser(user)"
+            >
+              {{ user.first_name }} {{ user.last_name }}
+            </div>
+          </div>
+          <div v-if="memberToAdd">
+            {{ this.memberToAdd.first_name }} {{ this.memberToAdd.last_name }}
+            <button
+              @click="addUser()"
+              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+            >
+              toevoegen
+            </button>
+          </div>
+
+          <div v-for="member in this.members" v-bind:key="member.userid">
+            <span class="full-button" @click="navigateUser(member.userid)">
+              {{ member.first_name }} {{ member.last_name }}
+            </span>
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeUser(member.userid)"
+            >
+              x
+            </button>
+          </div>
+
+          <div v-if="this.members.length == 0" class="text">
+            Geen resultaten
+          </div>
+          <br />
+          Overkoepelende projecten:
+          <form autocomplete="off">
+            <SearchBar
+              v-show="canUpdateProject()"
+              v-bind:searchTerm="this.parentSearchTerm"
+              :id="'searchParentsBar' + this.project.projectid"
+              autocomplete="off"
+              class="searchbar"
+              @searchBarChanged="
+                (searchTerm) => {
+                  handleSearchParent(searchTerm);
+                }
+              "
+            ></SearchBar>
+          </form>
+          <div
+            class="dropdown-menu"
+            :id="'parentSearchDropdown' + this.project.projectid"
+          >
+            <div
+              class="dropdown-item"
+              v-for="parent in filteredParents"
+              v-bind:key="parent.projectid"
+              @click="selectParent(parent)"
+            >
+              {{ parent.project_name }}
+            </div>
+          </div>
+          <div v-if="parentToAdd">
+            {{ this.parentToAdd.project_name }}
+            <button
+              @click="addParent()"
+              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+            >
+              toevoegen
+            </button>
+          </div>
+
+          <div v-for="parent in this.parents" v-bind:key="parent.projectid">
+            <span
+              class="full-button"
+              @click="navigateProject(parent.projectid)"
+            >
+              {{ parent.project_name }}
+            </span>
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeParent(parent.projectid)"
+            >
+              x
+            </button>
+          </div>
+          <div v-if="this.parents.length == 0" class="text">
+            Geen resultaten
+          </div>
+          <br />
+          Sub-projecten:
+          <form autocomplete="off">
+            <SearchBar
+              v-show="canUpdateProject()"
+              v-bind:searchTerm="this.childSearchTerm"
+              :id="'searchParentsBar' + this.project.projectid"
+              autocomplete="off"
+              class="searchbar"
+              @searchBarChanged="
+                (searchTerm) => {
+                  handleSearchChild(searchTerm);
+                }
+              "
+            ></SearchBar>
+          </form>
+          <div
+            class="dropdown-menu"
+            :id="'childSearchDropdown' + this.project.projectid"
+          >
+            <div
+              class="dropdown-item"
+              v-for="child in filteredChildren"
+              v-bind:key="child.projectid"
+              @click="selectChild(child)"
+            >
+              {{ child.project_name }}
+            </div>
+          </div>
+          <div v-if="childToAdd">
+            {{ this.childToAdd.project_name }}
+            <button
+              @click="addChild()"
+              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+            >
+              toevoegen
+            </button>
+          </div>
+
+          <div v-for="child in this.children" v-bind:key="child.projectid">
+            <span class="full-button" @click="navigateProject(child.projectid)">
+              {{ child.project_name }}
+            </span>
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeChild(child.projectid)"
+            >
+              x
+            </button>
+          </div>
+          <div v-if="this.children.length == 0" class="text">
+            Geen resultaten
+          </div>
         </div>
       </div>
     </div>
@@ -299,7 +389,7 @@ import UserService from "@/services/UserService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import PermissionService from "@/services/PermissionService.js";
 export default {
-  props: ["project"],
+  props: ["project", "open"],
   components: { SearchBar },
   name: "ProjectInfo",
   data: function () {
@@ -325,7 +415,21 @@ export default {
       childToAdd: null,
       childSearchTerm: "",
       filteredChildren: [],
+      disabled: false,
     };
+  },
+  mounted() {
+    if (this.open) {
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.$refs.btn.click();
+          this.disabled = true;
+          document.getElementById(
+            "collapseDetailsButton" + this.project.projectid
+          ).textContent = "";
+        }, 500);
+      });
+    }
   },
   methods: {
     updateNameDescription() {
@@ -383,7 +487,7 @@ export default {
         this.parentToAdd.projectid
       )
         .then(() => {
-          this.closeAllAcordeons();
+          this.refreshAllAcordeons();
           this.parentToAdd = null;
           this.loadParents();
         })
@@ -401,7 +505,7 @@ export default {
         this.childToAdd.projectid
       )
         .then(() => {
-          this.closeAllAcordeons();
+          this.refreshAllAcordeons();
           this.childToAdd = null;
           this.loadChildren();
         })
@@ -416,7 +520,7 @@ export default {
     removeChild(childid) {
       ProjectService.removeChildFromProject(this.project.projectid, childid)
         .then(() => {
-          this.closeAllAcordeons();
+          this.refreshAllAcordeons();
           this.loadChildren();
         })
         .catch((err) => {
@@ -430,7 +534,7 @@ export default {
     removeParent(parentid) {
       ProjectService.removeParentFromProject(this.project.projectid, parentid)
         .then(() => {
-          this.closeAllAcordeons();
+          this.refreshAllAcordeons();
           this.loadParents();
         })
         .catch((err) => {
@@ -547,12 +651,16 @@ export default {
           }
         });
     },
-    onNameOrDescriptionClick() {
+    openDetails() {
       this.projectdescription = this.project.description;
       this.projectname = this.project.project_name;
+
+      this.onMembersClick();
+      this.onParentsClick();
+      this.onChildrenClick();
     },
     onParentsClick() {
-      if (this.accordeonIsOpen("collapseParentsButton")) {
+      if (this.accordeonIsOpen("collapseDetailsButton")) {
         this.loadParents();
         ProjectService.getProjects()
           .then((response) => {
@@ -582,7 +690,7 @@ export default {
         });
     },
     onChildrenClick() {
-      if (this.accordeonIsOpen("collapseChildrenButton")) {
+      if (this.accordeonIsOpen("collapseDetailsButton")) {
         this.loadChildren();
         ProjectService.getProjects()
           .then((response) => {
@@ -599,7 +707,7 @@ export default {
       }
     },
     onMembersClick() {
-      if (this.accordeonIsOpen("collapseMembersButton")) {
+      if (this.accordeonIsOpen("collapseDetailsButton")) {
         this.loadMembers();
 
         UserService.getUsers()
@@ -640,6 +748,8 @@ export default {
       this.$router.push("/project/" + projectid);
     },
     canUpdateProject() {
+      PermissionService;
+
       return (
         PermissionService.userHasPermission("may_update_any_project") ||
         PermissionService.userHasPermission("may_update_own_project")
@@ -652,7 +762,7 @@ export default {
           .attributes.getNamedItem("aria-expanded").value == "true"
       );
     },
-    closeAllAcordeons() {
+    refreshAllAcordeons() {
       var arr = document.getElementsByClassName("accordion-button");
 
       for (let j = 0; j < arr.length; j++) {
@@ -680,7 +790,7 @@ export default {
       } else {
         document
           .getElementById("userSearchDropdown" + this.project.projectid)
-          .classList.toggle("show");
+          .classList.add("show");
       }
     },
     filteredParents: function () {
@@ -691,7 +801,7 @@ export default {
       } else {
         document
           .getElementById("parentSearchDropdown" + this.project.projectid)
-          .classList.toggle("show");
+          .classList.add("show");
       }
     },
     filteredChildren: function () {
@@ -702,7 +812,7 @@ export default {
       } else {
         document
           .getElementById("childSearchDropdown" + this.project.projectid)
-          .classList.toggle("show");
+          .classList.add("show");
       }
     },
   },
@@ -732,10 +842,21 @@ button {
   margin-top: 10px;
   margin-bottom: 20px;
   margin-left: 10px;
+
+  border-radius: 1rem;
+  margin: 5px;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  font-size: 14pt;
+  color: white;
+  padding: 6px;
+  text-decoration: none;
 }
 
 .area {
-  width: 100%;
+  width: 70%;
+  display: block;
 }
 
 .searchbar {
@@ -746,5 +867,8 @@ button {
   background-color: red;
   border-radius: 5px;
   color: white;
+}
+.text {
+  font-family: AddeleThin;
 }
 </style>

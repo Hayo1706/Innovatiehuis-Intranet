@@ -4,6 +4,7 @@
       <slot></slot>
 
       <img
+        data-toggle="tooltip" data-placement="bottom" title="Mededeling toevoegen"
         class="component-header-button"
         src="./../assets/images/add_icon.png"
         data-bs-toggle="modal"

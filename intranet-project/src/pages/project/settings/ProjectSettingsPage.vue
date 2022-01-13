@@ -10,6 +10,7 @@
         }
       "
       v-bind:project="project"
+      v-bind:open="true"
     ></ProjectInfo>
   </div>
 </template>
@@ -44,5 +45,8 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style scoped>
+div {
+  padding-bottom: 5vh;
+}
+</style>>
