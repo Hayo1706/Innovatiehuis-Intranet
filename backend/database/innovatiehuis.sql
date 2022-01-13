@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `first_name` varchar(40) NOT NULL,
   `last_name` varchar(40) NOT NULL,
   `email` tinytext NOT NULL,
-  `phonenumber` varchar(40) NOT NULL,
+  `phone_number` varchar(40) NOT NULL,
   `password_hash` tinytext NOT NULL,
   `roleid` int(11) NOT NULL DEFAULT 0,
   `screening_status` tinyint(1) NOT NULL DEFAULT 0,
@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table innovatieplatform.users: ~9 rows (approximately)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`,`phonenumber`, `password_hash`, `roleid`, `screening_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
+INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`,`phone_number`, `password_hash`, `roleid`, `screening_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
 	(1, 'Hayo', 'Riem', 'hayoriem@mail.com','06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK', 4, 2, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
 	(2, 'Peter', 'Beens', 'peterbeens@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0),
 	(3, 'Singh', 'van Offeren', 'singhvano@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0),

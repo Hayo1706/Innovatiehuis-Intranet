@@ -14,7 +14,7 @@ from ..services.extensions import bcrypt
 @check_permissions(Users.may_read)
 def read_one(user_id):
     return query(
-        "SELECT userid, first_name, last_name, email, phonenumber, roleid, role_name, screening_status, created, "
+        "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, screening_status, created, "
         "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen), created) AS last_seen FROM (SELECT * FROM users "
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) "
         "WHERE userid= %(id)s",
@@ -24,7 +24,7 @@ def read_one(user_id):
 @check_permissions(Users.may_read_all)
 def read_all():
     return query(
-        "SELECT userid, first_name, last_name, email,phonenumber, roleid, role_name, screening_status, created, "
+        "SELECT userid, first_name, last_name, email,phone_number, roleid, role_name, screening_status, created, "
         "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid")
 
@@ -36,16 +36,18 @@ def create():
         first_name = body['first_name']
         last_name = body['last_name']
         email = body['email']
+        phone_number = body['phone_number']
         roleid = body['roleid']
         screening_status = body['screening_status']
+
         password_hash = bcrypt.generate_password_hash(secrets.token_urlsafe(16)).decode('utf-8')
     except KeyError:
         return response("Invalid body", 400)
 
     query_update(
-        "INSERT INTO users (first_name, last_name, email, roleid, screening_status, password_hash) "
-        "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(roleid)s, %(screening_status)s,%(password_hash)s)",
-        {'first_name': first_name, 'last_name': last_name, 'email': email, 'roleid': roleid,
+        "INSERT INTO users (first_name, last_name, email,phone_number, roleid, screening_status, password_hash) "
+        "VALUES (%(first_name)s, %(last_name)s, %(email)s,%(phone_number)s, %(roleid)s, %(screening_status)s,%(password_hash)s)",
+        {'first_name': first_name, 'last_name': last_name, 'email': email,'phone_number': phone_number, 'roleid': roleid,
          'screening_status': screening_status, 'password_hash': password_hash})
     serializer = URLSafeSerializer(PASSWORD_CHANGE_SECRET_KEY)
     d1 = date.today().strftime("%d/%m/%Y")
@@ -69,16 +71,17 @@ def update(user_id):
         first_name = body['first_name']
         last_name = body['last_name']
         email = body['email']
+        phone_number = body['phone_number']
         roleid = body['roleid']
         screening_status = body['screening_status']
     except KeyError:
         return response("Invalid body", 400)
 
     query_update(
-        "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, roleid=%(roleid)s, "
+        "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, phone_number=%(phone_number)s, roleid=%(roleid)s, "
         "screening_status=%(screening_status)s "
         "WHERE userid=%(userid)s",
-        {'first_name': first_name, 'last_name': last_name, 'email': email, 'roleid': roleid,
+        {'first_name': first_name, 'last_name': last_name, 'email': email,'phone_number': phone_number, 'roleid': roleid,
          'screening_status': screening_status, "userid": user_id})
     return response(f"User {user_id} successfully updated", 200)
 
