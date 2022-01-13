@@ -8,6 +8,8 @@
         </div>
         <div>Email:</div>
         <div class="item-text">{{ this.user.email }}</div>
+        <div>Telefoonnummer:</div>
+        <div class="item-text">{{ this.user.phone_number }}</div>
         <div>Rol:</div>
         <div class="item-text">{{ this.user.role_name }}</div>
         <div>Aanmaakdatum:</div>
@@ -25,6 +27,7 @@
       <div class="col-6 d-none d-lg-block">
         <div class="item">Naam:</div>
         <div class="item">Email:</div>
+        <div>Telefoonnummer:</div>
         <div class="item">Rol:</div>
         <div class="item">Aanmaakdatum:</div>
         <div class="item">Laatst gezien:</div>
@@ -35,6 +38,7 @@
           {{ this.user.first_name }} {{ this.user.last_name }}
         </div>
         <div class="item-text">{{ this.user.email }}</div>
+        <div class="item-text">{{ this.user.phone_number }}</div>
         <div class="item-text">{{ this.user.role_name }}</div>
         <div class="item-text">{{ this.created }}</div>
         <div class="item-text">{{ this.last_seen }}</div>
@@ -94,6 +98,7 @@ export default {
     $route() {
       this.getUser();
     },
+    
   },
 };
 </script>

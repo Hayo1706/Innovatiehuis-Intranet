@@ -42,6 +42,12 @@
                 id="message-text"
                 placeholder="Email"
               />
+              <input
+                v-model="this.phone_number"
+                class="form-control"
+                id="message-text"
+                placeholder="Telefoonnummer (optioneel)"
+              />
               Rol: &nbsp;
               <select v-model="selectedRole">
                 <option
@@ -104,6 +110,7 @@ export default {
       first_name: "",
       last_name: "",
       email: "",
+      phone_number: "",
       selectedRoleId: 2,
       selectedScreeningStateId: 0,
     };
@@ -135,14 +142,23 @@ export default {
         first_name: this.first_name,
         last_name: this.last_name,
         email: this.email,
+        phone_number: this.phone_number,
         roleid: this.selectedRoleId,
         screening_status: this.selectedScreeningStateId,
       })
         .then((respsonse) => {
           this.closeModal();
-          var message = "De gebruiker '" + this.first_name + " " + this.last_name + "' is toegevoegd!" +
-          "\nMail de volgende link naar " + this.first_name + " zodat ze hun wachtwoord kunnen instellen:" + 
-          "\n" + respsonse.response.link
+          var message =
+            "De gebruiker '" +
+            this.first_name +
+            " " +
+            this.last_name +
+            "' is toegevoegd!" +
+            "\nMail de volgende link naar " +
+            this.first_name +
+            " zodat ze hun wachtwoord kunnen instellen:" +
+            "\n" +
+            respsonse.response.link;
           console.log(message);
           alert(message);
           window.location.reload();

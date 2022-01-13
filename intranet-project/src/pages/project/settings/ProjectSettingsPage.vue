@@ -10,6 +10,7 @@
         }
       "
       v-bind:project="project"
+      v-bind:open="true"
     ></ProjectInfo>
   </div>
 </template>
