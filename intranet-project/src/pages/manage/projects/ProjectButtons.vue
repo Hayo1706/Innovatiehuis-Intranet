@@ -8,6 +8,7 @@
         @click="handleArchiveProject(project)"
         >Dearchiveren</a
       >
+
       <a v-else class="link" @click="handleArchiveProject(project)"
         >Archiveren</a
       >

@@ -35,12 +35,17 @@
       </div>
 
       <!-- large screens-->
-      <div class="col d-none d-lg-flex align-items-center" @click="onClick()">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-start"
+        @click="onClick()"
+      >
         <div class="full-button">
           {{ projectname }}
         </div>
       </div>
-      <div class="col d-none d-lg-flex align-items-center">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
         {{
           project.created.toLocaleString("nl-NL", {
             day: "numeric",
@@ -49,7 +54,9 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-flex align-items-center">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
         {{
           project.last_updated.toLocaleString("nl-NL", {
             day: "numeric",
@@ -61,17 +68,21 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-flex align-items-center">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
         <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
         <div v-else>Niet gearchiveerd</div>
       </div>
 
-      <div class="col">
-        <ProjectButtons
-          @removeProject="(id) => $emit('removeProject', id)"
-          @archiveProject="(_project) => $emit('archiveProject', _project)"
-          v-bind:project="project"
-        ></ProjectButtons>
+      <div class="col-lg d-lg-flex align-items-center justify-content-center">
+        <span>
+          <ProjectButtons
+            @removeProject="(id) => $emit('removeProject', id)"
+            @archiveProject="(_project) => $emit('archiveProject', _project)"
+            v-bind:project="project"
+          ></ProjectButtons>
+        </span>
       </div>
     </div>
     <ProjectInfo
