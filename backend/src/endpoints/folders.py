@@ -9,8 +9,6 @@ from werkzeug.utils import secure_filename
 
 from src.services.helper_functions import response
 
-DIR_NAME_LIMIT = 16
-
 def path_exists(path):
     if os.path.exists(path):
         return True
@@ -70,15 +68,15 @@ def get_unique_dir_path(new_dir, current_path, count):
             return get_unique_dir_path(new_dir, current_path, count + 1)
         return path_to_check + " (" + str(count) + ")"
 
-def get_secure_name(file_name):
-    secure_file_name = secure_filename(file_name)
-    length_file_name = len(secure_file_name)
-    if length_file_name == 0:
+def get_secure_name(name):
+    secure_folder_name = secure_filename(name)
+    length_folder_name = len(secure_folder_name)
+    if length_folder_name == 0:
         return "Nieuwe_Map"
-    elif length_file_name > DIR_NAME_LIMIT:
-        return secure_file_name[0:DIR_NAME_LIMIT]
+    elif length_folder_name > config.MAX_DIR_NAME:
+        return secure_folder_name[0:config.MAX_DIR_NAME]
 
-    return secure_file_name
+    return secure_folder_name
 
 def get_folders_in_path(project_id):
     folder_path = connexion.request.values.get('path')
@@ -111,19 +109,17 @@ def move_dir(source_path, target_path):
 def rename_dir(new_name, path):
     new_name = get_secure_name(new_name)
     path = unquote(path)
-
     if dir_exists(path):
         sub_path = path.rsplit("/", 1)[0]
-
         if name_valid(sub_path, new_name):
             new_path = sub_path + "/" + new_name
             os.rename(path, new_path)
             return response("Successfully renamed folder", 200)
 
+        print("yes")
         return response("Failed to rename folder", 400)
 
     else:
-
         return response("Failed to rename folder", 400)
 
 def create_dir(project_id):

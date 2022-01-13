@@ -125,6 +125,7 @@ export default {
             this.folderName = this.newName;
           })
           .catch((err) => {
+            this.newName = this.folderName
             if (err.response) {
               console.log(err.response.status);
             }
