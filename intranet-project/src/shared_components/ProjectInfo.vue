@@ -790,7 +790,7 @@ export default {
       } else {
         document
           .getElementById("userSearchDropdown" + this.project.projectid)
-          .classList.toggle("show");
+          .classList.add("show");
       }
     },
     filteredParents: function () {
@@ -801,7 +801,7 @@ export default {
       } else {
         document
           .getElementById("parentSearchDropdown" + this.project.projectid)
-          .classList.toggle("show");
+          .classList.add("show");
       }
     },
     filteredChildren: function () {
@@ -812,7 +812,7 @@ export default {
       } else {
         document
           .getElementById("childSearchDropdown" + this.project.projectid)
-          .classList.toggle("show");
+          .classList.add("show");
       }
     },
   },
