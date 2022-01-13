@@ -89,6 +89,8 @@
         <UserListing
           v-bind:user="user"
           @removeUser="this.removeUser"
+          @screeningChanged="setUserScreening"
+          @roleChanged="setUserRole"
         ></UserListing>
       </div>
       <div id="noresults" v-if="filteredUsers.length == 0">
@@ -123,6 +125,13 @@ export default {
     };
   },
   methods: {
+    setUserScreening(id, new_screening_id) {
+      this.users.find((user) => user.userid == id).screening_status =
+        new_screening_id;
+    },
+    setUserRole(id, new_role_id) {
+      this.users.find((user) => user.userid == id).roleid = new_role_id;
+    },
     sort(method) {
       if (this.sortingMethod != method) {
         this.sortingMethod = method;

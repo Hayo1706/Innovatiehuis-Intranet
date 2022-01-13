@@ -214,6 +214,11 @@ export default {
           )
             .then(() => {
               this.previousScreeningstate = val;
+              this.$emit(
+                "screeningChanged",
+                this.user.userid,
+                screeningstateId
+              );
               return;
             })
             .catch(() => {
@@ -251,6 +256,7 @@ export default {
           )
             .then(() => {
               this.previousRole = this.selectedRole;
+              this.$emit("roleChanged", this.user.userid, roleid);
               return;
             })
             .catch(() => {
