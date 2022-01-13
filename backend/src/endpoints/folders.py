@@ -63,9 +63,10 @@ def check_folder_put_request(project_id):
 
     if len(new_name) == 0 or new_name == None:
         # must be put as /example/example
-        move_dir_from_request(path, target_path)
+        return move_dir_from_request(path, target_path)
     else:
-        change_folder_name(new_name, path)
+        return change_folder_name(new_name, path)
+
 
 
 def change_folder_name(new_name, path):

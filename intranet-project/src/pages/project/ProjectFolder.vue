@@ -13,21 +13,29 @@
             class="foldersImage"
             v-if="this.shared != 'yes'"
             src=".\..\..\assets\images\folder.png"
+            draggable="false"
+
           />
           <img
             class="foldersImage"
             v-if="this.shared == 'yes'"
             src=".\..\..\assets\images\shared_folder.png"
+            draggable="false"
+
           />
         </div>
-        <div class="col-7">
+        <div class="col-7" style="display: inline-block; position: relative">
+          <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10"/>
+
           <input
             v-on:keyup.enter="renameFolder()"
             class="folderName"
             v-model="newName"
             v-bind:id="this.name"
             disabled
+            draggable="false"
           />
+
         </div>
       </div>
     </div>
@@ -249,7 +257,7 @@ export default {
   width: 50%;
 }
 .projectFolder:hover{
-  background: linear-gradient(to bottom, rgba(94, 124, 223, 0.8), rgba(225,225,225,0.9));
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
   border-radius: 10px;
 }
 </style>

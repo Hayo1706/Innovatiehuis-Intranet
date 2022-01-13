@@ -10,7 +10,11 @@
         </ProjectFilesHeader>
     </div>
       <div class="row">
-        <div v-for="file in files" :key="file" class="col-sm-2">
+        <div
+            v-for="file in files" :key="file"
+            class="col-sm-2"
+
+        >
           <!--- Determine size of each Column --->
           <div v-if="fileNameInSearchterm(file)">
             <!--- Ensures that height is equal to width --->
@@ -20,10 +24,12 @@
               :type="file.split('.').pop()"
               :path="this.path + '/' + file"
               :directorypath="this.path"
-              :shared="no"
+              :shared="'no'"
               @fileDeleted="setFiles()"
               @nameChanged="setFiles()"
               @fileMoved="setFiles()"
+              draggable="true"
+              @dragstart="startDrag($event, this.path + '/' + file)"
             />
           </div>
         </div>
@@ -37,6 +43,18 @@ import FilestorageService from "@/services/FilestorageService.js";
 import ProjectFilesHeader from "./ProjectFilesHeader.vue";
 import ProjectFile from "./ProjectFile.vue";
 export default {
+  setup(){
+    const startDrag = (event, path) => {
+      event.dataTransfer.dropEffect = 'move'
+      event.dataTransfer.effectAllowed = 'move'
+      event.dataTransfer.setData('path', path)
+      event.dataTransfer.setData('type', 'file')
+    }
+
+    return{
+      startDrag,
+    }
+  },
   components: {
     ProjectFilesHeader,
     ProjectFile,

@@ -6,8 +6,9 @@
               <FoldersView
                 :path="this.path"
                 @currentPathChanged="pathChanged"
+                @fileMoved="$refs.child.setFiles()"
               />
-              <FilesView :path="this.path" />
+              <FilesView ref="child" :path="this.path" />
         </div>
         <div class="col-sm-4">
             <AnnouncementWindow
