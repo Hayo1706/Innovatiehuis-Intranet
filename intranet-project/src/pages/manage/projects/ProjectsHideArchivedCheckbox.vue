@@ -1,14 +1,12 @@
 <template>
   <div>
+    <label for="hidarchivedcheckbox">Verberg gearchiveerde projecten</label>
     <input
       id="hidarchivedcheckbox"
       type="checkbox"
       name="hidarchivedcheckbox"
       v-model="hideArchivedField"
     />
-    <label for="hidarchivedcheckbox"
-      >Verberg gearchiveerde projecten</label
-    >
   </div>
 </template>
 <script>
@@ -38,8 +36,15 @@ export default {
 label {
   font-size: 15px;
   font-family: AddeleThin;
+  display: inline-block;
+}
+input {
+  display: inline-block;
 }
 #hidarchivedcheckbox {
-  margin-right: 4px;
+  position: relative;
+  top: 13px;
+  margin-left: 7px;
+  display: inline-block;
 }
 </style>
