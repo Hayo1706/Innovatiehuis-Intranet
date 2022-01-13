@@ -80,9 +80,6 @@ export default {
   font-family: Montserrat;
   margin-bottom: 1vh;
 }
-.input-group {
-  width: 90%;
-}
 #search-input {
   margin-right: 4px;
 }
