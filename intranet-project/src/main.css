@@ -13,11 +13,18 @@ body {
     /*background-color: white;*/
 }
 
+input {
+  border-style: inset;
+  border-radius: 10px;
+  height: 35px;
+}
+
 .full-button{
     border-radius: 1rem;
     border-style: outset;
     background-color: var(--blue2);
     margin: 5px;
+    width: 100%;
     align-items: center;
     display: flex;
     cursor: pointer;

@@ -24,9 +24,9 @@
         }
       "
       @searchBarChanged="setSearchTerm"
-      @showUnArchivedOnly="setShowUnArchived"
+      @hideArchived="setHideArchived"
       v-bind:searchTerm="this.searchTerm"
-      v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
+      v-bind:hideArchived="this.hideArchived"
     ></ProjectsHeader>
 
     <div class="container-fluid d-sm-block d-lg-none" id="sorting_space">
@@ -70,12 +70,12 @@
           @searchBarChanged="setSearchTerm"
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
-        <ProjectsShowUnArchivedOnlyBox
-          id="showunarchivedonlyboxMobile"
+        <Projectshidarchivedcheckbox
+          id="hidarchivedcheckboxMobile"
           class="col"
-          @showUnArchivedOnly="setShowUnArchived"
-          v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
-        ></ProjectsShowUnArchivedOnlyBox>
+          @hideArchived="setHideArchived"
+          v-bind:hideArchived="this.hideArchived"
+        ></Projectshidarchivedcheckbox>
       </div>
     </div>
     <div class="container-fluid">
@@ -101,14 +101,14 @@ import ProjectService from "@/services/ProjectService.js";
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
 import SearchBar from "@/shared_components/SearchBar.vue";
-import ProjectsShowUnArchivedOnlyBox from "./ProjectsShowUnArchivedOnlyBox.vue";
+import Projectshidarchivedcheckbox from "./ProjectsHideArchivedCheckbox.vue";
 import ProjectCreateModal from "./ProjectCreateModal.vue";
 export default {
   components: {
     ProjectListing,
     ProjectsHeader,
     SearchBar,
-    ProjectsShowUnArchivedOnlyBox,
+    Projectshidarchivedcheckbox,
     ProjectCreateModal,
   },
   name: "ProjectsPage",
@@ -116,7 +116,7 @@ export default {
     return {
       projects: [],
       searchTerm: null,
-      showUnArchivedOnly: false,
+      hideArchived: false,
       sortingMethod: "name",
       ascending: true,
     };
@@ -131,8 +131,8 @@ export default {
     setSearchTerm(value) {
       this.searchTerm = value;
     },
-    setShowUnArchived(value) {
-      this.showUnArchivedOnly = value;
+    setHideArchived(value) {
+      this.hideArchived = value;
     },
     removeProject(id) {
       ProjectService.deleteProject(id)
@@ -183,7 +183,7 @@ export default {
       }
     },
     showArchivedWhenShould(project) {
-      if (!this.showUnArchivedOnly) {
+      if (!this.hideArchived) {
         return true;
       } else {
         return project.is_archived == false;
@@ -291,7 +291,7 @@ export default {
   height: 60px;
   width: 100%;
 }
-#showunarchivedonlyboxMobile {
+#hidarchivedcheckboxMobile {
   margin-top: 10px;
   color: white;
 }

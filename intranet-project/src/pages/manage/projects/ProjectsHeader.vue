@@ -43,10 +43,10 @@
           "
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
-        <ProjectsShowUnArchivedOnlyBox
-          @showUnArchivedOnly="(value) => $emit('showUnArchivedOnly', value)"
-          v-bind:showUnArchivedOnly="this.showUnArchivedOnly"
-        ></ProjectsShowUnArchivedOnlyBox>
+        <Projectshidarchivedcheckbox
+          @hideArchived="(value) => $emit('hideArchived', value)"
+          v-bind:hideArchived="this.hideArchived"
+        ></Projectshidarchivedcheckbox>
       </div>
     </div>
   </div>
@@ -54,11 +54,11 @@
 
 <script>
 import SearchBar from "@/shared_components/SearchBar.vue";
-import ProjectsShowUnArchivedOnlyBox from "./ProjectsShowUnArchivedOnlyBox.vue";
+import Projectshidarchivedcheckbox from "./ProjectsHideArchivedCheckbox.vue";
 export default {
-  components: { SearchBar, ProjectsShowUnArchivedOnlyBox },
+  components: { SearchBar, Projectshidarchivedcheckbox },
   name: "ProjectsHeader",
-  props: ["searchTerm", "showUnArchivedOnly", "sortingMethod", "ascending"],
+  props: ["searchTerm", "hideArchived", "sortingMethod", "ascending"],
   data: function () {
     return {};
   },
