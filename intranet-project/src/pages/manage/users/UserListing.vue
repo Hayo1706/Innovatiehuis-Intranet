@@ -1,5 +1,6 @@
 <template>
   <div id="user-listing">
+    <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
@@ -182,9 +183,10 @@
 import VerticalHeader from "./VerticalHeader.vue";
 import UserService from "@/services/UserService.js";
 import PermissionService from "@/services/PermissionService.js";
+import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 export default {
   props: ["user"],
-  components: { VerticalHeader },
+  components: { VerticalHeader, ConfirmDialogue },
   name: "UserListing",
   data: function () {
     return {
@@ -202,18 +204,20 @@ export default {
     };
   },
   watch: {
-    screeningstate: function (val) {
+    screeningstate: async function (val) {
       if (val != this.previousScreeningstate) {
-        let answer = confirm(
-          'Wil je de screening status van de gebruiker "' +
+        const ok = await this.$refs.confirmDialogue.show({
+          title: "Screening veranderen",
+          message:
+            'Wil je de screening status van de gebruiker "' +
             this.user.first_name +
             " " +
             this.user.last_name +
             '" echt veranderen naar "' +
             val +
-            '"?'
-        );
-        if (answer) {
+            '"?',
+        });
+        if (ok) {
           const screeningstateId = this.screeningstates[val];
 
           UserService.updateUser(
@@ -221,6 +225,7 @@ export default {
               first_name: this.user.first_name,
               last_name: this.user.last_name,
               email: this.user.email,
+              phone_number: this.user.phone_number,
               roleid: this.user.roleid,
               screening_status: screeningstateId,
             },
@@ -244,18 +249,20 @@ export default {
         }
       }
     },
-    selectedRole: function (val) {
+    selectedRole: async function (val) {
       if (val != this.previousRole) {
-        let answer = confirm(
-          'Wil je de rol van de gebruiker "' +
+        const ok = await this.$refs.confirmDialogue.show({
+          title: "Rol veranderen",
+          message:
+            'Wil je de rol van de gebruiker "' +
             this.user.first_name +
             " " +
             this.user.last_name +
             '" echt veranderen naar ' +
             val +
-            "?"
-        );
-        if (answer) {
+            "?",
+        });
+        if (ok) {
           const roleid = this.roles[val];
 
           UserService.updateUser(
@@ -263,6 +270,7 @@ export default {
               first_name: this.user.first_name,
               last_name: this.user.last_name,
               email: this.user.email,
+              phone_number: this.user.phone_number,
               roleid: roleid,
               screening_status: this.user.screening_status,
             },
@@ -317,14 +325,17 @@ export default {
       this.$router.push("/user/" + this.user.userid);
     },
     async handleRemoveUser(user) {
-      let answer = confirm(
-        'Wil je de gebruiker "' +
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Verwijderen",
+        message:
+          'Wil je de gebruiker "' +
           user.first_name +
           " " +
           user.last_name +
-          '" echt verwijderen ?'
-      );
-      if (answer) {
+          '" echt verwijderen ?',
+      });
+
+      if (ok) {
         UserService.deleteUser(user.userid)
           .then(() => {
             this.$emit("removeUser", user.userid);

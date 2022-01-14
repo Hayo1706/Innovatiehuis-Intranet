@@ -39,10 +39,12 @@ export default {
       return PermissionService.userHasPermission("may_delete_any_project");
     },
     async handleDeleteProject(project) {
-      let answer = confirm(
-        'Wil je het project "' + project.project_name + '" echt verwijderen?'
-      );
-      if (answer) {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Verwijderen",
+        message:
+          'Wil je het project "' + project.project_name + '" echt verwijderen?',
+      });
+      if (ok) {
         this.$emit("removeProject", project.projectid);
       }
     },
