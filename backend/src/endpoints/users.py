@@ -64,19 +64,8 @@ def update(user_id):
         last_name = body['last_name']
         email = body['email']
         phone_number = body['phone_number']
-        roleid = body['roleid']
-        screening_status = body['screening_status']
     except KeyError:
         return response("Invalid body", 400)
-
-    data = query(
-        "SELECT screening_status, roleid FROM users JOIN roles USING(roleid) WHERE userid = %(user_id)s",
-        {'user_id': user_id})
-
-    if roleid != data[0]["roleid"]:
-        update_role(user_id, roleid)
-    if screening_status != data[0]["screening_status"]:
-        update_screening(user_id, screening_status)
 
     query_update(
         "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, "
@@ -103,21 +92,12 @@ def update_role(user_id, role_id):
         "SELECT is_protected FROM roles WHERE roleid = %(role_id)s",
         {'role_id': role_id})[0]["is_protected"]
     if is_protected:
-        return update_role_protected(user_id, role_id)
+        return response(f"Cannot elevate users to this role.", 403)
 
     query_update(
         "UPDATE users SET roleid=%(roleid)s WHERE userid=%(userid)s",
         {'roleid': role_id, "userid": user_id})
     return response(f"User {user_id} successfully granted new role", 200)
-
-
-# NOT AN ENDPOINT
-@check_permissions(Users.may_update_role_protected)
-def update_role_protected(user_id, role_id):
-    query_update(
-        "UPDATE users SET roleid=%(roleid)s WHERE userid=%(userid)s",
-        {'roleid': role_id, "userid": user_id})
-    return response(f"User {user_id} successfully elevated to protected role", 200)
 
 
 # PATCH users/{id}/password

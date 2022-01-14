@@ -915,6 +915,8 @@ components:
           type: string
         email:
           type: string
+        phone_number:
+          type: string
         roleid:
           type: integer
         screening_status:
