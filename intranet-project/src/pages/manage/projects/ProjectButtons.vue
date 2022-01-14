@@ -60,7 +60,6 @@ export default {
           '" echt ' +
           action +
           "?",
-        okButton: action,
       });
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {

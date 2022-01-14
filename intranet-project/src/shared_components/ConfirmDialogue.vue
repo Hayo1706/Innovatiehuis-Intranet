@@ -20,7 +20,7 @@ export default {
     // Parameters that change depending on the type of dialogue
     title: undefined,
     message: undefined, // Main text content
-    okButton: undefined, // Text for confirm button; leave it empty because we don't know what we're using it for
+    okButton: "Ok", // Text for confirm button
     cancelButton: "Annuleren", // text for cancel button
 
     // Private variables
@@ -35,6 +35,12 @@ export default {
       this.okButton = opts.okButton;
       if (opts.cancelButton) {
         this.cancelButton = opts.cancelButton;
+      }
+      if (opts.okButton) {
+        this.okButton = opts.okButton;
+      } else {
+        //weird error, the default value does not show, so workaround
+        this.okButton = "Ok";
       }
       // Once we set our config, we tell the popup modal to open
       this.$refs.popup.open();
@@ -64,13 +70,6 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-.ok-btn {
-  color: red;
-  text-decoration: underline;
-  line-height: 2.5rem;
-  cursor: pointer;
 }
 
 .cancel-btn {
