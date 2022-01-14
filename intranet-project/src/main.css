@@ -38,7 +38,14 @@ input {
     color: white;
 
 }
+.header-icon {
+  border-style: outset;
+  border-radius: 50%;
+}
 
+.header-icon:hover {
+  border-style: ridge;
+}
 
 #scrollable{
     max-height: fit-content;

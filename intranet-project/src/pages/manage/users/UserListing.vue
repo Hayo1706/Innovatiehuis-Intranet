@@ -129,51 +129,51 @@
         class="col d-none d-lg-flex align-items-center justify-content-center"
         id="screening justify-content-center"
       >
-        <div class="dropdown">
-          <button
-            class="btn dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <img
-              src="@\assets\images\exclamation.png"
-              v-if="screeningstate == 'nog niet in behandeling'"
-            />
-            <img
-              src="@\assets\images\waiting.png"
-              v-if="screeningstate == 'in behandeling'"
-            />
-            <img
-              src="@\assets\images\check.png"
-              v-if="screeningstate == 'voltooid'"
-            />
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <select
-              class="dropdown-item"
-              v-model="screeningstate"
-              :disabled="!canUpdateUserScreening()"
+        <div class="header-icon iconHolder">
+          <div class="dropdown">
+            <button
+              class="btn dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton1"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              <option
-                v-for="screeningstate in Object.keys(this.screeningstates)"
-                v-bind:key="screeningstate"
+              <img
+                src="@\assets\images\exclamation.png"
+                v-if="screeningstate == 'nog niet in behandeling'"
+              />
+              <img
+                src="@\assets\images\waiting.png"
+                v-if="screeningstate == 'in behandeling'"
+              />
+              <img
+                src="@\assets\images\check.png"
+                v-if="screeningstate == 'voltooid'"
+              />
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <select
+                class="dropdown-item"
+                v-model="screeningstate"
+                :disabled="!canUpdateUserScreening()"
               >
-                {{ screeningstate }}
-              </option>
-            </select>
-          </ul>
+                <option
+                  v-for="screeningstate in Object.keys(this.screeningstates)"
+                  v-bind:key="screeningstate"
+                >
+                  {{ screeningstate }}
+                </option>
+              </select>
+            </ul>
+          </div>
         </div>
       </div>
 
       <div class="col d-lg-flex align-items-center justify-content-center">
-        <a
-          class="full-button"
-          @click="handleRemoveUser(this.user)"
-          v-show="canDelete()"
-          >Verwijderen</a
-        >
+        <a @click="handleRemoveUser(this.user)" v-show="canDelete()"
+          ><div class="header-icon iconHolder">
+            <img src="@\assets\images\x.png" /></div
+        ></a>
       </div>
     </div>
   </div>
@@ -393,7 +393,7 @@ export default {
   height: 70px;
 }
 img {
-  width: 30px;
+  height: 40px;
 }
 .link {
   cursor: pointer;
@@ -416,5 +416,8 @@ select {
 .dropdown-item {
   margin-right: 10px;
   margin-left: 10px;
+}
+.iconHolder {
+  padding: 5px;
 }
 </style>

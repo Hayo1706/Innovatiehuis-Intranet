@@ -139,12 +139,5 @@ header {
 .options {
   height: 70%;
 }
-.header-icon {
-  border-style: outset;
-  border-radius: 50%;
-}
 
-.header-icon:hover {
-  border-style: ridge;
-}
 </style>

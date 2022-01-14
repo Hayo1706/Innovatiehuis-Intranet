@@ -6,16 +6,19 @@
         v-if="project.is_archived"
         class="link"
         @click="handleArchiveProject(project)"
-        ><img src="@/assets/images/upload.png"
-      /></a>
+        ><span class="header-icon iconHolder"
+          ><img src="@/assets/images/upload.png" /></span
+      ></a>
 
       <a v-else class="link" @click="handleArchiveProject(project)">
-        <img src="@/assets/images/upload.png" class="rotate"
-      /></a>
+        <span class="header-icon iconHolder"
+          ><img src="@/assets/images/upload.png" class="rotate" /></span
+      ></a>
     </span>
     <a class="link" v-show="canDelete()" @click="handleDeleteProject(project)"
-      ><img src="@/assets/images/x.png"
-    /></a>
+      ><span class="header-icon iconHolder"
+        ><img src="@/assets/images/x.png" /></span
+    ></a>
   </div>
 </template>
 
@@ -73,7 +76,6 @@ export default {
 <style scoped>
 img {
   height: 40px;
-  margin-right: 15px;
   cursor: pointer;
 }
 .rotate {
@@ -81,5 +83,10 @@ img {
 }
 .link {
   text-decoration: none;
+  margin-right: 7px;
+}
+.iconHolder {
+  padding: 10px;
+  display: inline-block;
 }
 </style>

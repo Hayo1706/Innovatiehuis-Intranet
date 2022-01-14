@@ -156,4 +156,5 @@ export default {
 #archivedText {
   color: purple;
 }
+
 </style>
