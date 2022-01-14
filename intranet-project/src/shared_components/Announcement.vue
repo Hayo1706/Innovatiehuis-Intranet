@@ -59,6 +59,8 @@
       </div>
     </div>
 
+    <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
+
     <div
       class="modal fade"
       :id="'repliesModal' + this.id"
@@ -85,10 +87,11 @@
 import AnnouncementService from "@/services/AnnouncementService.js";
 import RepliesModal from "@/shared_components/RepliesModal.vue";
 import PermissionService from "@/services/PermissionService";
+import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 
 export default {
   name: "Announcement",
-  components: { RepliesModal },
+  components: { RepliesModal, ConfirmDialogue },
   loggedInUser: 0,
   props: {
     id: { type: Number, required: true },
@@ -120,45 +123,64 @@ export default {
       });
   },
   methods: {
-    remove() {
-      AnnouncementService.deleteAnnouncement(this.id);
-      alert("Mededeling is verwijderd!");
-      this.$emit("reload");
+    async remove() {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Mededeling verwijderen",
+        message: 'Wil je deze mededeling echt verwijderen?'
+      });
+      if (ok) {
+        AnnouncementService.deleteAnnouncement(this.id);
+        alert("Mededeling is verwijderd!");
+        this.$emit("reload");
+      }
     },
     canEditDelete(){
       return PermissionService.userHasPermission("may_update_any_announcement") ||
-          (PermissionService.userHasPermission("may_update_own_content") &&  this.loggedInUser == this.userid)
+          (PermissionService.userHasPermission("may_update_own_content") && this.loggedInUser == this.userid)
     },
     toggleEdit() {
       this.editing = !this.editing;
     },
-    saveEdits() {
-      AnnouncementService.editAnnouncement(this.id, this.editData)
-        .then((response) => {
-          console.log(response);
-          this.editing = false;
-          this.editData.title = "";
-          this.editData.content = "";
-          this.$emit("reload");
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-        });
+    async saveEdits() {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Wijziging opslaan",
+        message: 'Wil je deze wijziging echt opslaan?'
+      });
+      if (ok) {
+        AnnouncementService.editAnnouncement(this.id, this.editData)
+          .then((response) => {
+            console.log(response);
+            this.editing = false;
+            this.editData.title = "";
+            this.editData.content = "";
+            this.$emit("reload");
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      }
     },
-    addReply() {
-      AnnouncementService.addReply(this.id, this.newReply)
-        .then((response) => {
-          console.log(response);
-          this.newReply.content = "";
-          this.$emit("reload");
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-        });
+    async addReply() {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Reactie plaatsen",
+        message: 'Wil je deze reactie echt plaatsen?',
+        okButton: "Plaats reactie",
+      });
+      if (ok) {
+        AnnouncementService.addReply(this.id, this.newReply)
+          .then((response) => {
+            console.log(response);
+            this.newReply.content = "";
+            this.$emit("reload");
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      }
     },
     reload() {
       console.log("reloaded component RepliesModal");

@@ -6,7 +6,7 @@ from flask_jwt_extended import jwt_required
 from ..config import PASSWORD_CHANGE_SECRET_KEY, DOMAIN_NAME
 from ..services.helper_functions import *
 from itsdangerous import URLSafeSerializer
-from ..services.permissions import Users
+from ..services.permissions import Users, Projects
 from ..services.permissions.permissions import check_permissions
 from ..services.extensions import bcrypt
 
@@ -58,11 +58,12 @@ def create():
 @check_permissions(Users.may_update)
 def update(user_id):
 
+
+
     # TODO:
-    #   1 get current role and screening status of user
-    #   2 if specified role is changed, check permission using "UPDATE ROLE" OR "UPDATE ROLE PROTECTED"
-    #   3 abort immediately if user has no permission!
-    #   4 if screening status is changed and role is protected, abort! admin should not be able to disable their own account...
+
+
+    #   3 if specified screening_status is changed, call update_screening()
 
     try:
         body = connexion.request.json
@@ -74,22 +75,49 @@ def update(user_id):
         screening_status = body['screening_status']
     except KeyError:
         return response("Invalid body", 400)
+
+    data = query(
+        "SELECT screening_status, roleid, is_protected FROM users JOIN roles USING(roleid) WHERE userid = %(user_id)s",
+        {'user_id': user_id})
+
+    if roleid != data[0]["roleid"]:
+        update_role(user_id, roleid)
+    if screening_status != data[0]["screening_status"]:
+        update_screening(user_id, screening_status)
+
     query_update(
         "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, "
-        "phone_number=%(phone_number)s, roleid=%(roleid)s, screening_status=%(screening_status)s "
+        "phone_number=%(phone_number)s "
         "WHERE userid=%(userid)s",
-        {'first_name': first_name, 'last_name': last_name, 'email': email,'phone_number': phone_number, 'roleid': roleid,
-         'screening_status': screening_status, "userid": user_id})
+        {'first_name': first_name, 'last_name': last_name, 'email': email,'phone_number': phone_number,
+         "userid": user_id})
     return response(f"User {user_id} successfully updated", 200)
 
 
+# PATCH users/{id}/role/{id}
+@check_permissions(Users.may_update_role)
+def update_role(user_id, role_id):
+    query_update(
+        "UPDATE users SET roleid=%(roleid)s WHERE userid=%(userid)s",
+        {'roleid': role_id, "userid": user_id})
+
+
+# PATCH users/{id}/screening/{status}
+@check_permissions(Users.may_update_screening)
+def update_screening(user_id, screening_status):
+    query_update(
+        "UPDATE users SET screening_status=%(screening_status)s WHERE userid=%(userid)s",
+        {'screening_status': screening_status, "userid": user_id})
+
+
+# DELETE users/{id}
 @check_permissions(Users.may_delete_user)
 def delete(user_id):
     query_update("DELETE FROM users WHERE userid = %(id)s", {'id': user_id})
     return response(f"User {user_id} successfully deleted", 200)
 
 
-# users/{id}/password
+# PATCH users/{id}/password
 @check_permissions(Users.may_update_password)
 def update_password(user_id):
     try:
@@ -101,7 +129,7 @@ def update_password(user_id):
                  {'hash': new_password_hash, 'userid': user_id})
 
 
-# users/{id}/projects
+# READ users/{id}/projects
 @check_permissions(Users.may_read_user_projects)
 def read_projects(user_id):
     return query("SELECT * FROM users_have_projects INNER JOIN projects "
@@ -109,11 +137,12 @@ def read_projects(user_id):
                  "WHERE users_have_projects.userid = %(id)s AND projects.is_archived = 0", {'id': user_id})
 
 
-# TODO Welke permissie?
-def add_project(user_id):
+# POST users/{id}/projects/{id}
+# TODO: WERKT DEZE PERMISSIE? ZO NIET, DELETE (ook uit YAML)
+@check_permissions(Projects.may_update)
+def add_project(user_id, project_id):
     try:
         body = connexion.request.json
-        project_id = body['projectid']
     except KeyError:
         return response("Invalid body", 400)
     query_update(f"INSERT INTO users_have_projects (userid, projectid) VALUES (%(userid)s, %(projectid)s)",

@@ -89,7 +89,7 @@ def user_owns_reply(reply_id):
               {'userid': get_jwt_identity(), 'replyid': reply_id})) > 0
 
 
-def user_owns_itself(user_id):
+def user_owns_account(user_id):
     return user_id == str(get_jwt_identity())
 
 

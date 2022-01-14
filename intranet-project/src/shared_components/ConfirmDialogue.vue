@@ -3,8 +3,8 @@
     <h2 style="margin-top: 0">{{ title }}</h2>
     <p>{{ message }}</p>
     <div class="btns">
+      <button class="confirm-btn" @click="_confirm">{{ okButton }}</button>
       <button class="cancel-btn" @click="_cancel">{{ cancelButton }}</button>
-      <span class="cancel-btn" @click="_confirm">{{ okButton }}</span>
     </div>
   </popup-modal>
 </template>
@@ -20,7 +20,7 @@ export default {
     // Parameters that change depending on the type of dialogue
     title: undefined,
     message: undefined, // Main text content
-    okButton: "Ok", // Text for confirm button
+    okButton: "Bevestigen", // Text for confirm button
     cancelButton: "Annuleren", // text for cancel button
 
     // Private variables
@@ -40,7 +40,7 @@ export default {
         this.okButton = opts.okButton;
       } else {
         //weird error, the default value does not show, so workaround
-        this.okButton = "Ok";
+        this.okButton = "Bevestigen";
       }
       // Once we set our config, we tell the popup modal to open
       this.$refs.popup.open();
@@ -72,11 +72,23 @@ export default {
   justify-content: space-between;
 }
 
+.confirm-btn {
+  padding: 0.5em 1em;
+  margin: 0em 0.2em 0em 0.2em;
+  background-color: var(--blue1);
+  color: #e6e6e6;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
 .cancel-btn {
   padding: 0.5em 1em;
-  background-color: #d5eae7;
-  color: #35907f;
-  border: 2px solid #0ec5a4;
+  margin: 0em 0.2em 0em 0.2em;
+  background-color: #e6e6e6;
+  color: var(--blue1);
   border-radius: 5px;
   font-weight: bold;
   font-size: 16px;
