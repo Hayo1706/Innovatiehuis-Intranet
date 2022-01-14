@@ -5,16 +5,26 @@
           :path="this.currentPath"
           @newFolderAdded="(id) => setFolders()"
           @searchBarChanged="setSearchTerm">
-          &nbsp;
-          <text v-if="this.path == ''">Mappen</text>
-          <text @click="folderPathChanged('')" v-else>.../</text>
-          <span v-for="(path, index) in fullPath = this.path.split('/')" :key="path">
-            <text @click="folderPathChanged(fullPath.slice(1, index+1))" v-if="path != ''">{{ path }}/</text>
-          </span>
+          <div id="projectPath">
+            <text v-if="this.path == ''">Mappen</text>
+            <text @click="folderPathChanged('')" v-else>.../</text>
+            <span v-for="(path, index) in fullPath = this.path.split('/')" :key="path">
+              <text @click="folderPathChanged(fullPath.slice(1, index+1))" v-if="path != ''">{{ path }}/</text>
+            </span>
+          </div>
         </ProjectFolderHeader>
     </div>
     <div>
       <div class="row">
+        <div class="col-sm-4" v-show="this.path != ''">
+          <ProjectFolder
+          :name="'Go Back'"
+          :shared="'goback'"
+          :path="this.previousPath"
+          @click="folderPathChanged(this.previousPath)"
+          >
+          </ProjectFolder>
+        </div>
         <div v-for="folder in searched_folders" :key="folder" class="col-sm-4">
           <div v-if="folderNameInSearchTerm(folder)">
             <ProjectFolder
@@ -27,6 +37,7 @@
               @folderMoved="setFolders()"
               @folderDeleted="setFolders()"
               @nameChanged="setFolders()"
+
               @drop="onDrop($event, this.path + '/' + folder)"
               @dragenter.prevent
               @dragover.prevent
@@ -75,6 +86,7 @@ export default {
       searched_folders: [],
       search_term: "",
       currentPath: this.path,
+      previousPath: this.path,
       projectid: this.$route.params.id,
     };
   },
@@ -101,8 +113,6 @@ export default {
       else{
         FilestorageService.moveFolder(id ,path,to, '')
             .then(() => {
-              console.log('1.Moving Folder')
-              console.log(2)
               this.setFolders()
             })
             .catch((err) => {
@@ -129,10 +139,9 @@ export default {
         this.$router.push("/project/" + this.projectid + path);
         this.$emit("currentPathChanged", this.currentPath);
       }
-      
+      this.getPreviousPath();
     },
     setFolders(path=this.path) {
-      console.log(path)
       FilestorageService.getFoldersOfProject(this.projectid, path)
         .then((response) => {
           console.log('Resetting Folders')
@@ -145,6 +154,17 @@ export default {
             console.log(err.response.status);
           }
         });
+    },
+    getPreviousPath(){
+      this.previousPath = ""
+      var pathArray = this.currentPath.split("/")
+      pathArray.pop()
+      for(var element in pathArray){
+        if(pathArray[element] != "") {
+          this.previousPath += "/" + pathArray[element]
+        }
+      }
+      console.log(this.previousPath)
     },
     setSearchedFolders(search_term){
       if(search_term == "" || search_term == null){
@@ -163,6 +183,7 @@ export default {
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");
     this.setFolders();
+    this.getPreviousPath();
   },
 };
 </script>
@@ -175,5 +196,8 @@ export default {
 .component-container{
   height: auto;
   min-height: auto;
+}
+#projectPath {
+  overflow: hidden;
 }
 </style>
