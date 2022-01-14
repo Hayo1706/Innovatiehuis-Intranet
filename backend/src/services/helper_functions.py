@@ -1,6 +1,5 @@
 from flask import request
 from .extensions import db
-import re
 
 
 def query(query, param=None):
