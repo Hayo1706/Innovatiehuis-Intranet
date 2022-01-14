@@ -122,11 +122,8 @@ def request_to_upload_file(project_id):
     confirmation = connexion.request.values.get('conf')
 
     file = list(files.values())[0]
-    if size_valid(file):
-        return upload_file(file, current_path, confirmation)
-    else:
-        print("Uploaded file is too big, maximum size of files is " + str(config.MAX_FILE_SIZE) + " bytes.")
-        return response("Uploaded file is too big, maximum size of files is " + str(config.MAX_FILE_SIZE) + " bytes.", 406)
+
+    return upload_file(file, current_path, confirmation)
 
 def upload_file(file, path, confirmation):
     if dir_exists(path):
@@ -164,8 +161,8 @@ def upload_file(file, path, confirmation):
                     print("Succesfully uploaded file")
                     return response("Successfully uploaded file", 200)
         else:
-            print("File type or file size is not valid")
-            return response("File type or file size is not valid", 400)
+            print("File type or file size is not valid, maximum file size is " + str(config.MAX_FILE_SIZE))
+            return response("File type or file size is not valid, maximum file size is " + str(config.MAX_FILE_SIZE), 406)
     print("Failed to upload file")
     return response("Failed to upload file", 424)
 
