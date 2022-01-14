@@ -96,6 +96,17 @@ def file_save_valid(file, file_path):
     except:
         return False
 
+def file_type_valid(file_type):
+    if file_type in config.ALLOWED_FILE_TYPES:
+        return True
+    else:
+        return False
+
+def file_valid(file, file_type):
+    if file_type_valid(file_type) and size_valid(file):
+        return True
+    else:
+        return False
 
 def delete_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
@@ -110,41 +121,52 @@ def request_to_upload_file(project_id):
     current_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + "/" + unquote(connexion.request.values.get('path'))
     confirmation = connexion.request.values.get('conf')
 
-    if len(files) > 0:
-        file = list(files.values())[0]
-        if size_valid(file):
-            return upload_file(file, current_path, confirmation)
-        else:
-            print("Uploaded file is too big, maximum size of files is " + str(config.MAX_FILE_SIZE) + " bytes.")
-            return response("Uploaded file is too big, maximum size of files is " + str(config.MAX_FILE_SIZE) + " bytes.", 406)
+    file = list(files.values())[0]
+    if size_valid(file):
+        return upload_file(file, current_path, confirmation)
+    else:
+        print("Uploaded file is too big, maximum size of files is " + str(config.MAX_FILE_SIZE) + " bytes.")
+        return response("Uploaded file is too big, maximum size of files is " + str(config.MAX_FILE_SIZE) + " bytes.", 406)
 
 def upload_file(file, path, confirmation):
     if dir_exists(path):
         file_name = file.filename
+        file_type = file_name.split('.')[1]
         file_path = os.path.join(path, file_name)
-        if file_path_valid(file_path):
-            if confirmation == 'true':
-                if file_replace_valid(file, file_path):
-                    print("Succesfully replaced file")
-                    return response("Succesfully replaced file", 200)
+        print(file_path)
+
+        if file_valid(file, file_type):
+            if file_path_valid(file_path) or file_path_valid(os.path.join(path, get_secure_file_name(file_name))):
+                if not file_path_valid(file_path):
+                    file_name = get_secure_file_name(file_name)
+                    file_path = os.path.join(path, file_name)
+
+                if confirmation == 'true':
+                    if file_replace_valid(file, file_path):
+                        print("Succesfully replaced file")
+                        return response("Succesfully replaced file", 200)
+                    else:
+                        print("Failed to replace file")
+                        return response("Failed to replace file", 424)
+                elif confirmation == 'false':
+                    new_file_name = get_unique_file_name(get_secure_file_name(file_name), path, 0)
+                    new_file_path = os.path.join(path, new_file_name)
+                    if file_save_valid(file, new_file_path):
+                        print("Succesfully uploaded file")
+                        return response("Succesfully uploaded file", 200)
                 else:
-                    print("Failed to replace file")
-                    return response("Failed to replace file", 424)
-            elif confirmation == 'false':
-                new_file_name = get_unique_file_name(get_secure_file_name(file_name), path, 0)
-                new_file_path = os.path.join(path, new_file_name)
-                if file_save_valid(file, new_file_path):
-                    print("Succesfully uploaded file")
-                    return response("Succesfully uploaded file", 200)
+                    print(file_name + " already exists would you like to replace it?")
+                    return response(file_name + " already exists would you like to replace it?", 409)
             else:
-                print(file_name + " already exists would you like to replace it?")
-                return response(file_name + " already exists would you like to replace it?", 409)
+                file_name = get_secure_file_name(file_name)
+                file_path = os.path.join(path, file_name) # Usage of get_secure_file_name because of (1) possibility beforehand
+                if file_save_valid(file, file_path):
+                    print("Succesfully uploaded file")
+                    return response("Successfully uploaded file", 200)
         else:
-            file_name = get_secure_file_name(file_name)
-            file_path = os.path.join(path, file_name)
-            if file_save_valid(file, file_path):
-                print("Succesfully uploaded file")
-                return response("Successfully uploaded file", 200)
+            print("File type or file size is not valid")
+            return response("File type or file size is not valid", 400)
+    print("Failed to upload file")
     return response("Failed to upload file", 424)
 
 def download_file(project_id):
