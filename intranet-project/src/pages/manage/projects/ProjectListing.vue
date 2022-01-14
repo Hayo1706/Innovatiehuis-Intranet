@@ -156,5 +156,7 @@ export default {
 #archivedText {
   color: purple;
 }
-
+.iconHolder {
+  padding: 5px;
+}
 </style>
