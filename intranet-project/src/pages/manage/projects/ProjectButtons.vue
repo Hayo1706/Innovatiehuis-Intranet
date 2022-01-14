@@ -1,5 +1,6 @@
 <template>
   <div class="col">
+    <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <span v-show="canArchive()">
       <a
         v-if="project.is_archived"
@@ -21,9 +22,11 @@
 
 <script>
 import PermissionService from "@/services/PermissionService.js";
+import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
+
 export default {
   props: ["project"],
-  components: {},
+  components: { ConfirmDialogue },
   name: "ProjectButtons",
   data: function () {
     return {};
@@ -48,10 +51,19 @@ export default {
       if (project.is_archived) {
         action = "dearchiveren";
       }
-      let answer = confirm(
-        'Wil je het project "' + project.project_name + '" echt ' + action + "?"
-      );
-      if (answer) {
+
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Archiveren",
+        message:
+          'Wil je het project "' +
+          project.project_name +
+          '" echt ' +
+          action +
+          "?",
+        okButton: action,
+      });
+      // If you throw an error, the method will terminate here unless you surround it wil try/catch
+      if (ok) {
         this.$emit("archiveProject", project);
       }
     },
