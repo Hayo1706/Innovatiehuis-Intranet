@@ -4,19 +4,18 @@
     <span v-show="canArchive()">
       <a
         v-if="project.is_archived"
-        src="@/assets/images/upload.png"
         class="link"
         @click="handleArchiveProject(project)"
-        >Dearchiveren</a
-      >
+        ><img src="@/assets/images/upload.png"
+      /></a>
 
-      <a v-else class="link" @click="handleArchiveProject(project)"
-        >Archiveren</a
-      >
+      <a v-else class="link" @click="handleArchiveProject(project)">
+        <img src="@/assets/images/upload.png" class="rotate"
+      /></a>
     </span>
     <a class="link" v-show="canDelete()" @click="handleDeleteProject(project)"
-      >Verwijderen</a
-    >
+      ><img src="@/assets/images/x.png"
+    /></a>
   </div>
 </template>
 
@@ -55,7 +54,7 @@ export default {
       }
 
       const ok = await this.$refs.confirmDialogue.show({
-        title: "Archiveren",
+        title: action[0].toUpperCase() + action.substring(1),
         message:
           'Wil je het project "' +
           project.project_name +
@@ -72,11 +71,15 @@ export default {
 };
 </script>
 <style scoped>
+img {
+  height: 40px;
+  margin-right: 10px;
+}
+.rotate {
+  transform: rotate(180deg);
+}
 .link {
   cursor: pointer;
-  color: var(--gold2);
-  display: block;
-  margin-bottom: 10px;
   text-decoration: none;
 }
 </style>
