@@ -14,21 +14,10 @@ from ..services.extensions import bcrypt
 # READ users
 @check_permissions(Users.may_read_all)
 def read_all():
-    try:
-        order_column = connexion.request.args.get('order_column')
-        order_direction = connexion.request.args.get('order_direction')
-    except TypeError:
-        order_column = 'userid'
-        order_direction = 'ascending'
-    sql = "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, screening_status, created, "\
-          "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "\
-          "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid "\
-          "ORDER BY %(column)s"
-    if order_direction == 'ascending':
-        sql += " ASC"
-    else:
-        sql += " DESC"
-    return query(sql, {'column': order_column})
+    return query(
+        "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, screening_status, created, "
+        "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "
+        "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid")
 
 # READ users/{id}
 @check_permissions(Users.may_read)
