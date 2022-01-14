@@ -24,13 +24,13 @@
       >
         <div v-if="canUpdateProject()" class="accordion-body">
           Naam:
-          <textarea class="area" v-model="projectname" />
+          <textarea class="area form-control" v-model="projectname" />
           <button class="addButton" @click="updateNameDescription()">
             Wijzigen
           </button>
           <br />
           Beschrijving:
-          <textarea class="area" v-model="projectdescription" />
+          <textarea class="area form-control" v-model="projectdescription" />
           <button class="addButton" @click="updateNameDescription()">
             Wijzigen
           </button>
@@ -857,6 +857,7 @@ button {
 .area {
   width: 70%;
   display: block;
+  font-family: AddeleThin;
 }
 
 .searchbar {
