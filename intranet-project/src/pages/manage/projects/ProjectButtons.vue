@@ -73,13 +73,13 @@ export default {
 <style scoped>
 img {
   height: 40px;
-  margin-right: 10px;
+  margin-right: 15px;
+  cursor: pointer;
 }
 .rotate {
   transform: rotate(180deg);
 }
 .link {
-  cursor: pointer;
   text-decoration: none;
 }
 </style>
