@@ -764,7 +764,7 @@ paths:
           name: resettoken
           schema:
             type: string
-          required: true
+          required: false
       responses:
         200:
           description: User is authenticated and receives a JSON Web Token
