@@ -132,6 +132,8 @@ export default {
     onDrop(event, to) {
       const path = event.dataTransfer.getData('path')
       let id = this.projectid
+      if (to === path)
+        return
       if (event.dataTransfer.getData('type') === 'file') {
         FilestorageService.moveFile(id, path, to)
             .then(() => {
