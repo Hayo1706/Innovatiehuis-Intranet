@@ -1,41 +1,38 @@
 *{
-    font-family: AddeleSemiBold;
+  font-family: AddeleSemiBold;
 }
 body {
   overflow-x: hidden;
-    background-color: #101936 !important;
-    background-image: url(./assets/images/back.png);
-    background-size: 100vw;
-    background-repeat: no-repeat;
-    /*background: linear-gradient(to left TOP, rgb(50,50,50), rgb(20,20,80)) no-repeat;*/
-    min-height: 100%;
+  background-color: #101936 !important;
+  background-image: url(./assets/images/back.png);
+  background-size: 100vw;
+  background-repeat: no-repeat;
+  /*background: linear-gradient(to left TOP, rgb(50,50,50), rgb(20,20,80)) no-repeat;*/
+  min-height: 100%;
 
-    /*background-color: white;*/
+  /*background-color: white;*/
 }
 
-input {
-  border-style: inset;
-  border-radius: 10px;
-  height: 35px;
+.custom-link {
+  color: var(--blue2);
 }
 
 .full-button{
-    border-radius: 1rem;
-    border-style: outset;
-    background-color: var(--blue2);
-    margin: 5px;
-    width: 100%;
-    align-items: center;
-    display: flex;
-    cursor: pointer;
-    font-size: 14pt;
-    color: white;
-    padding: 6px;
-    text-decoration: none;
+  border-radius: 0.5rem;
+  background-color: var(--blue2);
+  margin: 5px;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  font-size: 14pt;
+  color: white;
+  padding: 6px;
+  text-decoration: none;
 }
 .full-button:hover{
-    background-color: var(--blue1);
-    color: white;
+  background-color: var(--blue1);
+  color: white;
 
 }
 .listing-icon {
@@ -48,10 +45,10 @@ input {
 }
 
 #scrollable{
-    max-height: fit-content;
+  max-height: fit-content;
 }
 .container-fluid{
-    max-width: 1500px;
+  max-width: 1500px;
 }
 
 p {
@@ -59,35 +56,35 @@ p {
 }
 
 .component-container {
-    /*background: linear-gradient(to left top, rgba(50,50,80,0.8), rgba(225,225,225,1));*/
-    background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
-    border: solid var(--gold1) 2px;
-    /*backdrop-filter: blur(1rem);*/
-    min-height: 500px;
-    max-height: 80vh;
-    overflow-y: scroll;
-    width: 100%;
-    border-radius: 1rem;
-    padding: 1vh;
-    box-sizing: border-box;
-    margin-top: 1vh;
+  /*background: linear-gradient(to left top, rgba(50,50,80,0.8), rgba(225,225,225,1));*/
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+  border: solid var(--gold1) 2px;
+  /*backdrop-filter: blur(1rem);*/
+  min-height: 500px;
+  max-height: 80vh;
+  overflow-y: scroll;
+  width: 100%;
+  border-radius: 1rem;
+  padding: 1vh;
+  box-sizing: border-box;
+  margin-top: 1vh;
 /* Hide scrollbar for IE, Edge and Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .component-container::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .component-header {
   color: #101936;
-  font-size: min(calc(10px + 2vw), 36px);
+  font-size: min(calc(10px + 2vh), 36px);
   height: fit-content;
   padding-left: 10px;
   overflow: hidden;
@@ -96,12 +93,15 @@ p {
   border-top-left-radius: 12px;
 }
 .component-header-button {
-  height: 4vh;
-  width: 4vh;
+  height: 1em;
+  width: 1em;
   float: right;
   border-style: hidden;
   cursor: pointer;
   margin: 0.5vh
+}
+.component-header-button:hover {
+  filter: brightness(50%);
 }
 .component-body {
   margin-left: 2px;

@@ -28,7 +28,9 @@
                 class="form-control"
                 placeholder="Naam"
               />
-              <textarea
+              <textarea 
+                oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
+                onclick='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
                 class="form-control"
                 placeholder="Beschrijving"
                 v-model="this.projectdescription"
@@ -459,7 +461,7 @@ input {
 }
 textarea {
   margin-bottom: 10px;
-  height: 20vh;
+  min-height: 20vh;
 }
 #userSearchBar {
   margin-top: 5px;

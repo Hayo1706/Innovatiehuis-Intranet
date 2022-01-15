@@ -4,7 +4,7 @@
       Sorry! De pagina waar je naar zoekt kan niet gevonden worden!
     </div>
     <div class="component-body">
-      <router-link to="/home" class="full-button" style="width:fit-content">Terug naar Hoofdpagina</router-link>
+      <router-link class="custom-link" to="/home" style="width:fit-content">Terug naar Hoofdpagina</router-link>
     </div>
   </div>
 </template>

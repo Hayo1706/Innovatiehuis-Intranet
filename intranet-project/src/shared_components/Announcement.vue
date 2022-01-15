@@ -1,44 +1,64 @@
 <template>
+  <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
   <div class="card" style="width: 100%;">
     <div class="card-body">
-      <h5 class="card-title">{{ this.title }}
-        <img 
-          title="Aanpassen"
-          class="component-header-button" 
-          src=".\..\assets\images\edit.png" 
-        />
-        <img 
-          title="Verwijderen"
-          class="component-header-button" 
-          src=".\..\assets\images\delete.png" 
-        />
+      <h5 class="card-title">
+        <div v-if="this.editing">
+          <input v-model="this.editData.title" />
+        </div>
+        <div v-else>
+          {{ this.title }}
+          <img
+            v-if="canEditDelete()"
+            @click="toggleEdit()"
+            title="Aanpassen"
+            class="component-header-button"
+            src=".\..\assets\images\edit.png"
+          />
+          <img
+            v-if="canEditDelete()"
+            @click="remove()"
+            title="Verwijderen"
+            class="component-header-button"
+            src=".\..\assets\images\delete.png"
+          />
+        </div>
       </h5>
-      <p class="card-text">
+      <div class="card-text">
         <strong>
-          <router-link :to="'/user/' + this.userid">{{ this.username }}</router-link>
+          <router-link class="custom-link" :to="'/user/' + this.userid">{{ this.username }}</router-link>
         </strong>
-        ({{ this.timestamp.toLocaleDateString("nl-NL")}})
+        <strong style="color: rgba(0,0,0,0.5); margin-left: 1em;">
+          {{ this.timestamp.toLocaleDateString("nl-NL")}} {{ this.timestamp.toLocaleTimeString("nl-NL")}}
+        </strong>
         <br />
-        <br />Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </p>
+        <div v-if="this.editing">
+          <textarea 
+            oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
+            onclick='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
+            class="form-control" 
+            v-model="this.editData.content" 
+          />
+          <button @click="toggleEdit()">Annuleren</button>
+          <button @click="saveEdits()">Opslaan</button>
+        </div>
+        <div v-else>
+          <p style="margin-bottom: 0px">{{ this.content }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="accordion-item">
     <h2 class="accordion-header" :id="'heading' + this.id">
-      <div v-if="this.editing">
-        <input v-model="this.editData.title" />
-      </div>
-      <div v-else>
-        <button
-          class="accordion-button"
-          type="button"
-          data-bs-toggle="collapse"
-          :data-bs-target="'#collapse' + this.id"
-          aria-expanded="false"
-          aria-controls="panelsStayOpen-collapseOne"
-        >Reacties ({{ this.replies.length }})</button>
-      </div>
+      <button
+        class="accordion-button"
+        type="button"
+        data-bs-toggle="collapse"
+        :data-bs-target="'#collapse' + this.id"
+        aria-expanded="false"
+        aria-controls="panelsStayOpen-collapseOne"
+      >Reacties ({{ this.replies.length }})</button>
     </h2>
     <div
       :id="'collapse' + this.id"
@@ -46,56 +66,42 @@
       :aria-labelledby="'heading' + this.id"
     >
       <div class="accordion-body">
-        <div v-if="this.editing">
-          <textarea class="form-control" v-model="this.editData.content" style="height: 80px" />
-          <button @click="toggleEdit()">Annuleren</button>
-          <button @click="saveEdits()">Opslaan</button>
+        <div v-for="reply in this.replies" :key="reply">
+          <Reply
+            :id="reply.replyid"
+            :announcementid="reply.announcementid"
+            :userid="reply.userid"
+            :username="reply.first_name + ' ' + reply.last_name"
+            :timestamp="reply.timestamp"
+            :content="reply.content"
+            @reload="reload()"
+          />
         </div>
-        <div v-else>
-          <p>{{ this.content }}</p>
-          <button v-if="canEditDelete()" @click="remove()">Verwijderen</button>
-          <button v-if="canEditDelete()" @click="toggleEdit()">Aanpassen</button>
-          <button
-            data-bs-toggle="modal"
-            :data-bs-target="'#repliesModal' + this.id"
-          >Reacties ({{ this.replies.length }})</button>
-        </div>
+        <form v-if="canAddReply()">
+          <textarea
+            class="form-control"
+            id="message-text"
+            placeholder="Laat een reactie achter..."
+            v-model="this.newReply.content"
+          />
+          <div type="button" class="full-button" style="width: fit-content;" @click="addReply()">
+            Plaats reactie
+          </div>
+        </form>
       </div>
-    </div>
-
-    <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
-
-    <div
-      class="modal fade"
-      :id="'repliesModal' + this.id"
-      tabindex="-1"
-      aria-labelledby="repliesModalLabel"
-      aria-hidden="true"
-    >
-      <RepliesModal
-        :key="this.repliesModalKey"
-        :id="this.id"
-        :title="this.title"
-        :content="this.content"
-        :timestamp="this.timestamp"
-        :username="this.username"
-        :userid="this.userid"
-        :replies="this.replies"
-        @reload="reload()"
-      />
     </div>
   </div>
 </template>
 
 <script>
 import AnnouncementService from "@/services/AnnouncementService.js";
-import RepliesModal from "@/shared_components/RepliesModal.vue";
 import PermissionService from "@/services/PermissionService";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
+import Reply from "./Reply.vue";
 
 export default {
   name: "Announcement",
-  components: { RepliesModal, ConfirmDialogue },
+  components: { ConfirmDialogue, Reply },
   loggedInUser: 0,
   props: {
     id: { type: Number, required: true },
@@ -166,6 +172,11 @@ export default {
           });
       }
     },
+    canAddReply(){
+      return PermissionService.userHasPermission("may_create_reply_anywhere") ||
+          PermissionService.userHasPermission("may_create_reply_in_own_project")
+
+    },
     async addReply() {
       const ok = await this.$refs.confirmDialogue.show({
         title: "Reactie plaatsen",
@@ -197,21 +208,27 @@ export default {
 <style scoped>
 .accordion-item {
   margin-bottom: 1vh;
-  background: linear-gradient(
-    to left top,
-    rgba(50, 50, 80, 0.5),
-    rgba(225, 225, 225, 0.7)
-  );
+}
+
+.accordion-header {
+  border-radius: 0px 0px 10px 10px;
 }
 .accordion-button {
   background: var(--blue2);
   color: white;
+  border-radius: 0px 0px 10px 10px;
 }
 .accordion-body {
-  background-color: transparent;
+  border-radius: 0px 0px 10px 10px;
+}
+
+.accordion-item {
+  border-radius: 0px 0px 10px 10px;
+  background-color: rgba(180,180,180,0.3);
 }
 
 .card {
-  background-color: transparent;
+  border-radius: 10px 10px 0px 0px;
+  background-color: rgba(255, 255, 255, 0.7);
 }
 </style>

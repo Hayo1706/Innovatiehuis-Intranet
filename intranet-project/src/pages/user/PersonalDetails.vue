@@ -17,9 +17,9 @@
         <div>Laatst gezien:</div>
         <div class="item-text">{{ this.last_seen }}</div>
         <div v-if="show_password">Wachtwoord:</div>
-        <router-link
+        <router-link 
           v-if="show_password"
-          class="button"
+          class="custom-link button"
           to="/manage/resetpassword"
           >Wachtwoord resetten</router-link
         >

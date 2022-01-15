@@ -4,7 +4,7 @@
     <div style="text-align: center" class="component-body">
       <input
         v-model="this.loginAttempt.email"
-        style="text-align: center; width: 100%;"
+        class="login-input"
         type="text"
         placeholder="e-mail"
         v-on:keyup.enter="submit()"
@@ -12,7 +12,7 @@
       <br />
       <input
         v-model="this.loginAttempt.password"
-        style="text-align: center; width: 100%;"
+        class="login-input"
         type="password"
         placeholder="wachtwoord"
         v-on:keyup.enter="submit()"
@@ -99,5 +99,12 @@ export default {
 }
 #error-message {
   color: red;
+}
+.login-input {
+  text-align: center;
+  width: 100%;
+  height: fit-content;
+  font-size: 14pt;
+  margin: 4px;
 }
 </style>

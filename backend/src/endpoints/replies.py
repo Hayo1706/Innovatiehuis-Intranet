@@ -7,7 +7,6 @@ from ..services.permissions.permissions import check_permissions
 
 @check_permissions(Announcements.may_update_delete_reply)
 def update(reply_id):
-    
     try:
         body = connexion.request.json['reply']
         content = body['content']
@@ -22,6 +21,5 @@ def update(reply_id):
 
 @check_permissions(Announcements.may_update_delete_reply)
 def delete(reply_id):
-    
-    query_update("DELETE FROM replies WHERE replyid =%(id)s", {'id': id})
+    query_update("DELETE FROM replies WHERE replyid=%(id)s", {'id': reply_id})
     return response(f"Reply {reply_id} successfully deleted", 200)

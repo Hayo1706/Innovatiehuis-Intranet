@@ -24,13 +24,22 @@
       >
         <div v-if="canUpdateProject()" class="accordion-body">
           Naam:
-          <textarea class="area form-control" v-model="projectname" />
+          <textarea 
+            oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
+            onclick='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
+            class="area form-control" 
+            v-model="projectname" 
+          />
           <button class="addButton" @click="updateNameDescription()">
             Wijzigen
           </button>
           <br />
           Beschrijving:
-          <textarea class="area form-control" v-model="projectdescription" />
+          <textarea 
+            oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
+            onclick='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
+            class="area form-control" 
+            v-model="projectdescription" />
           <button class="addButton" @click="updateNameDescription()">
             Wijzigen
           </button>

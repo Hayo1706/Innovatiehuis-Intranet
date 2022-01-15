@@ -1,8 +1,32 @@
 <template>
-  <div>
-    <div class="reply">
+  <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
+  <div class="reply">
+    <strong>
+      <router-link class="custom-link" :to="'/user/' + this.userid">{{ this.username }}</router-link>
+    </strong>
+    <strong
+      style="color: rgba(0,0,0,0.5); margin-left: 1em;"
+    >{{ this.timestamp.toLocaleDateString("nl-NL") }} {{ this.timestamp.toLocaleTimeString("nl-NL") }}</strong>
+    <img
+      v-if="canEditDelete()"
+      @click="toggleEdit()"
+      title="Aanpassen"
+      class="component-header-button"
+      src=".\..\assets\images\edit.png"
+    />
+    <img
+      v-if="canEditDelete()"
+      @click="remove()"
+      title="Verwijderen"
+      class="component-header-button"
+      src=".\..\assets\images\delete.png"
+    />
+
+    <div>
       <div v-if="this.editing">
         <textarea
+          oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+          onclick="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
           class="form-control"
           id="edit-text"
           style="height: 100px"
@@ -12,24 +36,21 @@
         <button @click="saveEdits()">Opslaan</button>
       </div>
       <div v-else>
-        <p>{{ this.content }}</p>
-        <button v-if="canEditDelete()" @click="toggleEdit()">Wijzigen</button>
-        <button v-if="canEditDelete()" @click="remove()">Verwijderen</button>
+        <p style="margin-bottom: 0px">{{ this.content }}</p>
       </div>
     </div>
-    <p style="text-align: right">
-      {{ this.username }} ({{ this.timestamp.toLocaleDateString() }})
-    </p>
   </div>
 </template>
 
 <script>
 import AnnouncementService from "@/services/AnnouncementService.js";
 import PermissionService from "@/services/PermissionService";
+import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 
 export default {
   name: "Reply",
   loggedInUser: 0,
+  components: { ConfirmDialogue },
   props: {
     id: { type: Number, required: true },
     announcementid: { type: Number, required: true },
@@ -51,35 +72,47 @@ export default {
     toggleEdit() {
       this.editing = !this.editing;
     },
-    canEditDelete(){
+    canEditDelete() {
       return PermissionService.userHasPermission("may_update_any_reply") ||
-          (PermissionService.userHasPermission("may_update_own_content") &&  this.loggedInUser == this.userid)
+        (PermissionService.userHasPermission("may_update_own_content") && this.loggedInUser == this.userid)
     },
-    saveEdits() {
-      this.editing = false;
-      AnnouncementService.editReply(this.id, this.editData)
-        .then((response) => {
-          console.log("API RESPONDS: " + JSON.stringify(response));
-          this.$emit("reload");
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-        });
+    async saveEdits() {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Reactie aanpassen",
+        message: 'Wil je deze reactie echt aanpassen?'
+      });
+      if (ok) {
+        this.editing = false;
+        AnnouncementService.editReply(this.id, this.editData)
+          .then((response) => {
+            console.log("API RESPONDS: " + JSON.stringify(response));
+            this.$emit("reload");
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      }
     },
-    remove() {
-      AnnouncementService.deleteReply(this.id)
-        .then((response) => {
-          alert("Reactie is verwijderd!");
-          console.log("API RESPONDS: " + JSON.stringify(response));
-          this.$emit("reload"); // TODO: verwijder reactie uit scherm
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-        });
+    async remove() {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Reactie verwijderen",
+        message: 'Wil je deze reactie echt verwijderen?'
+      });
+      if (ok) {
+        AnnouncementService.deleteReply(this.id)
+          .then((response) => {
+            alert("Reactie is verwijderd!");
+            console.log("API RESPONDS: " + JSON.stringify(response));
+            this.$emit("reload"); // TODO: verwijder reactie uit scherm
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response.status);
+            }
+          });
+      }
     },
   },
 };
@@ -87,10 +120,9 @@ export default {
 
 <style scoped>
 .reply {
-  width: 100%;
-  text-align: right;
-  background-color: var(--gold3);
-  border-style: inset;
-  padding: 4px;
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 10px 0px;
 }
 </style>
