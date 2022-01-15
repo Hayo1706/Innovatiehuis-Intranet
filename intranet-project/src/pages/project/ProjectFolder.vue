@@ -11,7 +11,7 @@
         <div class="col-5">
           <img
             class="foldersImage"
-            v-if="this.shared != 'yes'"
+            v-if="this.shared == 'no'"
             src=".\..\..\assets\images\folder.png"
             draggable="false"
 
@@ -20,6 +20,13 @@
             class="foldersImage"
             v-if="this.shared == 'yes'"
             src=".\..\..\assets\images\shared_folder.png"
+            draggable="false"
+
+          />
+          <img
+            class="foldersImage"
+            v-if="this.shared == 'goback'"
+            src=".\..\..\assets\images\goback.png"
             draggable="false"
 
           />
@@ -39,7 +46,7 @@
         </div>
       </div>
     </div>
-    <ul v-show="canSeeMenu()" id="drop-down-menu" v-if="viewMenu == true">
+    <ul v-show="canSeeMenu() && this.shared !=  'goback'" id="drop-down-menu" v-if="viewMenu == true">
         <li v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</li>
         <li v-show="canMoveFolder()" v-if="this.folders.length > 0" @click="moveMenu = true; getFolders(); viewMenu = false;">Verplaats</li>
         <li v-show="canDeleteFolder()" @click="deleteFolder()">Verwijder</li>
@@ -252,10 +259,9 @@ export default {
   position: absolute;
   top: 35%;
   background-color: transparent;
-  overflow: hidden;
   color: var(--blue1);
   border: 0px;
-  width: 50%;
+  width: 100%;
 }
 .projectFolder:hover{
   background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));

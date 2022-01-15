@@ -26,16 +26,16 @@ def may_update_password(user_perm, user_id):
            (user_perm["may_update_own_password"] and permissions.user_owns_account(user_id))
 
 
-def may_update_role(user_perm, user_id):
-    return user_perm["may_update_any_user_role"] and not permissions.user_owns_account(user_id)
+def may_update_role(user_perm, *ids):
+    return user_perm["may_update_any_user_role"] and not permissions.user_owns_account(ids[0])
 
 
-def may_update_role_protected(user_perm, user_id):
-    return user_perm["may_elevate_to_protected_role"] and not permissions.user_owns_account(user_id)
+def may_update_role_protected(user_perm, *ids):
+    return user_perm["may_elevate_to_protected_role"] and not permissions.user_owns_account(ids[0])
 
 
-def may_update_screening(user_perm, user_id):
-    return user_perm["may_update_any_user_screening_status"] and not permissions.user_owns_account(user_id)
+def may_update_screening(user_perm, *ids):
+    return user_perm["may_update_any_user_screening_status"] and not permissions.user_owns_account(ids[0])
 
 
 def may_read_user_projects(user_perm, user_id):

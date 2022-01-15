@@ -50,6 +50,14 @@ var UserService = function () {
         const { data } = await axiosClient.put(`/users/${userid}`, user, { timeout: 2000 });
         return data;
     }
+    async function updateUserRole(roleid, userid) {
+        const { data } = await axiosClient.patch(`/users/${userid}/role/${roleid}`, { timeout: 2000 });
+        return data;
+    }
+    async function updateUserScreening(screeningstatus, userid) {
+        const { data } = await axiosClient.patch(`/users/${userid}/screening/${screeningstatus}`, { timeout: 2000 });
+        return data;
+    }
     return {
         getUsers,
         getUserById,
@@ -58,7 +66,9 @@ var UserService = function () {
         updateUser,
         getUsersByProject,
         addUserToProject,
-        removeUserFromProject
+        removeUserFromProject,
+        updateUserRole,
+        updateUserScreening
     }
 
 }

@@ -220,17 +220,7 @@ export default {
         if (ok) {
           const screeningstateId = this.screeningstates[val];
 
-          UserService.updateUser(
-            {
-              first_name: this.user.first_name,
-              last_name: this.user.last_name,
-              email: this.user.email,
-              phone_number: this.user.phone_number,
-              roleid: this.user.roleid,
-              screening_status: screeningstateId,
-            },
-            this.user.userid
-          )
+          UserService.updateUserScreening(screeningstateId, this.user.userid)
             .then(() => {
               this.previousScreeningstate = val;
               this.$emit(
@@ -265,17 +255,7 @@ export default {
         if (ok) {
           const roleid = this.roles[val];
 
-          UserService.updateUser(
-            {
-              first_name: this.user.first_name,
-              last_name: this.user.last_name,
-              email: this.user.email,
-              phone_number: this.user.phone_number,
-              roleid: roleid,
-              screening_status: this.user.screening_status,
-            },
-            this.user.userid
-          )
+          UserService.updateUserRole(roleid, this.user.userid)
             .then(() => {
               this.previousRole = this.selectedRole;
               this.$emit("roleChanged", this.user.userid, roleid);

@@ -605,7 +605,7 @@ paths:
       operationId: src.endpoints.users.read_all
       tags:
         - Users
-      summary: Gets all users
+      summary: Reads all users
       responses:
         200:
           description: Successfully read all users
@@ -663,8 +663,37 @@ paths:
         200:
           description: Successfully deleted user
 
+  /users/{user_id}/screening/{screening_status}:
+    patch:
+      operationId: src.endpoints.users.update_screening
+      tags:
+        - Users
+      summary: Change screening status of specified user
+      parameters:
+        - $ref: '#/components/parameters/user_id'
+        - $ref: '#/components/parameters/screening_status'
+      responses:
+        200:
+          description: Successfully updated password
+        403:
+          description: Request denied due to lack of permissions
+  /users/{user_id}/role/{role_id}:
+    patch:
+      operationId: src.endpoints.users.update_role
+      tags:
+        - Users
+        - Roles
+      summary: Change screening status of specified user
+      parameters:
+        - $ref: '#/components/parameters/user_id'
+        - $ref: '#/components/parameters/role_id'
+      responses:
+        200:
+          description: Successfully updated password
+        403:
+          description: Request denied due to lack of permissions
   /users/{user_id}/password:
-    put:
+    patch:
       operationId: src.endpoints.users.update_password
       tags:
         - Users
@@ -780,9 +809,6 @@ paths:
       tags:
         - Authentication
       summary: User requests server to clear the HTTP-only cookie holding the JSON Web Token
-#      security: [
-#        {}
-#      ]
       responses:
         200:
           description: Server sends a HTTP request that clears the HTTP-only cookie
@@ -837,8 +863,20 @@ components:
       schema:
         type: string
       description: The ID number of a reply
-
-
+    role_id:
+      in: path
+      name: role_id
+      required: true
+      schema:
+        type: string
+      description: The ID number of a role
+    screening_status:
+      in: path
+      name: screening_status
+      required: true
+      schema:
+        type: string
+      description: Number representing screening status; 0 = unscreened, 1 = in progress, 2 = screened
     path:
       in: query
       name: path
@@ -846,7 +884,6 @@ components:
       schema:
         type: string
       description: The path to be used
-
     conf:
       in: query
       name: conf
@@ -878,6 +915,8 @@ components:
           type: string
         email:
           type: string
+        phone_number:
+          type: string
         roleid:
           type: integer
         screening_status:
@@ -903,21 +942,3 @@ components:
       properties:
         IDs:
           type: array
-
-
-
-#  securitySchemes:
-#    oAuthSecurity: # <---- arbitrary name
-#      type: oauth2
-#      description: This API uses OAuth 2 with the password grant flow.
-#      x-tokenInfoFunc: src.endpoints.auth.decode_token
-#      flows:
-#        password: # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
-#          tokenUrl: /api/auth
-#          scopes:
-#            {}
-#
-#
-## Step 2 - apply security globally...
-#security:
-#  - oAuthSecurity: []
