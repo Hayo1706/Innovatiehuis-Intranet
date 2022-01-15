@@ -38,12 +38,12 @@ input {
     color: white;
 
 }
-.header-icon {
+.listing-icon {
   border-style: outset;
   border-radius: 50%;
 }
 
-.header-icon:hover {
+.listing-icon:hover {
   border-style: ridge;
 }
 

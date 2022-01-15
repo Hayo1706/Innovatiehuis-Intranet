@@ -129,7 +129,7 @@
         class="col d-none d-lg-flex align-items-center justify-content-center"
         id="screening justify-content-center"
       >
-        <div class="header-icon iconHolder">
+        <div class="listing-icon iconHolder">
           <div class="dropdown">
             <button
               class="btn dropdown-toggle"
@@ -171,8 +171,8 @@
 
       <div class="col d-lg-flex align-items-center justify-content-center">
         <a @click="handleRemoveUser(this.user)" v-show="canDelete()"
-          ><div class="header-icon iconHolder">
-            <img src="@\assets\images\x.png" /></div
+          ><div class="listing-icon iconHolder">
+            <img src="@\assets\images\x_red.png" /></div
         ></a>
       </div>
     </div>
@@ -350,10 +350,6 @@ export default {
   font-size: 1.6vh;
   border: solid var(--gold1) 2px;
 }
-
-.row {
-  padding-top: 12px;
-}
 .userButton {
   font-weight: bold;
   background-color: var(--gold1);
@@ -398,6 +394,6 @@ select {
   margin-left: 10px;
 }
 .iconHolder {
-  padding: 5px;
+  border-radius: 10%;
 }
 </style>

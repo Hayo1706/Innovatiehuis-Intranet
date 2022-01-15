@@ -6,9 +6,9 @@
     @long-press="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
   >
-     <div class="container"  @click="goToFolder()">
+     <div class="container" style="padding: 0px 12px 0px 12px;"  @click="goToFolder()">
       <div class="row">
-        <div class="col-5">
+        <div class="col-4">
           <img
             class="foldersImage"
             v-if="this.shared == 'no'"
@@ -31,18 +31,18 @@
 
           />
         </div>
-        <div class="col-7" style="display: inline-block; position: relative">
+        <div class="col-8" style="display: inline-block; position: relative">
           <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10"/>
-
-          <input
-            v-on:keyup.enter="renameFolder()"
-            class="folderName"
-            v-model="newName"
-            v-bind:id="this.name"
-            disabled
-            draggable="false"
-          />
-
+          <div style="display:flex;align-items:center;width:100%;height:100%;">
+            <input
+              v-on:keyup.enter="renameFolder()"
+              class="folderName"
+              v-model="newName"
+              v-bind:id="this.name"
+              disabled
+              draggable="false"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -249,15 +249,13 @@ export default {
   position: relative;
 }
 .foldersImage {
-  margin:10px auto;
+  margin:8px auto;
   top: 50%;
   overflow: hidden;
   width: max(80%, 30px);
 }
 .folderName {
-  margin: 0;
   position: absolute;
-  top: 35%;
   background-color: transparent;
   color: var(--blue1);
   border: 0px;

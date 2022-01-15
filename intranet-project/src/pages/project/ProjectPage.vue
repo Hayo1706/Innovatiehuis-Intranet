@@ -3,12 +3,14 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-8">
-              <FoldersView
+          <div class="component-container">
+            <FoldersView
                 :path="this.path"
                 @currentPathChanged="pathChanged"
                 @fileMoved="$refs.child.setFiles()"
               />
               <FilesView ref="child" :path="this.path" />
+          </div>
         </div>
         <div class="col-sm-4">
             <AnnouncementWindow

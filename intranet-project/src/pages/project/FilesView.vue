@@ -1,5 +1,4 @@
 <template>
-  <div class="component-container">
     <div class="component-header">
         <ProjectFilesHeader
           :path="this.path"
@@ -34,7 +33,6 @@
           </div>
         </div>
       </div>
-    </div>
 
 </template>
 

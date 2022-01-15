@@ -82,6 +82,7 @@ export default {
 }
 #search-input {
   margin-right: 4px;
+  font-family: AddeleThin;
 }
 img {
   width: calc(2vw + 3vh);

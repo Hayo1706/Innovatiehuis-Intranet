@@ -6,18 +6,18 @@
         v-if="project.is_archived"
         class="link"
         @click="handleArchiveProject(project)"
-        ><span class="header-icon iconHolder"
+        ><span class="listing-icon iconHolder"
           ><img src="@/assets/images/upload.png" /></span
       ></a>
 
       <a v-else class="link" @click="handleArchiveProject(project)">
-        <span class="header-icon iconHolder"
+        <span class="listing-icon iconHolder"
           ><img src="@/assets/images/upload.png" class="rotate" /></span
       ></a>
     </span>
     <a class="link" v-show="canDelete()" @click="handleDeleteProject(project)"
-      ><span class="header-icon iconHolder"
-        ><img src="@/assets/images/x.png" /></span
+      ><span class="listing-icon iconHolder"
+        ><img src="@/assets/images/x_red.png" /></span
     ></a>
   </div>
 </template>

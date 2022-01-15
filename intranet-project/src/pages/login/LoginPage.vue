@@ -18,14 +18,11 @@
         v-on:keyup.enter="submit()"
       />
       <br />
-      <div style="text-align: center;">
-        <div class="full-button" @click="submit()">Aanmelden</div>
+      <div class="full-button" @click="submit()">
+        Aanmelden
       </div>
       <br />
-      <p
-        v-if="this.redirectTarget != '/home' && !this.enteredWrongPassword"
-        id="error-message"
-      >
+      <p v-if="this.redirectTarget != '/home' && !this.enteredWrongPassword" id="error-message">
         Sessie is ongeldig of verlopen. Log in om terug te keren naar de vorige
         pagina.
       </p>
@@ -52,14 +49,14 @@ export default {
     submit() {
       LoginService.attemptLogin(
         "username=" +
-          this.loginAttempt.email +
-          "&password=" +
-          this.loginAttempt.password
+        this.loginAttempt.email +
+        "&password=" +
+        this.loginAttempt.password
       )
         .then((response) => {
           console.log(response.status);
 
-          //set user id and user permission data retrieved from API
+          //set to local storage: user id and user permission data retrieved from API
           for (var property in response.data[0]) {
             localStorage.setItem(property, response.data[0][property]);
           }

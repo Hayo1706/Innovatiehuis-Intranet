@@ -1,5 +1,4 @@
 <template>
-  <div class="component-container">
     <div class="component-header">
       <ProjectFolderHeader
           :path="this.currentPath"
@@ -48,7 +47,6 @@
           </div>
         </div>
       </div>
-  </div>
 </template>
 
 <script>

@@ -135,9 +135,6 @@ export default {
   font-size: 2vh;
   border: solid var(--gold1) 2px;
 }
-.row {
-  padding-top: 12px;
-}
 .projectButton {
   font-weight: bold;
   background-color: var(--gold2);
