@@ -274,7 +274,7 @@ export default {
 #actionButton {
   position: fixed;
   bottom: 0;
-  left: 0;
+  right: 0;
   margin: 20px;
   background-color: var(--gold1);
   border-color: var(--blue1);

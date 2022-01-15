@@ -1,4 +1,29 @@
 <template>
+  <div class="card" style="width: 100%;">
+    <div class="card-body">
+      <h5 class="card-title">{{ this.title }}
+        <img 
+          title="Aanpassen"
+          class="component-header-button" 
+          src=".\..\assets\images\edit.png" 
+        />
+        <img 
+          title="Verwijderen"
+          class="component-header-button" 
+          src=".\..\assets\images\delete.png" 
+        />
+      </h5>
+      <p class="card-text">
+        <strong>
+          <router-link :to="'/user/' + this.userid">{{ this.username }}</router-link>
+        </strong>
+        ({{ this.timestamp.toLocaleDateString("nl-NL")}})
+        <br />
+        <br />Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+      </p>
+    </div>
+  </div>
+
   <div class="accordion-item">
     <h2 class="accordion-header" :id="'heading' + this.id">
       <div v-if="this.editing">
@@ -12,36 +37,17 @@
           :data-bs-target="'#collapse' + this.id"
           aria-expanded="false"
           aria-controls="panelsStayOpen-collapseOne"
-        >
-          {{
-            this.timestamp.toLocaleString("nl-NL", {
-              day: "numeric",
-              month: "long",
-            })
-          }}: {{ this.title }}
-        </button>
+        >Reacties ({{ this.replies.length }})</button>
       </div>
     </h2>
     <div
       :id="'collapse' + this.id"
-      class="accordion-collapse collapse show"
+      class="accordion-collapse collapse hide"
       :aria-labelledby="'heading' + this.id"
     >
       <div class="accordion-body">
-        <strong>
-          <router-link :to="'/user/' + this.userid">
-            {{ this.username }}
-          </router-link>
-        </strong>
-        ({{ this.timestamp.toLocaleDateString("nl-NL") }})
-        <br />
-
         <div v-if="this.editing">
-          <textarea
-            class="form-control"
-            v-model="this.editData.content"
-            style="height: 80px"
-          />
+          <textarea class="form-control" v-model="this.editData.content" style="height: 80px" />
           <button @click="toggleEdit()">Annuleren</button>
           <button @click="saveEdits()">Opslaan</button>
         </div>
@@ -52,9 +58,7 @@
           <button
             data-bs-toggle="modal"
             :data-bs-target="'#repliesModal' + this.id"
-          >
-            Reacties ({{ this.replies.length }})
-          </button>
+          >Reacties ({{ this.replies.length }})</button>
         </div>
       </div>
     </div>
@@ -103,7 +107,7 @@ export default {
   },
   data: function () {
     return {
-      repliesModalKey: { type: Number},
+      repliesModalKey: { type: Number },
       editData: { title: this.title + "", content: this.content + "" },
       editing: false,
       replies: [],
@@ -134,9 +138,9 @@ export default {
         this.$emit("reload");
       }
     },
-    canEditDelete(){
+    canEditDelete() {
       return PermissionService.userHasPermission("may_update_any_announcement") ||
-          (PermissionService.userHasPermission("may_update_own_content") && this.loggedInUser == this.userid)
+        (PermissionService.userHasPermission("may_update_own_content") && this.loggedInUser == this.userid)
     },
     toggleEdit() {
       this.editing = !this.editing;
@@ -204,5 +208,10 @@ export default {
   color: white;
 }
 .accordion-body {
+  background-color: transparent;
+}
+
+.card {
+  background-color: transparent;
 }
 </style>
