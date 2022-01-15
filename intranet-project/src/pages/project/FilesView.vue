@@ -75,11 +75,7 @@ export default {
   },
   methods: {
     fileNameInSearchterm(name) {
-      if (name.includes(this.searchTerm) || this.searchTerm == null) {
-        return true;
-      } else {
-        return false;
-      }
+      return name.includes(this.searchTerm) || this.searchTerm == null;
     },
     setSearchTerm(value) {
       this.searchTerm = value;

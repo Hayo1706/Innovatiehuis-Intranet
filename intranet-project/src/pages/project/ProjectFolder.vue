@@ -1,12 +1,13 @@
 <template>
   <div
-    class="projectFolder"
+    class="projectFolder hover"
     @mousemove="set_coordinates"
     @contextmenu="viewMenu = true"
     @long-press="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
+    @click="goToFolder()"
   >
-     <div class="container" style="padding: 0px 12px 0px 12px;"  @click="goToFolder()">
+     <div class="container" style="padding: 0px 12px 0px 12px;pointer-events: none;"  >
       <div class="row">
         <div class="col-4">
           <img
@@ -260,9 +261,5 @@ export default {
   color: var(--blue1);
   border: 0px;
   width: 100%;
-}
-.projectFolder:hover{
-  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
-  border-radius: 10px;
 }
 </style>

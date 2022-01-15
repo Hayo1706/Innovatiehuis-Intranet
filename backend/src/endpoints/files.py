@@ -1,27 +1,23 @@
 import mimetypes
 from os.path import abspath
 
-import src.config as config
-import os
-import json
-import time
-
-import connexion
 from flask import Flask, request, send_file, send_from_directory
 from ..endpoints.folders import *
+
 
 def get_unique_file_name(file_name_type, current_path, count):
     index_split_name = file_name_type.rfind('.');
     file_name = file_name_type[0: index_split_name]
     file_type = file_name_type[index_split_name::]
     if count == 0:
-        if file_exists(current_path + "/" + file_name + file_type):
+        if path_exists(current_path + "/" + file_name + file_type):
             return get_unique_file_name(file_name_type, current_path, count + 1)
         return file_name + file_type
     else:
-        if file_exists(current_path + "/" + file_name  + " (" + str(count) + ")" + file_type):
+        if path_exists(current_path + "/" + file_name + " (" + str(count) + ")" + file_type):
             return get_unique_file_name(file_name_type, current_path, count + 1)
         return file_name + " (" + str(count) + ")" + file_type
+
 
 def get_secure_file_name(filename):
     index_split_name = filename.rfind('.');
@@ -38,6 +34,7 @@ def get_secure_file_name(filename):
 
     return secure_name + file_type
 
+
 def get_files_in_path(project_id):
     folder_path = connexion.request.values.get('path')
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + folder_path
@@ -50,26 +47,18 @@ def get_files_in_path(project_id):
 
     return list_of_files
 
+
 def get_full_file_path(path):
     return config.FILE_STORAGE_ROOT + path
 
-def file_exists(path):
-    if path_exists(path):
-        return True
-    else:
-        return False
 
 def file_path_valid(requested_path):
-    if path_exists(requested_path) and not os.path.isdir(requested_path):
-        return True
-    else:
-        return False
+    return path_exists(requested_path) and not os.path.isdir(requested_path)
+
 
 def size_valid(file):
-    if not os.fstat(file.fileno()).st_size > config.MAX_FILE_SIZE:
-        return True
-    else:
-        return False
+    return not os.fstat(file.fileno()).st_size > config.MAX_FILE_SIZE
+
 
 def file_move_valid(source_path, target_path):
     if not file_path_valid(target_path):
@@ -80,14 +69,15 @@ def file_move_valid(source_path, target_path):
             return False
     return False
 
+
 def file_replace_valid(file, file_path):
-    while file_exists(file_path):
+    while path_exists(file_path):
         try:
             os.remove(file_path)
         except:
             return False
-    else:
-        return file_save_valid(file, file_path)
+    return file_save_valid(file, file_path)
+
 
 def file_save_valid(file, file_path):
     try:
@@ -96,17 +86,14 @@ def file_save_valid(file, file_path):
     except:
         return False
 
+
 def file_type_valid(file_type):
-    if file_type in config.ALLOWED_FILE_TYPES:
-        return True
-    else:
-        return False
+    return file_type in config.ALLOWED_FILE_TYPES
+
 
 def file_valid(file, file_type):
-    if file_type_valid(file_type) and size_valid(file):
-        return True
-    else:
-        return False
+    return file_type_valid(file_type) and size_valid(file)
+
 
 def delete_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
@@ -116,14 +103,17 @@ def delete_file(project_id):
 
     return response("Failed to delete file", 400)
 
+
 def request_to_upload_file(project_id):
     files = connexion.request.files
-    current_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + "/" + unquote(connexion.request.values.get('path'))
+    current_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + "/" + unquote(
+        connexion.request.values.get('path'))
     confirmation = connexion.request.values.get('conf')
 
     file = list(files.values())[0]
 
     return upload_file(file, current_path, confirmation)
+
 
 def upload_file(file, path, confirmation):
     if dir_exists(path):
@@ -156,15 +146,18 @@ def upload_file(file, path, confirmation):
                     return response(file_name + " already exists would you like to replace it?", 409)
             else:
                 file_name = get_secure_file_name(file_name)
-                file_path = os.path.join(path, file_name) # Usage of get_secure_file_name because of (1) possibility beforehand
+                file_path = os.path.join(path,
+                                         file_name)  # Usage of get_secure_file_name because of (1) possibility beforehand
                 if file_save_valid(file, file_path):
                     print("Succesfully uploaded file")
                     return response("Successfully uploaded file", 200)
         else:
             print("File type or file size is not valid, maximum file size is " + str(config.MAX_FILE_SIZE))
-            return response("File type or file size is not valid, maximum file size is " + str(config.MAX_FILE_SIZE), 406)
+            return response("File type or file size is not valid, maximum file size is " + str(config.MAX_FILE_SIZE),
+                            406)
     print("Failed to upload file")
     return response("Failed to upload file", 424)
+
 
 def download_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
@@ -178,6 +171,7 @@ def download_file(project_id):
 
     return response("Failed to download file", 400)
 
+
 def move_file(project_id):
     source_path = unquote(connexion.request.json['from'])
     file_name = source_path.rsplit('/', 1)[1]
@@ -188,12 +182,12 @@ def move_file(project_id):
     target_path = target_folder_path + "/" + file_name
 
     if file_path_valid(source_path) and dir_exists(target_folder_path):
-        if(file_move_valid(source_path, target_path)):
+        if (file_move_valid(source_path, target_path)):
             print("Succesfully moved file to target folder")
             return response("Successfully moved file to target folder", 200)
 
-
     return response("Failed to move file", 400)
+
 
 def rename_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
@@ -214,6 +208,7 @@ def rename_file(project_id):
 
     print("Failed to update filename")
     return response("Failed to update filename", 400)
+
 
 def file_rename_valid(old_path, new_path):
     print(old_path)

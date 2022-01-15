@@ -5,6 +5,7 @@
         <div class="col-sm-8">
           <div class="component-container">
             <FoldersView
+                :name="this.name"
                 :path="this.path"
                 @currentPathChanged="pathChanged"
                 @fileMoved="$refs.child.setFiles()"
@@ -37,6 +38,7 @@ export default {
     return {
       announcementWindowKey: 0,
       projectId: this.$route.params.id,
+      name: "",
       path: this.$route.fullPath
         .split("/project/")[1]
         .split(this.$route.params.id)[1],
@@ -53,6 +55,7 @@ export default {
   async created() {
     ProjectService.getProjectById(this.$route.params.id)
       .then((response) => {
+        this.name = response[0].project_name;
         this.$emit("newHeaderTitle", response[0].project_name);
       })
       .catch((err) => {

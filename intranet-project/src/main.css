@@ -33,6 +33,15 @@ body {
 .full-button:hover{
   background-color: var(--blue1);
   color: white;
+}
+.hover:hover{
+    background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+    border-radius: 10px;
+
+}
+.hoverDrag{
+    background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+    border-radius: 10px;
 
 }
 .listing-icon {
@@ -76,6 +85,17 @@ p {
 /* Hide scrollbar for Chrome, Safari and Opera */
 .component-container::-webkit-scrollbar {
   display: none;
+}
+
+.hideScroll{
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hideScroll::-webkit-scrollbar {
+    display: none;
 }
 
 ::-webkit-scrollbar {
