@@ -45,8 +45,15 @@ export default {
   display: flex;
   cursor: pointer;
   border: transparent;
-  border-left: solid var(--gold1) 2px;
-
+  border-left: solid var(--gold1) 8px;
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+.project-button:hover {
+  border: solid var(--gold1) 1px;
+  border-left: solid var(--gold1) 18px;
+  -webkit-transition: .3s;
+  transition: .3s;
 }
 img {
   height: 5vh;
