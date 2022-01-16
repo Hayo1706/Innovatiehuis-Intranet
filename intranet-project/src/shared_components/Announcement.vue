@@ -52,7 +52,7 @@
   <div class="accordion-item">
     <h2 class="accordion-header" :id="'heading' + this.id">
       <button
-        class="accordion-button"
+        class="accordion-button collapsed"
         type="button"
         data-bs-toggle="collapse"
         :data-bs-target="'#collapse' + this.id"
@@ -212,6 +212,9 @@ export default {
   background: var(--blue2);
   color: white;
   border-radius: 0px 0px 10px 10px;
+}
+.collapsed {
+  border-radius: 0px 0px 10px 10px !important;
 }
 .accordion-body {
   border-radius: 0px 0px 10px 10px;
