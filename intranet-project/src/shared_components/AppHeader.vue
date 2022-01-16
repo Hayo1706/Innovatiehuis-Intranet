@@ -110,11 +110,7 @@ header {
   height: 11vh;
   margin-bottom: 2vh;
   /*background-color: var(--blue1);*/
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0.8),
-    rgba(225, 225, 225, 0.9)
-  );
+  background: rgb(234, 234, 234);
   backdrop-filter: blur(1rem);
   border-bottom: solid 2px var(--gold1);
 }
