@@ -29,20 +29,23 @@ body {
   color: white;
   padding: 6px;
   text-decoration: none;
+    border: 0;
+    transition: .3s
 }
 .full-button:hover{
-  background-color: var(--blue1);
-  color: white;
+    background-color: var(--blue1);
+    transition: .3s;
+    color: white;
 }
 .hover:hover{
-    background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+    background: white;
     border-radius: 10px;
-
+    transition: .3s
 }
 .hoverDrag{
-    background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+    background: white;
     border-radius: 10px;
-
+    transition: .3s
 }
 .listing-icon {
   border-style: outset;
@@ -67,7 +70,8 @@ p {
 .component-container {
   /*background: linear-gradient(to left top, rgba(50,50,80,0.8), rgba(225,225,225,1));*/
   background: rgba(255,255,255,0.8);
-  border: solid var(--gold1) 2px;
+
+    border: solid var(--gold1) 2px;
   /*backdrop-filter: blur(1rem);*/
   min-height: 400px;
   overflow-y: scroll;
@@ -126,6 +130,7 @@ p {
   margin-left: 2px;
   padding-top: 5px;
   padding-bottom: 5px;
+
 }
 
 @font-face {

@@ -245,6 +245,7 @@ export default {
   border-radius: 10px;
   border-width: 1px;
   margin-top: 1vh;
+  transition: .3s
 }
 .container {
   position: relative;

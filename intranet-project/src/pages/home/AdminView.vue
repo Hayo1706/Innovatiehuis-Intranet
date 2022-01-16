@@ -9,6 +9,7 @@
           class="full-button mobileRow extraLarge"
           @click="projectsClick()"
           v-if="this.canSeeProjects()"
+
       >Projectenoverzicht</button>
       <button
           title="Gebruikersoverzicht"
@@ -66,4 +67,8 @@ export default {
 </script>
 
 <style scoped>
+button:hover{
+  padding-left: 20px;
+
+}
 </style>

@@ -109,9 +109,7 @@ header {
   padding-top: 1vh;
   height: 11vh;
   margin-bottom: 2vh;
-  /*background-color: var(--blue1);*/
-  background: rgb(234, 234, 234);
-  backdrop-filter: blur(1rem);
+  background: rgba(255, 255, 255, 0.9);
   border-bottom: solid 2px var(--gold1);
 }
 

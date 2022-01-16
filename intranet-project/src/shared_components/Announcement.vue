@@ -223,6 +223,7 @@ export default {
 .accordion-item {
   border-radius: 0px 0px 10px 10px;
   background-color: rgba(180,180,180,0.3);
+  border-width: 0;
 }
 
 .card {

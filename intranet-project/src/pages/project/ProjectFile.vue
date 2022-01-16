@@ -193,6 +193,7 @@ export default {
   border-radius: 10px;
   border-width: 1px;
   margin-top: 1vh;
+  transition: .3s
 }
 .row {
   margin: 0;
@@ -211,8 +212,9 @@ export default {
   width: min(80%, 150px);
 }
 .projectFile:hover{
-  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+  background: white;
   border-radius: 10px;
+  transition: .3s
 }
 
 #drop-down-menu{
