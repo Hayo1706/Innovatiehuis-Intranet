@@ -1,7 +1,7 @@
 <template>
   <div id="projectsHeader" class="container-fluid d-none d-lg-block">
     <div class="row">
-      <div class="full-button col" @click="this.$emit('sortEvent', 'name')">
+      <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
         Project
         <span v-if="sortingMethod == 'name'"
           ><i v-if="this.ascending" class="bi-caret-down-fill"></i
@@ -43,20 +43,22 @@
           "
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
-        <Projectshidarchivedcheckbox
-          @hideArchived="(value) => $emit('hideArchived', value)"
-          v-bind:hideArchived="this.hideArchived"
-        ></Projectshidarchivedcheckbox>
       </div>
+    </div>
+    <div class="row">
+      <ProjectsHideArchivedCheckbox
+        @hideArchived="(value) => $emit('hideArchived', value)"
+        v-bind:hideArchived="this.hideArchived"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import SearchBar from "@/shared_components/SearchBar.vue";
-import Projectshidarchivedcheckbox from "./ProjectsHideArchivedCheckbox.vue";
+import ProjectsHideArchivedCheckbox from "./ProjectsHideArchivedCheckbox.vue";
 export default {
-  components: { SearchBar, Projectshidarchivedcheckbox },
+  components: { SearchBar, ProjectsHideArchivedCheckbox },
   name: "ProjectsHeader",
   props: ["searchTerm", "hideArchived", "sortingMethod", "ascending"],
   data: function () {
@@ -70,15 +72,11 @@ export default {
 #projectsHeader {
   width: 100%;
   box-sizing: border-box;
-  min-height: 10vh;
+  min-height: 5vh;
   background-color: var(--blue1);
-  border: white 5px solid;
-  margin-top: 1vh;
   color: white;
-  font-size: calc(1vw + 1vh);
+  font-size: 1.6vh;
   padding: 20px;
-  font-family: Montserrat;
-  margin-bottom: 1vh;
 }
 #search-input {
   margin-right: 4px;

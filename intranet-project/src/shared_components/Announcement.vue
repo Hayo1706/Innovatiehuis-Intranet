@@ -113,7 +113,6 @@ export default {
   },
   data: function () {
     return {
-      repliesModalKey: { type: Number },
       editData: { title: this.title + "", content: this.content + "" },
       editing: false,
       replies: [],
@@ -196,11 +195,7 @@ export default {
             }
           });
       }
-    },
-    reload() {
-      console.log("reloaded component RepliesModal");
-      this.repliesModalKey += 1;
-    },
+    }
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-6">
-        <ProjectsWindow>Mijn Overzicht</ProjectsWindow>
+        <ProjectsWindow>Mijn Projecten</ProjectsWindow>
       </div>
       <div class="col-sm-6">
         <AnnouncementWindow

@@ -16,6 +16,7 @@
     </button>
 
     <ProjectsHeader
+      class="component-header"
       v-bind:sortingMethod="this.sortingMethod"
       v-bind:ascending="this.ascending"
       @sortEvent="
@@ -78,7 +79,7 @@
         ></Projectshidarchivedcheckbox>
       </div>
     </div>
-    <div class="container-fluid">
+    <div id="listing-container" class="container-fluid">
       <div v-for="project of filteredProjects" :key="project.project_name">
         <ProjectListing
           class="projectlisting"
@@ -116,7 +117,7 @@ export default {
     return {
       projects: [],
       searchTerm: null,
-      hideArchived: false,
+      hideArchived: true,
       sortingMethod: "name",
       ascending: true,
     };
@@ -273,6 +274,11 @@ export default {
   margin-bottom: 5px;
   height: fit-content;
   width: 100%;
+}
+#listing-container {
+  padding: 8px 4px 8px 4px;
+  border-radius: 0px 0px 10px 10px;
+  background-color: rgba(255,255,255,0.3)
 }
 #noresults {
   margin-top: 10px;

@@ -47,11 +47,11 @@
               aria-expanded="false"
             >
               <img
-                src="@\assets\images\exclamation.png"
+                src="@\assets\images\screening1.png"
                 v-if="screeningstate == 'nog niet in behandeling'"
               />
               <img
-                src="@\assets\images\waiting.png"
+                src="@\assets\images\screening2.png"
                 v-if="screeningstate == 'in behandeling'"
               />
               <img
@@ -79,10 +79,10 @@
 
       <!-- large screens-->
       <div
-        class="col d-none d-lg-flex align-items-center justify-content-start"
+        class="col-3 d-none d-lg-flex align-items-center justify-content-start"
         @click="onClick()"
       >
-        <div class="full-button">
+        <div class="name-button">
           {{ user.first_name + " " + user.last_name }}
         </div>
       </div>
@@ -139,11 +139,11 @@
               aria-expanded="false"
             >
               <img
-                src="@\assets\images\exclamation.png"
+                src="@\assets\images\screening1.png"
                 v-if="screeningstate == 'nog niet in behandeling'"
               />
               <img
-                src="@\assets\images\waiting.png"
+                src="@\assets\images\screening2.png"
                 v-if="screeningstate == 'in behandeling'"
               />
               <img
@@ -172,7 +172,7 @@
       <div class="col d-lg-flex align-items-center justify-content-center">
         <a @click="handleRemoveUser(this.user)" v-show="canDelete()"
           ><div class="listing-icon iconHolder">
-            <img src="@\assets\images\x_red.png" /></div
+            <img src="@\assets\images\delete.png" /></div
         ></a>
       </div>
     </div>
@@ -335,8 +335,25 @@ export default {
 </script>
 
 <style scoped>
+.name-button{
+  border-radius: 0.5rem;
+  background-color: var(--blue2);
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  font-size: 14pt;
+  color: white;
+  padding: 6px;
+  text-decoration: none;
+}
+.name-button:hover{
+  background-color: var(--blue1);
+  color: white;
+}
+
 #user-listing {
-  padding: 10px;
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
@@ -345,10 +362,10 @@ export default {
     rgba(230, 230, 230, 0.7),
     rgba(230, 230, 230, 0.9)
   );
-  border-radius: 1rem;
-  margin-bottom: 1vh;
+  border-radius: 0.5rem;
+  margin-bottom: 0.3rem;
   font-size: 1.6vh;
-  border: solid var(--gold1) 2px;
+  border: solid var(--gold4) 2px;
 }
 .userButton {
   font-weight: bold;
@@ -381,9 +398,6 @@ img {
 select {
   border-radius: 0.25rem;
   width: fit-content;
-}
-.full-button {
-  min-width: fit-content;
 }
 .dropdown-toggle {
   padding: 0px;

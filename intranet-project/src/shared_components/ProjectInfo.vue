@@ -1,5 +1,5 @@
 <template>
-  <div class="accordion" style="margin-top: 4px" :id="'accordion' + project.projectid">
+  <div class="accordion" :id="'accordion' + project.projectid">
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading">
         <button
@@ -830,8 +830,18 @@ export default {
 
 
 <style scoped>
-.accordion {
-  margin-top: 30px;
+
+.accordion-item {
+  background-color: rgba(255,255,255,0.7)
+}
+.accordion-button {
+  height: 2rem;
+  background: var(--blue4);
+  text-align: center;
+  padding: 0px 1vw;
+}
+.accordion-button:hover {
+  background: var(--blue3);
 }
 button {
   font-family: Montserrat;

@@ -7,17 +7,17 @@
         class="link"
         @click="handleArchiveProject(project)"
         ><span class="listing-icon iconHolder"
-          ><img src="@/assets/images/upload.png" /></span
+          ><img src="@/assets/images/dearchive.png" /></span
       ></a>
 
       <a v-else class="link" @click="handleArchiveProject(project)">
         <span class="listing-icon iconHolder"
-          ><img src="@/assets/images/upload.png" class="rotate" /></span
+          ><img src="@/assets/images/archive.png" /></span
       ></a>
     </span>
     <a class="link" v-show="canDelete()" @click="handleDeleteProject(project)"
       ><span class="listing-icon iconHolder"
-        ><img src="@/assets/images/x_red.png" /></span
+        ><img src="@/assets/images/delete.png" /></span
     ></a>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div id="usersHeader" class="container-fluid d-none d-lg-block">
     <div class="row">
-      <div class="full-button col" @click="this.$emit('sortEvent', 'name')">
+      <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
         Gebruiker
         <span v-if="sortingMethod == 'name'"
           ><i v-if="this.ascending" class="bi-caret-down-fill"></i
@@ -82,16 +82,11 @@ export default {
 #usersHeader {
   width: 100%;
   box-sizing: border-box;
-  min-height: 13vh;
+  min-height: 5vh;
   background-color: var(--blue1);
-  border: white 5px solid;
-  margin-top: 1vh;
   color: white;
   font-size: 1.6vh;
-
   padding: 20px;
-
-  margin-bottom: 1vh;
 }
 .bi-caret-down-fill {
   margin-left: 5px;
