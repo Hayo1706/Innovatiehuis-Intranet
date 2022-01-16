@@ -2,6 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-6">
+        <AdminView>Extra functies</AdminView>
         <ProjectsWindow>Mijn Projecten</ProjectsWindow>
       </div>
       <div class="col-sm-6">
@@ -17,10 +18,11 @@
 <script>
 import AnnouncementWindow from '../../shared_components/AnnouncementWindow.vue';
 import ProjectsWindow from '../../shared_components/ProjectsWindow.vue';
+import AdminView from "@/pages/home/AdminView";
 
 
 export default {
-  components: { AnnouncementWindow, ProjectsWindow },
+  components: {AdminView, AnnouncementWindow, ProjectsWindow },
   name: "HomePage",
   data: function () {
     return {
