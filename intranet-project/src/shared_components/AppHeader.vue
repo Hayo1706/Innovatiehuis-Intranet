@@ -12,14 +12,14 @@
           data-toggle="tooltip" data-placement="bottom" title="Projectenoverzicht"
           class="header-icon"
           @click="projectsClick()"
-          src=".\..\assets\images\projects_icon.png"
+          src=".\..\assets\images\projects_icon_yellow.png"
           v-if="this.canSeeProjects()"
         />
         <img
           title="Gebruikersoverzicht"
           class="header-icon"
           @click="usersClick()"
-          src=".\..\assets\images\users_icon.png"
+          src=".\..\assets\images\users_icon_yellow.png"
           v-if="this.canSeeUsers()"
         />
       </div>

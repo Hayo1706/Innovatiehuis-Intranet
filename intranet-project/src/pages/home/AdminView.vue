@@ -10,13 +10,13 @@
           @click="projectsClick()"
           v-if="this.canSeeProjects()"
 
-      >Projectenoverzicht</button>
+      ><img src="../../assets/images/projects_icon.png">Projectenoverzicht</button>
       <button
           title="Gebruikersoverzicht"
           class="full-button mobileRow extraLarge"
           @click="usersClick()"
           v-if="this.canSeeUsers()"
-      >Gebruikersoverzicht</button>
+      ><img src="../../assets/images/users_icon.png">Gebruikersoverzicht</button>
       <hr>
       <button
           title="Gebruikersoverzicht"
@@ -68,7 +68,12 @@ export default {
 
 <style scoped>
 button:hover{
-  padding-left: 20px;
+  padding-left: 15px;
 
+}
+img{
+  height: 40px;
+  margin-right: 20px;
+  margin-left: 20px;
 }
 </style>
