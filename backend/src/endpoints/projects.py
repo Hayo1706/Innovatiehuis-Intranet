@@ -162,7 +162,7 @@ def update_last_seen(project_id):
 @check_permissions(Projects.may_read)  # TODO: placeholder for more specific permissions?
 def read_parents(project_id):
     return query(
-        "SELECT projectid, project_name, description, is_archived, created, last_updated "
+        "SELECT projectid, shared_files, project_name, description, is_archived, created, last_updated "
         "FROM projects_have_parents "
         "JOIN projects "
         "ON projects_have_parents.parentid = projects.projectid "

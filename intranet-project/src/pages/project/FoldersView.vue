@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="component-header">
       <ProjectFolderHeader
           :path="this.currentPath"
@@ -68,10 +69,11 @@
               draggable="true"
               @dragstart="startDrag($event, this.path + '/' + folder)"
             />
-            </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -214,7 +216,7 @@ export default {
           }
         }
       }
-    }
+    },
   },
   async created() {
     //this.$emit("newHeaderTitle", "NAAM + PAD");

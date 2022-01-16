@@ -26,12 +26,12 @@
     </div>
       
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
-      <li v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
-      <li v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
+      <li v-if="this.shared == 'no'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
+      <li v-if="this.shared == 'no'" v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
       <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
-      <li v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
+      <li v-if="this.shared == 'no'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
     </ul>
-    <ul id="drop-down-menu" v-if="moveMenu == true">
+    <ul id="drop-down-menu" v-if="moveMenu == true && this.shared == 'no'">
       <li>Verplaatsen naar:</li>
       <ul id="drop-down-menu">
         <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">

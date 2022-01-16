@@ -88,7 +88,7 @@ def file_save_valid(file, file_path):
 
 
 def file_type_valid(file_type):
-    return file_type in config.ALLOWED_FILE_TYPES
+    return file_type.lower() in config.ALLOWED_FILE_TYPES
 
 
 def file_valid(file, file_type):
