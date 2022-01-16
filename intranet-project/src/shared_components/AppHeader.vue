@@ -101,13 +101,12 @@ export default {
 
 <style scoped>
 img {
-  height: 80%;
+  height: 70%;
   cursor: pointer;
 }
 header {
   width: 100%;
-  padding-top: 1vh;
-  height: 11vh;
+  height: 9vh;
   margin-bottom: 2vh;
   background: rgba(255, 255, 255, 0.9);
   border-bottom: solid 2px var(--gold1);
@@ -121,7 +120,7 @@ header {
   align-items: center;
   max-width: 1500px;
   margin: auto;
-  height: 9vh;
+  height: 100%;
 }
 .image-container {
   padding: 0;
