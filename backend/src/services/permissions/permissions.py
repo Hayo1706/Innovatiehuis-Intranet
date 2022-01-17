@@ -44,7 +44,7 @@ def check_permissions(rule, *parameters):
                 if rule(user_perm, *[kwargs[v] for v in compare]) or config.DEBUG_MODE:
                     return fn(*args, **kwargs)
 
-            return response("No permission", 403)
+            return response("You do not have permission to perform this action, you are now under arrest.", 403)
 
         return decorator
 

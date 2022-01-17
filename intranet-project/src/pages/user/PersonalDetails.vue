@@ -121,7 +121,7 @@ export default {
 .item-text {
   margin-bottom: 1vh;
   white-space: initial;
-  font-family: addelleThin;
+  font-family: AddeleThin;
 }
 
 .button {
