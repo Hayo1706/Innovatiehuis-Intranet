@@ -79,15 +79,13 @@
         ></Projectshidarchivedcheckbox>
       </div>
     </div>
-    <div id="listing-container" class="container-fluid">
-      <div v-for="project of filteredProjects" :key="project.project_name">
-        <ProjectListing
-          class="projectlisting"
-          @removeProject="this.removeProject"
-          @archiveProject="this.archiveProject"
-          v-bind:project="project"
-        ></ProjectListing>
-      </div>
+    <div class="listing-container container-fluid">
+      <ProjectListing v-for="project of filteredProjects" :key="project.project_name"
+        class="projectlisting"
+        @removeProject="this.removeProject"
+        @archiveProject="this.archiveProject"
+        v-bind:project="project"
+      ></ProjectListing>
       <div id="noresults" v-if="filteredProjects.length == 0">
         Geen resultaten.
       </div>
@@ -278,10 +276,13 @@ export default {
   height: fit-content;
   width: 100%;
 }
-#listing-container {
-  padding: 8px 4px 8px 4px;
+.listing-container {
+  padding: 0;
   border-radius: 0px 0px 10px 10px;
   background-color: rgba(255,255,255,0.3)
+}
+.container{
+  padding: 0;
 }
 #noresults {
   margin-top: 10px;

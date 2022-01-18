@@ -4,9 +4,7 @@
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col-3 d-block d-lg-none">
-        <div class="name-button mobileRow" @click="onClick()">
-          {{ projectname }}
-        </div>
+        <div class="name-button mobileRow" @click="onClick()">{{ projectname }}</div>
         <div class="mobileRow">
           {{
             project.created.toLocaleString("nl-NL", {
@@ -40,9 +38,7 @@
         class="col-3 d-none d-lg-flex align-items-center justify-content-center"
         @click="onClick()"
       >
-        <div class="name-button">
-          {{ projectname }}
-        </div>
+        <div class="name-button">{{ projectname }}</div>
       </div>
       <div
         title="Aangemaakt"
@@ -71,9 +67,7 @@
           })
         }}
       </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
+      <div class="col d-none d-lg-flex align-items-center justify-content-center">
         <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
         <div v-else>Niet gearchiveerd</div>
       </div>
@@ -86,16 +80,34 @@
             v-bind:project="project"
           ></ProjectButtons>
         </span>
+        <h2 class="accordion-header" :id="'heading' + this.project.projectid">
+            <button
+              class="full-button"
+              type="button"
+              data-bs-toggle="collapse"
+              :data-bs-target="'#collapseName' + this.project.projectid"
+              aria-expanded="false"
+              :aria-controls="'collapseName' + this.project.projectid"
+            >Details</button>
+          </h2>
       </div>
     </div>
-    <ProjectInfo
-      @nameOrDescriptionChanged="
-        (project_obb) => {
-          this.projectname = project_obb.project_name;
-        }
-      "
-      v-bind:project="project"
-    ></ProjectInfo>
+
+    <div
+      :id="'collapseName' + this.project.projectid"
+      class="accordion-collapse collapse"
+      aria-labelledby="heading"
+    >
+      <div class="accordion-body">
+        <ProjectInfo
+          v-bind:project="project"
+          @nameOrDescriptionChanged="
+          (project_obb) => {
+            this.projectname = project_obb.project_name;
+          }"
+        ></ProjectInfo>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -128,14 +140,14 @@ export default {
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
-  background: linear-gradient(
-    to right top,
-    rgba(230, 230, 230, 0.7),
-    rgba(230, 230, 230, 0.9)
-  );
-  border-radius: 0.5rem;
-  margin-bottom: 0.3rem;
+  background-color: rgb(234, 234, 234);
+  border-radius: 0 0.2rem 0.2rem 0;
+  /* margin-bottom: 0.3rem; */
   font-size: 1.6vh;
+  border-bottom: 1px solid #e1e1e1;
+}
+.project-listing:last-child{
+  border-bottom: none;
 }
 .projectButton {
   font-weight: bold;
@@ -149,8 +161,7 @@ export default {
   cursor: pointer;
   width: fit-content;
 }
-.name-button{
-  border-radius: 0.5rem 0px 0px 0px;
+.name-button {
   background-color: var(--blue2);
   width: 100%;
   height: 100%;
@@ -162,7 +173,7 @@ export default {
   padding: 6px;
   text-decoration: none;
 }
-.name-button:hover{
+.name-button:hover {
   background-color: var(--blue1);
   color: white;
 }
@@ -172,10 +183,11 @@ export default {
 #archivedText {
   color: purple;
 }
-.button-span-right{
+.button-span-right {
   margin-left: auto;
 }
 .iconHolder {
   padding: 5px;
 }
+
 </style>

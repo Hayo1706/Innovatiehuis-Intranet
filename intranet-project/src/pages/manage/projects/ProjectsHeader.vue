@@ -1,5 +1,12 @@
 <template>
   <div id="projectsHeader" class="container-fluid d-none d-lg-block">
+    <div id="projects-header-top" class="row">
+      <ProjectsHideArchivedCheckbox
+        @hideArchived="(value) => $emit('hideArchived', value)"
+        v-bind:hideArchived="this.hideArchived"
+    />
+    </div>
+    
     <div class="row">
       <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
         Project
@@ -45,12 +52,6 @@
         ></SearchBar>
       </div>
     </div>
-    <div class="row">
-      <ProjectsHideArchivedCheckbox
-        @hideArchived="(value) => $emit('hideArchived', value)"
-        v-bind:hideArchived="this.hideArchived"
-      />
-    </div>
   </div>
 </template>
 
@@ -76,7 +77,6 @@ export default {
   background-color: var(--blue1);
   color: white;
   font-size: 1.6vh;
-  padding: 20px;
 }
 #search-input {
   margin-right: 4px;
@@ -99,5 +99,8 @@ img {
 }
 .full-button {
   height: fit-content;
+}
+#projectsHeader .full-button{
+ margin: 0;
 }
 </style>

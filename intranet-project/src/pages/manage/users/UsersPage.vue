@@ -27,6 +27,7 @@
       @searchBarChanged="setSearchTerm"
       v-bind:searchTerm="this.searchTerm"
     ></UsersHeader>
+    
     <div class="container-fluid d-sm-block d-lg-none" id="sorting_space">
       <p>Sorteren op:</p>
       <div class="row">
@@ -84,7 +85,7 @@
         ></SearchBar>
       </div>
     </div>
-    <div id="listing-container" class="container-fluid">
+    <div class="listing-container container-fluid">
       <div v-for="user of filteredUsers" :key="user.first_name">
         <UserListing
           v-bind:user="user"
@@ -267,8 +268,7 @@ export default {
   margin-bottom: 5px;
   width: 100%;
 }
-#listing-container {
-  padding: 8px 4px 8px 4px;
+.listing-container {
   border-radius: 0px 0px 10px 10px;
   background-color: rgba(255,255,255,0.3)
 }
