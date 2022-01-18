@@ -50,8 +50,7 @@ export default {
   transition: .3s;
 }
 .project-button:hover {
-  border: solid var(--gold1) 1px;
-  border-left: solid var(--gold1) 18px;
+  border-left: solid var(--gold1) 11px;
   -webkit-transition: .3s;
   transition: .3s;
 }

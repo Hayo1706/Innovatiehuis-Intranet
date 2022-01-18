@@ -3,6 +3,7 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading">
         <button
+        v-if="!disabled"
           ref="btn"
           :id="'collapseDetailsButton' + this.project.projectid"
           class="accordion-button collapsed"
@@ -14,7 +15,8 @@
           @click="openDetails()"
           :disabled="disabled"
         >
-          Details
+          <span   v-if="!open" >
+          Details</span>
         </button>
       </h2>
       <div

@@ -19,7 +19,7 @@
           <img
             data-toggle="tooltip" data-placement="bottom" title="Map aanmaken"
             class="component-header-button"
-            src=".\..\..\assets\images\add_icon.png" 
+            src=".\..\..\assets\images\newfolder.png" 
             data-bs-toggle="modal"
             data-bs-target="#folderModal"
             v-if="canAddFolder()"

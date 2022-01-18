@@ -1,8 +1,57 @@
+/* CSS RESET */
+
+/* html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+} */
+
+/* END OF CSS RESET */
+
 *{
   font-family: AddeleSemiBold;
 }
 body {
   overflow-x: hidden;
+  /* marnik suggereert een kleur als deze:    
+  background-color: hsl(222deg 36% 70%) !important; */
   background-color: #101936 !important;
   background-image: url(./assets/images/back.png);
   background-size: 100vw;
@@ -70,14 +119,11 @@ p {
 .component-container {
   /*background: linear-gradient(to left top, rgba(50,50,80,0.8), rgba(225,225,225,1));*/
   background: rgba(255,255,255,0.8);
-
-    border: solid var(--gold1) 2px;
   /*backdrop-filter: blur(1rem);*/
-  min-height: 400px;
   overflow-y: scroll;
   width: 100%;
   border-radius: 1rem;
-  padding: 1vh;
+  padding: 12px;
   box-sizing: border-box;
   margin-top: 1vh;
 /* Hide scrollbar for IE, Edge and Firefox */
@@ -174,4 +220,17 @@ p {
   --gold2: #cfa852;
   --gold3: #d9bb7b;
   --gold4: #e4cfa2;
+}
+
+#alert-wrapper{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Fix voor rare scrollruimte met onzichtbare alert wrapper */
+#app {
+  overflow: hidden;
 }

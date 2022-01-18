@@ -133,6 +133,17 @@ export default {
       return PermissionService.userHasPermission("may_create_announcement_anywhere") ||
           (PermissionService.userHasPermission("may_create_announcement_in_own_project") && this.$route.path.indexOf('/project') > -1)
     },
+    createAlert(message, type) {
+      const alertEl = document.createElement("div");
+      alertEl.innerHTML = `<div class="alert alert-warning alert-dismissible fade show ${type}" role="alert">
+        <strong>${message}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>`;
+      alertEl.classList.add(type);
+      document.querySelector("#alert-wrapper").appendChild(alertEl);
+    },
     addAnnouncement() {
       AnnouncementService.postAnnouncement(
         this.pathArgs.project,
@@ -142,11 +153,15 @@ export default {
           console.log(response);
           this.newAnnouncement.title = "";
           this.newAnnouncement.content = "";
-          console.log("about to update key");
+          let alertText = response.response.message;
+          this.createAlert(alertText, "success-alert");
           this.reload();
         })
         .catch((err) => {
+          console.log({err});
           if (err.response) {
+            let alertText = err.response.data.response.message;
+            this.createAlert(alertText, "error-alert");
             console.log(err.response.status);
           }
         });
