@@ -166,6 +166,7 @@
 import SearchBar from "@/shared_components/SearchBar.vue";
 import UserService from "@/services/UserService.js";
 import ProjectService from "@/services/ProjectService.js";
+import AlertService from "@/services/AlertService.js";
 import { Modal } from "bootstrap";
 export default {
   name: "ProjectCreateModal",
@@ -244,8 +245,10 @@ export default {
             "parentids": parentIds, "childids":childIds };
        ProjectService.addProject(project)
         .then(() => {
-          alert("Het project \""+this.projectname+"\" is aangemaakt!");
-          window.location.reload();
+
+          this.$emit("reloadProjects");
+          this.closeModal();
+                    AlertService.alert("Het project \""+this.projectname+"\" is aangemaakt!", "success");
           
         })
         .catch((err) => {

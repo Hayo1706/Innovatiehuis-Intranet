@@ -62,7 +62,7 @@
         </button>
       </div>
     </div>
-    <ProjectCreateModal></ProjectCreateModal>
+    <ProjectCreateModal @reloadProjects="loadProjects()"></ProjectCreateModal>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
         <SearchBar
@@ -216,6 +216,17 @@ export default {
       }
       return 0;
     },
+    loadProjects(){
+            ProjectService.getProjects()
+      .then((response) => {
+        this.projects = response;
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+      });
+    }
   },
 
   computed: {
@@ -254,15 +265,7 @@ export default {
   },
   async created() {
     this.$emit("newHeaderTitle", "Projecten - Overzicht");
-    ProjectService.getProjects()
-      .then((response) => {
-        this.projects = response;
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-      });
+    this.loadProjects();
   },
 };
 </script>
