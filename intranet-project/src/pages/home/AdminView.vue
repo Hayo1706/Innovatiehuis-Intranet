@@ -1,5 +1,5 @@
 <template>
-  <div class="component-container" style="min-height: fit-content">
+  <div class="component-container" style="min-height: fit-content" v-if="canSeeAdminView()">
     <div class="component-header">
       <slot></slot>
     </div>
@@ -79,6 +79,9 @@ export default {
     canCreateUsers() {
       return PermissionService.userHasPermission("may_create_users");
     },
+    canSeeAdminView(){
+      return this.canSeeProjects() || this.canSeeUsers() || this.canCreateProjects() ||this.canCreateUsers()
+    }
   },
 };
 </script>
