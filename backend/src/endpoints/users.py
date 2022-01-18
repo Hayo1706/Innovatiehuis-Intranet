@@ -138,3 +138,7 @@ def add_project(user_id, project_id):
     query_update(f"INSERT INTO users_have_projects (userid, projectid) VALUES (%(userid)s, %(projectid)s)",
                  {'userid': user_id, 'projectid': project_id})
     return response(f"Successfully assigned {project_id} to project {project_id}")
+
+def get_roles():
+    return query(
+        "SELECT roleid, role_name, is_protected FROM roles;")

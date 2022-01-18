@@ -753,8 +753,15 @@ paths:
                 $ref: '#/components/schemas/Project'
         404:
           description: Specified user or project not found
-
-
+  /roles:
+    get:
+      operationId: src.endpoints.users.get_roles
+      tags:
+        - Roles
+      summary: Get all possible roles
+      responses:
+        200:
+          description: Successfully retrieved all roles that exist on the platform
 # ========================================AUTH/LOGOUT==================================================
   /auth:
     post:
