@@ -28,6 +28,11 @@ axiosClient.interceptors.response.use((config) => {
         window.location.reload();
 
     }
+    if (error.response.status == 403) {
+        router.push({path:"/404"});
+
+    }
+    
     return Promise.reject(error);
 });
 

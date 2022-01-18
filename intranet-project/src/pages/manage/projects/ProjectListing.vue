@@ -1,5 +1,5 @@
 <template>
-  <div id="project-listing">
+  <div class="project-listing">
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
@@ -36,6 +36,7 @@
 
       <!-- large screens-->
       <div
+        title="Open projectpagina"
         class="col-3 d-none d-lg-flex align-items-center justify-content-center"
         @click="onClick()"
       >
@@ -44,6 +45,7 @@
         </div>
       </div>
       <div
+        title="Aangemaakt"
         class="col d-none d-lg-flex align-items-center justify-content-center"
       >
         {{
@@ -55,6 +57,7 @@
         }}
       </div>
       <div
+        title="Laatst aangepast"
         class="col d-none d-lg-flex align-items-center justify-content-center"
       >
         {{
@@ -76,7 +79,7 @@
       </div>
 
       <div class="col-lg d-lg-flex align-items-center justify-content-center">
-        <span>
+        <span class="button-span-right">
           <ProjectButtons
             @removeProject="(id) => $emit('removeProject', id)"
             @archiveProject="(_project) => $emit('archiveProject', _project)"
@@ -121,7 +124,7 @@ export default {
 </script>
 
 <style scoped>
-#project-listing {
+.project-listing {
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
@@ -133,7 +136,6 @@ export default {
   border-radius: 0.5rem;
   margin-bottom: 0.3rem;
   font-size: 1.6vh;
-  border: solid var(--gold4) 2px;
 }
 .projectButton {
   font-weight: bold;
@@ -169,6 +171,9 @@ export default {
 }
 #archivedText {
   color: purple;
+}
+.button-span-right{
+  margin-left: auto;
 }
 .iconHolder {
   padding: 5px;

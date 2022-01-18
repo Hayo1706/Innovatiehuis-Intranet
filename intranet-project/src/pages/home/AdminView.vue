@@ -95,4 +95,9 @@ img {
   margin-right: 20px;
   margin-left: 20px;
 }
+.component-container button img{
+  height: 30px;
+  margin-right: 12px;
+  margin-left: 4px;
+}
 </style>

@@ -41,7 +41,6 @@ export default {
 <style  scoped>
 #search-input {
   margin-right: 4px;
-  font-family: AddeleThin;
   background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
 }
 </style>

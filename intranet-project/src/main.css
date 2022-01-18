@@ -88,7 +88,7 @@ body {
   border-radius: 0.5rem;
   background-color: var(--blue2);
   margin: 5px;
-  width: 100%;
+  width: calc(100% - 10px);
   align-items: center;
   display: flex;
   cursor: pointer;
@@ -115,13 +115,11 @@ body {
   transition: .3s
 }
 .listing-icon {
-  border-style: outset;
   border-radius: 50%;
 }
 
-.listing-icon:hover {
-  border-style: ridge;
-}
+/* .listing-icon:hover {
+} */
 
 #scrollable{
   max-height: fit-content;
@@ -251,4 +249,13 @@ p {
 /* Fix voor rare scrollruimte met onzichtbare alert wrapper */
 #app {
   overflow: hidden;
+}
+/* -------------------------------------------------------- */
+
+#search-input{
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+  font-family: AddeleSemiBold;
+}
+.accordion-button:focus{
+  box-shadow: none !important;
 }

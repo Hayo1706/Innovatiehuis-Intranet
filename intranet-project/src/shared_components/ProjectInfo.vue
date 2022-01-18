@@ -834,13 +834,19 @@ export default {
 <style scoped>
 
 .accordion-item {
-  background-color: rgba(255,255,255,0.7)
+  background-color: rgba(255,255,255,0.7);
+  border: none;
 }
 .accordion-button {
+  border: none;
   height: 2rem;
   background: var(--blue4);
   text-align: center;
   padding: 0px 1vw;
+}
+.accordion-item:first-of-type .accordion-button {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 .accordion-button:hover {
   background: var(--blue3);

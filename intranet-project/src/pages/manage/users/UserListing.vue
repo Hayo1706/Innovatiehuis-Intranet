@@ -1,5 +1,5 @@
 <template>
-  <div id="user-listing">
+  <div class="user-listing">
     <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
@@ -353,7 +353,7 @@ export default {
   color: white;
 }
 
-#user-listing {
+.user-listing {
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
@@ -365,7 +365,6 @@ export default {
   border-radius: 0.5rem;
   margin-bottom: 0.3rem;
   font-size: 1.6vh;
-  border: solid var(--gold4) 2px;
 }
 .userButton {
   font-weight: bold;
@@ -410,4 +409,12 @@ select {
 .iconHolder {
   border-radius: 10%;
 }
+.row select {
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+}
+.listing-icon {
+  border-style: none;
+  cursor: pointer;
+}
+
 </style>

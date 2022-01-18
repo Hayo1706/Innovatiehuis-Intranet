@@ -97,4 +97,7 @@ export default {
 .col {
   font-family: AddeleSemiBold;
 }
+#search-input{
+  font-family: AddeleSemiBold;
+}
 </style>

@@ -6,16 +6,16 @@
         v-if="project.is_archived"
         class="link"
         @click="handleArchiveProject(project)"
-        ><span class="listing-icon iconHolder"
+        ><span title="Project de-archiveren" class="listing-icon iconHolder"
           ><img src="@/assets/images/dearchive.png" /></span
       ></a>
 
       <a v-else class="link" @click="handleArchiveProject(project)">
-        <span class="listing-icon iconHolder"
+        <span title="Project archiveren" class="listing-icon iconHolder"
           ><img src="@/assets/images/archive.png" /></span
       ></a>
     </span>
-    <a class="link" v-show="canDelete()" @click="handleDeleteProject(project)"
+    <a class="link" title="Project verwijderen" v-show="canDelete()" @click="handleDeleteProject(project)"
       ><span class="listing-icon iconHolder"
         ><img src="@/assets/images/delete.png" /></span
     ></a>
@@ -77,6 +77,10 @@ export default {
 img {
   height: 40px;
   cursor: pointer;
+  opacity: 60%;
+}
+img:hover{
+  opacity: 80%;
 }
 .rotate {
   transform: rotate(180deg);
@@ -86,7 +90,7 @@ img {
   margin-right: 7px;
 }
 .iconHolder {
-  padding: 10px;
   display: inline-block;
 }
+
 </style>
