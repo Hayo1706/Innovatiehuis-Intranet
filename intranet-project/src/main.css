@@ -62,6 +62,24 @@ body {
   /*background-color: white;*/
 }
 
+.alert-bar {
+  position: fixed;
+  bottom: 0px;
+  margin: 1em;
+  border-radius: 0.5em;
+  border: 2px solid;
+  padding: 1rem;
+  width: 95vw;
+}
+.success {
+  background-color: green;
+  border-color: darkgreen;
+}
+.error {
+  background-color: red;
+  border-color: darkred;
+}
+
 .custom-link {
   color: var(--blue2);
 }
@@ -78,23 +96,23 @@ body {
   color: white;
   padding: 6px;
   text-decoration: none;
-    border: 0;
-    transition: .3s
+  border: 0;
+  transition: .3s
 }
 .full-button:hover{
-    background-color: var(--blue1);
-    transition: .3s;
-    color: white;
+  background-color: var(--blue1);
+  transition: .3s;
+  color: white;
 }
 .hover:hover{
-    background: white;
-    border-radius: 10px;
-    transition: .3s
+  background: white;
+  border-radius: 10px;
+  transition: .3s
 }
 .hoverDrag{
-    background: white;
-    border-radius: 10px;
-    transition: .3s
+  background: white;
+  border-radius: 10px;
+  transition: .3s
 }
 .listing-icon {
   border-style: outset;

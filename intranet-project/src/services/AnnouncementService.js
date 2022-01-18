@@ -3,8 +3,6 @@ import { jsonToJsDate } from './DataConverter';
 
 var AnouncementService = function () {
 
-
-
     async function getAnnouncementsByProject(projectid) {
         if (typeof projectid == 'undefined') {
             const { data } = await axiosClient.get(`/announcements`, { timeout: 2000 });

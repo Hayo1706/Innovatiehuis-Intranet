@@ -96,6 +96,7 @@
 <script>
 import AnnouncementService from "@/services/AnnouncementService.js";
 import PermissionService from "@/services/PermissionService";
+import AlertService from "@/services/AlertService";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 import Reply from "./Reply.vue";
 
@@ -138,9 +139,19 @@ export default {
         message: 'Wil je deze mededeling echt verwijderen?'
       });
       if (ok) {
-        AnnouncementService.deleteAnnouncement(this.id);
-        alert("Mededeling is verwijderd!");
-        this.$emit("reload");
+        AnnouncementService.deleteAnnouncement(this.id)
+          .then((response) => {
+            console.log(response.status, response.response.message);
+            AlertService.alert(response.response.message, "success");
+            this.$emit("reload");
+          })
+          .catch((err) => {
+            console.log({err});
+            if (err.response) {
+              AlertService.alert(err.response.data.response.message, "error");
+              console.log(err.response.status, err.response.data.response.message);
+            }
+          });
       }
     },
     canEditDelete() {
@@ -158,15 +169,17 @@ export default {
       if (ok) {
         AnnouncementService.editAnnouncement(this.id, this.editData)
           .then((response) => {
-            console.log(response);
             this.editing = false;
             this.editData.title = "";
             this.editData.content = "";
+            console.log(response.status, response.response.message);
+            AlertService.alert(response.response.message, "success");
             this.$emit("reload");
           })
           .catch((err) => {
             if (err.response) {
-              console.log(err.response.status);
+              AlertService.alert(err.response.data.response.message, "error");
+              console.log(err.response.status, err.response.data.response.message);
             }
           });
       }
@@ -185,13 +198,15 @@ export default {
       if (ok) {
         AnnouncementService.addReply(this.id, this.newReply)
           .then((response) => {
-            console.log(response);
             this.newReply.content = "";
+            console.log(response.status, response.response.message);
+            AlertService.alert(response.response.message, "success");
             this.$emit("reload");
           })
           .catch((err) => {
             if (err.response) {
-              console.log(err.response.status);
+              AlertService.alert(err.response.data.response.message, "error");
+              console.log(err.response.status, err.response.data.response.message);
             }
           });
       }

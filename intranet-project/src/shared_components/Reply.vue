@@ -125,4 +125,5 @@ export default {
   background-color: white;
   margin: 10px 0px;
 }
+
 </style>
