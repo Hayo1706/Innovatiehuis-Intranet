@@ -9,7 +9,7 @@ from flask_jwt_extended import jwt_required, \
 from src.services.permissions.permissions import check_jwt
 from ..services.extensions import bcrypt
 from itsdangerous import URLSafeSerializer
-
+import re
 
 def login():
     try:
@@ -66,18 +66,17 @@ def change_password():
         serializer = URLSafeSerializer(config.PASSWORD_CHANGE_SECRET_KEY)
         data = serializer.loads(token)
         try:
-            first_time_password(data[1], new_password, data[0])
+            return first_time_password(data[1], new_password, data[0])
         except Exception:
             response('invalid token', 400)
     else:
-        change_existing_password(old_password, new_password)
+        return change_existing_password(old_password, new_password)
 
 
 def first_time_password(old_password, new_password, user_id):
     user = query("SELECT * FROM users WHERE userid =%(userid)s", {'userid': user_id})[0]
     if user['password_hash'] == old_password:
-        set_password(bcrypt.generate_password_hash(new_password).decode('utf-8'), user_id)
-        return response(f"User {user_id} successfully updated", 200)
+        return set_password(new_password, user_id)
     return response("Token invalid", 401)
 
 
@@ -87,23 +86,48 @@ def change_existing_password(old_password, new_password):
     try:
         user = query("SELECT * FROM users WHERE userid =%(userid)s", {'userid': user_id})[0]
         if bcrypt.check_password_hash(user['password_hash'], old_password):
-            set_password(bcrypt.generate_password_hash(new_password).decode('utf-8'), user_id)
-            return response(f"User {user_id} successfully updated", 200)
+            return set_password(new_password, user_id)
         return response("Incorrect current password", 401)
     except KeyError:
         return response("Invalid body", 400)
 
 
-def validate_password(password):
-    if len(password) > config.MAX_PASSWORD_LENGTH:
-        return response('Password length exceeded max length of ' + config.MAX_PASSWORD_LENGTH, 400)
-    if len(password) < config.MIN_PASSWORD_LENGTH:
-        return response('Password must be at least ' + config.MAX_PASSWORD_LENGTH + "characters long", 400)
-
-
 def set_password(password, user_id):
-    validate_password(password)
+    """
+    Verify the strength of 'password'
+    Returns a dict indicating the wrong criteria
+    A password is considered strong if:
+        8 characters length or more
+        1 digit or more
+        1 symbol or more
+        1 uppercase letter or more
+        1 lowercase letter or more
+    """
+
+    # calculating the length
+    if len(password) > config.MAX_PASSWORD_LENGTH:
+        return response('Password length exceeded max length of ' + str(config.MAX_PASSWORD_LENGTH), 400)
+    if len(password) < config.MIN_PASSWORD_LENGTH:
+        return response('Password must be at least ' + str(config.MAX_PASSWORD_LENGTH) + "characters long", 400)
+
+    # searching for digits
+    if config.FORCE_NUMBERS and re.search(r"\d", password) is None:
+        return response('Invalid password: No digits present',400)
+
+    # searching for uppercase
+    if config.FORCE_CAPITAL_LETTERS and re.search(r"[A-Z]", password) is None:
+        return response('Invalid password: No uppercase letters present',400)
+
+    # searching for lowercase
+    if re.search(r"[a-z]", password) is None:
+        return response('Invalid password: No lowercase letters present',400)
+
+    # searching for symbols
+    if config.FORCE_SPECIAL_CHARACTER and re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None:
+        return response('Invalid password: No special characters present',400)
+
     query_update(
         "UPDATE users SET password_hash=%(password_hash)s "
         "WHERE userid=%(userid)s",
-        {"password_hash": password, "userid": user_id})
+        {"password_hash": bcrypt.generate_password_hash(password).decode('utf-8'), "userid": user_id})
+    return response("Password succesfully updated",200)
