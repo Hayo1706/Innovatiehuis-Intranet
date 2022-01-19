@@ -34,7 +34,7 @@
             <button
               class="deleteButton"
               v-show="canUpdateProject()"
-              @click="removeUser(member.userid)"
+              @click="removeUserFromList(member.userid)"
             >
               x
             </button>
@@ -56,7 +56,7 @@
             <button
               class="deleteButton"
               v-show="canUpdateProject()"
-              @click="removeParent(parent.projectid)"
+              @click="removeProjectFromList('parents', parent.projectid)"
             >
               x
             </button>
@@ -76,7 +76,7 @@
             <button
               class="deleteButton"
               v-show="canUpdateProject()"
-              @click="removeChild(child.projectid)"
+              @click="removeProjectFromList('children', child.projectid)"
             >
               x
             </button>
@@ -121,24 +121,6 @@
           {{ user.first_name }} {{ user.last_name }}
         </div>
       </div>
-      <div v-if="this.selectedUsers.length != 0">
-        <span
-          class="text"
-          v-for="user in this.selectedUsers"
-          v-bind:key="user.userid"
-        >
-          {{ user.first_name }} {{ user.last_name }}
-          <button
-            class="deleteButton"
-            v-show="canUpdateProject()"
-            @click="removeSelectedUser(user.userid)"
-          >
-            x</button
-          >,&nbsp;</span
-        >
-        <br />
-        <br />
-      </div>
     </div>
     <div v-show="canUpdateProject()">
       Overkoepelende projecten toevoegen:
@@ -170,24 +152,6 @@
         >
           {{ parent.project_name }}
         </div>
-      </div>
-      <div v-if="this.selectedParents.length != 0">
-        <span
-          class="text"
-          v-for="parent in this.selectedParents"
-          v-bind:key="parent.projectid"
-        >
-          {{ parent.project_name }}
-          <button
-            class="deleteButton"
-            v-show="canUpdateProject()"
-            @click="removeSelectedParent(parent.projectid)"
-          >
-            x</button
-          >,&nbsp;</span
-        >
-        <br />
-        <br />
       </div>
     </div>
     <div v-show="canUpdateProject()">
@@ -221,23 +185,6 @@
           {{ child.project_name }}
         </div>
       </div>
-      <div v-if="this.selectedChildren.length != 0">
-        <span
-          class="text"
-          v-for="child in this.selectedChildren"
-          v-bind:key="child.projectid"
-        >
-          {{ child.project_name }}
-          <button
-            class="deleteButton"
-            v-show="canUpdateProject()"
-            @click="removeSelectedChild(child.projectid)"
-          >
-            x</button
-          >,&nbsp;</span
-        >
-        <br />
-      </div>
 
       <br />
       <button class="addButton" @click="updateProjectDetails()">
@@ -266,24 +213,19 @@ export default {
       membersOpen: false,
       projectname: "",
       projectdescription: "",
-      memberToAdd: null,
+
       userSearchTerm: "",
-      users: [],
       filteredUsers: [],
+
+      users: [],
       projects: [],
 
-      parentToAdd: null,
       parentSearchTerm: "",
       filteredParents: [],
 
-      childToAdd: null,
       childSearchTerm: "",
       filteredChildren: [],
       disabled: false,
-
-      selectedUsers: [],
-      selectedParents: [],
-      selectedChildren: [],
     };
   },
   mounted() {
@@ -313,50 +255,53 @@ export default {
           }
           alert("Er ging iets mis, probeer later opnieuw");
         });
-    },
-    selectUser(user) {
-      this.selectedUsers.push(user);
-      this.userSearchTerm = "";
-    },
-    selectParent(project) {
-      this.selectedParents.push(project);
-      this.parentSearchTerm = "";
-    },
-    selectChild(project) {
-      this.selectedChildren.push(project);
-      this.childSearchTerm = "";
-    },
-    removeSelectedParent(id) {
-      this.selectedParents = this.selectedParents.filter((project) => {
-        return project.projectid != id;
-      });
-    },
-    removeSelectedChild(id) {
-      this.selectedChildren = this.selectedChildren.filter((project) => {
-        return project.projectid != id;
-      });
-    },
-    removeSelectedUser(id) {
-      this.selectedUsers = this.selectedUsers.filter((user) => {
-        return user.userid != id;
-      });
-    },
-    addUsers() {
-      UserService.addUserToProject(
-        this.project.projectid,
-        this.memberToAdd.userid
-      )
+
+      ProjectService.updateMembersOfProject(this.project.projectid, {
+        ids: this.getUserIds(this.members),
+      })
         .then(() => {
-          this.memberToAdd = null;
-          this.loadMembers();
+          console.log("users added");
         })
         .catch((err) => {
+          console.log(err);
           //invalid operation on server
           if (err.response) {
             console.log(err.response.status);
           }
           alert("Er ging wat mis, probeer later opnieuw");
         });
+      this.refreshAllAcordeons();
+      this.openDetails();
+    },
+    selectUser(user) {
+      this.members.push(user);
+      this.userSearchTerm = "";
+    },
+    selectParent(project) {
+      this.parents.push(project);
+      this.parentSearchTerm = "";
+    },
+    selectChild(project) {
+      this.children.push(project);
+      this.childSearchTerm = "";
+    },
+    removeProjectFromList(list, id) {
+      if (list == "parents") {
+        this.parents = this.parents.filter((project) => {
+          return project.projectid != id;
+        });
+      } else if (list == "children") {
+        this.children = this.children.filter((project) => {
+          return project.projectid != id;
+        });
+      } else {
+        throw new Error("Unsupported operation");
+      }
+    },
+    removeUserFromList(id) {
+      this.members = this.members.filter((user) => {
+        return user.userid != id;
+      });
     },
     addParents() {
       ProjectService.addParentToProject(
@@ -396,10 +341,7 @@ export default {
     },
     removeChild(childid) {
       ProjectService.removeChildFromProject(this.project.projectid, childid)
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.loadChildren();
-        })
+        .then(() => {})
         .catch((err) => {
           //invalid operation on server
           if (err.response) {
@@ -449,8 +391,7 @@ export default {
           (item.first_name + " " + item.last_name)
             .toLowerCase()
             .includes(this.userSearchTerm.toLowerCase()) &&
-          !this.userListContainsUser(this.members, item.userid) &&
-          !this.userListContainsUser(this.selectedUsers, item.userid)
+          !this.userListContainsUser(this.members, item.userid)
         );
       });
     },
@@ -493,11 +434,7 @@ export default {
             .toLowerCase()
             .includes(this.childSearchTerm.toLowerCase()) &&
           !this.projectListContainsProject(this.children, item.projectid) &&
-          item.projectid != this.project.projectid &&
-          !this.projectListContainsProject(
-            this.selectedChildren,
-            item.projectid
-          )
+          item.projectid != this.project.projectid
         );
       });
     },
@@ -508,8 +445,7 @@ export default {
             .toLowerCase()
             .includes(this.parentSearchTerm.toLowerCase()) &&
           !this.projectListContainsProject(this.parents, item.projectid) &&
-          item.projectid != this.project.projectid &&
-          !this.projectListContainsProject(this.selectedParents, item.projectid)
+          item.projectid != this.project.projectid
         );
       });
     },
@@ -536,6 +472,7 @@ export default {
     },
     handleParentsLoading() {
       if (this.accordeonIsOpen()) {
+        this.parentSearchTerm = "";
         this.loadParents();
         ProjectService.getProjects()
           .then((response) => {
@@ -547,7 +484,6 @@ export default {
             }
           });
       } else {
-        this.parentToAdd = null;
         this.parentSearchTerm = "";
       }
     },
@@ -566,23 +502,15 @@ export default {
     },
     handleChildrenLoading() {
       if (this.accordeonIsOpen()) {
+        this.childSearchTerm = "";
         this.loadChildren();
-        ProjectService.getProjects()
-          .then((response) => {
-            this.projects = response;
-          })
-          .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
-          });
       } else {
-        this.childToAdd = null;
         this.childSearchTerm = "";
       }
     },
     handleMembersLoading() {
       if (this.accordeonIsOpen()) {
+        this.userSearchTerm = "";
         this.loadMembers();
 
         UserService.getUsers()
@@ -595,7 +523,6 @@ export default {
             }
           });
       } else {
-        this.memberToAdd = null;
         this.userSearchTerm = "";
       }
     },
@@ -630,6 +557,20 @@ export default {
     },
     accordeonIsOpen() {
       return this.open;
+    },
+    getProjectIds(projectList) {
+      let ids = [];
+      for (let project of projectList) {
+        ids.push(project.projectid);
+      }
+      return ids;
+    },
+    getUserIds(userList) {
+      let ids = [];
+      for (let user of userList) {
+        ids.push(user.userid);
+      }
+      return ids;
     },
     refreshAllAcordeons() {
       var arr = document.getElementsByClassName("accordion_button");

@@ -103,8 +103,8 @@ def read_users(project_id):
 @check_permissions(Projects.may_update)
 def update_users(project_id):
     try:
-        body = connexion.request.json['project']
-        new_ids = body['userids']
+        body = connexion.request.json
+        new_ids = body['ids']
     except KeyError:
         return response("Invalid body", 400)
 

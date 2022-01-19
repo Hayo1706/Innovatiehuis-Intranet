@@ -50,23 +50,21 @@ var ProjectService = function () {
         return data;
     }
 
-    async function addParentToProject(projectid, parentid) {
-        const { data } = await axiosClient.post(`/projects/${projectid}/parents/${parentid}`, { timeout: 2000 });
+    async function updateMembersOfProject(projectid, memberids) {
+        const { data } = await axiosClient.put(`/projects/${projectid}/users`, memberids, { timeout: 2000 });
         return data;
     }
-    async function removeParentFromProject(projectid, parentid) {
-        const { data } = await axiosClient.delete(`/projects/${projectid}/parents/${parentid}`, { timeout: 2000 });
+    async function updateParentsOfProject(projectid, parentids) {
+        const { data } = await axiosClient.put(`/projects/${projectid}/parents`, parentids, { timeout: 2000 });
         return data;
     }
 
-    async function addChildToProject(projectid, childid) {
-        const { data } = await axiosClient.post(`/projects/${projectid}/children/${childid}`, { timeout: 2000 });
+
+    async function updateChildrenOfProject(projectid, childids) {
+        const { data } = await axiosClient.put(`/projects/${projectid}/children`, childids, { timeout: 2000 });
         return data;
     }
-    async function removeChildFromProject(projectid, childid) {
-        const { data } = await axiosClient.delete(`/projects/${projectid}/children/${childid}`, { timeout: 2000 });
-        return data;
-    }
+
     return {
         getProjects,
         getProjectById,
@@ -77,10 +75,11 @@ var ProjectService = function () {
         getChildrenById,
         addProject,
         updateProjectNameDescription,
-        addParentToProject,
-        removeParentFromProject,
-        addChildToProject,
-        removeChildFromProject
+        updateChildrenOfProject,
+        updateMembersOfProject,
+        updateParentsOfProject
+
+
     }
 
 
