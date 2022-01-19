@@ -22,6 +22,14 @@
       >
         <img src="../../assets/images/users_icon.png" />Gebruikersoverzicht
       </button>
+      <button
+          title="Rollenoverzicht"
+          class="full-button mobileRow extraLarge"
+          @click="rolesClick()"
+          v-if="this.canSeeUsers()"
+      >
+        <img src="../../assets/images/users_icon.png" />Rollenoverzicht
+      </button>
       <hr />
       <button
         title="Project aanmaken"
@@ -31,7 +39,7 @@
         type="button"
         v-if="this.canCreateProjects()"
       >
-        Project aanmaken
+        <img src="../../assets/images/add_project.png" />Project aanmaken
       </button>
       <button
         title="Gebruiker aanmaken"
@@ -40,7 +48,7 @@
         data-bs-toggle="modal"
         type="button"
         v-if="this.canCreateUsers()"
-      >
+      ><img src="../../assets/images/add_user.png" />
         Gebruiker toevoegen
       </button>
     </div>
@@ -66,6 +74,9 @@ export default {
     },
     usersClick() {
       this.$router.push("/manage/users");
+    },
+    rolesClick() {
+      this.$router.push("/manage/roles")
     },
     canSeeProjects() {
       return PermissionService.userHasPermission("may_read_any_project");
