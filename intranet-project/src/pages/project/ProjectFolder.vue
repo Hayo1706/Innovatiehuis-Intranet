@@ -14,20 +14,8 @@
           <div class="col-4">
             <img
               class="foldersImage"
-              v-if="this.folderType == 'back'"
-              src=".\..\..\assets\images\folder.png"
-              draggable="false"
-            />
-            <img
-              class="foldersImage"
               v-if="this.folderType == 'normal'"
               src=".\..\..\assets\images\folder.png"
-              draggable="false"
-            />
-            <img
-              class="foldersImage"
-              v-if="this.folderType == 'shared'"
-              src=".\..\..\assets\images\shared_folder.png"
               draggable="false"
             />
           </div>
@@ -57,8 +45,8 @@
         <li>Verplaatsen naar:</li>
         <ul id="drop-down-menu">
           <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
-            <li v-if="folder != folderName">
-              {{ folder }}
+            <li v-if="folder.name != folderName">
+              {{ folder.name }}
             </li>
           </span>
         </ul>
@@ -151,7 +139,7 @@ export default {
       inputName.setAttribute("disabled", "")
     },
     moveToFolder(folder) {
-      var targetPath = this.currentPath + "/" + folder;
+      var targetPath = folder.path;
       console.log(targetPath, this.folderPath, this.projectID)
       FilestorageService.moveFolder(this.projectID, this.folderPath, targetPath, "")
         .then((response) => {
@@ -167,7 +155,7 @@ export default {
         });
     },
     confirmMove(folder){
-      if(confirm("Are you sure you want to move " + this.folderName + " to " + folder + "?")){
+      if(confirm("Are you sure you want to move " + this.folderName + " to " + folder.name + "?")){
         this.moveToFolder(folder)
       }
     },

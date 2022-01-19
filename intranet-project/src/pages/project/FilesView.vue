@@ -10,38 +10,21 @@
         </ProjectFilesHeader>
     </div>
       <div class="row">
-        <div
-            v-for="file in files" :key="file"
-            class="col-sm-2"
-        >
-          <div v-if="fileNameInSearchterm(file)">
+        <div v-for="file in files" :key="file" class="col-sm-2">
+          <div v-if="fileNameInSearchterm(file.name)">
             <ProjectFile
-              :projectid="this.$route.params.id"
-              :name="file"
-              :type="file.split('.').pop()"
-              :path="this.folderPath + '/' + file"
-              :directorypath="this.folderPath"
-              :shared="'no'"
+              :projectID="this.$route.params.id"
+              :name="file.name"
+              :fileType="file.name.split('.').pop()"
+              :path="file.path"
+              :type="file.type"
+              :folders="this.folders"
+
               @fileDeleted="setFiles()"
               @nameChanged="setFiles()"
               @fileMoved="setFiles()"
               draggable="true"
-              @dragstart="startDrag($event, this.folderPath + '/' + file)"
-            />
-          </div>
-        </div>
-        <div
-            v-for="file in shared_files" :key="file"
-            class="col-sm-2"
-        >
-          <div v-if="fileNameInSearchterm(file.name)">
-            <ProjectFile
-              :projectid="file['projectid']"
-              :name="file['name']"
-              :type="file['name'].split('.').pop()"
-              :path="file['path']"
-              :directorypath="file['path']"
-              :shared="'yes'"
+              @dragstart="startDrag($event, file.path)"
             />
           </div>
         </div>
@@ -50,8 +33,6 @@
 </template>
 
 <script>
-import FilestorageService from "@/services/FilestorageService.js";
-import ProjectService from "@/services/ProjectService.js";
 import ProjectFilesHeader from "./ProjectFilesHeader.vue";
 import ProjectFile from "./ProjectFile.vue";
 export default {
@@ -72,19 +53,23 @@ export default {
     ProjectFile,
   },
   name: "FilesView",
-  props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'currentFiles', 'sharedParents'],
+  props: ['projectID', 'parentID', 'currentPath', 'previousPath', 'currentFolders', 'currentFiles'],
   watch: {
-    currentPath(newPath) {
+    currentPath: function(newPath){
       this.folderPath = newPath;
-      this.setFiles();
     },
+    currentFiles(newFiles){
+      this.files = newFiles;
+    },
+    currentFolders(newFolders){
+      this.folders = newFolders;
+    }
   },
   data: function () {
     return {
       files: [],
+      folders: [],
       folderPath: this.currentPath,
-      shared_files: [],
-      projectid: this.$route.params.id,
       searchTerm: "",
     };
   },
@@ -95,49 +80,7 @@ export default {
     setSearchTerm(value) {
       this.searchTerm = value;
     },
-    setFiles() {
-      console.log(this.projectID, this.folderPath)
-      FilestorageService.getFilesOfPath(this.projectID, this.folderPath)
-        .then((response) => {
-          this.files = response;
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-        });
-    },
-    getSharedFiles(){
-      this.shared_files = []
-      ProjectService.getParentsById(this.projectid)
-      .then((response) => {
-        for(var project_index in response){
-          var parentid = response[project_index].projectid
-          if(response[project_index].shared_files.length > 0){
-            var project_shared_files = response[project_index].shared_files.split(" ")
-            for(var file_index in project_shared_files){
-              let file_path = "/" + project_shared_files[file_index]
-              let file_path_array = file_path.split("/")
-              let file_name = file_path_array[file_path_array.length-1]
-              console.log(response[project_index].project_name)
-              this.shared_files.push({"projectid": parentid, "path": file_path, "name": file_name})
-            }
-          }
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-          if (err.response) {
-            console.log(err.response.status);
-          }
-      })
-    }
-  },
-  async created() {
-    this.setFiles();
-    this.getSharedFiles();
-
-  },
+  }
 };
 </script>
 

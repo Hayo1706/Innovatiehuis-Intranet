@@ -49,52 +49,31 @@
         </div>
 
         <div v-for="folder in searchedFolders" :key="folder" class="col-sm-4">
-          <div v-if="folderNameInSearchTerm(folder)">
-            <ProjectFolder
-              :folderName="folder"
-              :folderType="'normal'"
-              :folderPath="this.folderPath + '/' + folder"
-              :projectID="this.projectID"
-              :currentFolders="this.currentFolders"
-              :currentPath="this.folderPath"
-              :previousPath="this.previousPath"
+          <ProjectFolder
+            :folderName="folder.name"
+            :folderType="folder.type"
+            :folderPath="folder.path"
+            :projectID="folder.projectID"
+            :currentFolders="this.currentFolders"
+            :currentPath="this.folderPath"
+            :previousPath="this.previousPath"
 
-              @currentPathChanged="currentPathChanged"
-              @folderMoved="currentFoldersChanged()"
-              @folderDeleted="currentFoldersChanged()"
-              @nameChanged="currentFoldersChanged()"
-              
-      
-              @dragenter="addClass"
-              @dragleave.self="removeClass"
-              @mouseleave.self="removeClass"
+            @currentPathChanged="currentPathChanged"
+            @folderMoved="currentFoldersChanged()"
+            @folderDeleted="currentFoldersChanged()"
+            @nameChanged="currentFoldersChanged()"
+            
+    
+            @dragenter="addClass"
+            @dragleave="removeClass"
+            @mouseleave.self="removeClass"
 
-              @drop="onDrop($event, this.folderPath + '/' + folder)"
-              @dragenter.prevent
-              @dragover.prevent
-              draggable="true"
-              @dragstart="startDrag($event, this.folderPath + '/' + folder)"
-            />
-          </div>
-        </div>
-
-        <div v-for="parent in allSharedParents" :key="parent" class="col-sm-4">
-          <div v-if="folderNameInSearchTerm(parent['project_name'])">
-            <ProjectFolder
-              :folderName="parent['project_name']"
-              :folderType="'shared'"
-              :folderPath="this.folderPath + '?parent=' + parent['projectid']"
-              :projectID="parent['projectid']"
-              :currentFolders="this.currentFolders"
-              :currentPath="this.folderPath + '?parent=' + parent['projectid']"
-              :previousPath="this.folderPath"
-
-              @currentPathChanged="currentPathChanged"
-              @folderMoved="currentFoldersChanged()"
-              @folderDeleted="currentFoldersChanged()"
-              @nameChanged="currentFoldersChanged()"
-            />
-          </div>
+            @drop="onDrop($event, folder.path)"
+            @dragenter.prevent
+            @dragover.prevent
+            draggable="true"
+            @dragstart="startDrag($event, folder.path)"
+          />
         </div>
 
       </div>
@@ -126,8 +105,9 @@ export default {
   name: "FoldersView",
   props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'sharedParents'],
   watch: {
-    currentFolders: function(){
-      this.setSearchedFolders();
+    currentFolders: function(newFolders){
+      console.log("huh", newFolders)
+      this.setSearchedFolders(newFolders);
     },
     currentPath: function(newPath){
       this.folderPath = newPath;
@@ -185,20 +165,22 @@ export default {
     },
     setSearchTerm(searchTerm) {
       this.searchTerm = searchTerm;
-      this.setSearchedFolders();
+      this.setSearchedFolders(this.searchTerm);
     },
     folderNameInSearchTerm(folderName, searchTerm) {
       return folderName.includes(searchTerm) || searchTerm == null;
     },   
-    setSearchedFolders(){
-      console.log("test",this.currentFolders)
-      if(this.searchTerm == "" || this.searchTerm == null){
+    setSearchedFolders(searchTerm){
+      if(searchTerm == "" || searchTerm == null){
           this.searchedFolders = this.currentFolders;  
       }
       else{
         this.searchedFolders = []
+        console.log(this.currentFolders)
         for(var folder_index in this.currentFolders){
-          if(this.folderNameInSearchTerm(this.currentFolders[folder_index], this.searchTerm)){
+          var folderName = this.currentFolders[folder_index].name
+          console.log(folderName, this.searchTerm)
+          if(this.folderNameInSearchTerm(String(folderName), this.searchTerm)){
             this.searchedFolders.push(this.currentFolders[folder_index])
           }
         }

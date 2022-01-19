@@ -18,7 +18,6 @@
               <FilesView ref="child" 
               :currentPath="this.currentPath"
               :projectID="this.projectID"
-              :sharedParents="this.sharedParents"
               :currentFolders="this.currentFolders"
               :currentFiles="this.currentFiles"/>
           </div>
@@ -67,7 +66,6 @@ export default {
     },
     currentPathChanged(path) {
       this.projectID = this.getProjectId();
-
       this.previousPath = this.currentPath;
       this.currentPath = path;
       this.$router.push("/project/" + this.projectID + this.currentPath)
@@ -84,16 +82,19 @@ export default {
       return this.$route.fullPath.split("/project/")[1].split(this.$route.params.id)[1]
     },
     getProjectId(){
-      if(this.$route.query.child != null){
-        return this.$route.query.child
+      if(this.$route.query.parent != null){
+        return this.$route.query.parent
       }
       return this.$route.params.id
     },
     setCurrentFolders() {
       FilestorageService.getFoldersOfProject(this.projectID, this.currentPath)
         .then((response) => {
-          this.currentFolders = response
-
+          this.currentFolders = []
+          for(var folder in response){
+            this.currentFolders.push({'name': response[folder], 'path': this.currentPath + '/' + response[folder], 'projectID': this.projectID, 'type':'normal'})
+          }
+          return this.currentFolders
         })
         .catch((err) => {
           if (err.response) {
@@ -105,8 +106,12 @@ export default {
     setCurrentFiles() {
       FilestorageService.getFilesOfPath(this.projectID, this.currentPath)
       .then((response) => {
-        this.currentFiles = response;
-        return response;
+        this.currentFiles = []
+        for(var file in response){
+          this.currentFiles.push({'name': response[file], 'path': this.currentPath + '/' + response[file], 'projectID': this.projectID, 'type':'normal'})
+        }
+        console.log(this.currentFiles)
+        return this.currentFiles
       })
       .catch((err) => {
         if (err.response) {
@@ -114,36 +119,6 @@ export default {
         }
         return []
       });
-    },
-    setSharedParents(){
-      this.sharedParents = []
-      ProjectService.getParentsById(this.projectID)
-      .then((response) => {
-        this.sharedParents = response
-      })
-      .catch((err) => {
-        console.log(err)
-          if (err.response) {
-            console.log(err.response.status);
-          }
-      })
-    },
-    setParentProjects() {
-      this.projectParents = []
-      ProjectService.getParentsById(this.projectID)
-      .then((response) => {
-        for(var index in response){
-          var parentID = response[index].projectID
-          var parentName = response[index].project_name
-          this.projectParents.push({"projectID": parentID, "projectName": parentName})
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-          if (err.response) {
-            console.log(err.response.status);
-          }
-      })
     },
     setProjectName() {
       ProjectService.getProjectById(this.$route.params.id)
@@ -163,7 +138,6 @@ export default {
   async created() {
     this.setProjectName();
     this.setCurrentFolders();
-    this.setSharedParents();
     this.setCurrentFiles();
 
   },

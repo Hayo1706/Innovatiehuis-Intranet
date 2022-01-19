@@ -12,7 +12,7 @@
             draggable="false"
             class="fileImage"
             :src="this.getTypeImage()"
-            v-bind:id="this.type"/>
+            v-bind:id="this.fileType"/>
         <input
         v-on:keyup.enter="renameFile()"
         class="fileName"
@@ -26,16 +26,16 @@
     </div>
       
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
-      <li v-if="this.shared == 'no'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
-      <li v-if="this.shared == 'no'" v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
+      <li v-if="this.shared != 'no'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
+      <li v-if="this.shared != 'no'" v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
       <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
-      <li v-if="this.shared == 'no'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
+      <li v-if="this.shared != 'no'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
     </ul>
-    <ul id="drop-down-menu" v-if="moveMenu == true && this.shared == 'no'">
+    <ul id="drop-down-menu" v-if="moveMenu == true && this.shared != 'no'">
       <li>Verplaatsen naar:</li>
       <ul id="drop-down-menu">
         <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">
-          {{ folder }}
+          {{ folder.name }}
         </li>
       </ul>
     </ul>
@@ -49,20 +49,18 @@ import PermissionService from "@/services/PermissionService.js";
 export default {
   name: "ProjectFile",
   props: {
-    projectid: { type: String, required: true },
+    projectID: { type: String, required: true },
     name: { type: String, required: true },
-    type: { type: String, required: false },
+    fileType: { type: String, required: false },
     path: { type: String, required: true },
-    directorypath: { type: String, required: true },
-    shared: { type: String, required: true },
+    type: { type: String, required: true },
+    folders: { type: Array, required: true },
   },
   data: function () {
     return {
       viewMenu: false,
       moveMenu: false,
       fileName: this.name,
-      folders: [],
-      fileType: this.type,
       fileTypes: {
         jpg: require("./../../assets/images/file_icons/Jpg.png"),
         jpeg: require("./../../assets/images/file_icons/Jpeg.png"),
@@ -78,7 +76,7 @@ export default {
   },
   methods: {
       downloadFile(){
-        FilestorageService.downloadFile(this.projectid, this.path)
+        FilestorageService.downloadFile(this.projectID, this.path)
         .then((response) => { 
           const url = window.URL.createObjectURL(new Blob([response.data]))
           const link = document.createElement('a')
@@ -90,7 +88,7 @@ export default {
         }).catch(console.error)
       },
       deleteFile(){
-        FilestorageService.deleteFile(this.projectid, this.path)
+        FilestorageService.deleteFile(this.projectID, this.path)
         .then(() => {
           this.$emit("fileDeleted");
         })
@@ -102,9 +100,10 @@ export default {
       },
       renameFile() {
         this.disableInput();
+        alert(this.fileType)
         var newFileName = this.fileName + "." + this.fileType
-        if(this.name != newFileName && newFileName != this.name + this.type){
-          FilestorageService.renameFile(this.projectid, this.path, newFileName)
+        if(this.name != newFileName && newFileName != this.name + this.fileType){
+          FilestorageService.renameFile(this.projectID, this.path, newFileName)
             .then((response) => {
               console.log(response.data);
               this.$emit("nameChanged");
@@ -131,20 +130,9 @@ export default {
         var inputName = document.getElementById(this.name)
         inputName.setAttribute("disabled", "")
       },
-      setFolders() {
-        FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
-          .then((response) => {
-            this.folders = response;
-          })
-          .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
-          });
-      },
       moveFile(target_folder) {
-        var target_path = this.directorypath + '/' + target_folder
-        FilestorageService.moveFile(this.projectid, this.path, target_path)
+        var target_path = target_folder.path
+        FilestorageService.moveFile(this.projectID, this.path, target_path)
         .then(() => {
             this.$emit("fileMoved");
           })
@@ -155,7 +143,7 @@ export default {
           });
       },
       getTypeImage() {
-        var result = this.fileTypes[this.type];
+        var result = this.fileTypes[this.fileType];
         result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
         return result
       },
