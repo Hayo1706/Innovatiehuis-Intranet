@@ -1,345 +1,220 @@
 <template>
-  <div v-if="canUpdateProject()">
+  <div>
     Naam:
     <textarea
+      v-if="canUpdateProject()"
       oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
       onclick="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
       class="area form-control"
       v-model="projectname"
     />
-    <button class="addButton" @click="updateNameDescription()">Wijzigen</button>
+    <div v-else class="text">
+      {{ projectname }}
+    </div>
     <br />Beschrijving:
     <textarea
+      v-if="canUpdateProject()"
       oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
       onclick="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
       class="area form-control"
       v-model="projectdescription"
     />
-    <button class="addButton" @click="updateNameDescription()">Wijzigen</button>
-    <br />Leden toevoegen:
-    <form autocomplete="off">
-      <SearchBar
-        v-show="canUpdateProject()"
-        placeholder="Zoek gebruikers..."
-        :id="'searchUsersBar' + this.project.projectid"
-        autocomplete="off"
-        class="searchbar"
-        @searchBarChanged="
-          (searchTerm) => {
-            handleSearchUser(searchTerm);
-          }
-        "
-        v-bind:searchTerm="this.userSearchTerm"
-      ></SearchBar>
-    </form>
-    <div
-      class="dropdown-menu"
-      :id="'userSearchDropdown' + this.project.projectid"
-    >
-      <div
-        class="dropdown-item"
-        v-for="user in filteredUsers"
-        v-bind:key="user.userid"
-        @click="selectUser(user)"
-      >
-        {{ user.first_name }} {{ user.last_name }}
-      </div>
+    <div v-else class="text">
+      {{ projectdescription }}
     </div>
-    <div v-if="memberToAdd">
-      {{ this.memberToAdd.first_name }} {{ this.memberToAdd.last_name }}
-      <button
-        @click="addUser()"
-        class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-      >
-        toevoegen
-      </button>
-    </div>
-
-    <div v-for="member in this.members" v-bind:key="member.userid">
-      <span class="full-button" @click="navigateUser(member.userid)"
-        >{{ member.first_name }} {{ member.last_name }}</span
-      >
-      <button
-        class="userDeleteButton"
-        v-show="canUpdateProject()"
-        @click="removeUser(member.userid)"
-      >
-        x
-      </button>
-    </div>
-
-    <div v-if="this.members.length == 0" class="text">Geen resultaten</div>
-    <br />Overkoepelende projecten toevoegen:
-    <form autocomplete="off">
-      <SearchBar
-        v-show="canUpdateProject()"
-        placeholder="Zoek projecten"
-        :id="'searchParentsBar' + this.project.projectid"
-        autocomplete="off"
-        class="searchbar"
-        @searchBarChanged="
-          (searchTerm) => {
-            handleSearchParent(searchTerm);
-          }
-        "
-        v-bind:searchTerm="this.parentSearchTerm"
-      ></SearchBar>
-    </form>
-    <div
-      class="dropdown-menu"
-      :id="'parentSearchDropdown' + this.project.projectid"
-    >
-      <div
-        class="dropdown-item"
-        v-for="parent in filteredParents"
-        v-bind:key="parent.projectid"
-        @click="selectParent(parent)"
-      >
-        {{ parent.project_name }}
-      </div>
-    </div>
-    <div v-if="parentToAdd">
-      {{ this.parentToAdd.project_name }}
-      <button
-        @click="addParent()"
-        class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-      >
-        toevoegen
-      </button>
-    </div>
-
-    <div v-for="parent in this.parents" v-bind:key="parent.projectid">
-      <span class="full-button" @click="navigateProject(parent.projectid)">{{
-        parent.project_name
-      }}</span>
-      <button
-        class="userDeleteButton"
-        v-show="canUpdateProject()"
-        @click="removeParent(parent.projectid)"
-      >
-        x
-      </button>
-    </div>
-    <div v-if="this.parents.length == 0" class="text">Geen resultaten</div>
-    <br />Sub-projecten toevoegen:
-    <form autocomplete="off">
-      <SearchBar
-        v-show="canUpdateProject()"
-        placeholder="Zoek projecten..."
-        :id="'searchParentsBar' + this.project.projectid"
-        autocomplete="off"
-        class="searchbar"
-        @searchBarChanged="
-          (searchTerm) => {
-            handleSearchChild(searchTerm);
-          }
-        "
-        v-bind:searchTerm="this.childSearchTerm"
-      ></SearchBar>
-    </form>
-    <div
-      class="dropdown-menu"
-      :id="'childSearchDropdown' + this.project.projectid"
-    >
-      <div
-        class="dropdown-item"
-        v-for="child in filteredChildren"
-        v-bind:key="child.projectid"
-        @click="selectChild(child)"
-      >
-        {{ child.project_name }}
-      </div>
-    </div>
-    <div v-if="childToAdd">
-      {{ this.childToAdd.project_name }}
-      <button
-        @click="addChild()"
-        class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-      >
-        toevoegen
-      </button>
-    </div>
-
-    <div v-for="child in this.children" v-bind:key="child.projectid">
-      <span class="full-button" @click="navigateProject(child.projectid)">{{
-        child.project_name
-      }}</span>
-      <button
-        class="userDeleteButton"
-        v-show="canUpdateProject()"
-        @click="removeChild(child.projectid)"
-      >
-        x
-      </button>
-    </div>
-    <div v-if="this.children.length == 0" class="text">Geen resultaten</div>
-  </div>
-  <div v-else>
-    Naam:
     <br />
-    <span class="text">{{ project.project_name }}</span>
-    <br />
-    <br />beschrijving:
-    <br />
-    <span class="text">{{ project.description }}</span>
-    <br />
-    <br />Leden:
-    <form autocomplete="off">
-      <SearchBar
-        v-show="canUpdateProject()"
-        placeholder="Zoek gebruikers..."
-        :id="'searchUsersBar' + this.project.projectid"
-        autocomplete="off"
-        class="searchbar"
-        @searchBarChanged="
-          (searchTerm) => {
-            handleSearchUser(searchTerm);
-          }
-        "
-        v-bind:searchTerm="this.userSearchTerm"
-      ></SearchBar>
-    </form>
-    <div
-      class="dropdown-menu"
-      :id="'userSearchDropdown' + this.project.projectid"
-    >
-      <div
-        class="dropdown-item"
-        v-for="user in filteredUsers"
-        v-bind:key="user.userid"
-        @click="selectUser(user)"
-      >
-        {{ user.first_name }} {{ user.last_name }}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          Leden:
+          <div v-for="member in this.members" v-bind:key="member.userid">
+            <span class="full-button" @click="navigateUser(member.userid)"
+              >{{ member.first_name }} {{ member.last_name }}</span
+            >
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeUser(member.userid)"
+            >
+              x
+            </button>
+            <br />
+          </div>
+
+          <div v-if="this.members.length == 0" class="text">
+            Geen resultaten
+          </div>
+        </div>
+        <div class="col">
+          Overkoepelende projecten:
+          <div v-for="parent in this.parents" v-bind:key="parent.projectid">
+            <span
+              class="full-button"
+              @click="navigateProject(parent.projectid)"
+              >{{ parent.project_name }}</span
+            >
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeParent(parent.projectid)"
+            >
+              x
+            </button>
+          </div>
+          <div v-if="this.parents.length == 0" class="text">
+            Geen resultaten
+          </div>
+        </div>
+        <div class="col">
+          Sub-projecten:
+          <div v-for="child in this.children" v-bind:key="child.projectid">
+            <span
+              class="full-button"
+              @click="navigateProject(child.projectid)"
+              >{{ child.project_name }}</span
+            >
+            <button
+              class="userDeleteButton"
+              v-show="canUpdateProject()"
+              @click="removeChild(child.projectid)"
+            >
+              x
+            </button>
+          </div>
+          <div v-if="this.children.length == 0" class="text">
+            Geen resultaten
+          </div>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
       </div>
     </div>
-    <div v-if="memberToAdd">
-      {{ this.memberToAdd.first_name }} {{ this.memberToAdd.last_name }}
-      <button
-        @click="addUser()"
-        class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-      >
-        toevoegen
-      </button>
-    </div>
 
-    <div v-for="member in this.members" v-bind:key="member.userid">
-      <span class="full-button" @click="navigateUser(member.userid)"
-        >{{ member.first_name }} {{ member.last_name }}</span
-      >
-      <button
-        class="userDeleteButton"
-        v-show="canUpdateProject()"
-        @click="removeUser(member.userid)"
-      >
-        x
-      </button>
-    </div>
-
-    <div v-if="this.members.length == 0" class="text">Geen resultaten</div>
-    <br />Overkoepelende projecten:
-    <form autocomplete="off">
-      <SearchBar
-        v-show="canUpdateProject()"
-        placeholder="Zoek projecten..."
-        :id="'searchParentsBar' + this.project.projectid"
-        autocomplete="off"
-        class="searchbar"
-        @searchBarChanged="
-          (searchTerm) => {
-            handleSearchParent(searchTerm);
-          }
-        "
-        v-bind:searchTerm="this.parentSearchTerm"
-      ></SearchBar>
-    </form>
-    <div
-      class="dropdown-menu"
-      :id="'parentSearchDropdown' + this.project.projectid"
-    >
+    <div v-show="canUpdateProject()">
+      <br />
+      Leden toevoegen:
+      <form autocomplete="off">
+        <SearchBar
+          placeholder="Zoek gebruikers..."
+          :id="'searchUsersBar' + this.project.projectid"
+          autocomplete="off"
+          class="searchbar"
+          @searchBarChanged="
+            (searchTerm) => {
+              handleSearchUser(searchTerm);
+            }
+          "
+          v-bind:searchTerm="this.userSearchTerm"
+        ></SearchBar>
+      </form>
       <div
-        class="dropdown-item"
-        v-for="parent in filteredParents"
-        v-bind:key="parent.projectid"
-        @click="selectParent(parent)"
+        class="dropdown-menu"
+        :id="'userSearchDropdown' + this.project.projectid"
       >
-        {{ parent.project_name }}
+        <div
+          class="dropdown-item"
+          v-for="user in filteredUsers"
+          v-bind:key="user.userid"
+          @click="selectUser(user)"
+        >
+          {{ user.first_name }} {{ user.last_name }}
+        </div>
+      </div>
+      <div v-if="memberToAdd">
+        {{ this.memberToAdd.first_name }} {{ this.memberToAdd.last_name }}
+        <button
+          @click="addUser()"
+          class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+        >
+          toevoegen
+        </button>
       </div>
     </div>
-    <div v-if="parentToAdd">
-      {{ this.parentToAdd.project_name }}
-      <button
-        @click="addParent()"
-        class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-      >
-        toevoegen
-      </button>
-    </div>
-
-    <div v-for="parent in this.parents" v-bind:key="parent.projectid">
-      <span class="full-button" @click="navigateProject(parent.projectid)">{{
-        parent.project_name
-      }}</span>
-      <button
-        class="userDeleteButton"
-        v-show="canUpdateProject()"
-        @click="removeParent(parent.projectid)"
-      >
-        x
-      </button>
-    </div>
-    <div v-if="this.parents.length == 0" class="text">Geen resultaten</div>
-    <br />Sub-projecten:
-    <form autocomplete="off">
-      <SearchBar
-        v-show="canUpdateProject()"
-        placeholder="Zoek projecten..."
-        :id="'searchParentsBar' + this.project.projectid"
-        autocomplete="off"
-        class="searchbar"
-        @searchBarChanged="
-          (searchTerm) => {
-            handleSearchChild(searchTerm);
-          }
-        "
-        v-bind:searchTerm="this.childSearchTerm"
-      ></SearchBar>
-    </form>
-    <div
-      class="dropdown-menu"
-      :id="'childSearchDropdown' + this.project.projectid"
-    >
+    <div v-show="canUpdateProject()">
+      Overkoepelende projecten toevoegen:
+      <form autocomplete="off">
+        <SearchBar
+          v-show="canUpdateProject()"
+          placeholder="Zoek projecten"
+          :id="'searchParentsBar' + this.project.projectid"
+          autocomplete="off"
+          class="searchbar"
+          @searchBarChanged="
+            (searchTerm) => {
+              handleSearchParent(searchTerm);
+            }
+          "
+          v-bind:searchTerm="this.parentSearchTerm"
+        ></SearchBar>
+      </form>
       <div
-        class="dropdown-item"
-        v-for="child in filteredChildren"
-        v-bind:key="child.projectid"
-        @click="selectChild(child)"
+        class="dropdown-menu"
+        :id="'parentSearchDropdown' + this.project.projectid"
       >
-        {{ child.project_name }}
+        <div
+          class="dropdown-item"
+          v-for="parent in filteredParents"
+          v-bind:key="parent.projectid"
+          @click="selectParent(parent)"
+        >
+          {{ parent.project_name }}
+        </div>
+      </div>
+      <div v-if="parentToAdd">
+        {{ this.parentToAdd.project_name }}
+        <button
+          @click="addParent()"
+          class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+        >
+          toevoegen
+        </button>
       </div>
     </div>
-    <div v-if="childToAdd">
-      {{ this.childToAdd.project_name }}
-      <button
-        @click="addChild()"
-        class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+    <div v-show="canUpdateProject()">
+      Sub-projecten toevoegen:
+      <form autocomplete="off">
+        <SearchBar
+          v-show="canUpdateProject()"
+          placeholder="Zoek projecten..."
+          :id="'searchParentsBar' + this.project.projectid"
+          autocomplete="off"
+          class="searchbar"
+          @searchBarChanged="
+            (searchTerm) => {
+              handleSearchChild(searchTerm);
+            }
+          "
+          v-bind:searchTerm="this.childSearchTerm"
+        ></SearchBar>
+      </form>
+      <div
+        class="dropdown-menu"
+        :id="'childSearchDropdown' + this.project.projectid"
       >
-        toevoegen
-      </button>
-    </div>
+        <div
+          class="dropdown-item"
+          v-for="child in filteredChildren"
+          v-bind:key="child.projectid"
+          @click="selectChild(child)"
+        >
+          {{ child.project_name }}
+        </div>
+      </div>
+      <div v-if="childToAdd">
+        {{ this.childToAdd.project_name }}
+        <button
+          @click="addChild()"
+          class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+        >
+          toevoegen
+        </button>
+      </div>
 
-    <div v-for="child in this.children" v-bind:key="child.projectid">
-      <span class="full-button" @click="navigateProject(child.projectid)">{{
-        child.project_name
-      }}</span>
-      <button
-        class="userDeleteButton"
-        v-show="canUpdateProject()"
-        @click="removeChild(child.projectid)"
-      >
-        x
+      <br />
+      <button class="addButton" @click="updateProjectDetails()">
+        Wijzigingen opslaan
       </button>
     </div>
-    <div v-if="this.children.length == 0" class="text">Geen resultaten</div>
   </div>
 </template>
 
@@ -386,7 +261,7 @@ export default {
     }
   },
   methods: {
-    updateNameDescription() {
+    updateProjectDetails() {
       const project = {
         project_name: this.projectname,
         description: this.projectdescription,
@@ -839,5 +714,10 @@ button {
 }
 .text {
   font-family: AddeleThin;
+}
+.container-fluid {
+  margin: 0px;
+  max-width: 10000px;
+  padding: 0;
 }
 </style>
