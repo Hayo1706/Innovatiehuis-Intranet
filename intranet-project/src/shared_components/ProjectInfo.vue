@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="component-body-white">
     Naam:
     <textarea
       v-if="canUpdateProject()"
@@ -341,7 +341,7 @@ export default {
         return user.userid != id;
       });
     },
-    addUser() {
+    addUsers() {
       UserService.addUserToProject(
         this.project.projectid,
         this.memberToAdd.userid
@@ -358,7 +358,7 @@ export default {
           alert("Er ging wat mis, probeer later opnieuw");
         });
     },
-    addParent() {
+    addParents() {
       ProjectService.addParentToProject(
         this.project.projectid,
         this.parentToAdd.projectid
@@ -376,7 +376,7 @@ export default {
           alert("Er ging wat mis, probeer later opnieuw");
         });
     },
-    addChild() {
+    addChildren() {
       ProjectService.addChildToProject(
         this.project.projectid,
         this.childToAdd.projectid
