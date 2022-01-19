@@ -81,7 +81,7 @@
           class="col"
           id="searchBarMobile"
           @searchBarChanged="setSearchTerm"
-          v-bind:searchTerm="this.searchTerm"
+          placeholder="Zoek gebruikers..."
         ></SearchBar>
       </div>
     </div>

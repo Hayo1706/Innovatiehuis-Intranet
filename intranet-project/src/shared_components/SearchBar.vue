@@ -4,7 +4,7 @@
       id="search-input"
       type="search"
       class="form-control"
-      placeholder="Zoeken"
+      :placeholder="this.placeholder"
       v-model="searchTermField"
     />
   </div>
@@ -12,7 +12,9 @@
 <script>
 export default {
   name: "SearchBar",
-  props: ["searchTerm"],
+  props: {
+    placeholder: { type: String, required: true }
+  },
   data: function () {
     return { searchTermField: null };
   },

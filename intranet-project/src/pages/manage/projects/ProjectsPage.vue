@@ -69,7 +69,7 @@
           class="col"
           id="searchBarMobile"
           @searchBarChanged="setSearchTerm"
-          v-bind:searchTerm="this.searchTerm"
+          placeholder="Filter op naam..."
         ></SearchBar>
         <Projectshidarchivedcheckbox
           id="hidarchivedcheckboxMobile"

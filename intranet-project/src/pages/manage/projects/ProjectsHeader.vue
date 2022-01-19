@@ -48,7 +48,7 @@
           @searchBarChanged="
             (searchTerm) => $emit('searchBarChanged', searchTerm)
           "
-          v-bind:searchTerm="this.searchTerm"
+          placeholder="Filter op naam..."
         ></SearchBar>
       </div>
     </div>

@@ -51,7 +51,7 @@
               >
               <SearchBar
                 id="userSearchBar"
-                v-bind:searchTerm="this.userSearchTerm"
+                placeholder="Zoek leden..."
                 @searchBarChanged="
                   (searchTerm) => {
                     handleSearchUser(searchTerm);
@@ -85,6 +85,7 @@
               <SearchBar
                 id="parentProjectsSearchBar"
                 v-bind:searchTerm="this.parentSearchTerm"
+                placeholder="Zoek projecten..."
                 @searchBarChanged="
                   (searchTerm) => {
                     handleSearchParent(searchTerm);
@@ -120,6 +121,7 @@
               <SearchBar
                 id="childProjectsSearchBar"
                 v-bind:searchTerm="this.childSearchTerm"
+                placeholder="Zoek projecten..."
                 @searchBarChanged="
                   (searchTerm) => {
                     handleSearchChild(searchTerm);

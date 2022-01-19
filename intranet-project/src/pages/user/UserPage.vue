@@ -2,13 +2,12 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-6">
-
         <PersonalDetails @getUserEvent="(name) => {
           this.$emit('newHeaderTitle', name)
         }" />
       </div>
       <div class="col-sm-6">
-        <ProjectsWindow>Projecten van gebruiker</ProjectsWindow>
+        <ProjectsWindow>Projecten</ProjectsWindow>
       </div>
     </div>
   </div>

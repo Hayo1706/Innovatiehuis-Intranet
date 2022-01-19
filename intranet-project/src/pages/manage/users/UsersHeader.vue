@@ -3,62 +3,53 @@
     <div class="row">
       <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
         Gebruiker
-        <span v-if="sortingMethod == 'name'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
+        <span v-if="sortingMethod == 'name'">
+          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+          <i v-else class="bi-caret-up-fill"></i>
+        </span>
       </div>
 
       <div class="full-button col" @click="this.$emit('sortEvent', 'created')">
         Geregistreerd
-        <span v-if="sortingMethod == 'created'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
+        <span v-if="sortingMethod == 'created'">
+          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+          <i v-else class="bi-caret-up-fill"></i>
+        </span>
       </div>
-      <div
-        class="full-button col"
-        @click="this.$emit('sortEvent', 'last_seen')"
-      >
+      <div class="full-button col" @click="this.$emit('sortEvent', 'last_seen')">
         Laatst gezien
-        <span v-if="sortingMethod == 'last_seen'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
+        <span v-if="sortingMethod == 'last_seen'">
+          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+          <i v-else class="bi-caret-up-fill"></i>
+        </span>
       </div>
       <div class="full-button col" @click="this.$emit('sortEvent', 'role')">
         Rol
-        <span v-if="sortingMethod == 'role'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
+        <span v-if="sortingMethod == 'role'">
+          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+          <i v-else class="bi-caret-up-fill"></i>
+        </span>
       </div>
-      <div
-        class="full-button col"
-        @click="this.$emit('sortEvent', 'amountprojects')"
-      >
+      <div class="full-button col" @click="this.$emit('sortEvent', 'amountprojects')">
         Projecten
-        <span v-if="sortingMethod == 'amountprojects'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
+        <span v-if="sortingMethod == 'amountprojects'">
+          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+          <i v-else class="bi-caret-up-fill"></i>
+        </span>
       </div>
-      <div
-        class="full-button col"
-        @click="this.$emit('sortEvent', 'screening')"
-      >
+      <div class="full-button col" @click="this.$emit('sortEvent', 'screening')">
         Screening
-        <span v-if="sortingMethod == 'screening'"
-          ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-          ><i v-else class="bi-caret-up-fill"></i
-        ></span>
+        <span v-if="sortingMethod == 'screening'">
+          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+          <i v-else class="bi-caret-up-fill"></i>
+        </span>
       </div>
       <div class="col">
         <SearchBar
           @searchBarChanged="
             (searchTerm) => $emit('searchBarChanged', searchTerm)
           "
-          v-bind:searchTerm="this.searchTerm"
+          placeholder="Filter op naam..."
         ></SearchBar>
       </div>
     </div>
@@ -97,7 +88,7 @@ export default {
 .col {
   font-family: AddeleSemiBold;
 }
-#search-input{
+#search-input {
   font-family: AddeleSemiBold;
 }
 </style>

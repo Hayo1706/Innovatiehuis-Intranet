@@ -6,7 +6,7 @@
           @searchBarChanged="setSearchTerm"
           @newFilesUploaded="setFiles()"
         >
-        <text>Bestanden</text>
+        Bestanden
         </ProjectFilesHeader>
     </div>
       <div class="row">

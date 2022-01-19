@@ -20,7 +20,7 @@
     <form autocomplete="off">
       <SearchBar
         v-show="canUpdateProject()"
-        v-bind:searchTerm="this.userSearchTerm"
+        placeholder="Zoek gebruikers..."
         :id="'searchUsersBar' + this.project.projectid"
         autocomplete="off"
         class="searchbar"
@@ -64,7 +64,7 @@
     <form autocomplete="off">
       <SearchBar
         v-show="canUpdateProject()"
-        v-bind:searchTerm="this.parentSearchTerm"
+        placeholder="Zoek projecten"
         :id="'searchParentsBar' + this.project.projectid"
         autocomplete="off"
         class="searchbar"
@@ -104,7 +104,7 @@
     <form autocomplete="off">
       <SearchBar
         v-show="canUpdateProject()"
-        v-bind:searchTerm="this.childSearchTerm"
+        placeholder="Zoek projecten..."
         :id="'searchParentsBar' + this.project.projectid"
         autocomplete="off"
         class="searchbar"
@@ -154,7 +154,7 @@
     <form autocomplete="off">
       <SearchBar
         v-show="canUpdateProject()"
-        v-bind:searchTerm="this.userSearchTerm"
+        placeholder="Zoek gebruikers..."
         :id="'searchUsersBar' + this.project.projectid"
         autocomplete="off"
         class="searchbar"
@@ -198,7 +198,7 @@
     <form autocomplete="off">
       <SearchBar
         v-show="canUpdateProject()"
-        v-bind:searchTerm="this.parentSearchTerm"
+        placeholder="Zoek projecten..."
         :id="'searchParentsBar' + this.project.projectid"
         autocomplete="off"
         class="searchbar"
@@ -238,7 +238,7 @@
     <form autocomplete="off">
       <SearchBar
         v-show="canUpdateProject()"
-        v-bind:searchTerm="this.childSearchTerm"
+        placeholder="Zoek projecten..."
         :id="'searchParentsBar' + this.project.projectid"
         autocomplete="off"
         class="searchbar"
@@ -343,7 +343,7 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert("Er ging wat mis, probeer later opnieuw");
+          alert("Er ging iets mis, probeer later opnieuw");
         });
     },
     selectUser(user) {
