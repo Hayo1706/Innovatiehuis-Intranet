@@ -32,7 +32,7 @@
               >{{ member.first_name }} {{ member.last_name }}</span
             >
             <button
-              class="userDeleteButton"
+              class="deleteButton"
               v-show="canUpdateProject()"
               @click="removeUser(member.userid)"
             >
@@ -54,7 +54,7 @@
               >{{ parent.project_name }}</span
             >
             <button
-              class="userDeleteButton"
+              class="deleteButton"
               v-show="canUpdateProject()"
               @click="removeParent(parent.projectid)"
             >
@@ -74,7 +74,7 @@
               >{{ child.project_name }}</span
             >
             <button
-              class="userDeleteButton"
+              class="deleteButton"
               v-show="canUpdateProject()"
               @click="removeChild(child.projectid)"
             >
@@ -93,6 +93,7 @@
     <div v-show="canUpdateProject()">
       <br />
       Leden toevoegen:
+      <br />
       <form autocomplete="off">
         <SearchBar
           placeholder="Zoek gebruikers..."
@@ -120,18 +121,28 @@
           {{ user.first_name }} {{ user.last_name }}
         </div>
       </div>
-      <div v-if="memberToAdd">
-        {{ this.memberToAdd.first_name }} {{ this.memberToAdd.last_name }}
-        <button
-          @click="addUser()"
-          class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+      <div v-if="this.selectedUsers.length != 0">
+        <span
+          class="text"
+          v-for="user in this.selectedUsers"
+          v-bind:key="user.userid"
         >
-          toevoegen
-        </button>
+          {{ user.first_name }} {{ user.last_name }}
+          <button
+            class="deleteButton"
+            v-show="canUpdateProject()"
+            @click="removeSelectedUser(user.userid)"
+          >
+            x</button
+          >,&nbsp;</span
+        >
+        <br />
+        <br />
       </div>
     </div>
     <div v-show="canUpdateProject()">
       Overkoepelende projecten toevoegen:
+      <br />
       <form autocomplete="off">
         <SearchBar
           v-show="canUpdateProject()"
@@ -160,18 +171,28 @@
           {{ parent.project_name }}
         </div>
       </div>
-      <div v-if="parentToAdd">
-        {{ this.parentToAdd.project_name }}
-        <button
-          @click="addParent()"
-          class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+      <div v-if="this.selectedParents.length != 0">
+        <span
+          class="text"
+          v-for="parent in this.selectedParents"
+          v-bind:key="parent.projectid"
         >
-          toevoegen
-        </button>
+          {{ parent.project_name }}
+          <button
+            class="deleteButton"
+            v-show="canUpdateProject()"
+            @click="removeSelectedParent(parent.projectid)"
+          >
+            x</button
+          >,&nbsp;</span
+        >
+        <br />
+        <br />
       </div>
     </div>
     <div v-show="canUpdateProject()">
       Sub-projecten toevoegen:
+      <br />
       <form autocomplete="off">
         <SearchBar
           v-show="canUpdateProject()"
@@ -200,14 +221,22 @@
           {{ child.project_name }}
         </div>
       </div>
-      <div v-if="childToAdd">
-        {{ this.childToAdd.project_name }}
-        <button
-          @click="addChild()"
-          class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
+      <div v-if="this.selectedChildren.length != 0">
+        <span
+          class="text"
+          v-for="child in this.selectedChildren"
+          v-bind:key="child.projectid"
         >
-          toevoegen
-        </button>
+          {{ child.project_name }}
+          <button
+            class="deleteButton"
+            v-show="canUpdateProject()"
+            @click="removeSelectedChild(child.projectid)"
+          >
+            x</button
+          >,&nbsp;</span
+        >
+        <br />
       </div>
 
       <br />
@@ -251,6 +280,10 @@ export default {
       childSearchTerm: "",
       filteredChildren: [],
       disabled: false,
+
+      selectedUsers: [],
+      selectedParents: [],
+      selectedChildren: [],
     };
   },
   mounted() {
@@ -282,16 +315,31 @@ export default {
         });
     },
     selectUser(user) {
-      this.memberToAdd = user;
+      this.selectedUsers.push(user);
       this.userSearchTerm = "";
     },
     selectParent(project) {
-      this.parentToAdd = project;
+      this.selectedParents.push(project);
       this.parentSearchTerm = "";
     },
     selectChild(project) {
-      this.childToAdd = project;
+      this.selectedChildren.push(project);
       this.childSearchTerm = "";
+    },
+    removeSelectedParent(id) {
+      this.selectedParents = this.selectedParents.filter((project) => {
+        return project.projectid != id;
+      });
+    },
+    removeSelectedChild(id) {
+      this.selectedChildren = this.selectedChildren.filter((project) => {
+        return project.projectid != id;
+      });
+    },
+    removeSelectedUser(id) {
+      this.selectedUsers = this.selectedUsers.filter((user) => {
+        return user.userid != id;
+      });
     },
     addUser() {
       UserService.addUserToProject(
@@ -387,8 +435,8 @@ export default {
           alert("Er ging wat mis, probeer later opnieuw");
         });
     },
-    membersContainsUser(userid) {
-      for (const user of this.members) {
+    userListContainsUser(userList, userid) {
+      for (const user of userList) {
         if (user.userid == userid) {
           return true;
         }
@@ -401,7 +449,8 @@ export default {
           (item.first_name + " " + item.last_name)
             .toLowerCase()
             .includes(this.userSearchTerm.toLowerCase()) &&
-          !this.membersContainsUser(item.userid)
+          !this.userListContainsUser(this.members, item.userid) &&
+          !this.userListContainsUser(this.selectedUsers, item.userid)
         );
       });
     },
@@ -413,9 +462,9 @@ export default {
         this.filteredUsers = [];
       }
     },
-    parentsContainsProject(projectid) {
-      for (const parent of this.parents) {
-        if (parent.projectid == projectid) {
+    projectListContainsProject(projectList, projectid) {
+      for (const project of projectList) {
+        if (project.projectid == projectid) {
           return true;
         }
       }
@@ -443,18 +492,14 @@ export default {
           item.project_name
             .toLowerCase()
             .includes(this.childSearchTerm.toLowerCase()) &&
-          !this.childrenContainsProject(item.projectid) &&
-          item.projectid != this.project.projectid
+          !this.projectListContainsProject(this.children, item.projectid) &&
+          item.projectid != this.project.projectid &&
+          !this.projectListContainsProject(
+            this.selectedChildren,
+            item.projectid
+          )
         );
       });
-    },
-    childrenContainsProject(projectid) {
-      for (const child of this.children) {
-        if (child.projectid == projectid) {
-          return true;
-        }
-      }
-      return false;
     },
     getFilteredParents() {
       return this.projects.filter((item) => {
@@ -462,8 +507,9 @@ export default {
           item.project_name
             .toLowerCase()
             .includes(this.parentSearchTerm.toLowerCase()) &&
-          !this.parentsContainsProject(item.projectid) &&
-          item.projectid != this.project.projectid
+          !this.projectListContainsProject(this.parents, item.projectid) &&
+          item.projectid != this.project.projectid &&
+          !this.projectListContainsProject(this.selectedParents, item.projectid)
         );
       });
     },
@@ -484,11 +530,11 @@ export default {
       this.projectdescription = this.project.description;
       this.projectname = this.project.project_name;
 
-      this.onMembersClick();
-      this.onParentsClick();
-      this.onChildrenClick();
+      this.handleMembersLoading();
+      this.handleParentsLoading();
+      this.handleChildrenLoading();
     },
-    onParentsClick() {
+    handleParentsLoading() {
       if (this.accordeonIsOpen()) {
         this.loadParents();
         ProjectService.getProjects()
@@ -518,7 +564,7 @@ export default {
           }
         });
     },
-    onChildrenClick() {
+    handleChildrenLoading() {
       if (this.accordeonIsOpen()) {
         this.loadChildren();
         ProjectService.getProjects()
@@ -535,7 +581,7 @@ export default {
         this.childSearchTerm = "";
       }
     },
-    onMembersClick() {
+    handleMembersLoading() {
       if (this.accordeonIsOpen()) {
         this.loadMembers();
 
@@ -707,7 +753,7 @@ button {
   width: 50%;
   margin-bottom: 10px;
 }
-.userDeleteButton {
+.deleteButton {
   background-color: red;
   border-radius: 5px;
   color: white;
