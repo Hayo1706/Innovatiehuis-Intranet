@@ -711,7 +711,7 @@ export default {
       return this.open;
     },
     refreshAllAcordeons() {
-      var arr = document.getElementsByClassName("accordion-button");
+      var arr = document.getElementsByClassName("accordion_button");
 
       for (let j = 0; j < arr.length; j++) {
         if (

@@ -89,7 +89,7 @@
         </span>
         <h2 class="accordion-header" :id="'heading' + this.project.projectid">
           <button
-            class="full-button"
+            class="full-button accordion_button"
             type="button"
             data-bs-toggle="collapse"
             :data-bs-target="'#collapseName' + this.project.projectid"
