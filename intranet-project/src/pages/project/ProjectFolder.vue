@@ -18,6 +18,12 @@
               src=".\..\..\assets\images\folder.png"
               draggable="false"
             />
+            <img
+              class="foldersImage"
+              v-if="this.folderType == 'shared'"
+              src=".\..\..\assets\images\shared_folder.png"
+              draggable="false"
+            />
           </div>
           <div class="col-8" style="display: inline-block; position: relative">
             <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10"/>
@@ -37,7 +43,7 @@
     </div>
     <ul v-show="canSeeMenu() && this.folderType ==  'normal'" id="drop-down-menu" v-if="viewMenu == true">
         <li v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</li>
-        <li v-show="canMoveFolder()" v-if="this.currentFolders.length > 1" @click="moveMenu = true; getFolders(); viewMenu = false;">Verplaats</li>
+        <li v-show="canMoveFolder()" v-if="this.currentFolders.length > 1" @click="moveMenu = true; viewMenu = false;">Verplaats</li>
         <li v-show="canDeleteFolder()" @click="deleteFolder()">Verwijder</li>
     </ul>
 
@@ -45,7 +51,7 @@
         <li>Verplaatsen naar:</li>
         <ul id="drop-down-menu">
           <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
-            <li v-if="folder.name != folderName">
+            <li v-if="folder.name != folderName && folder.type != 'shared'">
               {{ folder.name }}
             </li>
           </span>
@@ -70,6 +76,7 @@ export default {
 
     currentPath: { type: String, required: true },
     previousPath: { type: String, required: true },
+    files: { type: Array, required: false}
   },
   data: function () {
     return {
@@ -176,8 +183,11 @@ export default {
         });
     },
     goToFolder() {
+      if(this.files != null){
+        this.$emit("currentPathChanged", "?parent=" + this.projectID);
+        return;
+      }
       this.$emit("currentPathChanged", this.folderPath);
-
     },
     canDeleteFolder(){
     return PermissionService.userHasPermission("may_update_file_in_own_project");

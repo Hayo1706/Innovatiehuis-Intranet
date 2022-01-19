@@ -4,7 +4,7 @@
         <ProjectFilesHeader
           :path="this.folderPath"
           @searchBarChanged="setSearchTerm"
-          @newFilesUploaded="setFiles()"
+          @newFilesUploaded="currentFilesChanged"
         >
         <text>Bestanden</text>
         </ProjectFilesHeader>
@@ -13,16 +13,16 @@
         <div v-for="file in files" :key="file" class="col-sm-2">
           <div v-if="fileNameInSearchterm(file.name)">
             <ProjectFile
-              :projectID="this.$route.params.id"
+              :projectID="file.projectID"
               :name="file.name"
               :fileType="file.name.split('.').pop()"
               :path="file.path"
               :type="file.type"
               :folders="this.folders"
 
-              @fileDeleted="setFiles()"
-              @nameChanged="setFiles()"
-              @fileMoved="setFiles()"
+              @fileDeleted="currentFilesChanged"
+              @nameChanged="currentFilesChanged"
+              @fileMoved="currentFilesChanged"
               draggable="true"
               @dragstart="startDrag($event, file.path)"
             />
@@ -53,7 +53,7 @@ export default {
     ProjectFile,
   },
   name: "FilesView",
-  props: ['projectID', 'parentID', 'currentPath', 'previousPath', 'currentFolders', 'currentFiles'],
+  props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'currentFiles'],
   watch: {
     currentPath: function(newPath){
       this.folderPath = newPath;
@@ -80,6 +80,9 @@ export default {
     setSearchTerm(value) {
       this.searchTerm = value;
     },
+    currentFilesChanged(){
+      this.$emit("currentFilesChanged")
+    }
   }
 };
 </script>

@@ -57,6 +57,7 @@
             :currentFolders="this.currentFolders"
             :currentPath="this.folderPath"
             :previousPath="this.previousPath"
+            :files="folder.files"
 
             @currentPathChanged="currentPathChanged"
             @folderMoved="currentFoldersChanged()"
@@ -195,7 +196,6 @@ export default {
     }
   },
   async created() {
-    this.currentFoldersChanged();
     this.setSearchedFolders();
   },
 };

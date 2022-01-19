@@ -19,7 +19,9 @@
               :currentPath="this.currentPath"
               :projectID="this.projectID"
               :currentFolders="this.currentFolders"
-              :currentFiles="this.currentFiles"/>
+              :currentFiles="this.currentFiles"
+              
+              @currentFilesChanged="currentFilesChanged"/>
           </div>
         </div>
         <div class="col-sm-4">
@@ -56,7 +58,7 @@ export default {
       previousPath: this.getPath(),
       currentPath: this.getPath(),
       currentFiles: [],
-      currentFolders: this.setCurrentFolders(),
+      currentFolders: [],
       sharedParents: [],
     };
   },
@@ -64,44 +66,100 @@ export default {
     currentFoldersChanged(){
       this.setCurrentFolders();
     },
+    currentFilesChanged(){
+      this.setCurrentFiles();
+    },
     currentPathChanged(path) {
       this.projectID = this.getProjectId();
       this.previousPath = this.currentPath;
-      this.currentPath = path;
-      this.$router.push("/project/" + this.projectID + this.currentPath)
+      this.$router.push("/project/" + this.projectID + path)
+
+      if(path.startsWith("?")){
+        var typeID = path.split("?")[1].split("=")[0]
+        var ID = path.split("?")[1].split("=")[1]
+        if(typeID == "parent"){
+          alert("GAY")
+          this.setCurrentSharedFiles(ID)
+          alert(this.currentFiles);
+        }
+      }
+      
+      else{
+        this.currentPath = path
+      }
       this.setCurrentFolders();
+      this.setCurrentFiles();
+
     },
     reloadAnnouncementWindow() {
       this.announcementWindowKey += 1;
     },
     getPath(){
-      let childid = this.$route.query.child;
-      if(childid != null){
-        return "/"
+      let parent = this.$route.query.parent;
+      if(parent != null){
+        return this.$route.params.id
       }
       return this.$route.fullPath.split("/project/")[1].split(this.$route.params.id)[1]
     },
     getProjectId(){
-      if(this.$route.query.parent != null){
-        return this.$route.query.parent
-      }
       return this.$route.params.id
     },
     setCurrentFolders() {
+      this.currentFolders = []
       FilestorageService.getFoldersOfProject(this.projectID, this.currentPath)
         .then((response) => {
-          this.currentFolders = []
           for(var folder in response){
             this.currentFolders.push({'name': response[folder], 'path': this.currentPath + '/' + response[folder], 'projectID': this.projectID, 'type':'normal'})
           }
-          return this.currentFolders
         })
         .catch((err) => {
           if (err.response) {
             console.log(err.response.status);
           }
-          return []
-        });
+      });
+      if(this.currentPath == ''){
+        ProjectService.getParentsById(this.projectID)
+          .then((response) => {
+            for(var parent in response){
+              var parentID = response[parent].projectid
+              var parentName = response[parent].project_name
+              var sharedFiles = response[parent].shared_files.split(" ")
+              this.currentFolders.push({'name': parentName, 'path': '/', 'projectID': parentID, 'type':'shared', 'files': sharedFiles})
+              
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+              if (err.response) {
+                console.log(err.response.status);
+              }
+          })
+      }
+      return this.currentFolders
+
+    },
+    setCurrentSharedFiles(requestedID) {
+      ProjectService.getParentsById(this.projectID)
+          .then((response) => {
+            this.currentFiles = []
+            for(var parent in response){
+              var parentID = response[parent].projectid
+              var sharedFiles = response[parent].shared_files.split(" ")
+              if(parentID == requestedID){
+                for(var file in sharedFiles){
+                  var fileName = sharedFiles[file].split("/").pop()
+                  alert(parentID)
+                  this.currentFiles.push({'name': fileName, 'path': "/" + sharedFiles[file], 'projectID': parentID, 'type':'shared'})
+                }
+              }              
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+              if (err.response) {
+                console.log(err.response.status);
+              }
+          })
     },
     setCurrentFiles() {
       FilestorageService.getFilesOfPath(this.projectID, this.currentPath)

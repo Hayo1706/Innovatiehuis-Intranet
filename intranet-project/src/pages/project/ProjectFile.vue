@@ -100,12 +100,10 @@ export default {
       },
       renameFile() {
         this.disableInput();
-        alert(this.fileType)
         var newFileName = this.fileName + "." + this.fileType
         if(this.name != newFileName && newFileName != this.name + this.fileType){
           FilestorageService.renameFile(this.projectID, this.path, newFileName)
-            .then((response) => {
-              console.log(response.data);
+            .then(() => {
               this.$emit("nameChanged");
             })
             .catch((err) => {
@@ -147,9 +145,9 @@ export default {
         result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
         return result
       },
-      confirmMove(target_folder){
-        if(confirm("Are you sure you want to move " + this.name + " to " + target_folder + "?")){
-          this.moveFile(target_folder)
+      confirmMove(targetFolder){
+        if(confirm("Are you sure you want to move " + this.name + " to " + targetFolder.name + "?")){
+          this.moveFile(targetFolder)
         }
       },
       confirmDelete(file_name){
