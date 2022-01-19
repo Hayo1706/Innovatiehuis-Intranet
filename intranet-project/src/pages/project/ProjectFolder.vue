@@ -1,64 +1,66 @@
 <template>
   <div
-    class="projectFolder hover"
-    @mousemove="set_coordinates"
-    @contextmenu="viewMenu = true"
-    @long-press="viewMenu = true"
     @mouseleave="viewMenu = false; moveMenu = false"
-    @click="goToFolder()"
   >
-     <div class="container" style="padding: 0px 12px 0px 12px;pointer-events: none;"  >
-      <div class="row">
-        <div class="col-4">
-          <img
-            class="foldersImage"
-            v-if="this.shared == 'no'"
-            src=".\..\..\assets\images\folder.png"
-            draggable="false"
-
-          />
-          <img
-            class="foldersImage"
-            v-if="this.shared == 'yes'"
-            src=".\..\..\assets\images\shared_folder.png"
-            draggable="false"
-
-          />
-          <img
-            class="foldersImage"
-            v-if="this.shared == 'goback'"
-            src=".\..\..\assets\images\goback.png"
-            draggable="false"
-
-          />
-        </div>
-        <div class="col-8" style="display: inline-block; position: relative">
-          <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10"/>
-          <div style="display:flex;align-items:center;width:100%;height:100%;">
-            <input
-              v-on:keyup.enter="renameFolder()"
-              class="folderName"
-              v-model="newName"
-              v-bind:id="this.name"
-              disabled
+    <div
+      class="projectFolder hover"
+      @mousemove="set_coordinates"
+      @contextmenu="viewMenu = true"
+      @long-press="viewMenu = true"
+      @click="goToFolder()"
+    >
+      <div class="container" style="padding: 0px 12px 0px 12px;pointer-events: none;"  >
+        <div class="row">
+          <div class="col-4">
+            <img
+              class="foldersImage"
+              v-if="this.folderType == 'back'"
+              src=".\..\..\assets\images\folder.png"
               draggable="false"
             />
+            <img
+              class="foldersImage"
+              v-if="this.folderType == 'normal'"
+              src=".\..\..\assets\images\folder.png"
+              draggable="false"
+            />
+            <img
+              class="foldersImage"
+              v-if="this.folderType == 'shared'"
+              src=".\..\..\assets\images\shared_folder.png"
+              draggable="false"
+            />
+          </div>
+          <div class="col-8" style="display: inline-block; position: relative">
+            <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10"/>
+            <div style="display:flex;align-items:center;width:100%;height:100%;">
+              <input
+                v-on:keyup.enter="renameFolder()"
+                class="folderName"
+                v-model="newName"
+                v-bind:id="this.folderName"
+                disabled
+                draggable="false"
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <ul v-show="canSeeMenu() && this.shared !=  'goback'" id="drop-down-menu" v-if="viewMenu == true">
+    <ul v-show="canSeeMenu() && this.folderType ==  'normal'" id="drop-down-menu" v-if="viewMenu == true">
         <li v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</li>
-        <li v-show="canMoveFolder()" v-if="this.folders.length > 0" @click="moveMenu = true; getFolders(); viewMenu = false;">Verplaats</li>
+        <li v-show="canMoveFolder()" v-if="this.currentFolders.length > 1" @click="moveMenu = true; getFolders(); viewMenu = false;">Verplaats</li>
         <li v-show="canDeleteFolder()" @click="deleteFolder()">Verwijder</li>
     </ul>
 
     <ul v-show="canSeeMenu()" id="drop-down-menu" v-if="moveMenu == true">
         <li>Verplaatsen naar:</li>
         <ul id="drop-down-menu">
-          <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">
-            {{ folder }}
-          </li>
+          <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
+            <li v-if="folder != folderName">
+              {{ folder }}
+            </li>
+          </span>
         </ul>
     </ul>
   </div>
@@ -71,33 +73,34 @@ import PermissionService from "@/services/PermissionService.js";
 export default {
   name: "ProjectFolder",
   props: {
-    projectid: { type: String, required: true },
-    name: { type: String, required: true },
-    path: { type: String, required: true },
-    shared: { type: String, required: true },
-    directorypath: { type: String, required: true },
+    folderName: { type: String, required: true },
+    folderPath: { type: String, required: true },
+    folderType: { type: String, required: true },
+
+    projectID: { type: String, required: true },
+    currentFolders: { type: Array, required: true },
+
+    currentPath: { type: String, required: true },
+    previousPath: { type: String, required: true },
   },
   data: function () {
     return {
       viewMenu: false,
       moveMenu: false,
-      folderName: this.name,
-      newName: this.name,
+      newName: this.folderName,
       folders: [],
-      x: '0px',
-      y: '0px'
     };
   },
   methods: {
     deleteFolder() {
-      FilestorageService.deleteFolder(this.projectid, this.path, false)
+      FilestorageService.deleteFolder(this.projectID, this.folderPath, false)
         .then(() => {
           this.$emit("folderDeleted");
         })
         .catch((err) => {
           if(err.response.status === 409){
             if(confirm("There are elements within this folder, are you sure?")){
-              FilestorageService.deleteFolder(this.projectid, this.path, true)
+              FilestorageService.deleteFolder(this.projectID, this.folderPath, true)
               .then(() => {
                 this.$emit("folderDeleted");
               })
@@ -116,45 +119,41 @@ export default {
           }
         });
     },
-    set_coordinates(e){
-      this.x = String(e.x)
-      this.y = String(e.y)
-    },
     renameFolder() {
       this.disableInput();
       if (!(this.newName == this.folderName) || this.newName == '') {
         FilestorageService.renameFolder(
-          this.projectid,
-          this.path,
+          this.projectID,
+          this.folderPath,
           "",
           this.newName
         )
-          .then(() => {
-            this.folderName = this.newName;
-          })
-          .catch((err) => {
-            this.newName = this.folderName
-            if (err.response) {
-              console.log(err.response.status);
-            }
-          });
+        .then(() => {
           this.$emit("nameChanged");
+        })
+        .catch((err) => {
+          this.newName = this.folderName
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
       }
       else this.newName = this.folderName
     },
     enableInput(){
-      var inputName = document.getElementById(this.name)
+      var inputName = document.getElementById(this.folderName)
       inputName.removeAttribute("disabled")
       inputName.select();
       this.viewMenu = false;
     },
     disableInput(){
-      var inputName = document.getElementById(this.name)
+      var inputName = document.getElementById(this.folderName)
       inputName.setAttribute("disabled", "")
     },
     moveToFolder(folder) {
-      var folder_path = this.directorypath + "/" + folder;
-      FilestorageService.moveFolder(this.projectid, this.path, folder_path, "")
+      var targetPath = this.currentPath + "/" + folder;
+      console.log(targetPath, this.folderPath, this.projectID)
+      FilestorageService.moveFolder(this.projectID, this.folderPath, targetPath, "")
         .then((response) => {
           if (response.status == 400) {
             alert(response);
@@ -168,7 +167,7 @@ export default {
         });
     },
     confirmMove(folder){
-      if(confirm("Are you sure you want to move " + this.name + " to " + folder + "?")){
+      if(confirm("Are you sure you want to move " + this.folderName + " to " + folder + "?")){
         this.moveToFolder(folder)
       }
     },
@@ -189,7 +188,8 @@ export default {
         });
     },
     goToFolder() {
-      this.$emit("currentPathChanged", this.directorypath + "/" + this.folderName);
+      this.$emit("currentPathChanged", this.folderPath);
+
     },
     canDeleteFolder(){
     return PermissionService.userHasPermission("may_update_file_in_own_project");

@@ -2,21 +2,24 @@
   <div>
     <div class="component-header">
       <ProjectFolderHeader
-          :path="this.currentPath"
-          @newFolderAdded="(id) => setFolders()"
+          :path="this.folderPath"
+          @newFolderAdded="currentFoldersChanged()"
           @searchBarChanged="setSearchTerm">
           <div id="projectPath">
-            <text v-if="this.path == ''">Mappen</text>
-            <text
-                @dragenter.prevent
-                @dragover.prevent
-                @drop="onDrop($event, '/')"
-                @dragenter="addClass"
-                @dragleave="removeClass"
-                @mouseleave.self="removeClass"
-                class="hover"
-                @click="folderPathChanged('')" v-else>{{name}}/</text>
-            <span v-for="(path, index) in fullPath = this.path.split('/').slice(0,-1)" :key="path">
+            <text v-if="this.folderPath == ''">Mappen</text>
+          
+            <text 
+              @dragenter.prevent
+              @dragover.prevent
+              @drop="onDrop($event, '/')"
+              @dragenter="addClass"
+              @dragleave="removeClass"
+              @mouseleave.self="removeClass"
+
+              v-else class="hover"
+              @click="currentPathChanged('')"
+            >Home/</text>
+            <span v-for="(path, index) in fullPath = this.folderPath.split('/').slice(0,-1)" :key="path">
               <text
                   @drop="onDrop($event, '/'+ fullPath.slice(1, index+1)[0])"
                   @dragenter.prevent
@@ -24,53 +27,76 @@
                   @dragenter="addClass"
                   @dragleave="removeClass"
                   @mouseleave.self="removeClass"
+
                   class="hover"
-                  @click="folderPathChanged('/'+fullPath.slice(1, index+1)[0])"
+                  @click="currentPathChanged('/'+fullPath.slice(1, index+1)[0])"
                   v-if="path != ''">{{ path }}/</text>
             </span>
             <text>
-              {{this.path.split('/').slice(-1)[0]}}
+              {{this.folderPath.split('/').slice(-1)[0]}}
             </text>
           </div>
         </ProjectFolderHeader>
     </div>
+
     <div>
       <div class="row">
-        <div class="col-sm-4" v-show="this.path != ''">
+
+        <div col-sm-4>
           <ProjectFolder
-          :name="'Go Back'"
-          :shared="'goback'"
-          :path="this.previousPath"
-          @click="folderPathChanged(this.previousPath)"
-          >
-          </ProjectFolder>
+          
+          />
         </div>
-        <div v-for="folder in searched_folders" :key="folder" class="col-sm-4">
+
+        <div v-for="folder in searchedFolders" :key="folder" class="col-sm-4">
           <div v-if="folderNameInSearchTerm(folder)">
             <ProjectFolder
-              :directorypath="this.path"
-              :projectid="this.$route.params.id"
-              :name="folder"
-              :path="this.path + '/' + folder"
-              :shared="'no'"
+              :folderName="folder"
+              :folderType="'normal'"
+              :folderPath="this.folderPath + '/' + folder"
+              :projectID="this.projectID"
+              :currentFolders="this.currentFolders"
+              :currentPath="this.folderPath"
+              :previousPath="this.previousPath"
 
-              @currentPathChanged="folderPathChanged"
-              @folderMoved="setFolders()"
-              @folderDeleted="setFolders()"
-              @nameChanged="setFolders()"
-
+              @currentPathChanged="currentPathChanged"
+              @folderMoved="currentFoldersChanged()"
+              @folderDeleted="currentFoldersChanged()"
+              @nameChanged="currentFoldersChanged()"
+              
+      
               @dragenter="addClass"
               @dragleave.self="removeClass"
               @mouseleave.self="removeClass"
 
-              @drop="onDrop($event, this.path + '/' + folder)"
+              @drop="onDrop($event, this.folderPath + '/' + folder)"
               @dragenter.prevent
               @dragover.prevent
               draggable="true"
-              @dragstart="startDrag($event, this.path + '/' + folder)"
+              @dragstart="startDrag($event, this.folderPath + '/' + folder)"
             />
           </div>
         </div>
+
+        <div v-for="parent in allSharedParents" :key="parent" class="col-sm-4">
+          <div v-if="folderNameInSearchTerm(parent['project_name'])">
+            <ProjectFolder
+              :folderName="parent['project_name']"
+              :folderType="'shared'"
+              :folderPath="this.folderPath + '?parent=' + parent['projectid']"
+              :projectID="parent['projectid']"
+              :currentFolders="this.currentFolders"
+              :currentPath="this.folderPath + '?parent=' + parent['projectid']"
+              :previousPath="this.folderPath"
+
+              @currentPathChanged="currentPathChanged"
+              @folderMoved="currentFoldersChanged()"
+              @folderDeleted="currentFoldersChanged()"
+              @nameChanged="currentFoldersChanged()"
+            />
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -98,48 +124,46 @@ export default {
     ProjectFolder,
   },
   name: "FoldersView",
-  props: ["path","name"],
+  props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'sharedParents'],
   watch: {
-    path(newPath) {
-      this.currentPath = newPath;
-      this.setFolders();
+    currentFolders: function(){
+      this.setSearchedFolders();
     },
+    currentPath: function(newPath){
+      this.folderPath = newPath;
+    },
+    sharedParents: function(newFolders){
+      this.allSharedParents = newFolders
+      console.log('shared', this.allSharedParents)
+    }
   },
   data: function () {
     return {
-      folders: [],
-      searched_folders: [],
-      search_term: "",
-      currentPath: this.path,
-      previousPath: this.path,
-      projectid: this.$route.params.id,
-      last_target: "",
+      errorStatus: false,
+      folderPath: this.currentPath,
+      allSharedParents: this.sharedParents,
+      searchedFolders: [],
+      searchTerm: "",
     };
   },
   methods: {
     addClass: function (e) {
       if (e.target.classList.contains("hover"))
         e.target.classList.add("hoverDrag");
-
     },
     removeClass: function (e) {
       if (e.target.classList.contains("hover"))
         e.target.classList.remove("hoverDrag");
-
-    },
-    setSearchTerm(value) {
-      this.search_term = value;
-      this.setSearchedFolders(value);
     },
     onDrop(event, to) {
       const path = event.dataTransfer.getData('path')
-      let id = this.projectid
+      let id = this.projectID
       if (to === path)
         return
       if (event.dataTransfer.getData('type') === 'file') {
         FilestorageService.moveFile(id, path, to)
             .then(() => {
-              this.$emit("fileMoved");
+              this.$emit("currentFoldersChanged");
             })
             .catch((err) => {
               if (err.response) {
@@ -148,9 +172,9 @@ export default {
             });
       }
       else{
-        FilestorageService.moveFolder(id ,path,to, '')
+        FilestorageService.moveFolder(this.projectID, path, to, '')
             .then(() => {
-              this.setFolders()
+              this.$emit("currentFoldersChanged");
             })
             .catch((err) => {
               if (err.response) {
@@ -159,69 +183,38 @@ export default {
             });
       }
     },
-    folderNameInSearchTerm(folder_name, search_term) {
-      return folder_name.includes(search_term) || search_term == null;
+    setSearchTerm(searchTerm) {
+      this.searchTerm = searchTerm;
+      this.setSearchedFolders();
     },
-    folderPathChanged(path) {
-      this.searched_folders = []
-      if(Array.isArray(path)){
-        this.currentPath = ""
-        for(var element in path){
-          this.currentPath += "/" + path[element]
-        }
-        this.$router.push("/project/" + this.projectid + this.currentPath);
-        this.$emit("currentPathChanged", this.currentPath);
+    folderNameInSearchTerm(folderName, searchTerm) {
+      return folderName.includes(searchTerm) || searchTerm == null;
+    },   
+    setSearchedFolders(){
+      console.log("test",this.currentFolders)
+      if(this.searchTerm == "" || this.searchTerm == null){
+          this.searchedFolders = this.currentFolders;  
       }
       else{
-        this.currentPath = path;
-        this.$router.push("/project/" + this.projectid + path);
-        this.$emit("currentPathChanged", this.currentPath);
-      }
-      this.getPreviousPath();
-    },
-    setFolders(path=this.path) {
-      FilestorageService.getFoldersOfProject(this.projectid, path)
-        .then((response) => {
-          console.log('Resetting Folders')
-          this.folders = response;
-          this.setSearchedFolders(this.searchTerm);
-        })
-        .catch((err) => {
-          console.log('resetting Folders Failed')
-          if (err.response) {
-            console.log(err.response.status);
-          }
-        });
-    },
-    getPreviousPath(){
-      this.previousPath = ""
-      var pathArray = this.currentPath.split("/")
-      pathArray.pop()
-      for(var element in pathArray){
-        if(pathArray[element] != "") {
-          this.previousPath += "/" + pathArray[element]
-        }
-      }
-      console.log(this.previousPath)
-    },
-    setSearchedFolders(search_term){
-      if(search_term == "" || search_term == null){
-          this.searched_folders = this.folders  
-      }
-      else{
-        this.searched_folders = []
-        for(var folder_index in this.folders){
-          if(this.folderNameInSearchTerm(this.folders[folder_index], search_term)){
-            this.searched_folders.push(this.folders[folder_index])
+        this.searchedFolders = []
+        for(var folder_index in this.currentFolders){
+          if(this.folderNameInSearchTerm(this.currentFolders[folder_index], this.searchTerm)){
+            this.searchedFolders.push(this.currentFolders[folder_index])
           }
         }
       }
     },
+    currentFoldersChanged(){
+      this.$emit("currentFoldersChanged")
+    },
+    currentPathChanged(newPath){
+      this.folderPath = newPath;
+      this.$emit("currentPathChanged", newPath);
+    }
   },
   async created() {
-    //this.$emit("newHeaderTitle", "NAAM + PAD");
-    this.setFolders();
-    this.getPreviousPath();
+    this.currentFoldersChanged();
+    this.setSearchedFolders();
   },
 };
 </script>

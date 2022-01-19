@@ -2,7 +2,7 @@
   <div>
     <div class="component-header">
         <ProjectFilesHeader
-          :path="this.path"
+          :path="this.folderPath"
           @searchBarChanged="setSearchTerm"
           @newFilesUploaded="setFiles()"
         >
@@ -19,14 +19,14 @@
               :projectid="this.$route.params.id"
               :name="file"
               :type="file.split('.').pop()"
-              :path="this.path + '/' + file"
-              :directorypath="this.path"
+              :path="this.folderPath + '/' + file"
+              :directorypath="this.folderPath"
               :shared="'no'"
               @fileDeleted="setFiles()"
               @nameChanged="setFiles()"
               @fileMoved="setFiles()"
               draggable="true"
-              @dragstart="startDrag($event, this.path + '/' + file)"
+              @dragstart="startDrag($event, this.folderPath + '/' + file)"
             />
           </div>
         </div>
@@ -72,21 +72,20 @@ export default {
     ProjectFile,
   },
   name: "FilesView",
-  props: ["path"],
+  props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'currentFiles', 'sharedParents'],
   watch: {
-    path(newPath) {
-      this.currentPath = newPath;
+    currentPath(newPath) {
+      this.folderPath = newPath;
       this.setFiles();
-
     },
   },
   data: function () {
     return {
       files: [],
+      folderPath: this.currentPath,
       shared_files: [],
       projectid: this.$route.params.id,
       searchTerm: "",
-      currentPath: this.path,
     };
   },
   methods: {
@@ -96,11 +95,9 @@ export default {
     setSearchTerm(value) {
       this.searchTerm = value;
     },
-    setPath(path) {
-      this.currentPath = path;
-    },
     setFiles() {
-      FilestorageService.getFilesOfPath(this.projectid, this.path)
+      console.log(this.projectID, this.folderPath)
+      FilestorageService.getFilesOfPath(this.projectID, this.folderPath)
         .then((response) => {
           this.files = response;
         })
@@ -122,6 +119,7 @@ export default {
               let file_path = "/" + project_shared_files[file_index]
               let file_path_array = file_path.split("/")
               let file_name = file_path_array[file_path_array.length-1]
+              console.log(response[project_index].project_name)
               this.shared_files.push({"projectid": parentid, "path": file_path, "name": file_name})
             }
           }
