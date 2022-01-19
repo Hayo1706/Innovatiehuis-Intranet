@@ -27,7 +27,7 @@
       @searchBarChanged="setSearchTerm"
       v-bind:searchTerm="this.searchTerm"
     ></UsersHeader>
-    
+
     <div class="container-fluid d-sm-block d-lg-none" id="sorting_space">
       <p>Sorteren op:</p>
       <div class="row">
@@ -82,6 +82,7 @@
           id="searchBarMobile"
           @searchBarChanged="setSearchTerm"
           placeholder="Zoek gebruikers..."
+          v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
       </div>
     </div>
@@ -271,7 +272,7 @@ export default {
 .listing-container {
   padding: 0;
   border-radius: 0px 0px 10px 10px;
-  background-color: rgba(255,255,255,0.3)
+  background-color: rgba(255, 255, 255, 0.3);
 }
 #noresults {
   margin: 10px;

@@ -70,6 +70,7 @@
           id="searchBarMobile"
           @searchBarChanged="setSearchTerm"
           placeholder="Filter op naam..."
+          v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
         <Projectshidarchivedcheckbox
           id="hidarchivedcheckboxMobile"
@@ -80,7 +81,9 @@
       </div>
     </div>
     <div class="listing-container container-fluid">
-      <ProjectListing v-for="project of filteredProjects" :key="project.project_name"
+      <ProjectListing
+        v-for="project of filteredProjects"
+        :key="project.project_name"
         class="projectlisting"
         @removeProject="this.removeProject"
         @archiveProject="this.archiveProject"
@@ -214,17 +217,17 @@ export default {
       }
       return 0;
     },
-    loadProjects(){
-            ProjectService.getProjects()
-      .then((response) => {
-        this.projects = response;
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-      });
-    }
+    loadProjects() {
+      ProjectService.getProjects()
+        .then((response) => {
+          this.projects = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+    },
   },
 
   computed: {
@@ -279,9 +282,9 @@ export default {
 .listing-container {
   padding: 0;
   border-radius: 0px 0px 10px 10px;
-  background-color: rgba(255,255,255,0.3)
+  background-color: rgba(255, 255, 255, 0.3);
 }
-.container{
+.container {
   padding: 0;
 }
 #noresults {

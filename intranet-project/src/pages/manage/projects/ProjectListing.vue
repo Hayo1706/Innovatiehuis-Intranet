@@ -4,7 +4,9 @@
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col-3 d-block d-lg-none">
-        <div class="name-button mobileRow" @click="onClick()">{{ projectname }}</div>
+        <div class="name-button mobileRow" @click="onClick()">
+          {{ projectname }}
+        </div>
         <div class="mobileRow">
           {{
             project.created.toLocaleString("nl-NL", {
@@ -38,9 +40,10 @@
       >
         <router-link
           title="Naar projectpagina"
-          :to="'/project/' + this.project.projectid" 
+          :to="'/project/' + this.project.projectid"
           class="name-button mobileRow"
-        >{{ projectname }}</router-link>
+          >{{ projectname }}</router-link
+        >
       </div>
       <div
         title="Aangemaakt"
@@ -69,7 +72,9 @@
           })
         }}
       </div>
-      <div class="col d-none d-lg-flex align-items-center justify-content-center">
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
         <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
         <div v-else>Niet gearchiveerd</div>
       </div>
@@ -83,15 +88,19 @@
           ></ProjectButtons>
         </span>
         <h2 class="accordion-header" :id="'heading' + this.project.projectid">
-            <button
-              class="full-button"
-              type="button"
-              data-bs-toggle="collapse"
-              :data-bs-target="'#collapseName' + this.project.projectid"
-              aria-expanded="false"
-              :aria-controls="'collapseName' + this.project.projectid"
-            >Details</button>
-          </h2>
+          <button
+            class="full-button"
+            type="button"
+            data-bs-toggle="collapse"
+            :data-bs-target="'#collapseName' + this.project.projectid"
+            aria-expanded="false"
+            :aria-controls="'collapseName' + this.project.projectid"
+            :id="'collapseDetailsButton' + this.project.projectid"
+            @click="this.open = !this.open"
+          >
+            Details
+          </button>
+        </h2>
       </div>
     </div>
 
@@ -102,11 +111,13 @@
     >
       <div class="accordion-body">
         <ProjectInfo
+          v-bind:open="this.open"
           v-bind:project="project"
           @nameOrDescriptionChanged="
-          (project_obb) => {
-            this.projectname = project_obb.project_name;
-          }"
+            (project_obb) => {
+              this.projectname = project_obb.project_name;
+            }
+          "
         ></ProjectInfo>
       </div>
     </div>
@@ -124,6 +135,7 @@ export default {
   data: function () {
     return {
       projectname: "",
+      open: false,
     };
   },
   mounted() {
@@ -148,7 +160,7 @@ export default {
   font-size: 1.6vh;
   border-bottom: 1px solid #e1e1e1;
 }
-.project-listing:last-child{
+.project-listing:last-child {
   border-bottom: none;
 }
 .name-button {
@@ -179,5 +191,4 @@ export default {
 .iconHolder {
   padding: 5px;
 }
-
 </style>

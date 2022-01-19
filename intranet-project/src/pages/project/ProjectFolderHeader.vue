@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <div id="projectFolderHeader">
       <div class="row">
         <div class="col-sm-8">
@@ -12,14 +11,17 @@
               (searchTerm) => $emit('searchBarChanged', searchTerm)
             "
             placeholder="Filter op naam..."
+            v-bind:searchTerm="this.searchTerm"
           ></SearchBar>
         </div>
 
         <div class="col-sm-1">
           <img
-            data-toggle="tooltip" data-placement="bottom" title="Map aanmaken"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Map aanmaken"
             class="component-header-button"
-            src=".\..\..\assets\images\newfolder.png" 
+            src=".\..\..\assets\images\newfolder.png"
             data-bs-toggle="modal"
             data-bs-target="#folderModal"
             v-if="canAddFolder()"
@@ -118,9 +120,11 @@ export default {
           }
         });
     },
-    canAddFolder(){
-      return PermissionService.userHasPermission("may_update_file_in_own_project");
-    }
+    canAddFolder() {
+      return PermissionService.userHasPermission(
+        "may_update_file_in_own_project"
+      );
+    },
   },
 };
 </script>

@@ -16,7 +16,10 @@
           <i v-else class="bi-caret-up-fill"></i>
         </span>
       </div>
-      <div class="full-button col" @click="this.$emit('sortEvent', 'last_seen')">
+      <div
+        class="full-button col"
+        @click="this.$emit('sortEvent', 'last_seen')"
+      >
         Laatst gezien
         <span v-if="sortingMethod == 'last_seen'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
@@ -30,14 +33,20 @@
           <i v-else class="bi-caret-up-fill"></i>
         </span>
       </div>
-      <div class="full-button col" @click="this.$emit('sortEvent', 'amountprojects')">
+      <div
+        class="full-button col"
+        @click="this.$emit('sortEvent', 'amountprojects')"
+      >
         Projecten
         <span v-if="sortingMethod == 'amountprojects'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
           <i v-else class="bi-caret-up-fill"></i>
         </span>
       </div>
-      <div class="full-button col" @click="this.$emit('sortEvent', 'screening')">
+      <div
+        class="full-button col"
+        @click="this.$emit('sortEvent', 'screening')"
+      >
         Screening
         <span v-if="sortingMethod == 'screening'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
@@ -50,6 +59,7 @@
             (searchTerm) => $emit('searchBarChanged', searchTerm)
           "
           placeholder="Filter op naam..."
+          v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
       </div>
     </div>

@@ -4,9 +4,9 @@
       <ProjectsHideArchivedCheckbox
         @hideArchived="(value) => $emit('hideArchived', value)"
         v-bind:hideArchived="this.hideArchived"
-    />
+      />
     </div>
-    
+
     <div class="row">
       <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
         Project
@@ -49,6 +49,7 @@
             (searchTerm) => $emit('searchBarChanged', searchTerm)
           "
           placeholder="Filter op naam..."
+          v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
       </div>
     </div>
@@ -100,7 +101,7 @@ img {
 .full-button {
   height: fit-content;
 }
-#projectsHeader .full-button{
- margin: 0;
+#projectsHeader .full-button {
+  margin: 0;
 }
 </style>
