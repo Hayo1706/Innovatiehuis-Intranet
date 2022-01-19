@@ -124,7 +124,7 @@ def update_users(project_id):
         )
     for old_id in ids_to_remove:
         query_update(
-            "DELETE FROM users_have_projects WHERE userid = %(id)s AND projectid = %(projectid)s);",
+            "DELETE FROM users_have_projects WHERE userid = %(id)s AND projectid = %(projectid)s;",
             {'id': old_id, 'projectid': project_id}
         )
     return response(f"Successfully updated list of members in Project {project_id}", 200)
