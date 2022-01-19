@@ -10,7 +10,7 @@
       data-bs-toggle="modal"
       data-bs-target="#createProjectModal"
       type="button"
-      v-show="canCreate()"
+      v-show="canCreateProject()"
     >
       <i class="material-icons pmd-sm">Project toevoegen</i>
     </button>
@@ -121,7 +121,7 @@ export default {
     };
   },
   methods: {
-    canCreate() {
+    canCreateProject() {
       return PermissionService.userHasPermission("may_create_project");
     },
     gotoCreateProject() {
@@ -285,7 +285,7 @@ export default {
   padding: 0;
 }
 #noresults {
-  margin-top: 10px;
+  margin: 10px;
   color: white;
 }
 #actionButton {

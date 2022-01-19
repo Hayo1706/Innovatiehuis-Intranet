@@ -2,28 +2,30 @@
   <header v-if="this.$route.path !== '/login'">
     <div id="header-container">
       <div class="image-container align-left-header">
-        <img 
-          title="Hoofdpagina"
-          class="logo" 
-          @click="logoClick()" 
-          src=".\..\assets\images\logo\square.png" 
-        />
-        <img 
-          data-toggle="tooltip" data-placement="bottom" title="Projectenoverzicht"
-          class="header-icon"
-          @click="projectsClick()"
-          src=".\..\assets\images\projects_icon_yellow.png"
-          v-if="this.canSeeProjects()"
-        />
-        <img
-          title="Gebruikersoverzicht"
-          class="header-icon"
-          @click="usersClick()"
-          src=".\..\assets\images\users_icon_yellow.png"
-          v-if="this.canSeeUsers()"
-        />
+        <router-link to="/home">
+          <img 
+            title="Hoofdpagina"
+            id="logo" 
+            src=".\..\assets\images\logo\square.png" 
+          />
+        </router-link>
+        <router-link class="link" to="/manage/projects" v-if="this.canSeeProjects()">
+          <img 
+            data-toggle="tooltip" data-placement="bottom" title="Projectenoverzicht"
+            class="header-icon"
+            src=".\..\assets\images\projects_icon_yellow.png"
+          />
+        </router-link>
+        <router-link to="/manage/users" v-if="this.canSeeUsers()">
+          <img
+            title="Gebruikersoverzicht"
+            class="header-icon"
+            src=".\..\assets\images\users_icon_yellow.png"
+          />
+        </router-link>
       </div>
       <div class="image-container .align-middle-header">
+        
         <img
           title="Projectgegevens"
           class="header-icon"
@@ -35,18 +37,22 @@
       </div>
 
       <div class="image-container align-right-header">
-        <img 
-          title="Profiel"
-          class="header-icon" 
-          @click="profileClick()" 
-          src=".\..\assets\images\profile_icon.png" 
-        />
-        <img 
-          title="Uitloggen"
-          class="header-icon" 
-          @click="logout()" 
-          src=".\..\assets\images\logout-icon.png" 
-        />
+        <router-link :to="'/user/' + getUserId()">
+          <img 
+            title="Profiel"
+            class="header-icon" 
+            src=".\..\assets\images\profile_icon.png" 
+          />
+        </router-link>
+        <a>
+          <img 
+            title="Uitloggen"
+            class="header-icon" 
+            style="margin: 0;"
+            @click="logout()" 
+            src=".\..\assets\images\logout-icon.png" 
+          />
+        </a>
       </div>
     </div>
   </header>
@@ -63,17 +69,8 @@ export default {
     return {};
   },
   methods: {
-    logoClick() {
-      this.$router.push("/home");
-    },
-    projectsClick() {
-      this.$router.push("/manage/projects");
-    },
-    usersClick() {
-      this.$router.push("/manage/users");
-    },
-    profileClick() {
-      this.$router.push("/user/" + localStorage.getItem("userid"));
+    getUserId() {
+      return localStorage.getItem("userid");
     },
     logout() {
       LoginService.logout();
@@ -100,13 +97,16 @@ export default {
 
 
 <style scoped>
+.link {
+
+}
 img {
-  height: 70%;
+  height: 7vh;
   cursor: pointer;
 }
 header {
   width: 100%;
-  height: 9vh;
+  height: 100%;
   margin-bottom: 2vh;
   background: rgba(255, 255, 255, 0.9);
   border-bottom: solid 2px var(--gold1);
@@ -120,7 +120,7 @@ header {
   align-items: center;
   max-width: 1500px;
   margin: auto;
-  height: 100%;
+  height: 9vh;
 }
 .image-container {
   padding: 0;
@@ -128,9 +128,6 @@ header {
   height: 100%;
   align-items: center;
   display: flex;
-}
-.options {
-  height: 70%;
 }
 
 .align-right-header{
@@ -159,7 +156,8 @@ header {
   /* border: 4px solid grey; */
 }
 
-.logo{
+#logo{
+  height: 7vh;
   margin-right: 2vh;
 }
 </style>

@@ -269,11 +269,12 @@ export default {
   width: 100%;
 }
 .listing-container {
+  padding: 0;
   border-radius: 0px 0px 10px 10px;
   background-color: rgba(255,255,255,0.3)
 }
 #noresults {
-  margin-top: 10px;
+  margin: 10px;
   color: white;
 }
 #actionButton {

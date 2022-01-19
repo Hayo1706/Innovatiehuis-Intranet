@@ -34,11 +34,13 @@
 
       <!-- large screens-->
       <div
-        title="Open projectpagina"
         class="col-3 d-none d-lg-flex align-items-center justify-content-center"
-        @click="onClick()"
       >
-        <div class="name-button">{{ projectname }}</div>
+        <router-link
+          title="Naar projectpagina"
+          :to="'/project/' + this.project.projectid" 
+          class="name-button mobileRow"
+        >{{ projectname }}</router-link>
       </div>
       <div
         title="Aangemaakt"
@@ -148,18 +150,6 @@ export default {
 }
 .project-listing:last-child{
   border-bottom: none;
-}
-.projectButton {
-  font-weight: bold;
-  background-color: var(--gold2);
-  color: var(--blue1);
-  border-style: outset;
-  border-radius: 8px;
-  padding-left: 10px;
-  padding-right: 10px;
-  height: fit-content;
-  cursor: pointer;
-  width: fit-content;
 }
 .name-button {
   background-color: var(--blue2);

@@ -4,24 +4,22 @@
       <slot></slot>
     </div>
     <div>
-      <button
-        data-toggle="tooltip"
-        data-placement="bottom"
+      <router-link
         title="Projectenoverzicht"
         class="full-button mobileRow extraLarge"
-        @click="projectsClick()"
+        to="/manage/projects"
         v-if="this.canSeeProjects()"
       >
-        <img src="../../assets/images/projects_icon.png" />Projectenoverzicht
-      </button>
-      <button
+        <img class="big-img" src="../../assets/images/projects_icon.png" />Projectenoverzicht
+      </router-link>
+      <router-link
         title="Gebruikersoverzicht"
         class="full-button mobileRow extraLarge"
-        @click="usersClick()"
+        to="/manage/users"
         v-if="this.canSeeUsers()"
       >
-        <img src="../../assets/images/users_icon.png" />Gebruikersoverzicht
-      </button>
+        <img class="big-img" src="../../assets/images/users_icon.png" />Gebruikersoverzicht
+      </router-link>
       <hr />
       <button
         title="Project aanmaken"
@@ -31,6 +29,7 @@
         type="button"
         v-if="this.canCreateProjects()"
       >
+        <img class="small-img" src="../../assets/images/add_project.png" />
         Project aanmaken
       </button>
       <button
@@ -41,6 +40,7 @@
         type="button"
         v-if="this.canCreateUsers()"
       >
+        <img class="small-img" src="../../assets/images/add_user.png" />
         Gebruiker toevoegen
       </button>
     </div>
@@ -61,12 +61,6 @@ export default {
     return {};
   },
   methods: {
-    projectsClick() {
-      this.$router.push("/manage/projects");
-    },
-    usersClick() {
-      this.$router.push("/manage/users");
-    },
     canSeeProjects() {
       return PermissionService.userHasPermission("may_read_any_project");
     },
@@ -90,12 +84,12 @@ export default {
 button:hover {
   padding-left: 15px;
 }
-img {
+.big-img {
   height: 40px;
-  margin-right: 20px;
-  margin-left: 20px;
+  margin-right: 16px;
+  margin-left: 4px;
 }
-.component-container button img{
+.small-img{
   height: 30px;
   margin-right: 12px;
   margin-left: 4px;
