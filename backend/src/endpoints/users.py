@@ -7,7 +7,7 @@ from ..config import PASSWORD_CHANGE_SECRET_KEY, DOMAIN_NAME
 from ..services.helper_functions import *
 from itsdangerous import URLSafeSerializer
 from ..services.permissions import Users, Projects
-from ..services.permissions.permissions import check_permissions
+from ..services.permissions.permissions import check_permissions, check_jwt
 from ..services.extensions import bcrypt
 
 
@@ -139,6 +139,9 @@ def add_project(user_id, project_id):
                  {'userid': user_id, 'projectid': project_id})
     return response(f"Successfully assigned {project_id} to project {project_id}")
 
+
+#GET roles
+@check_jwt()
 def get_roles():
     return query(
-        "SELECT roleid, role_name, is_protected FROM roles;")
+        "SELECT * FROM roles;")

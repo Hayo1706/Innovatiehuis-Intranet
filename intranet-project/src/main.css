@@ -201,7 +201,12 @@ p {
   padding-bottom: 5px;
 
 }
-
+.component-body-white {
+    background-color: rgba(255,255,255,0.7);
+    border-radius: 1em;
+    padding: 10px;
+    margin-top: 10px;
+}
 @font-face {
   font-family: Montserrat;
   src: url(./assets/fonts/Montserrat-ExtraBold.ttf);
