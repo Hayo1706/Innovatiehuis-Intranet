@@ -50,10 +50,17 @@ table {
 }
 body {
   overflow-x: hidden;
-  /* marnik suggereert een kleur als deze:    
-  background-color: hsl(222deg 36% 70%) !important; */
+  /*
+  marnik suggereert een kleur als deze:    
+  background-color: hsl(222deg 36% 70%) !important;
+  of deze:
+  background-color: #383f56 !important; 
+  optie?
+  background-color: #7a7570 !important;
+  */
+  /* background-color: #383f56 !important;  */
   background-color: #101936 !important;
-  background-image: url(./assets/images/back.png);
+  /* background-image: url(./assets/images/back.png); */
   background-size: 100vw;
   background-repeat: no-repeat;
   /*background: linear-gradient(to left TOP, rgb(50,50,50), rgb(20,20,80)) no-repeat;*/

@@ -10,16 +10,24 @@
             @searchBarChanged="
               (searchTerm) => $emit('searchBarChanged', searchTerm)
             "
+            placeholder="Filter op naam..."
             v-bind:searchTerm="this.searchTerm"
           ></SearchBar>
         </div>
         <div v-show="canUploadFile()" class="col-1">
-          <input @change="uploadFiles" type="file" id="files" name="files" multiple hidden />
+          <input
+            @change="uploadFiles"
+            type="file"
+            id="files"
+            name="files"
+            multiple
+            hidden
+          />
           <label for="files" refs="files" class="file-btn">
-            <img 
+            <img
               title="Upload bestand"
-              class="component-header-button" 
-              src=".\..\..\assets\images\new_upload.png" 
+              class="component-header-button"
+              src=".\..\..\assets\images\new_upload.png"
             />
           </label>
         </div>
@@ -50,16 +58,25 @@ export default {
         var formData = new FormData();
         formData.append(files[i].name, files[i]);
 
-        FilestorageService.uploadFiles(this.$route.params.id, this.path, formData)
+        FilestorageService.uploadFiles(
+          this.$route.params.id,
+          this.path,
+          formData
+        )
           .then(() => {
-            this.$emit("newFilesUploaded")
+            this.$emit("newFilesUploaded");
           })
           .catch((err) => {
             if (err.response.status === 409) {
-              var confirmation = confirm(err.response.data.response.message)
-              FilestorageService.uploadFiles(this.$route.params.id, this.path, formData, confirmation)
+              var confirmation = confirm(err.response.data.response.message);
+              FilestorageService.uploadFiles(
+                this.$route.params.id,
+                this.path,
+                formData,
+                confirmation
+              )
                 .then(() => {
-                  this.$emit("newFilesUploaded")
+                  this.$emit("newFilesUploaded");
                 })
                 .catch((err) => {
                   if (err.response) {
@@ -72,7 +89,9 @@ export default {
       document.getElementById("files").value = null;
     },
     canUploadFile() {
-      return PermissionService.userHasPermission("may_update_file_in_own_project");
+      return PermissionService.userHasPermission(
+        "may_update_file_in_own_project"
+      );
     },
   },
 };

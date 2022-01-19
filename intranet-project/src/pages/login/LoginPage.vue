@@ -22,7 +22,7 @@
       />
       <br />
       <div class="full-button" @click="submit()">
-        Aanmelden
+        Login
       </div>
       <!-- <p v-if="this.redirectTarget != '/home' && !this.enteredWrongPassword" id="error-message">
         Sessie is ongeldig of verlopen. Log in om terug te keren naar de vorige

@@ -28,7 +28,7 @@
                 class="form-control"
                 placeholder="Naam"
               />
-              <textarea 
+              <textarea
                 oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
                 onclick='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
                 class="form-control"
@@ -51,12 +51,13 @@
               >
               <SearchBar
                 id="userSearchBar"
-                v-bind:searchTerm="this.userSearchTerm"
+                placeholder="Zoek leden..."
                 @searchBarChanged="
                   (searchTerm) => {
                     handleSearchUser(searchTerm);
                   }
                 "
+                v-bind:searchTerm="this.userSearchTerm"
               ></SearchBar>
 
               <div class="dropdown-menu" id="userDropdown">
@@ -85,6 +86,7 @@
               <SearchBar
                 id="parentProjectsSearchBar"
                 v-bind:searchTerm="this.parentSearchTerm"
+                placeholder="Zoek projecten..."
                 @searchBarChanged="
                   (searchTerm) => {
                     handleSearchParent(searchTerm);
@@ -101,10 +103,8 @@
                 >
                   {{ project.project_name }}
                 </div>
-
-                
               </div>
-                            Sub-projecten toevoegen
+              Sub-projecten toevoegen
               <br />
               <span
                 id="selectedChildList"
@@ -120,6 +120,7 @@
               <SearchBar
                 id="childProjectsSearchBar"
                 v-bind:searchTerm="this.childSearchTerm"
+                placeholder="Zoek projecten..."
                 @searchBarChanged="
                   (searchTerm) => {
                     handleSearchChild(searchTerm);
@@ -136,8 +137,6 @@
                 >
                   {{ project.project_name }}
                 </div>
-
-                
               </div>
             </div>
           </form>
@@ -191,7 +190,7 @@ export default {
 
       children: [],
       filteredChildren: [],
-      selectedChildren: []
+      selectedChildren: [],
     };
   },
   mounted() {
@@ -233,36 +232,40 @@ export default {
       if (!this.validateForm()) {
         return;
       }
-            const memberIds = this.getUserIds(this.selectedUsers);
-            const parentIds = this.getProjectIds(this.selectedParents);
-            const childIds = this.getProjectIds(this.selectedChildren);
+      const memberIds = this.getUserIds(this.selectedUsers);
+      const parentIds = this.getProjectIds(this.selectedParents);
+      const childIds = this.getProjectIds(this.selectedChildren);
 
-            console.log(memberIds);
-            console.log(parentIds);
-            console.log(childIds);
+      console.log(memberIds);
+      console.log(parentIds);
+      console.log(childIds);
 
-            const project = {"project_name": this.projectname, "description":this.projectdescription, "memberids": memberIds,
-            "parentids": parentIds, "childids":childIds };
-       ProjectService.addProject(project)
+      const project = {
+        project_name: this.projectname,
+        description: this.projectdescription,
+        memberids: memberIds,
+        parentids: parentIds,
+        childids: childIds,
+      };
+      ProjectService.addProject(project)
         .then(() => {
-
           this.$emit("reloadProjects");
           this.closeModal();
-                    AlertService.alert("Het project \""+this.projectname+"\" is aangemaakt!", "success");
-          
+          AlertService.alert(
+            'Het project "' + this.projectname + '" is aangemaakt!',
+            "success"
+          );
         })
         .catch((err) => {
           if (err.response) {
             console.log(err.response.status);
           }
-            this.closeModal();
+          this.closeModal();
 
-          alert("Er ging iets mis bij het aanmaken van een project, probeer later weer");
+          alert(
+            "Er ging iets mis bij het aanmaken van een project, probeer later weer"
+          );
         });
-
-
-
-        
     },
     validateForm() {
       let projectNameEmpty = this.fieldEmpty(this.projectname);
@@ -325,9 +328,9 @@ export default {
       }
       return false;
     },
-    
-    selectedChildrenContainsChild(projectid){
-       for (const project of this.selectedChildren) {
+
+    selectedChildrenContainsChild(projectid) {
+      for (const project of this.selectedChildren) {
         if (project.projectid == projectid) {
           return true;
         }
@@ -397,19 +400,19 @@ export default {
         );
       });
     },
-    getProjectIds(projectList){
-        let ids = [];
-        for (let project of projectList){
-          ids.push(project.projectid)
-        }
-        return ids;
+    getProjectIds(projectList) {
+      let ids = [];
+      for (let project of projectList) {
+        ids.push(project.projectid);
+      }
+      return ids;
     },
-        getUserIds(userList){
-        let ids = [];
-        for (let user of userList){
-          ids.push(user.userid)
-        }
-        return ids;
+    getUserIds(userList) {
+      let ids = [];
+      for (let user of userList) {
+        ids.push(user.userid);
+      }
+      return ids;
     },
     setFieldEmptyErrorMessage(name) {
       this.errorMessage = 'Het veld "' + name + '" mag niet leeg zijn.';
@@ -474,8 +477,8 @@ textarea {
   margin-top: 5px;
   margin-bottom: 10px;
 }
-#childProjectsSearchBar{
-    margin-top: 5px;
+#childProjectsSearchBar {
+  margin-top: 5px;
   margin-bottom: 10px;
 }
 #selectedUserList {
@@ -484,8 +487,8 @@ textarea {
 #selectedParentList {
   font-family: AddeleThin;
 }
-#selectedChildList{
-   font-family: AddeleThin;
+#selectedChildList {
+  font-family: AddeleThin;
 }
 #errorMessage {
   margin-bottom: 10px;

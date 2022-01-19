@@ -10,7 +10,7 @@
       data-bs-toggle="modal"
       data-bs-target="#createProjectModal"
       type="button"
-      v-show="canCreate()"
+      v-show="canCreateProject()"
     >
       <i class="material-icons pmd-sm">Project toevoegen</i>
     </button>
@@ -69,6 +69,7 @@
           class="col"
           id="searchBarMobile"
           @searchBarChanged="setSearchTerm"
+          placeholder="Filter op naam..."
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
         <Projectshidarchivedcheckbox
@@ -79,15 +80,15 @@
         ></Projectshidarchivedcheckbox>
       </div>
     </div>
-    <div id="listing-container" class="container-fluid">
-      <div v-for="project of filteredProjects" :key="project.project_name">
-        <ProjectListing
-          class="projectlisting"
-          @removeProject="this.removeProject"
-          @archiveProject="this.archiveProject"
-          v-bind:project="project"
-        ></ProjectListing>
-      </div>
+    <div class="listing-container container-fluid">
+      <ProjectListing
+        v-for="project of filteredProjects"
+        :key="project.project_name"
+        class="projectlisting"
+        @removeProject="this.removeProject"
+        @archiveProject="this.archiveProject"
+        v-bind:project="project"
+      ></ProjectListing>
       <div id="noresults" v-if="filteredProjects.length == 0">
         Geen resultaten.
       </div>
@@ -123,7 +124,7 @@ export default {
     };
   },
   methods: {
-    canCreate() {
+    canCreateProject() {
       return PermissionService.userHasPermission("may_create_project");
     },
     gotoCreateProject() {
@@ -216,17 +217,17 @@ export default {
       }
       return 0;
     },
-    loadProjects(){
-            ProjectService.getProjects()
-      .then((response) => {
-        this.projects = response;
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-      });
-    }
+    loadProjects() {
+      ProjectService.getProjects()
+        .then((response) => {
+          this.projects = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+        });
+    },
   },
 
   computed: {
@@ -278,13 +279,16 @@ export default {
   height: fit-content;
   width: 100%;
 }
-#listing-container {
-  padding: 8px 4px 8px 4px;
+.listing-container {
+  padding: 0;
   border-radius: 0px 0px 10px 10px;
-  background-color: rgba(255,255,255,0.3)
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.container {
+  padding: 0;
 }
 #noresults {
-  margin-top: 10px;
+  margin: 10px;
   color: white;
 }
 #actionButton {

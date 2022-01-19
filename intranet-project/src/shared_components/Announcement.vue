@@ -247,9 +247,6 @@ export default {
   background-color: rgba(180,180,180,0.3);
   border-width: 0;
 }
-.accordion-button:focus{
-  box-shadow: none;
-}
 .card {
   border-radius: 10px 10px 0px 0px;
   background-color: rgba(255, 255, 255, 0.7);

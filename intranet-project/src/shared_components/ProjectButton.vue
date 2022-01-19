@@ -1,5 +1,5 @@
 <template>
-  <button @click="onClick()" class="project-button">
+  <router-link :to="'/project/' + this.projectId" class="project-button">
     <img
       v-if="lastUpdated >= lastVisit"
       src=".\..\assets\images\logo\square.png"
@@ -9,7 +9,7 @@
       src=".\..\assets\images\logo\square_dark.png"
     />
     {{ this.projectName }}
-  </button>
+  </router-link>
 </template>
 
 <script>
@@ -20,11 +20,6 @@ export default {
     return {
       lastVisit: new Date(),
     };
-  },
-  methods: {
-    onClick() {
-      this.$router.push("/project/" + this.projectId);
-    },
   },
 };
 </script>

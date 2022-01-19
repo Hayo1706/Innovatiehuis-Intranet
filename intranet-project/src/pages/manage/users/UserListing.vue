@@ -5,9 +5,10 @@
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col d-block d-lg-none">
-        <div class="full-button mobileRow extraLarge" @click="onClick()">
-          {{ user.first_name + " " + user.last_name }}
-        </div>
+        <div
+          class="full-button mobileRow extraLarge"
+          @click="onClick()"
+        >{{ user.first_name + " " + user.last_name }}</div>
         <div class="mobileRow">
           {{
             user.created.toLocaleString("nl-NL", {
@@ -31,9 +32,7 @@
         </div>
         <div class="mobileRow">
           <select v-model="selectedRole" :disabled="!canUpdateUserRole()">
-            <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
-              {{ role }}
-            </option>
+            <option v-for="role in Object.keys(this.roles)" v-bind:key="role">{{ role }}</option>
           </select>
         </div>
         <div class="mobileRow">{{ user.amountprojects }}</div>
@@ -50,14 +49,8 @@
                 src="@\assets\images\screening1.png"
                 v-if="screeningstate == 'nog niet in behandeling'"
               />
-              <img
-                src="@\assets\images\screening2.png"
-                v-if="screeningstate == 'in behandeling'"
-              />
-              <img
-                src="@\assets\images\check.png"
-                v-if="screeningstate == 'voltooid'"
-              />
+              <img src="@\assets\images\screening2.png" v-if="screeningstate == 'in behandeling'" />
+              <img src="@\assets\images\check.png" v-if="screeningstate == 'voltooid'" />
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <select
@@ -68,9 +61,7 @@
                 <option
                   v-for="screeningstate in Object.keys(this.screeningstates)"
                   v-bind:key="screeningstate"
-                >
-                  {{ screeningstate }}
-                </option>
+                >{{ screeningstate }}</option>
               </select>
             </ul>
           </div>
@@ -78,17 +69,14 @@
       </div>
 
       <!-- large screens-->
-      <div
-        class="col-3 d-none d-lg-flex align-items-center justify-content-start"
-        @click="onClick()"
-      >
-        <div class="name-button">
-          {{ user.first_name + " " + user.last_name }}
-        </div>
+      <div class="col-3 d-none d-lg-flex align-items-center justify-content-start">
+        <router-link
+          title="Naar profiel"
+          :to="'/user/' + this.user.userid"
+          class="name-button"
+        >{{ user.first_name + " " + user.last_name }}</router-link>
       </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
+      <div class="col d-none d-lg-flex align-items-center justify-content-center">
         {{
           user.created.toLocaleString("nl-NL", {
             day: "numeric",
@@ -97,9 +85,7 @@
           })
         }}
       </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
+      <div class="col d-none d-lg-flex align-items-center justify-content-center">
         {{
           user.last_seen.toLocaleString("nl-NL", {
             day: "numeric",
@@ -111,20 +97,14 @@
           })
         }}
       </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
+      <div class="col d-none d-lg-flex align-items-center justify-content-center">
         <select v-model="selectedRole" :disabled="!canUpdateUserRole()">
-          <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
-            {{ role }}
-          </option>
+          <option v-for="role in Object.keys(this.roles)" v-bind:key="role">{{ role }}</option>
         </select>
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
-        {{ user.amountprojects }}
-      </div>
+      >{{ user.amountprojects }}</div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
         id="screening justify-content-center"
@@ -142,14 +122,8 @@
                 src="@\assets\images\screening1.png"
                 v-if="screeningstate == 'nog niet in behandeling'"
               />
-              <img
-                src="@\assets\images\screening2.png"
-                v-if="screeningstate == 'in behandeling'"
-              />
-              <img
-                src="@\assets\images\check.png"
-                v-if="screeningstate == 'voltooid'"
-              />
+              <img src="@\assets\images\screening2.png" v-if="screeningstate == 'in behandeling'" />
+              <img src="@\assets\images\check.png" v-if="screeningstate == 'voltooid'" />
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <select
@@ -160,9 +134,7 @@
                 <option
                   v-for="screeningstate in Object.keys(this.screeningstates)"
                   v-bind:key="screeningstate"
-                >
-                  {{ screeningstate }}
-                </option>
+                >{{ screeningstate }}</option>
               </select>
             </ul>
           </div>
@@ -170,10 +142,11 @@
       </div>
 
       <div class="col d-lg-flex align-items-center justify-content-center">
-        <a @click="handleRemoveUser(this.user)" v-show="canDelete()"
-          ><div class="listing-icon iconHolder">
-            <img src="@\assets\images\delete.png" /></div
-        ></a>
+        <div @click="handleRemoveUser(this.user)" v-show="canDelete()">
+          <div class="listing-icon iconHolder">
+            <img src="@\assets\images\delete.png" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -335,8 +308,7 @@ export default {
 </script>
 
 <style scoped>
-.name-button{
-  border-radius: 0.5rem;
+.name-button {
   background-color: var(--blue2);
   width: 100%;
   height: 100%;
@@ -348,7 +320,7 @@ export default {
   padding: 6px;
   text-decoration: none;
 }
-.name-button:hover{
+.name-button:hover {
   background-color: var(--blue1);
   color: white;
 }
@@ -357,26 +329,11 @@ export default {
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
-  background: linear-gradient(
-    to right top,
-    rgba(230, 230, 230, 0.7),
-    rgba(230, 230, 230, 0.9)
-  );
-  border-radius: 0.5rem;
-  margin-bottom: 0.3rem;
+  background-color: rgb(234, 234, 234);
+  border-radius: 0 0.2rem 0.2rem 0;
+  /* margin-bottom: 0.3rem; */
   font-size: 1.6vh;
-}
-.userButton {
-  font-weight: bold;
-  background-color: var(--gold1);
-  color: var(--blue1);
-  border-radius: 1rem;
-  padding-left: 10px;
-  padding-right: 10px;
-  height: fit-content;
-  cursor: pointer;
-  width: fit-content;
-  margin-left: 10px;
+  border-bottom: 1px solid #e1e1e1;
 }
 .mobileRow {
   min-height: 50px;
@@ -410,11 +367,14 @@ select {
   border-radius: 10%;
 }
 .row select {
-  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.8),
+    rgba(225, 225, 225, 0.9)
+  );
 }
 .listing-icon {
   border-style: none;
   cursor: pointer;
 }
-
 </style>
