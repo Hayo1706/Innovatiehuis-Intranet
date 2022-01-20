@@ -58,6 +58,10 @@ var UserService = function () {
         const { data } = await axiosClient.patch(`/users/${userid}/screening/${screeningstatus}`, { timeout: 2000 });
         return data;
     }
+    async function getRoles() {
+        const { data } = await axiosClient.get(`/roles`, { timeout: 2000 });
+        return data;
+    }
     return {
         getUsers,
         getUserById,
@@ -68,7 +72,8 @@ var UserService = function () {
         addUserToProject,
         removeUserFromProject,
         updateUserRole,
-        updateUserScreening
+        updateUserScreening,
+        getRoles
     }
 
 }

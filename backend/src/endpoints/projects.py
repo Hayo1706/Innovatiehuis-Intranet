@@ -103,8 +103,8 @@ def read_users(project_id):
 @check_permissions(Projects.may_update)
 def update_users(project_id):
     try:
-        body = connexion.request.json['project']
-        new_ids = body['userids']
+        body = connexion.request.json
+        new_ids = body['ids']
     except KeyError:
         return response("Invalid body", 400)
 
@@ -124,7 +124,7 @@ def update_users(project_id):
         )
     for old_id in ids_to_remove:
         query_update(
-            "DELETE FROM users_have_projects WHERE userid = %(id)s AND projectid = %(projectid)s);",
+            "DELETE FROM users_have_projects WHERE userid = %(id)s AND projectid = %(projectid)s;",
             {'id': old_id, 'projectid': project_id}
         )
     return response(f"Successfully updated list of members in Project {project_id}", 200)
@@ -170,6 +170,36 @@ def read_parents(project_id):
         {'projectid': project_id})
 
 
+@check_permissions(Projects.may_update)
+def update_parents(project_id):
+    try:
+        body = connexion.request.json
+        new_ids = body['ids']
+    except KeyError:
+        return response("Invalid body", 400)
+
+    # 1 get all parent project ids
+    old_ids = [result["parentid"] for result in query(
+        "SELECT parentid FROM projects_have_parents WHERE childid = %(projectid)s",
+        {'projectid': project_id}
+    )]
+    # 2 cross-check with supplied userids
+    ids_to_add = list(set(new_ids) - set(old_ids))
+    ids_to_remove = list(set(old_ids) - set(new_ids))
+    # 3 query changes
+    for new_id in ids_to_add:
+        query_update(
+            "INSERT INTO projects_have_parents (parentid, childid) VALUES (%(new_id)s, %(projectid)s);",
+            {'new_id': new_id, 'projectid': project_id}
+        )
+    for old_id in ids_to_remove:
+        query_update(
+            "DELETE FROM projects_have_parents WHERE parentid = %(old_id)s AND childid = %(projectid)s;",
+            {'old_id': old_id, 'projectid': project_id}
+        )
+    return response(f"Successfully updated list of parents in Project {project_id}", 200)
+
+
 @check_permissions(Projects.may_update)  # TODO: placeholder for more specific permissions?
 def add_parent(project_id, parent_id):
     query_update(
@@ -196,6 +226,36 @@ def read_children(project_id):  # returns array of id/name/shared_files combinat
         "ON projects_have_parents.childid = projects.projectid "
         "WHERE parentid = %(projectid)s",
         {'projectid': project_id})
+
+
+@check_permissions(Projects.may_update)
+def update_children(project_id):
+    try:
+        body = connexion.request.json
+        new_ids = body['ids']
+    except KeyError:
+        return response("Invalid body", 400)
+
+    # 1 get all parent project ids
+    old_ids = [result["childid"] for result in query(
+        "SELECT childid FROM projects_have_parents WHERE parentid = %(projectid)s",
+        {'projectid': project_id}
+    )]
+    # 2 cross-check with supplied userids
+    ids_to_add = list(set(new_ids) - set(old_ids))
+    ids_to_remove = list(set(old_ids) - set(new_ids))
+    # 3 query changes
+    for new_id in ids_to_add:
+        query_update(
+            "INSERT INTO projects_have_parents (parentid, childid) VALUES (%(projectid)s, %(new_id)s);",
+            {'new_id': new_id, 'projectid': project_id}
+        )
+    for old_id in ids_to_remove:
+        query_update(
+            "DELETE FROM projects_have_parents WHERE parentid = %(projectid)s AND childid = %(old_id)s;",
+            {'old_id': old_id, 'projectid': project_id}
+        )
+    return response(f"Successfully updated list of children in Project {project_id}", 200)
 
 
 # projects/{id}/children/{id}

@@ -1,6 +1,9 @@
 <template>
   <div id="login" class="component-container">
-    <div class="component-header">Login</div>
+    <div class="component-header">
+      <img src=".\..\..\assets\images\logo\square.png">
+      <h2>Innovatiehuis Politie</h2>
+    </div>
     <div style="text-align: center" class="component-body">
       <input
         v-model="this.loginAttempt.email"
@@ -19,20 +22,15 @@
       />
       <br />
       <div class="full-button" @click="submit()">
-        Aanmelden
+        Login
       </div>
-      <br />
-      <p v-if="this.redirectTarget != '/home' && !this.enteredWrongPassword" id="error-message">
-        Sessie is ongeldig of verlopen. Log in om terug te keren naar de vorige
-        pagina.
-      </p>
-      <p id="error-message">{{ this.error }}</p>
     </div>
   </div>
 </template>
 
 <script>
 import LoginService from "../../services/LoginService";
+import AlertService from "../../services/AlertService";
 
 export default {
   components: {},
@@ -54,7 +52,7 @@ export default {
         this.loginAttempt.password
       )
         .then((response) => {
-          console.log(response.status);
+          console.log(response.status, "User logged in successfully");
 
           //set to local storage: user id and user permission data retrieved from API
           for (var property in response.data[0]) {
@@ -65,13 +63,7 @@ export default {
           this.$router.push(this.redirectTarget);
         })
         .catch((err) => {
-          console.log(err);
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          this.error = err.response.data.response.message;
-          console.log(this.err.response.data.response.message);
-          this.enteredWrongPassword = true;
+          AlertService.handleError(err);
         });
     },
   },
@@ -92,19 +84,52 @@ export default {
 <style>
 #login {
   width: 400px;
-  margin: 5vh auto auto;
+  margin: 22vh auto auto;
 }
-#center {
+#login #center {
   margin: auto;
 }
-#error-message {
+#login #error-message {
   color: red;
 }
 .login-input {
   text-align: center;
-  width: 100%;
+  min-width: 90%;
   height: fit-content;
   font-size: 14pt;
   margin: 4px;
+}
+#login .full-button{
+  justify-content: center;
+  width: 96%;
+  margin: 16px auto 1px auto;
+}
+#login input{
+  border:2px solid var(--blue4);
+  border-radius: 0.5vh;
+}
+#login input:focus{
+  outline: none !important;
+  border:2px solid var(--blue2);
+}
+#login .component-header{
+  display: flex;
+  height: 2.5em;
+  align-items: baseline;
+}
+#login .component-header img{
+  height: 2em;
+}
+#login h2 {
+  display: inline-block;
+  font-family: AddeleThin;
+  width: 100%;
+  text-align: center;
+}
+#login .component-container{
+  padding-bottom: 19px;
+}
+#login .component-body{
+  padding-top: 14px;
 }
 </style>

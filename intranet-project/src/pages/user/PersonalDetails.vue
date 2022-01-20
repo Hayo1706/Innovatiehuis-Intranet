@@ -52,6 +52,7 @@
 
 <script>
 import UserService from "@/services/UserService";
+import AlertService from "../../services/AlertService";
 
 export default {
   name: "PersonalDetails",
@@ -79,13 +80,13 @@ export default {
             "getUserEvent",
             this.user.first_name + " " + this.user.last_name
           );
-          if (localStorage.getItem("userid") === this.$route.params.id)
+          if (localStorage.getItem("userid") === this.$route.params.id) {
             this.show_password = true;
+          }
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     toResetPassword() {
@@ -121,7 +122,7 @@ export default {
 .item-text {
   margin-bottom: 1vh;
   white-space: initial;
-  font-family: addelleThin;
+  font-family: AddeleThin;
 }
 
 .button {

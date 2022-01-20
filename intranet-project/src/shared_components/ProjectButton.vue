@@ -1,5 +1,5 @@
 <template>
-  <button @click="onClick()" class="project-button">
+  <router-link :to="'/project/' + this.projectId" class="project-button">
     <img
       v-if="lastUpdated >= lastVisit"
       src=".\..\assets\images\logo\square.png"
@@ -9,7 +9,7 @@
       src=".\..\assets\images\logo\square_dark.png"
     />
     {{ this.projectName }}
-  </button>
+  </router-link>
 </template>
 
 <script>
@@ -20,11 +20,6 @@ export default {
     return {
       lastVisit: new Date(),
     };
-  },
-  methods: {
-    onClick() {
-      this.$router.push("/project/" + this.projectId);
-    },
   },
 };
 </script>
@@ -50,8 +45,7 @@ export default {
   transition: .3s;
 }
 .project-button:hover {
-  border: solid var(--gold1) 1px;
-  border-left: solid var(--gold1) 18px;
+  border-left: solid var(--gold1) 11px;
   -webkit-transition: .3s;
   transition: .3s;
 }

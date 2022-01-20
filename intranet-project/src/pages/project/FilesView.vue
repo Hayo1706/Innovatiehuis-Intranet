@@ -6,7 +6,7 @@
           @searchBarChanged="setSearchTerm"
           @newFilesUploaded="currentFilesChanged"
         >
-        <text>Bestanden</text>
+        Bestanden
         </ProjectFilesHeader>
     </div>
       <div class="row">
@@ -35,6 +35,8 @@
 <script>
 import ProjectFilesHeader from "./ProjectFilesHeader.vue";
 import ProjectFile from "./ProjectFile.vue";
+import AlertService from "../../services/AlertService";
+
 export default {
   setup(){
     const startDrag = (event, path) => {

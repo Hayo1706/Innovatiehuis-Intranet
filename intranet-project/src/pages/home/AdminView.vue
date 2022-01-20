@@ -1,79 +1,105 @@
 <template>
-  <div class="component-container" style="min-height: fit-content">
+  <div class="component-container" style="min-height: fit-content" v-if="canSeeAdminView()">
     <div class="component-header">
       <slot></slot>
     </div>
     <div>
-      <button
-          data-toggle="tooltip" data-placement="bottom" title="Projectenoverzicht"
+      <router-link
+        title="Projectenoverzicht"
+        class="full-button mobileRow extraLarge"
+        to="/manage/projects"
+        v-if="this.canSeeProjects()"
+      >
+        <img class="big-img" src="../../assets/images/projects_icon.png" />Projectenoverzicht
+      </router-link>
+      <router-link
+        title="Gebruikersoverzicht"
+        class="full-button mobileRow extraLarge"
+        to="/manage/users"
+        v-if="this.canSeeUsers()"
+      >
+        <img class="big-img" src="../../assets/images/users_icon.png" />Gebruikersoverzicht
+      </router-link>
+      <router-link
+          title="Rollenoverzicht"
           class="full-button mobileRow extraLarge"
-          @click="projectsClick()"
-          v-if="this.canSeeProjects()"
-
-      ><img src="../../assets/images/projects_icon.png">Projectenoverzicht</button>
-      <button
-          title="Gebruikersoverzicht"
-          class="full-button mobileRow extraLarge"
-          @click="usersClick()"
+          to="/manage/roles"
           v-if="this.canSeeUsers()"
-      ><img src="../../assets/images/users_icon.png">Gebruikersoverzicht</button>
-      <hr>
+      >
+        <img class="big-img" src="../../assets/images/users_icon.png" />Rollenoverzicht
+      </router-link>
+      <hr />
       <button
-          title="Gebruikersoverzicht"
-          class="full-button mobileRow extraLarge"
-          @click="usersClick()"
-          v-if="this.canSeeUsers()"
-      >Project aanmaken</button>
+        title="Project aanmaken"
+        class="full-button mobileRow extraLarge"
+        data-bs-target="#createProjectModal"
+        data-bs-toggle="modal"
+        type="button"
+        v-if="this.canCreateProjects()"
+      >
+        <img class="small-img" src="../../assets/images/add_project.png" />
+        Project aanmaken
+      </button>
       <button
-          title="Gebruikersoverzicht"
-          class="full-button mobileRow extraLarge"
-          @click="usersClick()"
-          v-if="this.canSeeUsers()"
-      >Gebruiker toevoegen</button>
+        title="Gebruiker aanmaken"
+        class="full-button mobileRow extraLarge"
+        data-bs-target="#createUserModal"
+        data-bs-toggle="modal"
+        type="button"
+        v-if="this.canCreateUsers()"
+      >
+        <img class="small-img" src="../../assets/images/add_user.png" />
+        Gebruiker toevoegen
+      </button>
     </div>
+    <ProjectCreateModal></ProjectCreateModal>
+    <UserCreateModal></UserCreateModal>
   </div>
 </template>
 
 <script>
 import PermissionService from "@/services/PermissionService";
-
+import ProjectCreateModal from "@/pages/manage/projects/ProjectCreateModal.vue";
+import UserCreateModal from "@/pages/manage/users/UserCreateModal.vue";
 export default {
-  components: {  },
+  components: { ProjectCreateModal, UserCreateModal },
   name: "AdminView",
   props: [],
   data: function () {
-    return {
-    };
+    return {};
   },
   methods: {
-    projectsClick() {
-      this.$router.push("/manage/projects");
-    },
-    usersClick() {
-      this.$router.push("/manage/users");
-    },
     canSeeProjects() {
-      return (
-          PermissionService.userHasPermission('may_read_any_project')
-      )
+      return PermissionService.userHasPermission("may_read_any_project");
     },
     canSeeUsers() {
-      return (
-          PermissionService.userHasPermission('may_read_any_user')
-      )
+      return PermissionService.userHasPermission("may_read_any_user");
+    },
+    canCreateProjects() {
+      return PermissionService.userHasPermission("may_create_project");
+    },
+    canCreateUsers() {
+      return PermissionService.userHasPermission("may_create_users");
+    },
+    canSeeAdminView(){
+      return this.canSeeProjects() || this.canSeeUsers() || this.canCreateProjects() ||this.canCreateUsers()
     }
   },
 };
 </script>
 
 <style scoped>
-button:hover{
+button:hover {
   padding-left: 15px;
-
 }
-img{
+.big-img {
   height: 40px;
-  margin-right: 20px;
-  margin-left: 20px;
+  margin-right: 16px;
+  margin-left: 4px;
+}
+.small-img{
+  height: 30px;
+  margin-right: 12px;
+  margin-left: 4px;
 }
 </style>

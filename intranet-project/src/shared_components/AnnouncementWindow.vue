@@ -104,6 +104,7 @@ import Announcement from "./Announcement.vue";
 import { getPathArguments } from "@/services/DataConverter.js";
 import AnnouncementService from "@/services/AnnouncementService.js";
 import PermissionService from "@/services/PermissionService";
+import AlertService from "@/services/AlertService";
 
 export default {
   components: { Announcement },
@@ -121,12 +122,10 @@ export default {
       AnnouncementService.getAnnouncementsByProject(this.pathArgs.project)
         .then((response) => {
           this.announcements = response;
-          console.log(this.announcements);
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     canAddAnnouncement(){
@@ -139,16 +138,13 @@ export default {
         this.newAnnouncement
       )
         .then((response) => {
-          console.log(response);
           this.newAnnouncement.title = "";
           this.newAnnouncement.content = "";
-          console.log("about to update key");
           this.reload();
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     reload() {

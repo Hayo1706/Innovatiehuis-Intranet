@@ -1,24 +1,44 @@
 <template>
-  <div class="col">
+  <div>
     <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
-    <span v-show="canArchive()">
-      <a
-        v-if="project.is_archived"
-        class="link"
-        @click="handleArchiveProject(project)"
-        ><span class="listing-icon iconHolder"
-          ><img src="@/assets/images/dearchive.png" /></span
-      ></a>
 
-      <a v-else class="link" @click="handleArchiveProject(project)">
-        <span class="listing-icon iconHolder"
-          ><img src="@/assets/images/archive.png" /></span
-      ></a>
-    </span>
-    <a class="link" v-show="canDelete()" @click="handleDeleteProject(project)"
-      ><span class="listing-icon iconHolder"
-        ><img src="@/assets/images/delete.png" /></span
-    ></a>
+    <div class="col">
+      <div class="row" style="margin-right: 8px">
+        <div class="col">
+          <div v-show="canArchive()">
+            <div
+              v-if="project.is_archived"
+              class="link"
+              @click="handleArchiveProject(project)"
+            >
+              <span
+                title="Project de-archiveren"
+                class="listing-icon icon-holder"
+              >
+                <img src="@/assets/images/dearchive.png" />
+              </span>
+            </div>
+            <div v-else class="link" @click="handleArchiveProject(project)">
+              <span title="Project archiveren" class="listing-icon icon-holder">
+                <img src="@/assets/images/archive.png" />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div
+            class="link"
+            v-show="canDelete()"
+            @click="handleDeleteProject(project)"
+          >
+            <span title="Project verwijderen" class="listing-icon icon-holder">
+              <img src="@/assets/images/delete.png" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -74,19 +94,24 @@ export default {
 };
 </script>
 <style scoped>
+.col {
+  padding: 0;
+}
 img {
-  height: 40px;
+  height: 3em;
   cursor: pointer;
+  opacity: 60%;
+}
+img:hover {
+  opacity: 80%;
 }
 .rotate {
   transform: rotate(180deg);
 }
 .link {
   text-decoration: none;
-  margin-right: 7px;
 }
-.iconHolder {
-  padding: 10px;
+.icon-holder {
   display: inline-block;
 }
 </style>

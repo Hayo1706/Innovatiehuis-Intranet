@@ -84,6 +84,8 @@
 import FilestorageService from "@/services/FilestorageService.js";
 import ProjectFolderHeader from "./ProjectFolderHeader.vue";
 import ProjectFolder from "./ProjectFolder.vue";
+import AlertService from "../../services/AlertService";
+
 export default {
   setup(){
     const startDrag = (event, path) => {
@@ -139,9 +141,7 @@ export default {
               this.$emit("currentFilesChanged");
             })
             .catch((err) => {
-              if (err.response) {
-                console.log(err.response.status);
-              }
+              AlertService.handleError(err);
             });
       }
       else{
@@ -150,9 +150,7 @@ export default {
               this.$emit("currentFoldersChanged");
             })
             .catch((err) => {
-              if (err.response) {
-                console.log(err.response.status);
-              }
+              AlertService.handleError(err);
             });
       }
     },

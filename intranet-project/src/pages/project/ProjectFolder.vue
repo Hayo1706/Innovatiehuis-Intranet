@@ -69,6 +69,7 @@
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
 import PermissionService from "@/services/PermissionService.js";
+import AlertService from "../../services/AlertService";
 
 export default {
   name: "ProjectFolder",
@@ -95,6 +96,7 @@ export default {
       FilestorageService.deleteFolder(this.projectID, this.folderPath, false)
         .then(() => {
           this.$emit("folderDeleted");
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
           if(err.response.status === 409){
@@ -102,19 +104,15 @@ export default {
               FilestorageService.deleteFolder(this.projectID, this.folderPath, true)
               .then(() => {
                 this.$emit("folderDeleted");
+                AlertService.handleSuccess(response);
               })
               .catch((err) => {
-                  if (err.response) {
-                    console.log(err.response);
-                }
+                AlertService.handleError(err);
               });
-              console.log(err.response.status)
             }
-            console.log(err.response.status)
           }
-
           if (err.response) {
-            console.log(err.response);
+            AlertService.handleError(err);
           }
         });
     },
@@ -154,15 +152,11 @@ export default {
       console.log(targetPath, this.folderPath, this.projectID)
       FilestorageService.moveFolder(this.projectID, this.folderPath, targetPath, "")
         .then((response) => {
-          if (response.status == 400) {
-            alert(response);
-          }
           this.$emit("folderMoved");
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     confirmMove(folder){
@@ -179,11 +173,10 @@ export default {
               this.folders.push(response[folder])
             }
           }
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     goToFolder() {

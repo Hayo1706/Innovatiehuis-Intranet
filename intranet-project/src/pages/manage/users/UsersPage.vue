@@ -6,7 +6,7 @@
     />
     <button
       id="actionButton"
-      class="full btn pmd-btn-fab pmd-ripple-effect btn-primary"
+      class="full btn pmd-btn-fab pmd-ripple-effect btn-primary d-lg-none"
       data-bs-toggle="modal"
       data-bs-target="#createUserModal"
       type="button"
@@ -27,6 +27,7 @@
       @searchBarChanged="setSearchTerm"
       v-bind:searchTerm="this.searchTerm"
     ></UsersHeader>
+
     <div class="container-fluid d-sm-block d-lg-none" id="sorting_space">
       <p>Sorteren op:</p>
       <div class="row">
@@ -35,8 +36,24 @@
           <span v-if="sortingMethod == 'name'"
             ><i v-if="this.ascending" class="bi-caret-down-fill"></i
             ><i v-else class="bi-caret-up-fill"></i
-          ></span></button
-        ><button class="full-button col-3" @click="sort('created')">
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('email')">
+          Email
+          <span v-if="sortingMethod == 'email'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('phone')">
+          Telefoonnummer
+          <span v-if="sortingMethod == 'phone'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+
+        <button class="full-button col-3" @click="sort('created')">
           Registreerdatum
           <span v-if="sortingMethod == 'created'"
             ><i v-if="this.ascending" class="bi-caret-down-fill"></i
@@ -73,21 +90,23 @@
         </button>
       </div>
     </div>
-    <UserCreateModal></UserCreateModal>
+    <UserCreateModal @reloadUsers="loadUsers()"></UserCreateModal>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
         <SearchBar
           class="col"
           id="searchBarMobile"
           @searchBarChanged="setSearchTerm"
+          placeholder="Zoek gebruikers..."
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
       </div>
     </div>
-    <div id="listing-container" class="container-fluid">
-      <div v-for="user of filteredUsers" :key="user.first_name">
+    <div class="listing-container container-fluid">
+      <div v-for="user of filteredUsers" :key="user.userid">
         <UserListing
           v-bind:user="user"
+          v-bind:all_roles="roles"
           @removeUser="this.removeUser"
           @screeningChanged="setUserScreening"
           @roleChanged="setUserRole"
@@ -102,12 +121,14 @@
 </template>
 
 <script>
+import AlertService from "@/services/AlertService.js";
 import UserService from "@/services/UserService.js";
 import UsersHeader from "./UsersHeader.vue";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import UserListing from "./UserListing.vue";
 import UserCreateModal from "./UserCreateModal.vue";
 import PermissionService from "@/services/PermissionService.js";
+
 export default {
   components: {
     UsersHeader,
@@ -122,6 +143,7 @@ export default {
       searchTerm: null,
       sortingMethod: "name",
       ascending: true,
+      roles: [],
     };
   },
   methods: {
@@ -147,9 +169,7 @@ export default {
       this.searchTerm = value;
     },
     shouldShow(item) {
-      let shouldShow = false;
-      shouldShow = this.matchesSearchTermWhenShould(item);
-      return shouldShow;
+      return this.matchesSearchTermWhenShould(item);
     },
     matchesSearchTermWhenShould(item) {
       if (this.searchTerm == null) {
@@ -159,6 +179,18 @@ export default {
           .toLowerCase()
           .includes(this.searchTerm.toLowerCase());
       }
+    },
+    loadUsers() {
+      UserService.getUsers()
+        .then((response) => {
+          this.users = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          AlertService.handleError(err);
+        });
     },
     removeUser(userid) {
       this.users = this.users.filter(function (item) {
@@ -192,14 +224,26 @@ export default {
       });
       if (this.sortingMethod == "name") {
         filteredUsers = filteredUsers.sort((a, b) => {
-          let fa = a.first_name.toLowerCase(),
-            fb = b.first_name.toLowerCase();
+          let fa = a.first_name.toLowerCase() + " " + a.last_name.toLowerCase(),
+            fb = b.first_name.toLowerCase() + " " + b.last_name.toLowerCase();
           return this.sortingFunction(fa, fb);
         });
       } else if (this.sortingMethod == "created") {
         filteredUsers = filteredUsers.sort((a, b) => {
           let fa = a.created,
             fb = b.created;
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "email") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.email,
+            fb = b.email;
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "phone") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.phone_number,
+            fb = b.phone_number;
           return this.sortingFunction(fa, fb);
         });
       } else if (this.sortingMethod == "last_seen") {
@@ -230,17 +274,16 @@ export default {
       return filteredUsers;
     },
   },
-  async created() {
-    this.$emit("newHeaderTitle", "Gebruikers - Overzicht");
-    UserService.getUsers()
+  created() {
+    UserService.getRoles()
       .then((response) => {
-        this.users = response;
+        this.roles = response;
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
+        AlertService.handleError(err);
       });
+    this.$emit("newHeaderTitle", "Gebruikers - Overzicht");
+    this.loadUsers();
   },
 };
 </script>
@@ -267,13 +310,13 @@ export default {
   margin-bottom: 5px;
   width: 100%;
 }
-#listing-container {
-  padding: 8px 4px 8px 4px;
+.listing-container {
+  padding: 0;
   border-radius: 0px 0px 10px 10px;
-  background-color: rgba(255,255,255,0.3)
+  background-color: rgba(255, 255, 255, 0.3);
 }
 #noresults {
-  margin-top: 10px;
+  margin: 10px;
   color: white;
 }
 #actionButton {

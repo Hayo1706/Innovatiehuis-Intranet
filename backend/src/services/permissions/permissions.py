@@ -1,8 +1,11 @@
+from datetime import datetime, timedelta, timezone
+
 import src.config as config
 from functools import wraps
 from flask import jsonify
 from src.services.helper_functions import query, response
-from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity, unset_jwt_cookies
+from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity, unset_jwt_cookies, get_jwt, create_access_token, \
+    set_access_cookies
 
 
 # ###### HOW TO CHECK ######
@@ -36,7 +39,7 @@ def check_permissions(rule, *parameters):
                 return resp, 401
             screening_status = query("SELECT screening_status FROM users WHERE userid = %(user_id)s",
                                      {'user_id': get_jwt_identity()})[0]
-            if screening_status['screening_status'] == 2:
+            if screening_status['screening_status'] == 1:
                 user_perm = \
                     query("SELECT roles.* FROM users JOIN roles ON users.roleid = roles.roleid WHERE userid = %(user_id)s",
                           {'user_id': get_jwt_identity()})[0]
@@ -44,7 +47,7 @@ def check_permissions(rule, *parameters):
                 if rule(user_perm, *[kwargs[v] for v in compare]) or config.DEBUG_MODE:
                     return fn(*args, **kwargs)
 
-            return response("No permission", 403)
+            return response("You do not have permission to perform this action, you are now under arrest.", 403)
 
         return decorator
 

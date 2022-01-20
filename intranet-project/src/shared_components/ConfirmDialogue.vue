@@ -3,8 +3,8 @@
     <h2 style="margin-top: 0">{{ title }}</h2>
     <p>{{ message }}</p>
     <div class="btns">
-      <button class="confirm-btn" @click="_confirm">{{ okButton }}</button>
       <button class="cancel-btn" @click="_cancel">{{ cancelButton }}</button>
+      <button class="confirm-btn" @click="_confirm">{{ okButton }}</button>
     </div>
   </popup-modal>
 </template>
@@ -73,10 +73,11 @@ export default {
 }
 
 .confirm-btn {
+  width: 9em;
   padding: 0.5em 1em;
   margin: 0em 0.2em 0em 0.2em;
-  background-color: var(--blue1);
   color: #e6e6e6;
+  background-color: var(--blue1);
   border-radius: 5px;
   font-weight: bold;
   font-size: 16px;
@@ -85,10 +86,11 @@ export default {
 }
 
 .cancel-btn {
+  width: 9em;
   padding: 0.5em 1em;
   margin: 0em 0.2em 0em 0.2em;
-  background-color: #e6e6e6;
   color: var(--blue1);
+  background-color: #e6e6e6;
   border-radius: 5px;
   font-weight: bold;
   font-size: 16px;

@@ -6,11 +6,11 @@
     />
     <button
       id="actionButton"
-      class="btn pmd-btn-fab pmd-ripple-effect btn-primary"
+      class="btn pmd-btn-fab pmd-ripple-effect btn-primary d-lg-none"
       data-bs-toggle="modal"
       data-bs-target="#createProjectModal"
       type="button"
-      v-show="canCreate()"
+      v-show="canCreateProject()"
     >
       <i class="material-icons pmd-sm">Project toevoegen</i>
     </button>
@@ -35,40 +35,42 @@
       <div class="row">
         <button class="full-button col-3" @click="sort('name')">
           Naam
-          <span v-if="sortingMethod == 'name'"
-            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-            ><i v-else class="bi-caret-up-fill"></i
-          ></span></button
-        ><button class="full-button col-3" @click="sort('created')">
+          <span v-if="sortingMethod == 'name'">
+            <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+            <i v-else class="bi-caret-up-fill"></i>
+          </span>
+        </button>
+        <button class="full-button col-3" @click="sort('created')">
           Aanmaakdatum
-          <span v-if="sortingMethod == 'created'"
-            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-            ><i v-else class="bi-caret-up-fill"></i
-          ></span>
+          <span v-if="sortingMethod == 'created'">
+            <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+            <i v-else class="bi-caret-up-fill"></i>
+          </span>
         </button>
         <button class="full-button col-3" @click="sort('last_updated')">
           Laatste update
-          <span v-if="sortingMethod == 'last_updated'"
-            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-            ><i v-else class="bi-caret-up-fill"></i
-          ></span>
+          <span v-if="sortingMethod == 'last_updated'">
+            <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+            <i v-else class="bi-caret-up-fill"></i>
+          </span>
         </button>
         <button class="full-button col-3" @click="sort('archive_status')">
           Archiveerstatus
-          <span v-if="sortingMethod == 'archive_status'"
-            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-            ><i v-else class="bi-caret-up-fill"></i
-          ></span>
+          <span v-if="sortingMethod == 'archive_status'">
+            <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+            <i v-else class="bi-caret-up-fill"></i>
+          </span>
         </button>
       </div>
     </div>
-    <ProjectCreateModal></ProjectCreateModal>
+    <ProjectCreateModal @reloadProjects="loadProjects()"></ProjectCreateModal>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
         <SearchBar
           class="col"
           id="searchBarMobile"
           @searchBarChanged="setSearchTerm"
+          placeholder="Filter op naam..."
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
         <Projectshidarchivedcheckbox
@@ -79,31 +81,30 @@
         ></Projectshidarchivedcheckbox>
       </div>
     </div>
-    <div id="listing-container" class="container-fluid">
-      <div v-for="project of filteredProjects" :key="project.project_name">
-        <ProjectListing
-          class="projectlisting"
-          @removeProject="this.removeProject"
-          @archiveProject="this.archiveProject"
-          v-bind:project="project"
-        ></ProjectListing>
-      </div>
-      <div id="noresults" v-if="filteredProjects.length == 0">
-        Geen resultaten.
-      </div>
+    <div class="listing-container container-fluid">
+      <ProjectListing
+        v-for="project of filteredProjects"
+        :key="project.projectid"
+        class="projectlisting"
+        @removeProject="this.removeProject"
+        @archiveProject="this.archiveProject"
+        v-bind:project="project"
+      ></ProjectListing>
+      <div id="noresults" v-if="filteredProjects.length == 0">Geen resultaten.</div>
     </div>
     <div id="littleSpace"></div>
   </div>
 </template>
 
 <script>
-import PermissionService from "@/services/PermissionService.js";
 import ProjectService from "@/services/ProjectService.js";
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import Projectshidarchivedcheckbox from "./ProjectsHideArchivedCheckbox.vue";
 import ProjectCreateModal from "./ProjectCreateModal.vue";
+import AlertService from "@/services/AlertService.js";
+import PermissionService from "@/services/PermissionService.js";
 export default {
   components: {
     ProjectListing,
@@ -123,7 +124,7 @@ export default {
     };
   },
   methods: {
-    canCreate() {
+    canCreateProject() {
       return PermissionService.userHasPermission("may_create_project");
     },
     gotoCreateProject() {
@@ -137,17 +138,15 @@ export default {
     },
     removeProject(id) {
       ProjectService.deleteProject(id)
-        .then(() => {
+        .then((response) => {
           //remove the project from the view
           this.projects = this.projects.filter(function (project) {
             return project.projectid !== id;
           });
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
 
@@ -155,14 +154,13 @@ export default {
       let projectCopy = JSON.parse(JSON.stringify(project));
       projectCopy.is_archived = !projectCopy.is_archived;
       ProjectService.archiveProject(projectCopy)
-        .then(() => {
+        .then((response) => {
           project.is_archived = !project.is_archived;
           project.last_updated = new Date();
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     shouldShow(project) {
@@ -216,6 +214,15 @@ export default {
       }
       return 0;
     },
+    loadProjects() {
+      ProjectService.getProjects()
+        .then((response) => {
+          this.projects = response;
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        });
+    }
   },
 
   computed: {
@@ -254,15 +261,7 @@ export default {
   },
   async created() {
     this.$emit("newHeaderTitle", "Projecten - Overzicht");
-    ProjectService.getProjects()
-      .then((response) => {
-        this.projects = response;
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-      });
+    this.loadProjects();
   },
 };
 </script>
@@ -275,13 +274,16 @@ export default {
   height: fit-content;
   width: 100%;
 }
-#listing-container {
-  padding: 8px 4px 8px 4px;
+.listing-container {
+  padding: 0;
   border-radius: 0px 0px 10px 10px;
-  background-color: rgba(255,255,255,0.3)
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.container {
+  padding: 0;
 }
 #noresults {
-  margin-top: 10px;
+  margin: 10px;
   color: white;
 }
 #actionButton {

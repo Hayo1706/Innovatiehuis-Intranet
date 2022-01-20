@@ -58,7 +58,7 @@
                 </option>
               </select>
               <br />
-              Screeningstatus: &nbsp;
+              Toegang: &nbsp;
               <select v-model="selectedScreeningState">
                 <option
                   v-for="screeningstate in Object.keys(this.screeningstates)"
@@ -68,8 +68,8 @@
                 </option>
               </select>
               <br />
-              (De gebruiker heeft pas rechten die bij zijn rol horen, als de
-              screening voltooid is.)
+              (De gebruiker heeft pas rechten die bij zijn rol horen, als hij
+              toegang heeft gekregen.)
             </div>
           </form>
         </div>
@@ -89,9 +89,11 @@
     </div>
   </div>
 </template>
+
 <script>
 import UserService from "@/services/UserService.js";
 import { Modal } from "bootstrap";
+import AlertService from "@/services/AlertService.js";
 export default {
   name: "UserCreateModal",
   data: function () {
@@ -100,19 +102,18 @@ export default {
       modal: null,
       roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
       screeningstates: {
-        "nog niet in behandeling": 0,
-        "in behandeling": 1,
-        voltooid: 2,
+        Geblokkeerd: 0,
+        Toegestaan: 1,
       },
       selectedRole: "student",
-      selectedScreeningState: "nog niet in behandeling",
+      selectedScreeningState: "Toegestaan",
 
       first_name: "",
       last_name: "",
       email: "",
       phone_number: "",
       selectedRoleId: 2,
-      selectedScreeningStateId: 0,
+      selectedScreeningStateId: 1,
     };
   },
 
@@ -146,29 +147,13 @@ export default {
         roleid: this.selectedRoleId,
         screening_status: this.selectedScreeningStateId,
       })
-        .then((respsonse) => {
+        .then((response) => {
+          this.$emit("reloadUsers");
           this.closeModal();
-          var message =
-            "De gebruiker '" +
-            this.first_name +
-            " " +
-            this.last_name +
-            "' is toegevoegd!" +
-            "\nMail de volgende link naar " +
-            this.first_name +
-            " zodat ze hun wachtwoord kunnen instellen:" +
-            "\n" +
-            respsonse.response.link;
-          console.log(message);
-          alert(message);
-          window.location.reload();
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          this.errorMessage =
-            "Er ging iets mis bij het aanmaken van een gebruiker, probeer later opnieuw.";
+          AlertService.handleError(err);
         });
     },
     setFieldEmptyErrorMessage(name) {

@@ -178,12 +178,10 @@ export default {
       .then((response) => {
         this.projectName = response[0].project_name;
         this.$emit("newHeaderTitle", response[0].project_name);
+        AlertService.handleSuccess(response);
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-          this.$emit("newHeaderTitle", "Project #" + this.$route.params.id);
-        }
+        AlertService.handleError(err);
       });
     }
   },

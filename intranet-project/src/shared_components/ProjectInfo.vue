@@ -1,153 +1,62 @@
 <template>
-  <div class="accordion" :id="'accordion' + project.projectid">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="heading">
-        <button
-          ref="btn"
-          :id="'collapseDetailsButton' + this.project.projectid"
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          :data-bs-target="'#collapseName' + this.project.projectid"
-          aria-expanded="false"
-          :aria-controls="'collapseName' + this.project.projectid"
-          @click="openDetails()"
-          :disabled="disabled"
-        >
-          Details
-        </button>
-      </h2>
-      <div
-        :id="'collapseName' + this.project.projectid"
-        class="accordion-collapse collapse"
-        aria-labelledby="heading"
-      >
-        <div v-if="canUpdateProject()" class="accordion-body">
-          Naam:
-          <textarea 
-            oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
-            onclick='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
-            class="area form-control" 
-            v-model="projectname" 
-          />
-          <button class="addButton" @click="updateNameDescription()">
-            Wijzigen
-          </button>
-          <br />
-          Beschrijving:
-          <textarea 
-            oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
-            onclick='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
-            class="area form-control" 
-            v-model="projectdescription" />
-          <button class="addButton" @click="updateNameDescription()">
-            Wijzigen
-          </button>
-          <br />
-          Leden toevoegen:
-          <form autocomplete="off">
-            <SearchBar
-              v-show="canUpdateProject()"
-              v-bind:searchTerm="this.userSearchTerm"
-              :id="'searchUsersBar' + this.project.projectid"
-              autocomplete="off"
-              class="searchbar"
-              @searchBarChanged="
-                (searchTerm) => {
-                  handleSearchUser(searchTerm);
-                }
-              "
-            ></SearchBar>
-          </form>
-          <div
-            class="dropdown-menu"
-            :id="'userSearchDropdown' + this.project.projectid"
-          >
-            <div
-              class="dropdown-item"
-              v-for="user in filteredUsers"
-              v-bind:key="user.userid"
-              @click="selectUser(user)"
-            >
-              {{ user.first_name }} {{ user.last_name }}
-            </div>
-          </div>
-          <div v-if="memberToAdd">
-            {{ this.memberToAdd.first_name }} {{ this.memberToAdd.last_name }}
-            <button
-              @click="addUser()"
-              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-            >
-              toevoegen
-            </button>
-          </div>
-
+  <div class="component-body-white">
+    Naam:
+    <textarea
+      v-if="canUpdateProject()"
+      oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+      onclick="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+      class="area form-control"
+      v-model="projectname"
+    />
+    <div v-else class="text">
+      {{ projectname }}
+    </div>
+    <br />Beschrijving:
+    <textarea
+      v-if="canUpdateProject()"
+      oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+      onclick="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+      class="area form-control"
+      v-model="projectdescription"
+    />
+    <div v-else class="text">
+      {{ projectdescription }}
+    </div>
+    <br />
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          Leden:
           <div v-for="member in this.members" v-bind:key="member.userid">
-            <span class="full-button" @click="navigateUser(member.userid)">
-              {{ member.first_name }} {{ member.last_name }}
-            </span>
+            <span class="full-button" @click="navigateUser(member.userid)"
+              >{{ member.first_name }} {{ member.last_name }}</span
+            >
             <button
-              class="userDeleteButton"
+              class="deleteButton"
               v-show="canUpdateProject()"
-              @click="removeUser(member.userid)"
+              @click="removeUserFromList(member.userid)"
             >
               x
             </button>
+            <br />
           </div>
 
           <div v-if="this.members.length == 0" class="text">
             Geen resultaten
           </div>
-          <br />
-          Overkoepelende projecten toevoegen:
-          <form autocomplete="off">
-            <SearchBar
-              v-show="canUpdateProject()"
-              v-bind:searchTerm="this.parentSearchTerm"
-              :id="'searchParentsBar' + this.project.projectid"
-              autocomplete="off"
-              class="searchbar"
-              @searchBarChanged="
-                (searchTerm) => {
-                  handleSearchParent(searchTerm);
-                }
-              "
-            ></SearchBar>
-          </form>
-          <div
-            class="dropdown-menu"
-            :id="'parentSearchDropdown' + this.project.projectid"
-          >
-            <div
-              class="dropdown-item"
-              v-for="parent in filteredParents"
-              v-bind:key="parent.projectid"
-              @click="selectParent(parent)"
-            >
-              {{ parent.project_name }}
-            </div>
-          </div>
-          <div v-if="parentToAdd">
-            {{ this.parentToAdd.project_name }}
-            <button
-              @click="addParent()"
-              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-            >
-              toevoegen
-            </button>
-          </div>
-
+        </div>
+        <div class="col">
+          Overkoepelende projecten:
           <div v-for="parent in this.parents" v-bind:key="parent.projectid">
             <span
               class="full-button"
               @click="navigateProject(parent.projectid)"
+              >{{ parent.project_name }}</span
             >
-              {{ parent.project_name }}
-            </span>
             <button
-              class="userDeleteButton"
+              class="deleteButton"
               v-show="canUpdateProject()"
-              @click="removeParent(parent.projectid)"
+              @click="removeProjectFromList('parents', parent.projectid)"
             >
               x
             </button>
@@ -155,53 +64,19 @@
           <div v-if="this.parents.length == 0" class="text">
             Geen resultaten
           </div>
-          <br />
-          Sub-projecten toevoegen:
-          <form autocomplete="off">
-            <SearchBar
-              v-show="canUpdateProject()"
-              v-bind:searchTerm="this.childSearchTerm"
-              :id="'searchParentsBar' + this.project.projectid"
-              autocomplete="off"
-              class="searchbar"
-              @searchBarChanged="
-                (searchTerm) => {
-                  handleSearchChild(searchTerm);
-                }
-              "
-            ></SearchBar>
-          </form>
-          <div
-            class="dropdown-menu"
-            :id="'childSearchDropdown' + this.project.projectid"
-          >
-            <div
-              class="dropdown-item"
-              v-for="child in filteredChildren"
-              v-bind:key="child.projectid"
-              @click="selectChild(child)"
-            >
-              {{ child.project_name }}
-            </div>
-          </div>
-          <div v-if="childToAdd">
-            {{ this.childToAdd.project_name }}
-            <button
-              @click="addChild()"
-              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-            >
-              toevoegen
-            </button>
-          </div>
-
+        </div>
+        <div class="col">
+          Sub-projecten:
           <div v-for="child in this.children" v-bind:key="child.projectid">
-            <span class="full-button" @click="navigateProject(child.projectid)">
-              {{ child.project_name }}
-            </span>
+            <span
+              class="full-button"
+              @click="navigateProject(child.projectid)"
+              >{{ child.project_name }}</span
+            >
             <button
-              class="userDeleteButton"
+              class="deleteButton"
               v-show="canUpdateProject()"
-              @click="removeChild(child.projectid)"
+              @click="removeProjectFromList('children', child.projectid)"
             >
               x
             </button>
@@ -210,184 +85,111 @@
             Geen resultaten
           </div>
         </div>
-        <div v-else class="accordion-body">
-          Naam:
-          <br />
-          <span class="text">{{ project.project_name }}</span>
-          <br />
-          <br />
-          beschrijving:
-          <br />
-          <span class="text">{{ project.description }}</span>
-          <br />
-          <br />
-          Leden:
-          <form autocomplete="off">
-            <SearchBar
-              v-show="canUpdateProject()"
-              v-bind:searchTerm="this.userSearchTerm"
-              :id="'searchUsersBar' + this.project.projectid"
-              autocomplete="off"
-              class="searchbar"
-              @searchBarChanged="
-                (searchTerm) => {
-                  handleSearchUser(searchTerm);
-                }
-              "
-            ></SearchBar>
-          </form>
-          <div
-            class="dropdown-menu"
-            :id="'userSearchDropdown' + this.project.projectid"
-          >
-            <div
-              class="dropdown-item"
-              v-for="user in filteredUsers"
-              v-bind:key="user.userid"
-              @click="selectUser(user)"
-            >
-              {{ user.first_name }} {{ user.last_name }}
-            </div>
-          </div>
-          <div v-if="memberToAdd">
-            {{ this.memberToAdd.first_name }} {{ this.memberToAdd.last_name }}
-            <button
-              @click="addUser()"
-              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-            >
-              toevoegen
-            </button>
-          </div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
+    </div>
 
-          <div v-for="member in this.members" v-bind:key="member.userid">
-            <span class="full-button" @click="navigateUser(member.userid)">
-              {{ member.first_name }} {{ member.last_name }}
-            </span>
-            <button
-              class="userDeleteButton"
-              v-show="canUpdateProject()"
-              @click="removeUser(member.userid)"
-            >
-              x
-            </button>
-          </div>
-
-          <div v-if="this.members.length == 0" class="text">
-            Geen resultaten
-          </div>
-          <br />
-          Overkoepelende projecten:
-          <form autocomplete="off">
-            <SearchBar
-              v-show="canUpdateProject()"
-              v-bind:searchTerm="this.parentSearchTerm"
-              :id="'searchParentsBar' + this.project.projectid"
-              autocomplete="off"
-              class="searchbar"
-              @searchBarChanged="
-                (searchTerm) => {
-                  handleSearchParent(searchTerm);
-                }
-              "
-            ></SearchBar>
-          </form>
-          <div
-            class="dropdown-menu"
-            :id="'parentSearchDropdown' + this.project.projectid"
-          >
-            <div
-              class="dropdown-item"
-              v-for="parent in filteredParents"
-              v-bind:key="parent.projectid"
-              @click="selectParent(parent)"
-            >
-              {{ parent.project_name }}
-            </div>
-          </div>
-          <div v-if="parentToAdd">
-            {{ this.parentToAdd.project_name }}
-            <button
-              @click="addParent()"
-              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-            >
-              toevoegen
-            </button>
-          </div>
-
-          <div v-for="parent in this.parents" v-bind:key="parent.projectid">
-            <span
-              class="full-button"
-              @click="navigateProject(parent.projectid)"
-            >
-              {{ parent.project_name }}
-            </span>
-            <button
-              class="userDeleteButton"
-              v-show="canUpdateProject()"
-              @click="removeParent(parent.projectid)"
-            >
-              x
-            </button>
-          </div>
-          <div v-if="this.parents.length == 0" class="text">
-            Geen resultaten
-          </div>
-          <br />
-          Sub-projecten:
-          <form autocomplete="off">
-            <SearchBar
-              v-show="canUpdateProject()"
-              v-bind:searchTerm="this.childSearchTerm"
-              :id="'searchParentsBar' + this.project.projectid"
-              autocomplete="off"
-              class="searchbar"
-              @searchBarChanged="
-                (searchTerm) => {
-                  handleSearchChild(searchTerm);
-                }
-              "
-            ></SearchBar>
-          </form>
-          <div
-            class="dropdown-menu"
-            :id="'childSearchDropdown' + this.project.projectid"
-          >
-            <div
-              class="dropdown-item"
-              v-for="child in filteredChildren"
-              v-bind:key="child.projectid"
-              @click="selectChild(child)"
-            >
-              {{ child.project_name }}
-            </div>
-          </div>
-          <div v-if="childToAdd">
-            {{ this.childToAdd.project_name }}
-            <button
-              @click="addChild()"
-              class="btn pmd-btn-fab pmd-ripple-effect btn-primary addButton"
-            >
-              toevoegen
-            </button>
-          </div>
-
-          <div v-for="child in this.children" v-bind:key="child.projectid">
-            <span class="full-button" @click="navigateProject(child.projectid)">
-              {{ child.project_name }}
-            </span>
-            <button
-              class="userDeleteButton"
-              v-show="canUpdateProject()"
-              @click="removeChild(child.projectid)"
-            >
-              x
-            </button>
-          </div>
-          <div v-if="this.children.length == 0" class="text">
-            Geen resultaten
-          </div>
+    <div v-show="canUpdateProject()">
+      <br />
+      Leden toevoegen:
+      <br />
+      <form autocomplete="off">
+        <SearchBar
+          placeholder="Zoek gebruikers..."
+          :id="'searchUsersBar' + this.project.projectid"
+          autocomplete="off"
+          class="searchbar"
+          @searchBarChanged="
+            (searchTerm) => {
+              handleSearchUser(searchTerm);
+            }
+          "
+          v-bind:searchTerm="this.userSearchTerm"
+        ></SearchBar>
+      </form>
+      <div
+        class="dropdown-menu"
+        :id="'userSearchDropdown' + this.project.projectid"
+      >
+        <div
+          class="dropdown-item"
+          v-for="user in filteredUsers"
+          v-bind:key="user.userid"
+          @click="selectUser(user)"
+        >
+          {{ user.first_name }} {{ user.last_name }}
         </div>
       </div>
+    </div>
+    <div v-show="canUpdateProject()">
+      Overkoepelende projecten toevoegen:
+      <br />
+      <form autocomplete="off">
+        <SearchBar
+          v-show="canUpdateProject()"
+          placeholder="Zoek projecten..."
+          :id="'searchParentsBar' + this.project.projectid"
+          autocomplete="off"
+          class="searchbar"
+          @searchBarChanged="
+            (searchTerm) => {
+              handleSearchParent(searchTerm);
+            }
+          "
+          v-bind:searchTerm="this.parentSearchTerm"
+        ></SearchBar>
+      </form>
+      <div
+        class="dropdown-menu"
+        :id="'parentSearchDropdown' + this.project.projectid"
+      >
+        <div
+          class="dropdown-item"
+          v-for="parent in filteredParents"
+          v-bind:key="parent.projectid"
+          @click="selectParent(parent)"
+        >
+          {{ parent.project_name }}
+        </div>
+      </div>
+    </div>
+    <div v-show="canUpdateProject()">
+      Sub-projecten toevoegen:
+      <br />
+      <form autocomplete="off">
+        <SearchBar
+          v-show="canUpdateProject()"
+          placeholder="Zoek projecten..."
+          :id="'searchParentsBar' + this.project.projectid"
+          autocomplete="off"
+          class="searchbar"
+          @searchBarChanged="
+            (searchTerm) => {
+              handleSearchChild(searchTerm);
+            }
+          "
+          v-bind:searchTerm="this.childSearchTerm"
+        ></SearchBar>
+      </form>
+      <div
+        class="dropdown-menu"
+        :id="'childSearchDropdown' + this.project.projectid"
+      >
+        <div
+          class="dropdown-item"
+          v-for="child in filteredChildren"
+          v-bind:key="child.projectid"
+          @click="selectChild(child)"
+        >
+          {{ child.project_name }}
+        </div>
+      </div>
+
+      <br />
+      <button class="addButton" @click="updateProjectDetails()">
+        Wijzigingen opslaan
+      </button>
     </div>
   </div>
 </template>
@@ -397,6 +199,7 @@ import ProjectService from "@/services/ProjectService.js";
 import UserService from "@/services/UserService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import PermissionService from "@/services/PermissionService.js";
+import AlertService from "@/services/AlertService.js";
 export default {
   props: ["project", "open"],
   components: { SearchBar },
@@ -411,17 +214,16 @@ export default {
       membersOpen: false,
       projectname: "",
       projectdescription: "",
-      memberToAdd: null,
+
       userSearchTerm: "",
-      users: [],
       filteredUsers: [],
+
+      users: [],
       projects: [],
 
-      parentToAdd: null,
       parentSearchTerm: "",
       filteredParents: [],
 
-      childToAdd: null,
       childSearchTerm: "",
       filteredChildren: [],
       disabled: false,
@@ -429,19 +231,14 @@ export default {
   },
   mounted() {
     if (this.open) {
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.$refs.btn.click();
-          this.disabled = true;
-          document.getElementById(
-            "collapseDetailsButton" + this.project.projectid
-          ).textContent = "";
-        }, 500);
-      });
+      setTimeout(() => {
+        this.openDetails();
+      }, 500);
     }
   },
   methods: {
-    updateNameDescription() {
+    updateProjectDetails() {
+      let all_ok = true;
       const project = {
         project_name: this.projectname,
         description: this.projectdescription,
@@ -458,117 +255,67 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert("Er ging wat mis, probeer later opnieuw");
+          AlertService.handleError(err);
+          all_ok = false;
         });
+
+      ProjectService.updateMembersOfProject(this.project.projectid, {
+        ids: this.getUserIds(this.members),
+      })
+        .then(() => {})
+        .catch((err) => {
+          console.log(err);
+          //invalid operation on server
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          AlertService.handleError(err);
+          all_ok = false;
+        });
+
+      if (all_ok) {
+        AlertService.alert("De wijzigingen zijn opgeslagen!", "success");
+      }
+      this.openDetails();
     },
     selectUser(user) {
-      this.memberToAdd = user;
+      this.members.push(user);
       this.userSearchTerm = "";
     },
     selectParent(project) {
-      this.parentToAdd = project;
+      this.parents.push(project);
       this.parentSearchTerm = "";
     },
     selectChild(project) {
-      this.childToAdd = project;
+      this.children.push(project);
       this.childSearchTerm = "";
     },
-    addUser() {
-      UserService.addUserToProject(
-        this.project.projectid,
-        this.memberToAdd.userid
-      )
-        .then(() => {
-          this.memberToAdd = null;
-          this.loadMembers();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
+    removeProjectFromList(list, id) {
+      if (list == "parents") {
+        this.parents = this.parents.filter((project) => {
+          return project.projectid != id;
         });
-    },
-    addParent() {
-      ProjectService.addParentToProject(
-        this.project.projectid,
-        this.parentToAdd.projectid
-      )
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.parentToAdd = null;
-          this.loadParents();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
+        if (this.filteredParents.length != 0)
+          this.filteredParents = this.getFilteredParents();
+      } else if (list == "children") {
+        this.children = this.children.filter((project) => {
+          return project.projectid != id;
         });
+        if (this.filteredChildren.length != 0)
+          this.filteredChildren = this.getFilteredChildren();
+      } else {
+        throw new Error("Unsupported operation");
+      }
     },
-    addChild() {
-      ProjectService.addChildToProject(
-        this.project.projectid,
-        this.childToAdd.projectid
-      )
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.childToAdd = null;
-          this.loadChildren();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
+    removeUserFromList(id) {
+      this.members = this.members.filter((user) => {
+        return user.userid != id;
+      });
+      if (this.filteredUsers.length != 0)
+        this.filteredUsers = this.getFilteredUsers();
     },
-    removeChild(childid) {
-      ProjectService.removeChildFromProject(this.project.projectid, childid)
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.loadChildren();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
-    },
-    removeParent(parentid) {
-      ProjectService.removeParentFromProject(this.project.projectid, parentid)
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.loadParents();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
-    },
-    removeUser(userid) {
-      UserService.removeUserFromProject(this.project.projectid, userid)
-        .then(() => {
-          this.loadMembers();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
-    },
-    membersContainsUser(userid) {
-      for (const user of this.members) {
+    userListContainsUser(userList, userid) {
+      for (const user of userList) {
         if (user.userid == userid) {
           return true;
         }
@@ -581,7 +328,7 @@ export default {
           (item.first_name + " " + item.last_name)
             .toLowerCase()
             .includes(this.userSearchTerm.toLowerCase()) &&
-          !this.membersContainsUser(item.userid)
+          !this.userListContainsUser(this.members, item.userid)
         );
       });
     },
@@ -593,9 +340,9 @@ export default {
         this.filteredUsers = [];
       }
     },
-    parentsContainsProject(projectid) {
-      for (const parent of this.parents) {
-        if (parent.projectid == projectid) {
+    projectListContainsProject(projectList, projectid) {
+      for (const project of projectList) {
+        if (project.projectid == projectid) {
           return true;
         }
       }
@@ -623,18 +370,10 @@ export default {
           item.project_name
             .toLowerCase()
             .includes(this.childSearchTerm.toLowerCase()) &&
-          !this.childrenContainsProject(item.projectid) &&
+          !this.projectListContainsProject(this.children, item.projectid) &&
           item.projectid != this.project.projectid
         );
       });
-    },
-    childrenContainsProject(projectid) {
-      for (const child of this.children) {
-        if (child.projectid == projectid) {
-          return true;
-        }
-      }
-      return false;
     },
     getFilteredParents() {
       return this.projects.filter((item) => {
@@ -642,7 +381,7 @@ export default {
           item.project_name
             .toLowerCase()
             .includes(this.parentSearchTerm.toLowerCase()) &&
-          !this.parentsContainsProject(item.projectid) &&
+          !this.projectListContainsProject(this.parents, item.projectid) &&
           item.projectid != this.project.projectid
         );
       });
@@ -664,12 +403,13 @@ export default {
       this.projectdescription = this.project.description;
       this.projectname = this.project.project_name;
 
-      this.onMembersClick();
-      this.onParentsClick();
-      this.onChildrenClick();
+      this.handleMembersLoading();
+      this.handleParentsLoading();
+      this.handleChildrenLoading();
     },
-    onParentsClick() {
-      if (this.accordeonIsOpen("collapseDetailsButton")) {
+    handleParentsLoading() {
+      if (this.accordeonIsOpen()) {
+        this.parentSearchTerm = "";
         this.loadParents();
         ProjectService.getProjects()
           .then((response) => {
@@ -681,7 +421,6 @@ export default {
             }
           });
       } else {
-        this.parentToAdd = null;
         this.parentSearchTerm = "";
       }
     },
@@ -698,25 +437,17 @@ export default {
           }
         });
     },
-    onChildrenClick() {
-      if (this.accordeonIsOpen("collapseDetailsButton")) {
+    handleChildrenLoading() {
+      if (this.accordeonIsOpen()) {
+        this.childSearchTerm = "";
         this.loadChildren();
-        ProjectService.getProjects()
-          .then((response) => {
-            this.projects = response;
-          })
-          .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
-          });
       } else {
-        this.childToAdd = null;
         this.childSearchTerm = "";
       }
     },
-    onMembersClick() {
-      if (this.accordeonIsOpen("collapseDetailsButton")) {
+    handleMembersLoading() {
+      if (this.accordeonIsOpen()) {
+        this.userSearchTerm = "";
         this.loadMembers();
 
         UserService.getUsers()
@@ -729,7 +460,6 @@ export default {
             }
           });
       } else {
-        this.memberToAdd = null;
         this.userSearchTerm = "";
       }
     },
@@ -757,40 +487,36 @@ export default {
       this.$router.push("/project/" + projectid);
     },
     canUpdateProject() {
-      PermissionService;
-
       return (
         PermissionService.userHasPermission("may_update_any_project") ||
         PermissionService.userHasPermission("may_update_own_project")
       );
     },
-    accordeonIsOpen(idName) {
-      return (
-        document
-          .getElementById(idName + this.project.projectid)
-          .attributes.getNamedItem("aria-expanded").value == "true"
-      );
+    accordeonIsOpen() {
+      return this.open;
     },
-    refreshAllAcordeons() {
-      var arr = document.getElementsByClassName("accordion-button");
-
-      for (let j = 0; j < arr.length; j++) {
-        if (
-          !arr[j]
-            .getAttribute("aria-controls")
-            .includes(this.project.projectid.toString()) &&
-          !arr[j].classList.contains("collapsed")
-        ) {
-          arr[j].click();
-          setTimeout(() => {
-            arr[j].click();
-          }, 500);
-        }
+    getProjectIds(projectList) {
+      let ids = [];
+      for (let project of projectList) {
+        ids.push(project.projectid);
       }
+      return ids;
+    },
+    getUserIds(userList) {
+      let ids = [];
+      for (let user of userList) {
+        ids.push(user.userid);
+      }
+      return ids;
     },
   },
 
   watch: {
+    open: function () {
+      if (this.open) {
+        this.openDetails();
+      }
+    },
     filteredUsers: function () {
       if (this.filteredUsers.length == 0) {
         document
@@ -830,15 +556,20 @@ export default {
 
 
 <style scoped>
-
 .accordion-item {
-  background-color: rgba(255,255,255,0.7)
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
 }
 .accordion-button {
+  border: none;
   height: 2rem;
   background: var(--blue4);
   text-align: center;
   padding: 0px 1vw;
+}
+.accordion-item:first-of-type .accordion-button {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 .accordion-button:hover {
   background: var(--blue3);
@@ -883,12 +614,17 @@ button {
   width: 50%;
   margin-bottom: 10px;
 }
-.userDeleteButton {
+.deleteButton {
   background-color: red;
   border-radius: 5px;
   color: white;
 }
 .text {
   font-family: AddeleThin;
+}
+.container-fluid {
+  margin: 0px;
+  max-width: 10000px;
+  padding: 0;
 }
 </style>

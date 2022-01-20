@@ -96,6 +96,7 @@
 <script>
 import AnnouncementService from "@/services/AnnouncementService.js";
 import PermissionService from "@/services/PermissionService";
+import AlertService from "@/services/AlertService";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 import Reply from "./Reply.vue";
 
@@ -126,9 +127,7 @@ export default {
         this.replies = response;
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
+        AlertService.handleError(err);
       });
   },
   methods: {
@@ -138,9 +137,14 @@ export default {
         message: 'Wil je deze mededeling echt verwijderen?'
       });
       if (ok) {
-        AnnouncementService.deleteAnnouncement(this.id);
-        alert("Mededeling is verwijderd!");
-        this.$emit("reload");
+        AnnouncementService.deleteAnnouncement(this.id)
+          .then((response) => {
+            this.$emit("reload");
+            AlertService.handleSuccess(response);
+          })
+          .catch((err) => {
+            AlertService.handleError(err);
+          });
       }
     },
     canEditDelete() {
@@ -158,16 +162,14 @@ export default {
       if (ok) {
         AnnouncementService.editAnnouncement(this.id, this.editData)
           .then((response) => {
-            console.log(response);
             this.editing = false;
             this.editData.title = "";
             this.editData.content = "";
             this.$emit("reload");
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       }
     },
@@ -185,14 +187,12 @@ export default {
       if (ok) {
         AnnouncementService.addReply(this.id, this.newReply)
           .then((response) => {
-            console.log(response);
             this.newReply.content = "";
             this.$emit("reload");
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       }
     }
@@ -213,11 +213,18 @@ export default {
   color: white;
   border-radius: 0px 0px 10px 10px;
 }
+.accordion-button:not(.collapsed)::after{
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23cfd1d7'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+.accordion-button::after{
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23c6c8cc'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
 .collapsed {
   border-radius: 0px 0px 10px 10px !important;
 }
 .accordion-body {
   border-radius: 0px 0px 10px 10px;
+  padding-bottom: 10px;
 }
 
 .accordion-item {
@@ -225,9 +232,17 @@ export default {
   background-color: rgba(180,180,180,0.3);
   border-width: 0;
 }
-
 .card {
   border-radius: 10px 10px 0px 0px;
   background-color: rgba(255, 255, 255, 0.7);
+}
+.accordion-body textarea {
+  border-radius: 0.55rem;
+}
+.accordion-body form .full-button {
+  margin: 10px 0 0 auto;
+}
+.full-button{
+  padding: 6px 9px;
 }
 </style>

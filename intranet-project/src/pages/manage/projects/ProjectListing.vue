@@ -1,5 +1,5 @@
 <template>
-  <div id="project-listing">
+  <div class="project-listing">
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
@@ -37,13 +37,16 @@
       <!-- large screens-->
       <div
         class="col-3 d-none d-lg-flex align-items-center justify-content-center"
-        @click="onClick()"
       >
-        <div class="name-button">
-          {{ projectname }}
-        </div>
+        <router-link
+          title="Naar projectpagina"
+          :to="'/project/' + this.project.projectid"
+          class="name-button mobileRow"
+          >{{ projectname }}</router-link
+        >
       </div>
       <div
+        title="Aangemaakt"
         class="col d-none d-lg-flex align-items-center justify-content-center"
       >
         {{
@@ -55,6 +58,7 @@
         }}
       </div>
       <div
+        title="Laatst aangepast"
         class="col d-none d-lg-flex align-items-center justify-content-center"
       >
         {{
@@ -76,23 +80,47 @@
       </div>
 
       <div class="col-lg d-lg-flex align-items-center justify-content-center">
-        <span>
+        <span class="button-span-right">
           <ProjectButtons
             @removeProject="(id) => $emit('removeProject', id)"
             @archiveProject="(_project) => $emit('archiveProject', _project)"
             v-bind:project="project"
           ></ProjectButtons>
         </span>
+        <h2 class="accordion-header" :id="'heading' + this.project.projectid">
+          <button
+            class="full-button accordion_button"
+            type="button"
+            data-bs-toggle="collapse"
+            :data-bs-target="'#collapseName' + this.project.projectid"
+            aria-expanded="false"
+            :aria-controls="'collapseName' + this.project.projectid"
+            :id="'collapseDetailsButton' + this.project.projectid"
+            @click="this.open = !this.open"
+          >
+            Details
+          </button>
+        </h2>
       </div>
     </div>
-    <ProjectInfo
-      @nameOrDescriptionChanged="
-        (project_obb) => {
-          this.projectname = project_obb.project_name;
-        }
-      "
-      v-bind:project="project"
-    ></ProjectInfo>
+
+    <div
+      :id="'collapseName' + this.project.projectid"
+      class="accordion-collapse collapse"
+      aria-labelledby="heading"
+    >
+      <div class="accordion-body">
+        <ProjectInfo
+          v-bind:open="this.open"
+          v-bind:project="project"
+          @nameOrDescriptionChanged="
+            (project_obb) => {
+              this.projectname = project_obb.project_name;
+            }
+          "
+        ></ProjectInfo>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -107,6 +135,7 @@ export default {
   data: function () {
     return {
       projectname: "",
+      open: false,
     };
   },
   mounted() {
@@ -121,34 +150,20 @@ export default {
 </script>
 
 <style scoped>
-#project-listing {
+.project-listing {
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
-  background: linear-gradient(
-    to right top,
-    rgba(230, 230, 230, 0.7),
-    rgba(230, 230, 230, 0.9)
-  );
-  border-radius: 0.5rem;
-  margin-bottom: 0.3rem;
+  background-color: rgb(234, 234, 234);
+  border-radius: 0 0.2rem 0.2rem 0;
+  /* margin-bottom: 0.3rem; */
   font-size: 1.6vh;
-  border: solid var(--gold4) 2px;
+  border-bottom: 1px solid #e1e1e1;
 }
-.projectButton {
-  font-weight: bold;
-  background-color: var(--gold2);
-  color: var(--blue1);
-  border-style: outset;
-  border-radius: 8px;
-  padding-left: 10px;
-  padding-right: 10px;
-  height: fit-content;
-  cursor: pointer;
-  width: fit-content;
+.project-listing:last-child {
+  border-bottom: none;
 }
-.name-button{
-  border-radius: 0.5rem 0px 0px 0px;
+.name-button {
   background-color: var(--blue2);
   width: 100%;
   height: 100%;
@@ -160,7 +175,7 @@ export default {
   padding: 6px;
   text-decoration: none;
 }
-.name-button:hover{
+.name-button:hover {
   background-color: var(--blue1);
   color: white;
 }
@@ -169,6 +184,9 @@ export default {
 }
 #archivedText {
   color: purple;
+}
+.button-span-right {
+  margin-left: auto;
 }
 .iconHolder {
   padding: 5px;

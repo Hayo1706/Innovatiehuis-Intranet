@@ -1,16 +1,90 @@
+/* CSS RESET */
+
+/* html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+} */
+
+/* END OF CSS RESET */
+
 *{
   font-family: AddeleSemiBold;
 }
 body {
   overflow-x: hidden;
+  /*
+  marnik suggereert een kleur als deze:    
+  background-color: hsl(222deg 36% 70%) !important;
+  of deze:
+  background-color: #383f56 !important; 
+  optie?
+  background-color: #7a7570 !important;
+  */
+  /* background-color: #383f56 !important;  */
   background-color: #101936 !important;
-  background-image: url(./assets/images/back.png);
+  /* background-image: url(./assets/images/back.png); */
   background-size: 100vw;
   background-repeat: no-repeat;
   /*background: linear-gradient(to left TOP, rgb(50,50,50), rgb(20,20,80)) no-repeat;*/
   min-height: 100%;
 
   /*background-color: white;*/
+}
+
+.alert-bar {
+  position: fixed;
+  bottom: 0px;
+  margin: 1em;
+  border-radius: 0.5em;
+  border: 2px solid;
+  padding: 1rem;
+  width: 95vw;
+}
+.success {
+  background-color: green;
+  border-color: darkgreen;
+}
+.error {
+  background-color: red;
+  border-color: darkred;
 }
 
 .custom-link {
@@ -21,7 +95,7 @@ body {
   border-radius: 0.5rem;
   background-color: var(--blue2);
   margin: 5px;
-  width: 100%;
+  width: calc(100% - 10px);
   align-items: center;
   display: flex;
   cursor: pointer;
@@ -29,32 +103,30 @@ body {
   color: white;
   padding: 6px;
   text-decoration: none;
-    border: 0;
-    transition: .3s
+  border: 0;
+  transition: .3s
 }
 .full-button:hover{
-    background-color: var(--blue1);
-    transition: .3s;
-    color: white;
+  background-color: var(--blue1);
+  transition: .3s;
+  color: white;
 }
 .hover:hover{
-    background: white;
-    border-radius: 10px;
-    transition: .3s
+  background: white;
+  border-radius: 10px;
+  transition: .3s
 }
 .hoverDrag{
-    background: white;
-    border-radius: 10px;
-    transition: .3s
+  background: white;
+  border-radius: 10px;
+  transition: .3s
 }
 .listing-icon {
-  border-style: outset;
   border-radius: 50%;
 }
 
-.listing-icon:hover {
-  border-style: ridge;
-}
+/* .listing-icon:hover {
+} */
 
 #scrollable{
   max-height: fit-content;
@@ -70,14 +142,11 @@ p {
 .component-container {
   /*background: linear-gradient(to left top, rgba(50,50,80,0.8), rgba(225,225,225,1));*/
   background: rgba(255,255,255,0.8);
-
-    border: solid var(--gold1) 2px;
   /*backdrop-filter: blur(1rem);*/
-  min-height: 400px;
   overflow-y: scroll;
   width: 100%;
   border-radius: 1rem;
-  padding: 1vh;
+  padding: 12px;
   box-sizing: border-box;
   margin-top: 1vh;
 /* Hide scrollbar for IE, Edge and Firefox */
@@ -132,7 +201,12 @@ p {
   padding-bottom: 5px;
 
 }
-
+.component-body-white {
+    background-color: rgba(255,255,255,0.7);
+    border-radius: 1em;
+    padding: 10px;
+    margin-top: 10px;
+}
 @font-face {
   font-family: Montserrat;
   src: url(./assets/fonts/Montserrat-ExtraBold.ttf);
@@ -174,4 +248,26 @@ p {
   --gold2: #cfa852;
   --gold3: #d9bb7b;
   --gold4: #e4cfa2;
+}
+
+#alert-wrapper{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Fix voor rare scrollruimte met onzichtbare alert wrapper */
+#app {
+  overflow: hidden;
+}
+/* -------------------------------------------------------- */
+
+#search-input{
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(225,225,225,0.9));
+  font-family: AddeleSemiBold;
+}
+.accordion-button:focus{
+  box-shadow: none !important;
 }

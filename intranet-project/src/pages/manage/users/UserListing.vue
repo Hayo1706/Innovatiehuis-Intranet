@@ -1,5 +1,5 @@
 <template>
-  <div id="user-listing">
+  <div class="user-listing">
     <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
@@ -7,6 +7,12 @@
       <div class="col d-block d-lg-none">
         <div class="full-button mobileRow extraLarge" @click="onClick()">
           {{ user.first_name + " " + user.last_name }}
+        </div>
+        <div class="mobileRow">
+          {{ user.email }}
+        </div>
+        <div class="mobileRow">
+          {{ user.phone_number }}
         </div>
         <div class="mobileRow">
           {{
@@ -30,61 +36,74 @@
           }}
         </div>
         <div class="mobileRow">
-          <select v-model="selectedRole" :disabled="!canUpdateUserRole()">
+          <select
+            v-model="selectedRole"
+            :disabled="!canUpdateUserRole()"
+            v-if="userIsNotProtected()"
+          >
             <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
               {{ role }}
             </option>
           </select>
+          <div v-else>{{ this.selectedRole }}</div>
         </div>
         <div class="mobileRow">{{ user.amountprojects }}</div>
         <div class="mobileRow">
-          <div class="dropdown">
-            <button
-              class="btn dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton1"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                src="@\assets\images\screening1.png"
-                v-if="screeningstate == 'nog niet in behandeling'"
-              />
-              <img
-                src="@\assets\images\screening2.png"
-                v-if="screeningstate == 'in behandeling'"
-              />
-              <img
-                src="@\assets\images\check.png"
-                v-if="screeningstate == 'voltooid'"
-              />
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <select
-                class="dropdown-item"
-                v-model="screeningstate"
-                :disabled="!canUpdateUserScreening()"
-              >
-                <option
-                  v-for="screeningstate in Object.keys(this.screeningstates)"
-                  v-bind:key="screeningstate"
-                >
-                  {{ screeningstate }}
-                </option>
-              </select>
-            </ul>
+          <div v-if="userIsNotProtected()">
+            <img
+              style="cursor: pointer"
+              src="@\assets\images\screening1.png"
+              v-if="screeningstate == 'Geblokkeerd'"
+              @click="
+                () => {
+                  this.screeningstate = 'Toegestaan';
+                }
+              "
+            />
+            <img
+              style="cursor: pointer"
+              src="@\assets\images\check.png"
+              v-if="screeningstate == 'Toegestaan'"
+              @click="
+                () => {
+                  this.screeningstate = 'Geblokkeerd';
+                }
+              "
+            />
+          </div>
+          <div v-else>
+            <img
+              src="@\assets\images\screening1.png"
+              v-if="screeningstate == 'Geblokkeerd'"
+            />
+            <img
+              src="@\assets\images\check.png"
+              v-if="screeningstate == 'Toegestaan'"
+            />
           </div>
         </div>
       </div>
 
       <!-- large screens-->
       <div
-        class="col-3 d-none d-lg-flex align-items-center justify-content-start"
-        @click="onClick()"
+        class="col d-none d-lg-flex align-items-center justify-content-start"
       >
-        <div class="name-button">
-          {{ user.first_name + " " + user.last_name }}
-        </div>
+        <router-link
+          title="Naar profiel"
+          :to="'/user/' + this.user.userid"
+          class="name-button"
+          >{{ user.first_name + " " + user.last_name }}</router-link
+        >
+      </div>
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
+        {{ user.email }}
+      </div>
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
+        {{ user.phone_number }}
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
@@ -114,11 +133,16 @@
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
       >
-        <select v-model="selectedRole" :disabled="!canUpdateUserRole()">
+        <select
+          v-model="selectedRole"
+          :disabled="!canUpdateUserRole()"
+          v-if="userIsNotProtected()"
+        >
           <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
             {{ role }}
           </option>
         </select>
+        <div v-else>{{ this.selectedRole }}</div>
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
@@ -130,50 +154,50 @@
         id="screening justify-content-center"
       >
         <div class="listing-icon iconHolder">
-          <div class="dropdown">
-            <button
-              class="btn dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton1"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                src="@\assets\images\screening1.png"
-                v-if="screeningstate == 'nog niet in behandeling'"
-              />
-              <img
-                src="@\assets\images\screening2.png"
-                v-if="screeningstate == 'in behandeling'"
-              />
-              <img
-                src="@\assets\images\check.png"
-                v-if="screeningstate == 'voltooid'"
-              />
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <select
-                class="dropdown-item"
-                v-model="screeningstate"
-                :disabled="!canUpdateUserScreening()"
-              >
-                <option
-                  v-for="screeningstate in Object.keys(this.screeningstates)"
-                  v-bind:key="screeningstate"
-                >
-                  {{ screeningstate }}
-                </option>
-              </select>
-            </ul>
+          <div v-if="userIsNotProtected()">
+            <img
+              style="cursor: pointer"
+              src="@\assets\images\screening1.png"
+              v-if="screeningstate == 'Geblokkeerd'"
+              @click="
+                () => {
+                  this.screeningstate = 'Toegestaan';
+                }
+              "
+            />
+            <img
+              style="cursor: pointer"
+              src="@\assets\images\check.png"
+              v-if="screeningstate == 'Toegestaan'"
+              @click="
+                () => {
+                  this.screeningstate = 'Geblokkeerd';
+                }
+              "
+            />
+          </div>
+          <div v-else>
+            <img
+              src="@\assets\images\screening1.png"
+              v-if="screeningstate == 'Geblokkeerd'"
+            />
+            <img
+              src="@\assets\images\check.png"
+              v-if="screeningstate == 'Toegestaan'"
+            />
           </div>
         </div>
       </div>
 
       <div class="col d-lg-flex align-items-center justify-content-center">
-        <a @click="handleRemoveUser(this.user)" v-show="canDelete()"
-          ><div class="listing-icon iconHolder">
-            <img src="@\assets\images\delete.png" /></div
-        ></a>
+        <div
+          @click="handleRemoveUser(this.user)"
+          v-show="canDelete() && userIsNotProtected()"
+        >
+          <div class="listing-icon iconHolder">
+            <img src="@\assets\images\delete.png" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -184,55 +208,62 @@ import VerticalHeader from "./VerticalHeader.vue";
 import UserService from "@/services/UserService.js";
 import PermissionService from "@/services/PermissionService.js";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
+import AlertService from "@/services/AlertService.js";
+
 export default {
-  props: ["user"],
+  props: ["user", "all_roles"],
   components: { VerticalHeader, ConfirmDialogue },
   name: "UserListing",
   data: function () {
     return {
       previousRole: this.user.role_name,
       selectedRole: this.user.role_name,
-      roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
       screeningstates: {
-        "nog niet in behandeling": 0,
-        "in behandeling": 1,
-        voltooid: 2,
+        Geblokkeerd: 0,
+        Toegestaan: 1,
       },
 
       previousScreeningstate: "",
       screeningstate: "",
+      roles: {},
     };
   },
   watch: {
     screeningstate: async function (val) {
       if (val != this.previousScreeningstate) {
+        let action;
+        if (val == "Toegestaan") {
+          action = "deblokkeren";
+        } else {
+          action = "blokkeren";
+        }
         const ok = await this.$refs.confirmDialogue.show({
-          title: "Screening veranderen",
+          title: "Toegang veranderen",
           message:
-            'Wil je de screening status van de gebruiker "' +
+            'Wil je de gebruiker "' +
             this.user.first_name +
             " " +
             this.user.last_name +
-            '" echt veranderen naar "' +
-            val +
-            '"?',
+            '" echt  ' +
+            action +
+            "?",
         });
         if (ok) {
           const screeningstateId = this.screeningstates[val];
 
           UserService.updateUserScreening(screeningstateId, this.user.userid)
-            .then(() => {
+            .then((response) => {
               this.previousScreeningstate = val;
               this.$emit(
                 "screeningChanged",
                 this.user.userid,
                 screeningstateId
               );
-              return;
+              AlertService.handleSuccess(response);
             })
-            .catch(() => {
+            .catch((err) => {
+              AlertService.handleError(err);
               this.screeningstate = this.previousScreeningstate;
-              alert("Er ging iets mis!");
             });
         } else {
           this.screeningstate = this.previousScreeningstate;
@@ -256,14 +287,14 @@ export default {
           const roleid = this.roles[val];
 
           UserService.updateUserRole(roleid, this.user.userid)
-            .then(() => {
+            .then((response) => {
               this.previousRole = this.selectedRole;
               this.$emit("roleChanged", this.user.userid, roleid);
-              return;
+              AlertService.handleSuccess(response);
             })
-            .catch(() => {
+            .catch((err) => {
+              AlertService.handleError(err);
               this.selectedRole = this.previousRole;
-              alert("Er ging iets mis!");
             });
         } else {
           this.selectedRole = this.previousRole;
@@ -272,6 +303,12 @@ export default {
     },
   },
   created() {
+    for (const role of this.all_roles) {
+      if (role.is_protected != 1) {
+        this.roles[role.role_name] = role.roleid;
+      }
+    }
+
     this.previousScreeningstate = this.getKeyByValue(
       this.screeningstates,
       this.user.screening_status
@@ -293,6 +330,13 @@ export default {
         PermissionService.userHasPermission("may_update_any_user_role") &&
         this.user.userid != localStorage.getItem("userid")
       );
+    },
+    userIsNotProtected() {
+      for (const role of this.all_roles) {
+        if (role.roleid == this.user.roleid) {
+          return !role.is_protected;
+        }
+      }
     },
     canUpdateUserScreening() {
       return (
@@ -317,13 +361,12 @@ export default {
 
       if (ok) {
         UserService.deleteUser(user.userid)
-          .then(() => {
+          .then((response) => {
             this.$emit("removeUser", user.userid);
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       }
     },
@@ -335,8 +378,7 @@ export default {
 </script>
 
 <style scoped>
-.name-button{
-  border-radius: 0.5rem;
+.name-button {
   background-color: var(--blue2);
   width: 100%;
   height: 100%;
@@ -348,36 +390,20 @@ export default {
   padding: 6px;
   text-decoration: none;
 }
-.name-button:hover{
+.name-button:hover {
   background-color: var(--blue1);
   color: white;
 }
 
-#user-listing {
+.user-listing {
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
-  background: linear-gradient(
-    to right top,
-    rgba(230, 230, 230, 0.7),
-    rgba(230, 230, 230, 0.9)
-  );
-  border-radius: 0.5rem;
-  margin-bottom: 0.3rem;
+  background-color: rgb(234, 234, 234);
+  border-radius: 0 0.2rem 0.2rem 0;
+  /* margin-bottom: 0.3rem; */
   font-size: 1.6vh;
-  border: solid var(--gold4) 2px;
-}
-.userButton {
-  font-weight: bold;
-  background-color: var(--gold1);
-  color: var(--blue1);
-  border-radius: 1rem;
-  padding-left: 10px;
-  padding-right: 10px;
-  height: fit-content;
-  cursor: pointer;
-  width: fit-content;
-  margin-left: 10px;
+  border-bottom: 1px solid #e1e1e1;
 }
 .mobileRow {
   min-height: 50px;
@@ -409,5 +435,15 @@ select {
 }
 .iconHolder {
   border-radius: 10%;
+}
+.row select {
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.8),
+    rgba(225, 225, 225, 0.9)
+  );
+}
+.listing-icon {
+  border-style: none;
 }
 </style>

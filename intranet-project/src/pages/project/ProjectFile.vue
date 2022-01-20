@@ -14,17 +14,16 @@
             :src="this.getTypeImage()"
             v-bind:id="this.fileType"/>
         <input
-        v-on:keyup.enter="renameFile()"
-        class="fileName"
-        v-model="fileName"
-        v-bind:id="this.name"
-        draggable="false"
-
-        disabled
+          v-on:keyup.enter="renameFile()"
+          class="fileName"
+          v-model="fileName"
+          v-bind:id="this.name"
+          draggable="false"
+          disabled
         />
       </div>
     </div>
-      
+
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
       <li v-if="this.type != 'shared'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
       <li v-if="this.type != 'shared'" v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
@@ -47,6 +46,7 @@
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
 import PermissionService from "@/services/PermissionService.js";
+import AlertService from "../../services/AlertService";
 
 export default {
   name: "ProjectFile",
@@ -87,17 +87,9 @@ export default {
           document.body.appendChild(link);
           link.click();
           link.href = window.URL.createObjectURL(new Blob());
-        }).catch(console.error)
-      },
-      deleteFile(){
-        FilestorageService.deleteFile(this.projectID, this.path)
-        .then(() => {
-          this.$emit("fileDeleted");
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
       },
       renameFile() {
@@ -169,6 +161,24 @@ export default {
       canDownloadFile(){
         return PermissionService.userHasPermission("may_read_own_project");
       }
+    },
+    confirmDelete(file_name) {
+      if (confirm("Are you sure you want to delete " + file_name + "?")) {
+        this.deleteFile()
+      }
+    },
+    canDeleteFile() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canMoveFile() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canRenameFile() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canDownloadFile() {
+      return PermissionService.userHasPermission("may_read_own_project");
+    }
   },
 };
 </script>
@@ -181,7 +191,7 @@ export default {
   border-radius: 10px;
   border-width: 1px;
   margin-top: 1vh;
-  transition: .3s
+  transition: 0.3s;
 }
 .row {
   margin: 0;
@@ -191,44 +201,44 @@ export default {
   color: var(--blue1);
   border: 0;
   width: 90%;
-  pointer-events: none
+  pointer-events: none;
 }
 .fileImage {
-  margin:0 auto;
+  margin: 0 auto;
   display: block;
   overflow: hidden;
   width: min(80%, 150px);
 }
-.projectFile:hover{
+.projectFile:hover {
   background: white;
   border-radius: 10px;
-  transition: .3s
+  transition: 0.3s;
 }
 
-#drop-down-menu{
-    background: #FAFAFA;
-    border: 1px solid var(--blue1);
-    display: block;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    width: 250px;
-    z-index: 99;
+#drop-down-menu {
+  background: #fafafa;
+  border: 1px solid var(--blue1);
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 250px;
+  z-index: 99;
 }
 
 #drop-down-menu li {
-    border-bottom: 1px solid #E0E0E0;
-    margin: 0;
-    padding: 5px 35px;
+  border-bottom: 1px solid #e0e0e0;
+  margin: 0;
+  padding: 5px 35px;
 }
 
 #drop-down-menu li:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 #drop-down-menu li:hover {
-    background: var(--blue3);
-    color: #FAFAFA;
+  background: var(--blue3);
+  color: #fafafa;
 }
 </style>
