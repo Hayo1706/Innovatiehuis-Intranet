@@ -6,7 +6,7 @@
     />
     <button
       id="actionButton"
-      class="btn pmd-btn-fab pmd-ripple-effect btn-primary"
+      class="btn pmd-btn-fab pmd-ripple-effect btn-primary d-lg-none"
       data-bs-toggle="modal"
       data-bs-target="#createProjectModal"
       type="button"
@@ -98,7 +98,6 @@
 </template>
 
 <script>
-import PermissionService from "@/services/PermissionService.js";
 import ProjectService from "@/services/ProjectService.js";
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
@@ -106,6 +105,7 @@ import SearchBar from "@/shared_components/SearchBar.vue";
 import Projectshidarchivedcheckbox from "./ProjectsHideArchivedCheckbox.vue";
 import ProjectCreateModal from "./ProjectCreateModal.vue";
 import AlertService from "@/services/AlertService.js";
+import PermissionService from "@/services/PermissionService.js";
 export default {
   components: {
     ProjectListing,

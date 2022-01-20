@@ -199,6 +199,7 @@ import ProjectService from "@/services/ProjectService.js";
 import UserService from "@/services/UserService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import PermissionService from "@/services/PermissionService.js";
+import AlertService from "@/services/AlertService.js";
 export default {
   props: ["project", "open"],
   components: { SearchBar },
@@ -237,6 +238,7 @@ export default {
   },
   methods: {
     updateProjectDetails() {
+      let all_ok = true;
       const project = {
         project_name: this.projectname,
         description: this.projectdescription,
@@ -253,7 +255,11 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert("Er ging iets mis, probeer later opnieuw");
+          AlertService.alert(
+            "Er ging iets mis bij het veranderen van de naam of beschrijving, probeer later opnieuw",
+            "error"
+          );
+          all_ok = false;
         });
 
       ProjectService.updateMembersOfProject(this.project.projectid, {
@@ -268,8 +274,16 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          alert("Er ging wat mis, probeer later opnieuw");
+          AlertService.alert(
+            "Er ging iets mis bij het aanpassen van leden, probeer later opnieuw",
+            "error"
+          );
+          all_ok = false;
         });
+
+      if (all_ok) {
+        AlertService.alert("De wijzigingen zijn opgeslagen!", "success");
+      }
       this.refreshAllAcordeons();
       this.openDetails();
     },

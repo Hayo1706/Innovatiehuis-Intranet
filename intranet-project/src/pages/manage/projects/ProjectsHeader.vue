@@ -1,6 +1,16 @@
 <template>
   <div id="projectsHeader" class="container-fluid d-none d-lg-block">
     <div id="projects-header-top" class="row">
+      <button
+        id="actionButton"
+        class="btn pmd-btn-fab pmd-ripple-effect btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#createProjectModal"
+        type="button"
+        v-show="canCreateProject()"
+      >
+        <i class="material-icons pmd-sm">Project toevoegen</i>
+      </button>
       <ProjectsHideArchivedCheckbox
         @hideArchived="(value) => $emit('hideArchived', value)"
         v-bind:hideArchived="this.hideArchived"
@@ -8,7 +18,11 @@
     </div>
 
     <div class="row">
-      <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
+      <div
+        class="full-button col-3"
+        @click="this.$emit('sortEvent', 'name')"
+        style="position: relative"
+      >
         Project
         <span v-if="sortingMethod == 'name'"
           ><i v-if="this.ascending" class="bi-caret-down-fill"></i
@@ -59,6 +73,7 @@
 <script>
 import SearchBar from "@/shared_components/SearchBar.vue";
 import ProjectsHideArchivedCheckbox from "./ProjectsHideArchivedCheckbox.vue";
+import PermissionService from "@/services/PermissionService.js";
 export default {
   components: { SearchBar, ProjectsHideArchivedCheckbox },
   name: "ProjectsHeader",
@@ -66,7 +81,11 @@ export default {
   data: function () {
     return {};
   },
-  methods: {},
+  methods: {
+    canCreateProject() {
+      return PermissionService.userHasPermission("may_create_project");
+    },
+  },
 };
 </script>
 
@@ -98,10 +117,13 @@ img {
 .col {
   font-family: AddeleSemiBold;
 }
-.full-button {
-  height: fit-content;
-}
 #projectsHeader .full-button {
   margin: 0;
+}
+#actionButton {
+  width: fit-content;
+  display: inline-block;
+  position: absolute;
+  left: 0px;
 }
 </style>
