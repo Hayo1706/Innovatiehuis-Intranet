@@ -290,12 +290,14 @@ export default {
         this.parents = this.parents.filter((project) => {
           return project.projectid != id;
         });
-        this.filteredParents = this.getFilteredParents();
+        if (this.filteredParents.length != 0)
+          this.filteredParents = this.getFilteredParents();
       } else if (list == "children") {
         this.children = this.children.filter((project) => {
           return project.projectid != id;
         });
-        this.filteredChildren = this.getFilteredChildren();
+        if (this.filteredChildren.length != 0)
+          this.filteredChildren = this.getFilteredChildren();
       } else {
         throw new Error("Unsupported operation");
       }
@@ -304,7 +306,8 @@ export default {
       this.members = this.members.filter((user) => {
         return user.userid != id;
       });
-      this.filteredUsers = this.getFilteredUsers();
+      if (this.filteredUsers.length != 0)
+        this.filteredUsers = this.getFilteredUsers();
     },
     addParents() {
       ProjectService.addParentToProject(
