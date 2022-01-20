@@ -255,10 +255,7 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          AlertService.alert(
-            "Er ging iets mis bij het veranderen van de naam of beschrijving, probeer later opnieuw",
-            "error"
-          );
+          AlertService.handleError(err);
           all_ok = false;
         });
 
@@ -274,10 +271,7 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          AlertService.alert(
-            "Er ging iets mis bij het aanpassen van leden, probeer later opnieuw",
-            "error"
-          );
+          AlertService.handleError(err);
           all_ok = false;
         });
 
@@ -322,42 +316,6 @@ export default {
       });
       if (this.filteredUsers.length != 0)
         this.filteredUsers = this.getFilteredUsers();
-    },
-    addParents() {
-      ProjectService.addParentToProject(
-        this.project.projectid,
-        this.parentToAdd.projectid
-      )
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.parentToAdd = null;
-          this.loadParents();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
-    },
-    addChildren() {
-      ProjectService.addChildToProject(
-        this.project.projectid,
-        this.childToAdd.projectid
-      )
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.childToAdd = null;
-          this.loadChildren();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
     },
     userListContainsUser(userList, userid) {
       for (const user of userList) {
