@@ -100,7 +100,7 @@ export default {
     return {
       errorMessage: "",
       modal: null,
-      roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
+      roles: {},
       screeningstates: {
         Geblokkeerd: 0,
         Toegestaan: 1,
@@ -123,6 +123,17 @@ export default {
       this.clearForm();
     });
     this.modal = new Modal(myModalEl);
+  },
+  created() {
+    UserService.getRoles()
+      .then((response) => {
+        for (const role of response) {
+          this.roles[role.role_name] = role.roleid;
+        }
+      })
+      .catch((err) => {
+        AlertService.handleError(err);
+      });
   },
 
   watch: {
@@ -190,7 +201,7 @@ export default {
       this.email = "";
       this.selectedRole = "student";
       this.selectedRoleId = 2;
-      this.selectedScreeningState = "nog niet in behandeling";
+      this.selectedScreeningState = "Toegestaan";
       this.selectedScreeningStateId = 0;
       this.errorMessage = "";
     },
