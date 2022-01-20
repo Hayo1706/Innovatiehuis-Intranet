@@ -26,7 +26,7 @@
 
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
       <li v-if="this.type != 'shared'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
-      <li v-if="this.type != 'shared'" v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
+      <li v-if="this.type != 'shared'" v-show="canMoveFile()" @click="moveMenu = true; viewMenu = false;">Verplaats</li>
       <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
       <li v-if="this.type != 'shared'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
     </ul>
@@ -77,93 +77,83 @@ export default {
     };
   },
   methods: {
-      downloadFile(){
-        FilestorageService.downloadFile(this.projectID, this.path)
-        .then((response) => { 
-          const url = window.URL.createObjectURL(new Blob([response.data]))
-          const link = document.createElement('a')
-          link.href = url;
-          link.setAttribute('download', this.name);
-          document.body.appendChild(link);
-          link.click();
-          link.href = window.URL.createObjectURL(new Blob());
+    downloadFile(){
+      FilestorageService.downloadFile(this.projectID, this.path)
+      .then((response) => { 
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url;
+        link.setAttribute('download', this.name);
+        document.body.appendChild(link);
+        link.click();
+        link.href = window.URL.createObjectURL(new Blob());
+      })
+      .catch((err) => {
+        AlertService.handleError(err);
+      });
+    },
+    renameFile() {
+      this.disableInput();
+      var newFileName = this.fileName + "." + this.fileType
+      if(this.name != newFileName && newFileName != this.name + this.fileType){
+        FilestorageService.renameFile(this.projectID, this.path, newFileName)
+          .then(() => {
+            this.$emit("nameChanged");
+          })
+          .catch((err) => {
+            if (err.response) {
+              this.fileName = this.name
+              AlertService.handleError(err);
+            }
+          });
+      }
+      else{
+        this.fileName = this.name
+      }
+    },
+    enableInput(){
+      this.fileName = this.name.split(".")[0]
+      var inputName = document.getElementById(this.name)
+      inputName.removeAttribute("disabled")
+      this.viewMenu = false;
+      inputName.select();
+    },
+    disableInput(){
+      var inputName = document.getElementById(this.name)
+      inputName.setAttribute("disabled", "")
+    },
+    moveFile(target_folder) {
+      var target_path = target_folder.path
+      FilestorageService.moveFile(this.projectID, this.path, target_path)
+        .then(() => {
+          this.$emit("fileMoved");
         })
         .catch((err) => {
           AlertService.handleError(err);
         });
-      },
-      renameFile() {
-        this.disableInput();
-        var newFileName = this.fileName + "." + this.fileType
-        if(this.name != newFileName && newFileName != this.name + this.fileType){
-          FilestorageService.renameFile(this.projectID, this.path, newFileName)
-            .then(() => {
-              this.$emit("nameChanged");
-            })
-            .catch((err) => {
-              if (err.response) {
-                this.fileName = this.name
-                console.log(err.response.status);
-              }
-            });
-        }
-        else{
-          this.fileName = this.name
-        }
-      },
-      enableInput(){
-        this.fileName = this.name.split(".")[0]
-        var inputName = document.getElementById(this.name)
-        inputName.removeAttribute("disabled")
-        this.viewMenu = false;
-        inputName.select();
-      },
-      disableInput(){
-        var inputName = document.getElementById(this.name)
-        inputName.setAttribute("disabled", "")
-      },
-      moveFile(target_folder) {
-        var target_path = target_folder.path
-        FilestorageService.moveFile(this.projectID, this.path, target_path)
-        .then(() => {
-            this.$emit("fileMoved");
-          })
-          .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
-          });
-      },
-      getTypeImage() {
-        var result = this.fileTypes[this.fileType];
-        result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
-        return result
-      },
-      confirmMove(targetFolder){
-        if(confirm("Are you sure you want to move " + this.name + " to " + targetFolder.name + "?")){
-          this.moveFile(targetFolder)
-        }
-      },
-      confirmDelete(file_name){
-        if(confirm("Are you sure you want to delete " + file_name + "?")){
-          this.deleteFile()
-        }
-      },
-      canDeleteFile(){
-        return PermissionService.userHasPermission("may_update_file_in_own_project");
-      },
-      canMoveFile(){
-        return PermissionService.userHasPermission("may_update_file_in_own_project");
-      },
-      canRenameFile(){
-        return PermissionService.userHasPermission("may_update_file_in_own_project");
-      },
-      canDownloadFile(){
-        return PermissionService.userHasPermission("may_read_own_project");
+    },
+    deleteFile() {
+      FilestorageService.deleteFile(this.projectID, this.path)
+        .then((response) => {
+          this.$emit("fileDeleted");
+          AlertService.handleSuccess(response);
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        });
+    },
+    getTypeImage() {
+      var result = this.fileTypes[this.fileType];
+      result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
+      return result
+    },
+    confirmMove(targetFolder){
+      if(confirm("Are you sure you want to move " + this.name + " to " + targetFolder.name + "?")){
+        this.moveFile(targetFolder)
       }
     },
-    confirmDelete(file_name) {
-      if (confirm("Are you sure you want to delete " + file_name + "?")) {
+    confirmDelete(file_name){
+      if(confirm("Are you sure you want to delete " + file_name + "?")){
         this.deleteFile()
       }
     },

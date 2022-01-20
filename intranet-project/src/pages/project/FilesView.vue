@@ -35,7 +35,6 @@
 <script>
 import ProjectFilesHeader from "./ProjectFilesHeader.vue";
 import ProjectFile from "./ProjectFile.vue";
-import AlertService from "../../services/AlertService";
 
 export default {
   setup(){

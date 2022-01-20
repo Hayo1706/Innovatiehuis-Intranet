@@ -94,7 +94,7 @@ export default {
   methods: {
     deleteFolder() {
       FilestorageService.deleteFolder(this.projectID, this.folderPath, false)
-        .then(() => {
+        .then((response) => {
           this.$emit("folderDeleted");
           AlertService.handleSuccess(response);
         })
@@ -102,7 +102,7 @@ export default {
           if(err.response.status === 409){
             if(confirm("There are elements within this folder, are you sure?")){
               FilestorageService.deleteFolder(this.projectID, this.folderPath, true)
-              .then(() => {
+              .then((response) => {
                 this.$emit("folderDeleted");
                 AlertService.handleSuccess(response);
               })
@@ -130,9 +130,7 @@ export default {
         })
         .catch((err) => {
           this.newName = this.folderName
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
       }
       else this.newName = this.folderName
@@ -149,7 +147,6 @@ export default {
     },
     moveToFolder(folder) {
       var targetPath = folder.path;
-      console.log(targetPath, this.folderPath, this.projectID)
       FilestorageService.moveFolder(this.projectID, this.folderPath, targetPath, "")
         .then((response) => {
           this.$emit("folderMoved");

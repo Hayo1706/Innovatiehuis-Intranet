@@ -40,6 +40,7 @@
 import FilesView from "./FilesView.vue";
 import FoldersView from "./FoldersView.vue";
 import AnnouncementWindow from "../../shared_components/AnnouncementWindow.vue";
+import AlertService from "../../services/AlertService";
 import ProjectService from "../../services/ProjectService.js";
 import FilestorageService from "../../services/FilestorageService.js";
 
@@ -105,9 +106,7 @@ export default {
             }
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
         });
         if(this.currentPath == ''){
           ProjectService.getParentsById(this.projectID)
@@ -120,10 +119,7 @@ export default {
               }
             })
             .catch((err) => {
-              console.log(err)
-                if (err.response) {
-                  console.log(err.response.status);
-                }
+              AlertService.handleError(err);
             })
         }
       }
@@ -144,9 +140,7 @@ export default {
           return this.currentFiles
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
           return []
         });
       }
@@ -166,10 +160,7 @@ export default {
             }
           })
           .catch((err) => {
-            console.log(err)
-              if (err.response) {
-                console.log(err.response.status);
-              }
+            AlertService.handleError(err);
           })
       }
     },
