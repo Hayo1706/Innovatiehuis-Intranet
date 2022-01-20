@@ -262,9 +262,7 @@ export default {
       ProjectService.updateMembersOfProject(this.project.projectid, {
         ids: this.getUserIds(this.members),
       })
-        .then(() => {
-          console.log("users added");
-        })
+        .then(() => {})
         .catch((err) => {
           console.log(err);
           //invalid operation on server
@@ -278,7 +276,6 @@ export default {
       if (all_ok) {
         AlertService.alert("De wijzigingen zijn opgeslagen!", "success");
       }
-      this.refreshAllAcordeons();
       this.openDetails();
     },
     selectUser(user) {
@@ -511,23 +508,6 @@ export default {
         ids.push(user.userid);
       }
       return ids;
-    },
-    refreshAllAcordeons() {
-      var arr = document.getElementsByClassName("accordion_button");
-
-      for (let j = 0; j < arr.length; j++) {
-        if (
-          !arr[j]
-            .getAttribute("aria-controls")
-            .includes(this.project.projectid.toString()) &&
-          !arr[j].classList.contains("collapsed")
-        ) {
-          arr[j].click();
-          setTimeout(() => {
-            arr[j].click();
-          }, 500);
-        }
-      }
     },
   },
 
