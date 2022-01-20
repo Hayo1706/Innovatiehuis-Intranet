@@ -17,7 +17,7 @@
               @mouseleave.self="removeClass"
 
               v-else class="hover"
-              @click="currentPathChanged('')"
+              @click="currentPathChanged('', this.projectID)"
             >Home/</text>
             <span v-for="(path, index) in fullPath = this.folderPath.split('/').slice(0,-1)" :key="path">
               <text
@@ -29,7 +29,7 @@
                   @mouseleave.self="removeClass"
 
                   class="hover"
-                  @click="currentPathChanged('/'+fullPath.slice(1, index+1)[0])"
+                  @click="currentPathChanged('/'+fullPath.slice(1, index+1)[0], this.projectID)"
                   v-if="path != ''">{{ path }}/</text>
             </span>
             <text>
@@ -55,8 +55,6 @@
             :folderPath="folder.path"
             :projectID="folder.projectID"
             :currentFolders="this.currentFolders"
-            :currentPath="this.folderPath"
-            :previousPath="this.previousPath"
             :files="folder.files"
 
             @currentPathChanged="currentPathChanged"
@@ -104,7 +102,7 @@ export default {
     ProjectFolder,
   },
   name: "FoldersView",
-  props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'sharedParents'],
+  props: ['projectID', 'currentPath', 'previousPath', 'currentFolders'],
   watch: {
     currentFolders: function(newFolders){
       console.log("huh", newFolders)
@@ -113,16 +111,11 @@ export default {
     currentPath: function(newPath){
       this.folderPath = newPath;
     },
-    sharedParents: function(newFolders){
-      this.allSharedParents = newFolders
-      console.log('shared', this.allSharedParents)
-    }
   },
   data: function () {
     return {
       errorStatus: false,
       folderPath: this.currentPath,
-      allSharedParents: this.sharedParents,
       searchedFolders: [],
       searchTerm: "",
     };
@@ -190,9 +183,9 @@ export default {
     currentFoldersChanged(){
       this.$emit("currentFoldersChanged")
     },
-    currentPathChanged(newPath){
+    currentPathChanged(newPath, projectID){
       this.folderPath = newPath;
-      this.$emit("currentPathChanged", newPath);
+      this.$emit("currentPathChanged", newPath, projectID);
     }
   },
   async created() {

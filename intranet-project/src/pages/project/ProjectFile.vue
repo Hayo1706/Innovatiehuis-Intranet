@@ -26,10 +26,10 @@
     </div>
       
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
-      <li v-if="this.shared != 'no'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
-      <li v-if="this.shared != 'no'" v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
+      <li v-if="this.type != 'shared'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
+      <li v-if="this.type != 'shared'" v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
       <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
-      <li v-if="this.shared != 'no'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
+      <li v-if="this.type != 'shared'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
     </ul>
     <ul id="drop-down-menu" v-if="moveMenu == true && this.shared != 'no'">
       <li>Verplaatsen naar:</li>

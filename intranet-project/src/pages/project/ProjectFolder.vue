@@ -20,6 +20,12 @@
             />
             <img
               class="foldersImage"
+              v-if="this.folderType == 'goback'"
+              src=".\..\..\assets\images\goback.png"
+              draggable="false"
+            />
+            <img
+              class="foldersImage"
               v-if="this.folderType == 'shared'"
               src=".\..\..\assets\images\shared_folder.png"
               draggable="false"
@@ -74,8 +80,6 @@ export default {
     projectID: { type: String, required: true },
     currentFolders: { type: Array, required: true },
 
-    currentPath: { type: String, required: true },
-    previousPath: { type: String, required: true },
     files: { type: Array, required: false}
   },
   data: function () {
@@ -184,10 +188,10 @@ export default {
     },
     goToFolder() {
       if(this.files != null){
-        this.$emit("currentPathChanged", "?parent=" + this.projectID);
+        this.$emit("currentPathChanged", "?parent=" + this.projectID, this.projectID);
         return;
       }
-      this.$emit("currentPathChanged", this.folderPath);
+      this.$emit("currentPathChanged", this.folderPath, this.projectID);
     },
     canDeleteFolder(){
     return PermissionService.userHasPermission("may_update_file_in_own_project");
