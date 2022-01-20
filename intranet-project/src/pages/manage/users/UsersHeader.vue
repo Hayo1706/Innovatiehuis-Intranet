@@ -13,14 +13,27 @@
       </button>
     </div>
     <div class="row">
-      <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
+      <div class="full-button col" @click="this.$emit('sortEvent', 'name')">
         Gebruiker
         <span v-if="sortingMethod == 'name'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
           <i v-else class="bi-caret-up-fill"></i>
         </span>
       </div>
-
+      <div class="full-button col" @click="this.$emit('sortEvent', 'email')">
+        Email
+        <span v-if="sortingMethod == 'email'">
+          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+          <i v-else class="bi-caret-up-fill"></i>
+        </span>
+      </div>
+      <div class="full-button col" @click="this.$emit('sortEvent', 'phone')">
+        Telefoonnummer
+        <span v-if="sortingMethod == 'phone'">
+          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+          <i v-else class="bi-caret-up-fill"></i>
+        </span>
+      </div>
       <div class="full-button col" @click="this.$emit('sortEvent', 'created')">
         Geregistreerd
         <span v-if="sortingMethod == 'created'">

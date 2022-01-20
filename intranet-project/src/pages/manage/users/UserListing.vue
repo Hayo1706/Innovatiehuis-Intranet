@@ -9,6 +9,12 @@
           {{ user.first_name + " " + user.last_name }}
         </div>
         <div class="mobileRow">
+          {{ user.email }}
+        </div>
+        <div class="mobileRow">
+          {{ user.phone_number }}
+        </div>
+        <div class="mobileRow">
           {{
             user.created.toLocaleString("nl-NL", {
               day: "numeric",
@@ -80,7 +86,7 @@
 
       <!-- large screens-->
       <div
-        class="col-3 d-none d-lg-flex align-items-center justify-content-start"
+        class="col d-none d-lg-flex align-items-center justify-content-start"
       >
         <router-link
           title="Naar profiel"
@@ -88,6 +94,16 @@
           class="name-button"
           >{{ user.first_name + " " + user.last_name }}</router-link
         >
+      </div>
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
+        {{ user.email }}
+      </div>
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
+        {{ user.phone_number }}
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
@@ -238,7 +254,11 @@ export default {
           UserService.updateUserScreening(screeningstateId, this.user.userid)
             .then((response) => {
               this.previousScreeningstate = val;
-              this.$emit("screeningChanged", this.user.userid, screeningstateId);
+              this.$emit(
+                "screeningChanged",
+                this.user.userid,
+                screeningstateId
+              );
               AlertService.handleSuccess(response);
             })
             .catch((err) => {
