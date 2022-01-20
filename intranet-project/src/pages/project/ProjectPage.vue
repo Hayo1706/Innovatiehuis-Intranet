@@ -73,12 +73,8 @@ export default {
       this.previousPath = this.currentPath;
       this.$router.push("/project/" + this.projectID + path)
 
-
-      console.log("testrun", path, parentID)
-
       if(this.projectID == parentID){
-        alert("pathChanged " + parentID)
-        this.parentID == null;
+        this.parentID = null;
         this.currentPath = path
       }
       else{
@@ -99,8 +95,6 @@ export default {
     },
     setCurrentFolders() {
       this.currentFolders = []
-      alert("setFolders " + this.parentID)
-      alert("setFolders2 " + this.$route.query.parent)
       if(this.parentID == null){
 
         FilestorageService.getFoldersOfProject(this.projectID, this.currentPath)
@@ -146,7 +140,6 @@ export default {
           for(var file in response){
             this.currentFiles.push({'name': response[file], 'path': this.currentPath + '/' + response[file], 'projectID': this.projectID, 'type':'normal'})
           }
-          console.log(this.currentFiles)
           return this.currentFiles
         })
         .catch((err) => {
