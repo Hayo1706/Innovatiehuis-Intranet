@@ -46,6 +46,7 @@
 import AnnouncementService from "@/services/AnnouncementService.js";
 import PermissionService from "@/services/PermissionService";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
+import AlertService from "../services/AlertService";
 
 export default {
   name: "Reply",
@@ -85,13 +86,11 @@ export default {
         this.editing = false;
         AnnouncementService.editReply(this.id, this.editData)
           .then((response) => {
-            console.log("API RESPONDS: " + JSON.stringify(response));
             this.$emit("reload");
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       }
     },
@@ -103,14 +102,11 @@ export default {
       if (ok) {
         AnnouncementService.deleteReply(this.id)
           .then((response) => {
-            alert("Reactie is verwijderd!");
-            console.log("API RESPONDS: " + JSON.stringify(response));
-            this.$emit("reload"); // TODO: verwijder reactie uit scherm
+            this.$emit("reload");
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       }
     },

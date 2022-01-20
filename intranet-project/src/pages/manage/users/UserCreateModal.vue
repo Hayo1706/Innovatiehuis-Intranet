@@ -89,6 +89,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import UserService from "@/services/UserService.js";
 import { Modal } from "bootstrap";
@@ -146,7 +147,7 @@ export default {
         roleid: this.selectedRoleId,
         screening_status: this.selectedScreeningStateId,
       })
-        .then(() => {
+        .then((response) => {
           this.$emit("reloadUsers");
           this.closeModal();
           var message =
@@ -154,16 +155,19 @@ export default {
             this.first_name +
             " " +
             this.last_name +
-            "' is toegevoegd!";
-
+            "' is toegevoegd!" +
+            "\nMail de volgende link naar " +
+            this.first_name +
+            " zodat ze hun wachtwoord kunnen instellen:" +
+            "\n" +
+            response.response.link;
+          window.location.reload();
+          AlertService.handleSuccess(response);
+          console.log(message);
           AlertService.alert(message, "success");
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          this.errorMessage =
-            "Er ging iets mis bij het aanmaken van een gebruiker, probeer later opnieuw.";
+          AlertService.handleError(err);
         });
     },
     setFieldEmptyErrorMessage(name) {

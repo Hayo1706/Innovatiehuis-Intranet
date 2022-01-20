@@ -89,6 +89,8 @@
 import FilestorageService from "@/services/FilestorageService.js";
 import PermissionService from "@/services/PermissionService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
+import AlertService from "../../services/AlertService";
+
 export default {
   name: "ProjectFolderHeader",
   components: {
@@ -110,14 +112,13 @@ export default {
         this.path,
         this.newFolderName
       )
-        .then(() => {
+        .then((response) => {
           this.$emit("newFolderAdded");
           this.newFolderName = null;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     canAddFolder() {

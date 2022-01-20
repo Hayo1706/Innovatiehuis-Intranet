@@ -24,17 +24,13 @@
       <div class="full-button" @click="submit()">
         Login
       </div>
-      <!-- <p v-if="this.redirectTarget != '/home' && !this.enteredWrongPassword" id="error-message">
-        Sessie is ongeldig of verlopen. Log in om terug te keren naar de vorige
-        pagina.
-      </p>
-      <p id="error-message">{{ this.error }}</p> -->
     </div>
   </div>
 </template>
 
 <script>
 import LoginService from "../../services/LoginService";
+import AlertService from "../../services/AlertService";
 
 export default {
   components: {},
@@ -56,7 +52,7 @@ export default {
         this.loginAttempt.password
       )
         .then((response) => {
-          console.log(response.status);
+          console.log(response.status, "User logged in successfully");
 
           //set to local storage: user id and user permission data retrieved from API
           for (var property in response.data[0]) {
@@ -67,13 +63,7 @@ export default {
           this.$router.push(this.redirectTarget);
         })
         .catch((err) => {
-          console.log(err);
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          this.error = err.response.data.response.message;
-          console.log(this.err.response.data.response.message);
-          this.enteredWrongPassword = true;
+          AlertService.handleError(err);
         });
     },
   },

@@ -204,9 +204,7 @@ export default {
           this.users = response;
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
       ProjectService.getProjects()
         .then((response) => {
@@ -214,9 +212,7 @@ export default {
           this.children = response;
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     });
     this.modal = new Modal(myModalEl);
@@ -248,23 +244,13 @@ export default {
         childids: childIds,
       };
       ProjectService.addProject(project)
-        .then(() => {
+        .then((response) => {
           this.$emit("reloadProjects");
           this.closeModal();
-          AlertService.alert(
-            'Het project "' + this.projectname + '" is aangemaakt!',
-            "success"
-          );
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          this.closeModal();
-
-          alert(
-            "Er ging iets mis bij het aanmaken van een project, probeer later opnieuw"
-          );
+          AlertService.handleError(err);
         });
     },
     validateForm() {

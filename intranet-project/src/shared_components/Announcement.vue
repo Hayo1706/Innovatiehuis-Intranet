@@ -127,9 +127,7 @@ export default {
         this.replies = response;
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
+        AlertService.handleError(err);
       });
   },
   methods: {
@@ -141,16 +139,11 @@ export default {
       if (ok) {
         AnnouncementService.deleteAnnouncement(this.id)
           .then((response) => {
-            console.log(response.status, response.response.message);
-            AlertService.alert(response.response.message, "success");
             this.$emit("reload");
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            console.log({err});
-            if (err.response) {
-              AlertService.alert(err.response.data.response.message, "error");
-              console.log(err.response.status, err.response.data.response.message);
-            }
+            AlertService.handleError(err);
           });
       }
     },
@@ -172,15 +165,11 @@ export default {
             this.editing = false;
             this.editData.title = "";
             this.editData.content = "";
-            console.log(response.status, response.response.message);
-            AlertService.alert(response.response.message, "success");
             this.$emit("reload");
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              AlertService.alert(err.response.data.response.message, "error");
-              console.log(err.response.status, err.response.data.response.message);
-            }
+            AlertService.handleError(err);
           });
       }
     },
@@ -199,15 +188,11 @@ export default {
         AnnouncementService.addReply(this.id, this.newReply)
           .then((response) => {
             this.newReply.content = "";
-            console.log(response.status, response.response.message);
-            AlertService.alert(response.response.message, "success");
             this.$emit("reload");
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              AlertService.alert(err.response.data.response.message, "error");
-              console.log(err.response.status, err.response.data.response.message);
-            }
+            AlertService.handleError(err);
           });
       }
     }

@@ -35,30 +35,31 @@
       <div class="row">
         <button class="full-button col-3" @click="sort('name')">
           Naam
-          <span v-if="sortingMethod == 'name'"
-            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-            ><i v-else class="bi-caret-up-fill"></i
-          ></span></button
-        ><button class="full-button col-3" @click="sort('created')">
+          <span v-if="sortingMethod == 'name'">
+            <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+            <i v-else class="bi-caret-up-fill"></i>
+          </span>
+        </button>
+        <button class="full-button col-3" @click="sort('created')">
           Aanmaakdatum
-          <span v-if="sortingMethod == 'created'"
-            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-            ><i v-else class="bi-caret-up-fill"></i
-          ></span>
+          <span v-if="sortingMethod == 'created'">
+            <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+            <i v-else class="bi-caret-up-fill"></i>
+          </span>
         </button>
         <button class="full-button col-3" @click="sort('last_updated')">
           Laatste update
-          <span v-if="sortingMethod == 'last_updated'"
-            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-            ><i v-else class="bi-caret-up-fill"></i
-          ></span>
+          <span v-if="sortingMethod == 'last_updated'">
+            <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+            <i v-else class="bi-caret-up-fill"></i>
+          </span>
         </button>
         <button class="full-button col-3" @click="sort('archive_status')">
           Archiveerstatus
-          <span v-if="sortingMethod == 'archive_status'"
-            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
-            ><i v-else class="bi-caret-up-fill"></i
-          ></span>
+          <span v-if="sortingMethod == 'archive_status'">
+            <i v-if="this.ascending" class="bi-caret-down-fill"></i>
+            <i v-else class="bi-caret-up-fill"></i>
+          </span>
         </button>
       </div>
     </div>
@@ -89,9 +90,7 @@
         @archiveProject="this.archiveProject"
         v-bind:project="project"
       ></ProjectListing>
-      <div id="noresults" v-if="filteredProjects.length == 0">
-        Geen resultaten.
-      </div>
+      <div id="noresults" v-if="filteredProjects.length == 0">Geen resultaten.</div>
     </div>
     <div id="littleSpace"></div>
   </div>
@@ -139,21 +138,15 @@ export default {
     },
     removeProject(id) {
       ProjectService.deleteProject(id)
-        .then(() => {
+        .then((response) => {
           //remove the project from the view
           this.projects = this.projects.filter(function (project) {
             return project.projectid !== id;
           });
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          AlertService.alert(
-            "Er ging iets mis bij het verwijderen, probeer later opnieuw",
-            "error"
-          );
+          AlertService.handleError(err);
         });
     },
 
@@ -161,24 +154,13 @@ export default {
       let projectCopy = JSON.parse(JSON.stringify(project));
       projectCopy.is_archived = !projectCopy.is_archived;
       ProjectService.archiveProject(projectCopy)
-        .then(() => {
+        .then((response) => {
           project.is_archived = !project.is_archived;
           project.last_updated = new Date();
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          let action;
-          if (project.is_archived) {
-            action = "dearchiveren";
-          } else {
-            action = "archiveren";
-          }
-          AlertService.alert(
-            "Er ging iets mis bij het " + action + ", probeer later opnieuw",
-            "error"
-          );
+          AlertService.handleError(err);
         });
     },
     shouldShow(project) {
@@ -238,14 +220,9 @@ export default {
           this.projects = response;
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          AlertService.alert(
-            "Er ging iets mis bij het laden van de pagina, probeer later opnieuw"
-          );
+          AlertService.handleError(err);
         });
-    },
+    }
   },
 
   computed: {

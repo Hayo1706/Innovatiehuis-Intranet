@@ -67,6 +67,7 @@
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
 import PermissionService from "@/services/PermissionService.js";
+import AlertService from "../../services/AlertService";
 
 export default {
   name: "ProjectFolder",
@@ -91,28 +92,25 @@ export default {
   methods: {
     deleteFolder() {
       FilestorageService.deleteFolder(this.projectid, this.path, false)
-        .then(() => {
+        .then((response) => {
           this.$emit("folderDeleted");
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if(err.response.status === 409){
-            if(confirm("There are elements within this folder, are you sure?")){
+          if (err.response.status === 409) {
+            if (confirm("There are elements within this folder, are you sure?")) {
               FilestorageService.deleteFolder(this.projectid, this.path, true)
-              .then(() => {
+              .then((response) => {
                 this.$emit("folderDeleted");
+                AlertService.handleSuccess(response);
               })
               .catch((err) => {
-                  if (err.response) {
-                    console.log(err.response);
-                }
+                AlertService.handleError(err);
               });
-              console.log(err.response.status)
             }
-            console.log(err.response.status)
           }
-
           if (err.response) {
-            console.log(err.response);
+            AlertService.handleError(err);
           }
         });
     },
@@ -129,16 +127,16 @@ export default {
           "",
           this.newName
         )
-          .then(() => {
+          .then((response) => {
             this.folderName = this.newName;
+            this.$emit("nameChanged");
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
             this.newName = this.folderName
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
-          this.$emit("nameChanged");
+          
       }
       else this.newName = this.folderName
     },
@@ -156,15 +154,11 @@ export default {
       var folder_path = this.directorypath + "/" + folder;
       FilestorageService.moveFolder(this.projectid, this.path, folder_path, "")
         .then((response) => {
-          if (response.status == 400) {
-            alert(response);
-          }
           this.$emit("folderMoved");
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     confirmMove(folder){
@@ -181,11 +175,10 @@ export default {
               this.folders.push(response[folder])
             }
           }
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     goToFolder() {

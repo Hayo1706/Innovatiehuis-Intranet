@@ -30,6 +30,7 @@ import FilesView from "./FilesView.vue";
 import FoldersView from "./FoldersView.vue";
 import AnnouncementWindow from "../../shared_components/AnnouncementWindow.vue";
 import ProjectService from "../../services/ProjectService.js";
+import AlertService from "../../services/AlertService";
 
 export default {
   components: { FilesView, FoldersView, AnnouncementWindow },
@@ -57,12 +58,10 @@ export default {
       .then((response) => {
         this.name = response[0].project_name;
         this.$emit("newHeaderTitle", response[0].project_name);
+        AlertService.handleSuccess(response);
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-          this.$emit("newHeaderTitle", "Project #" + this.$route.params.id);
-        }
+        AlertService.handleError(err);
       });
   },
 };

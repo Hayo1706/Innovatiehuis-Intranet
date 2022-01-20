@@ -128,7 +128,7 @@
       <form autocomplete="off">
         <SearchBar
           v-show="canUpdateProject()"
-          placeholder="Zoek projecten"
+          placeholder="Zoek projecten..."
           :id="'searchParentsBar' + this.project.projectid"
           autocomplete="off"
           class="searchbar"

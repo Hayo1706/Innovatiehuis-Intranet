@@ -80,6 +80,8 @@
 import FilestorageService from "@/services/FilestorageService.js";
 import ProjectFolderHeader from "./ProjectFolderHeader.vue";
 import ProjectFolder from "./ProjectFolder.vue";
+import AlertService from "../../services/AlertService";
+
 export default {
   setup(){
     const startDrag = (event, path) => {
@@ -142,9 +144,7 @@ export default {
               this.$emit("fileMoved");
             })
             .catch((err) => {
-              if (err.response) {
-                console.log(err.response.status);
-              }
+              AlertService.handleError(err);
             });
       }
       else{
@@ -153,9 +153,7 @@ export default {
               this.setFolders()
             })
             .catch((err) => {
-              if (err.response) {
-                console.log(err.response.status);
-              }
+              AlertService.handleError(err);
             });
       }
     },
@@ -188,9 +186,7 @@ export default {
         })
         .catch((err) => {
           console.log('resetting Folders Failed')
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     getPreviousPath(){

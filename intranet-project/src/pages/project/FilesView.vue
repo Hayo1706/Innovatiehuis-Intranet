@@ -54,6 +54,8 @@ import FilestorageService from "@/services/FilestorageService.js";
 import ProjectService from "@/services/ProjectService.js";
 import ProjectFilesHeader from "./ProjectFilesHeader.vue";
 import ProjectFile from "./ProjectFile.vue";
+import AlertService from "../../services/AlertService";
+
 export default {
   setup(){
     const startDrag = (event, path) => {
@@ -105,9 +107,7 @@ export default {
           this.files = response;
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     getSharedFiles(){
@@ -128,10 +128,7 @@ export default {
         }
       })
       .catch((err) => {
-        console.log(err)
-          if (err.response) {
-            console.log(err.response.status);
-          }
+        AlertService.handleError(err);
       })
     }
   },

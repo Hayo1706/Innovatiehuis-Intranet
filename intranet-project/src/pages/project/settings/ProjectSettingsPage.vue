@@ -18,6 +18,8 @@
 <script>
 import ProjectInfo from "@/shared_components/ProjectInfo.vue";
 import ProjectService from "@/services/ProjectService.js";
+import AlertService from "../../../services/AlertService";
+
 export default {
   components: { ProjectInfo },
   name: "ProjectSettings",
@@ -34,12 +36,10 @@ export default {
           response[0].project_name + ": Instellingen"
         );
         this.project = response[0];
+        AlertService.handleSuccess(response);
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-          this.$emit("newHeaderTitle", "Project: #" + this.$route.params.id);
-        }
+        AlertService.handleError(err);
       });
   },
 };

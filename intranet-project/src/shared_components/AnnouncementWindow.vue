@@ -122,12 +122,10 @@ export default {
       AnnouncementService.getAnnouncementsByProject(this.pathArgs.project)
         .then((response) => {
           this.announcements = response;
-          console.log(this.announcements);
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     canAddAnnouncement(){
@@ -140,18 +138,13 @@ export default {
         this.newAnnouncement
       )
         .then((response) => {
-          console.log(response);
           this.newAnnouncement.title = "";
           this.newAnnouncement.content = "";
-          AlertService.alert(response.response.message, "success");
           this.reload();
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          console.log({err});
-          if (err.response) {
-            AlertService.alert(err.response.data.response.message, "error");
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     reload() {

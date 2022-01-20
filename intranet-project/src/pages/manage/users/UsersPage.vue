@@ -112,6 +112,7 @@ import SearchBar from "@/shared_components/SearchBar.vue";
 import UserListing from "./UserListing.vue";
 import UserCreateModal from "./UserCreateModal.vue";
 import PermissionService from "@/services/PermissionService.js";
+
 export default {
   components: {
     UsersHeader,
@@ -254,9 +255,7 @@ export default {
         this.roles = response;
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
+        AlertService.handleError(err);
       });
     this.$emit("newHeaderTitle", "Gebruikers - Overzicht");
     this.loadUsers();

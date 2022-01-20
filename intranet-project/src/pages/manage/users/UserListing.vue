@@ -193,6 +193,7 @@ import UserService from "@/services/UserService.js";
 import PermissionService from "@/services/PermissionService.js";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 import AlertService from "@/services/AlertService.js";
+
 export default {
   props: ["user", "all_roles"],
   components: { VerticalHeader, ConfirmDialogue },
@@ -235,21 +236,14 @@ export default {
           const screeningstateId = this.screeningstates[val];
 
           UserService.updateUserScreening(screeningstateId, this.user.userid)
-            .then(() => {
+            .then((response) => {
               this.previousScreeningstate = val;
-              this.$emit(
-                "screeningChanged",
-                this.user.userid,
-                screeningstateId
-              );
-              return;
+              this.$emit("screeningChanged", this.user.userid, screeningstateId);
+              AlertService.handleSuccess(response);
             })
-            .catch(() => {
+            .catch((err) => {
+              AlertService.handleError(err);
               this.screeningstate = this.previousScreeningstate;
-              AlertService.alert(
-                "Er ging iets mis bij het " + action + " van de gebruiker",
-                "error"
-              );
             });
         } else {
           this.screeningstate = this.previousScreeningstate;
@@ -273,17 +267,14 @@ export default {
           const roleid = this.roles[val];
 
           UserService.updateUserRole(roleid, this.user.userid)
-            .then(() => {
+            .then((response) => {
               this.previousRole = this.selectedRole;
               this.$emit("roleChanged", this.user.userid, roleid);
-              return;
+              AlertService.handleSuccess(response);
             })
-            .catch(() => {
+            .catch((err) => {
+              AlertService.handleError(err);
               this.selectedRole = this.previousRole;
-              AlertService.alert(
-                "Er ging iets mis bij het veranderen van de rol, probeer later opnieuw",
-                "error"
-              );
             });
         } else {
           this.selectedRole = this.previousRole;
@@ -350,17 +341,12 @@ export default {
 
       if (ok) {
         UserService.deleteUser(user.userid)
-          .then(() => {
+          .then((response) => {
             this.$emit("removeUser", user.userid);
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
-            AlertService.alert(
-              "Er ging iets mis bij het verwijderen van de gebruiker, probeer later opnieuw",
-              "error"
-            );
+            AlertService.handleError(err);
           });
       }
     },
