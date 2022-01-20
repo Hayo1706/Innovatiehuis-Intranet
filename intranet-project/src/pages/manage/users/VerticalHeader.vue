@@ -5,7 +5,7 @@
     <div class="headerText">Laatst gezien</div>
     <div class="headerText">Rol</div>
     <div class="headerText">projecten</div>
-    <div class="headerText">screening</div>
+    <div class="headerText">Toegang</div>
   </div>
 </template>
 

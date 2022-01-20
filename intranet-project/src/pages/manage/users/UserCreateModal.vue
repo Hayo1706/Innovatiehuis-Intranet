@@ -100,19 +100,18 @@ export default {
       modal: null,
       roles: { observer: 1, student: 2, moderator: 3, admin: 4 },
       screeningstates: {
-        "nog niet in behandeling": 0,
-        "in behandeling": 1,
-        voltooid: 2,
+        Geblokkeerd: 0,
+        Toegestaan: 1,
       },
       selectedRole: "student",
-      selectedScreeningState: "nog niet in behandeling",
+      selectedScreeningState: "Toegestaan",
 
       first_name: "",
       last_name: "",
       email: "",
       phone_number: "",
       selectedRoleId: 2,
-      selectedScreeningStateId: 0,
+      selectedScreeningStateId: 1,
     };
   },
 

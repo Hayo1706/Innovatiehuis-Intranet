@@ -47,7 +47,7 @@
         class="full-button col"
         @click="this.$emit('sortEvent', 'screening')"
       >
-        Screening
+        Toegang
         <span v-if="sortingMethod == 'screening'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
           <i v-else class="bi-caret-up-fill"></i>

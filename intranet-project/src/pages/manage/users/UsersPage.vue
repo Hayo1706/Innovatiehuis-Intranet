@@ -87,7 +87,7 @@
       </div>
     </div>
     <div class="listing-container container-fluid">
-      <div v-for="user of filteredUsers" :key="user.first_name">
+      <div v-for="user of filteredUsers" :key="user.userid">
         <UserListing
           v-bind:user="user"
           v-bind:all_roles="roles"
@@ -151,9 +151,7 @@ export default {
       this.searchTerm = value;
     },
     shouldShow(item) {
-      let shouldShow = false;
-      shouldShow = this.matchesSearchTermWhenShould(item);
-      return shouldShow;
+      return this.matchesSearchTermWhenShould(item);
     },
     matchesSearchTermWhenShould(item) {
       if (this.searchTerm == null) {
@@ -196,8 +194,8 @@ export default {
       });
       if (this.sortingMethod == "name") {
         filteredUsers = filteredUsers.sort((a, b) => {
-          let fa = a.first_name.toLowerCase(),
-            fb = b.first_name.toLowerCase();
+          let fa = a.first_name.toLowerCase() + " " + a.last_name.toLowerCase(),
+            fb = b.first_name.toLowerCase() + " " + b.last_name.toLowerCase();
           return this.sortingFunction(fa, fb);
         });
       } else if (this.sortingMethod == "created") {
@@ -234,20 +232,20 @@ export default {
       return filteredUsers;
     },
   },
-  async created() {
-    this.$emit("newHeaderTitle", "Gebruikers - Overzicht");
-    UserService.getUsers()
+  created() {
+    UserService.getRoles()
       .then((response) => {
-        this.users = response;
+        this.roles = response;
       })
       .catch((err) => {
         if (err.response) {
           console.log(err.response.status);
         }
       });
-    UserService.getRoles()
+    this.$emit("newHeaderTitle", "Gebruikers - Overzicht");
+    UserService.getUsers()
       .then((response) => {
-        this.roles = response;
+        this.users = response;
       })
       .catch((err) => {
         if (err.response) {

@@ -33,7 +33,7 @@
           <select
             v-model="selectedRole"
             :disabled="!canUpdateUserRole()"
-            v-if="showRoleSelect()"
+            v-if="userIsNotProtected()"
           >
             <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
               {{ role }}
@@ -53,15 +53,11 @@
             >
               <img
                 src="@\assets\images\screening1.png"
-                v-if="screeningstate == 'nog niet in behandeling'"
-              />
-              <img
-                src="@\assets\images\screening2.png"
-                v-if="screeningstate == 'in behandeling'"
+                v-if="screeningstate == 'Geblokkeerd'"
               />
               <img
                 src="@\assets\images\check.png"
-                v-if="screeningstate == 'voltooid'"
+                v-if="screeningstate == 'Toegestaan'"
               />
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -124,7 +120,7 @@
         <select
           v-model="selectedRole"
           :disabled="!canUpdateUserRole()"
-          v-if="showRoleSelect()"
+          v-if="userIsNotProtected()"
         >
           <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
             {{ role }}
@@ -152,15 +148,11 @@
             >
               <img
                 src="@\assets\images\screening1.png"
-                v-if="screeningstate == 'nog niet in behandeling'"
-              />
-              <img
-                src="@\assets\images\screening2.png"
-                v-if="screeningstate == 'in behandeling'"
+                v-if="screeningstate == 'Geblokkeerd'"
               />
               <img
                 src="@\assets\images\check.png"
-                v-if="screeningstate == 'voltooid'"
+                v-if="screeningstate == 'Toegestaan'"
               />
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -206,9 +198,8 @@ export default {
       previousRole: this.user.role_name,
       selectedRole: this.user.role_name,
       screeningstates: {
-        "nog niet in behandeling": 0,
-        "in behandeling": 1,
-        voltooid: 2,
+        Geblokkeerd: 0,
+        Toegestaan: 1,
       },
 
       previousScreeningstate: "",
@@ -285,6 +276,12 @@ export default {
     },
   },
   created() {
+    for (const role of this.all_roles) {
+      if (role.is_protected != 1) {
+        this.roles[role.role_name] = role.roleid;
+      }
+    }
+
     this.previousScreeningstate = this.getKeyByValue(
       this.screeningstates,
       this.user.screening_status
@@ -293,11 +290,6 @@ export default {
       this.screeningstates,
       this.user.screening_status
     );
-    for (const role of this.all_roles) {
-      if (role.is_protected != 1) {
-        this.roles[role.role_name] = role.roleid;
-      }
-    }
   },
   methods: {
     canDelete() {
@@ -312,7 +304,7 @@ export default {
         this.user.userid != localStorage.getItem("userid")
       );
     },
-    showRoleSelect() {
+    userIsNotProtected() {
       for (const role of this.all_roles) {
         if (role.roleid == this.user.roleid) {
           return !role.is_protected;
