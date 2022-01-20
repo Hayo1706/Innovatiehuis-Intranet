@@ -187,7 +187,11 @@
       </div>
 
       <br />
-      <button class="addButton" @click="updateProjectDetails()">
+      <button
+        v-if="this.changes"
+        class="addButton"
+        @click="updateProjectDetails()"
+      >
         Wijzigingen opslaan
       </button>
     </div>
@@ -212,8 +216,12 @@ export default {
       parentsOpen: false,
       childrenOpen: false,
       membersOpen: false,
+
       projectname: "",
       projectdescription: "",
+
+      new_projectname: false,
+      new_projectdescription: false,
 
       userSearchTerm: "",
       filteredUsers: [],
@@ -227,6 +235,8 @@ export default {
       childSearchTerm: "",
       filteredChildren: [],
       disabled: false,
+
+      changes: false,
     };
   },
   mounted() {
@@ -249,6 +259,62 @@ export default {
       )
         .then(() => {
           this.$emit("nameOrDescriptionChanged", project);
+
+          ProjectService.updateMembersOfProject(this.project.projectid, {
+            ids: this.getUserIds(this.members),
+          })
+            .then(() => {
+              ProjectService.updateParentsOfProject(this.project.projectid, {
+                ids: this.getProjectIds(this.parents),
+              })
+                .then(() => {
+                  ProjectService.updateChildrenOfProject(
+                    this.project.projectid,
+                    {
+                      ids: this.getProjectIds(this.children),
+                    }
+                  )
+                    .then(() => {
+                      if (all_ok) {
+                        AlertService.alert(
+                          "De wijzigingen zijn opgeslagen!",
+                          "success"
+                        );
+                        this.changes = false;
+                      } else {
+                        //refresh
+                        this.openDetails();
+                      }
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                      //invalid operation on server
+                      if (err.response) {
+                        console.log(err.response.status);
+                      }
+                      AlertService.handleError(err);
+                      all_ok = false;
+                    });
+                })
+                .catch((err) => {
+                  console.log(err);
+                  //invalid operation on server
+                  if (err.response) {
+                    console.log(err.response.status);
+                  }
+                  AlertService.handleError(err);
+                  all_ok = false;
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+              //invalid operation on server
+              if (err.response) {
+                console.log(err.response.status);
+              }
+              AlertService.handleError(err);
+              all_ok = false;
+            });
         })
         .catch((err) => {
           //invalid operation on server
@@ -258,46 +324,32 @@ export default {
           AlertService.handleError(err);
           all_ok = false;
         });
-
-      ProjectService.updateMembersOfProject(this.project.projectid, {
-        ids: this.getUserIds(this.members),
-      })
-        .then(() => {})
-        .catch((err) => {
-          console.log(err);
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          AlertService.handleError(err);
-          all_ok = false;
-        });
-
-      if (all_ok) {
-        AlertService.alert("De wijzigingen zijn opgeslagen!", "success");
-      }
-      this.openDetails();
     },
     selectUser(user) {
       this.members.push(user);
+      this.changes = true;
       this.userSearchTerm = "";
     },
     selectParent(project) {
       this.parents.push(project);
+      this.changes = true;
       this.parentSearchTerm = "";
     },
     selectChild(project) {
       this.children.push(project);
+      this.changes = true;
       this.childSearchTerm = "";
     },
     removeProjectFromList(list, id) {
       if (list == "parents") {
+        this.changes = true;
         this.parents = this.parents.filter((project) => {
           return project.projectid != id;
         });
         if (this.filteredParents.length != 0)
           this.filteredParents = this.getFilteredParents();
       } else if (list == "children") {
+        this.changes = true;
         this.children = this.children.filter((project) => {
           return project.projectid != id;
         });
@@ -311,6 +363,7 @@ export default {
       this.members = this.members.filter((user) => {
         return user.userid != id;
       });
+      this.changes = true;
       if (this.filteredUsers.length != 0)
         this.filteredUsers = this.getFilteredUsers();
     },
@@ -512,6 +565,20 @@ export default {
   },
 
   watch: {
+    projectname: function () {
+      if (this.new_projectname) {
+        this.changes = true;
+      } else {
+        this.new_projectname = true;
+      }
+    },
+    projectdescription: function () {
+      if (this.new_projectdescription) {
+        this.changes = true;
+      } else {
+        this.new_projectdescription = true;
+      }
+    },
     open: function () {
       if (this.open) {
         this.openDetails();
