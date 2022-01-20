@@ -105,7 +105,6 @@ export default {
   props: ['projectID', 'currentPath', 'previousPath', 'currentFolders'],
   watch: {
     currentFolders: function(newFolders){
-      console.log("huh", newFolders)
       this.setSearchedFolders(newFolders);
     },
     currentPath: function(newPath){
@@ -137,7 +136,7 @@ export default {
       if (event.dataTransfer.getData('type') === 'file') {
         FilestorageService.moveFile(id, path, to)
             .then(() => {
-              this.$emit("currentFoldersChanged");
+              this.$emit("currentFilesChanged");
             })
             .catch((err) => {
               if (err.response) {
@@ -170,10 +169,8 @@ export default {
       }
       else{
         this.searchedFolders = []
-        console.log(this.currentFolders)
         for(var folder_index in this.currentFolders){
           var folderName = this.currentFolders[folder_index].name
-          console.log(folderName, this.searchTerm)
           if(this.folderNameInSearchTerm(String(folderName), this.searchTerm)){
             this.searchedFolders.push(this.currentFolders[folder_index])
           }

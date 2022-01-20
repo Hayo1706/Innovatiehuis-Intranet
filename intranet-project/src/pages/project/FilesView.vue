@@ -18,7 +18,7 @@
               :fileType="file.name.split('.').pop()"
               :path="file.path"
               :type="file.type"
-              :folders="this.folders"
+              :currentFolders="this.currentFolders"
 
               @fileDeleted="currentFilesChanged"
               @nameChanged="currentFilesChanged"
@@ -53,7 +53,7 @@ export default {
     ProjectFile,
   },
   name: "FilesView",
-  props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'currentFiles'],
+  props: ['projectID', 'currentPath', 'currentFolders', 'currentFiles'],
   watch: {
     currentPath: function(newPath){
       this.folderPath = newPath;

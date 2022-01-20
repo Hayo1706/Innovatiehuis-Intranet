@@ -11,6 +11,7 @@
                 :currentFolders="this.currentFolders"
 
                 @currentFoldersChanged="currentFoldersChanged"
+                @currentFilesChanged="currentFilesChanged"
                 @currentPathChanged="currentPathChanged"
                 @fileMoved="$refs.child.setFiles()"
               />

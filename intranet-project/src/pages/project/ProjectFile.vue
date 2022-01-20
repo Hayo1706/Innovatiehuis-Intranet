@@ -34,9 +34,11 @@
     <ul id="drop-down-menu" v-if="moveMenu == true && this.shared != 'no'">
       <li>Verplaatsen naar:</li>
       <ul id="drop-down-menu">
-        <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">
-          {{ folder.name }}
-        </li>
+        <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
+            <li v-if="folder.name != folderName && folder.type != 'shared'">
+              {{ folder.name }}
+            </li>
+          </span>
       </ul>
     </ul>
   </div>
@@ -54,7 +56,7 @@ export default {
     fileType: { type: String, required: false },
     path: { type: String, required: true },
     type: { type: String, required: true },
-    folders: { type: Array, required: true },
+    currentFolders: { type: Array, required: true },
   },
   data: function () {
     return {
