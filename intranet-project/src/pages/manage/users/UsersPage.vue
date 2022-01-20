@@ -90,6 +90,7 @@
       <div v-for="user of filteredUsers" :key="user.first_name">
         <UserListing
           v-bind:user="user"
+          v-bind:all_roles="roles"
           @removeUser="this.removeUser"
           @screeningChanged="setUserScreening"
           @roleChanged="setUserRole"
@@ -124,6 +125,7 @@ export default {
       searchTerm: null,
       sortingMethod: "name",
       ascending: true,
+      roles: [],
     };
   },
   methods: {
@@ -237,6 +239,15 @@ export default {
     UserService.getUsers()
       .then((response) => {
         this.users = response;
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status);
+        }
+      });
+    UserService.getRoles()
+      .then((response) => {
+        this.roles = response;
       })
       .catch((err) => {
         if (err.response) {
