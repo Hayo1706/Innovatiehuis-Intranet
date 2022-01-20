@@ -83,7 +83,7 @@
     <div class="listing-container container-fluid">
       <ProjectListing
         v-for="project of filteredProjects"
-        :key="project.project_name"
+        :key="project.projectid"
         class="projectlisting"
         @removeProject="this.removeProject"
         @archiveProject="this.archiveProject"
