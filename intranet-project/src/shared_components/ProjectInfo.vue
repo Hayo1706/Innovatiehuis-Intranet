@@ -290,10 +290,12 @@ export default {
         this.parents = this.parents.filter((project) => {
           return project.projectid != id;
         });
+        this.filteredParents = this.getFilteredParents();
       } else if (list == "children") {
         this.children = this.children.filter((project) => {
           return project.projectid != id;
         });
+        this.filteredChildren = this.getFilteredChildren();
       } else {
         throw new Error("Unsupported operation");
       }
@@ -302,6 +304,7 @@ export default {
       this.members = this.members.filter((user) => {
         return user.userid != id;
       });
+      this.filteredUsers = this.getFilteredUsers();
     },
     addParents() {
       ProjectService.addParentToProject(
@@ -330,44 +333,6 @@ export default {
           this.refreshAllAcordeons();
           this.childToAdd = null;
           this.loadChildren();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
-    },
-    removeChild(childid) {
-      ProjectService.removeChildFromProject(this.project.projectid, childid)
-        .then(() => {})
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
-    },
-    removeParent(parentid) {
-      ProjectService.removeParentFromProject(this.project.projectid, parentid)
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.loadParents();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
-    },
-    removeUser(userid) {
-      UserService.removeUserFromProject(this.project.projectid, userid)
-        .then(() => {
-          this.loadMembers();
         })
         .catch((err) => {
           //invalid operation on server
