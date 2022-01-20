@@ -105,6 +105,7 @@ import ProjectsHeader from "./ProjectsHeader.vue";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import Projectshidarchivedcheckbox from "./ProjectsHideArchivedCheckbox.vue";
 import ProjectCreateModal from "./ProjectCreateModal.vue";
+import AlertService from "@/services/AlertService.js";
 export default {
   components: {
     ProjectListing,
@@ -149,6 +150,10 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
+          AlertService.alert(
+            "Er ging iets mis bij het verwijderen, probeer later opnieuw",
+            "error"
+          );
         });
     },
 
@@ -164,6 +169,16 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
+          let action;
+          if (project.is_archived) {
+            action = "dearchiveren";
+          } else {
+            action = "archiveren";
+          }
+          AlertService.alert(
+            "Er ging iets mis bij het " + action + ", probeer later opnieuw",
+            "error"
+          );
         });
     },
     shouldShow(project) {
@@ -226,6 +241,9 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
+          AlertService.alert(
+            "Er ging iets mis bij het laden van de pagina, probeer later opnieuw"
+          );
         });
     },
   },

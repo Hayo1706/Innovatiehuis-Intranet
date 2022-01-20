@@ -263,7 +263,7 @@ export default {
           this.closeModal();
 
           alert(
-            "Er ging iets mis bij het aanmaken van een project, probeer later weer"
+            "Er ging iets mis bij het aanmaken van een project, probeer later opnieuw"
           );
         });
     },
