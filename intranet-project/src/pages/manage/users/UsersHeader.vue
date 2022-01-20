@@ -1,5 +1,17 @@
 <template>
   <div id="usersHeader" class="container-fluid d-none d-lg-block">
+    <div id="users-header-top" class="row">
+      <button
+        id="actionButton"
+        class="full btn pmd-btn-fab pmd-ripple-effect btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#createUserModal"
+        type="button"
+        v-show="canCreateUser()"
+      >
+        <i class="material-icons pmd-sm">Gebruiker toevoegen</i>
+      </button>
+    </div>
     <div class="row">
       <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
         Gebruiker
@@ -68,6 +80,7 @@
 
 <script>
 import SearchBar from "@/shared_components/SearchBar.vue";
+import PermissionService from "@/services/PermissionService.js";
 export default {
   components: { SearchBar },
   name: "UsersHeader",
@@ -75,7 +88,11 @@ export default {
   data: function () {
     return {};
   },
-  methods: {},
+  methods: {
+    canCreateUser() {
+      return PermissionService.userHasPermission("may_create_users");
+    },
+  },
 };
 </script>
 
@@ -87,7 +104,6 @@ export default {
   background-color: var(--blue1);
   color: white;
   font-size: 1.6vh;
-  padding: 20px;
 }
 .bi-caret-down-fill {
   margin-left: 5px;
@@ -100,5 +116,10 @@ export default {
 }
 #search-input {
   font-family: AddeleSemiBold;
+}
+#actionButton {
+  width: fit-content;
+  display: inline-block;
+  left: 0px;
 }
 </style>

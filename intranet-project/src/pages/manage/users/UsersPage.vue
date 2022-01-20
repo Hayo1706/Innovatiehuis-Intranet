@@ -6,7 +6,7 @@
     />
     <button
       id="actionButton"
-      class="full btn pmd-btn-fab pmd-ripple-effect btn-primary"
+      class="full btn pmd-btn-fab pmd-ripple-effect btn-primary d-lg-none"
       data-bs-toggle="modal"
       data-bs-target="#createUserModal"
       type="button"
