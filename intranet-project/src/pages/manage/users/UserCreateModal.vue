@@ -150,21 +150,7 @@ export default {
         .then((response) => {
           this.$emit("reloadUsers");
           this.closeModal();
-          var message =
-            "De gebruiker '" +
-            this.first_name +
-            " " +
-            this.last_name +
-            "' is toegevoegd!" +
-            "\nMail de volgende link naar " +
-            this.first_name +
-            " zodat ze hun wachtwoord kunnen instellen:" +
-            "\n" +
-            response.response.link;
-          window.location.reload();
           AlertService.handleSuccess(response);
-          console.log(message);
-          AlertService.alert(message, "success");
         })
         .catch((err) => {
           AlertService.handleError(err);

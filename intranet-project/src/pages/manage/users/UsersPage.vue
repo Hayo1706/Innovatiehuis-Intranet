@@ -173,10 +173,7 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          AlertService.alert(
-            "Er ging iets mis bij het laden van de pagina, probeer later opnieuw",
-            "error"
-          );
+          AlertService.handleError(err);
         });
     },
     removeUser(userid) {
