@@ -58,7 +58,7 @@
                 </option>
               </select>
               <br />
-              Screeningstatus: &nbsp;
+              Toegang: &nbsp;
               <select v-model="selectedScreeningState">
                 <option
                   v-for="screeningstate in Object.keys(this.screeningstates)"
@@ -68,8 +68,8 @@
                 </option>
               </select>
               <br />
-              (De gebruiker heeft pas rechten die bij zijn rol horen, als de
-              screening voltooid is.)
+              (De gebruiker heeft pas rechten die bij zijn rol horen, als hij
+              toegang heeft gekregen.)
             </div>
           </form>
         </div>

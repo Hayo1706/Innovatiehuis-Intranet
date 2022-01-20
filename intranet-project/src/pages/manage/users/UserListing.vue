@@ -43,37 +43,37 @@
         </div>
         <div class="mobileRow">{{ user.amountprojects }}</div>
         <div class="mobileRow">
-          <div class="dropdown">
-            <button
-              class="btn dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton1"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                src="@\assets\images\screening1.png"
-                v-if="screeningstate == 'Geblokkeerd'"
-              />
-              <img
-                src="@\assets\images\check.png"
-                v-if="screeningstate == 'Toegestaan'"
-              />
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <select
-                class="dropdown-item"
-                v-model="screeningstate"
-                :disabled="!canUpdateUserScreening()"
-              >
-                <option
-                  v-for="screeningstate in Object.keys(this.screeningstates)"
-                  v-bind:key="screeningstate"
-                >
-                  {{ screeningstate }}
-                </option>
-              </select>
-            </ul>
+          <div v-if="userIsNotProtected()">
+            <img
+              style="cursor: pointer"
+              src="@\assets\images\screening1.png"
+              v-if="screeningstate == 'Geblokkeerd'"
+              @click="
+                () => {
+                  this.screeningstate = 'Toegestaan';
+                }
+              "
+            />
+            <img
+              style="cursor: pointer"
+              src="@\assets\images\check.png"
+              v-if="screeningstate == 'Toegestaan'"
+              @click="
+                () => {
+                  this.screeningstate = 'Geblokkeerd';
+                }
+              "
+            />
+          </div>
+          <div v-else>
+            <img
+              src="@\assets\images\screening1.png"
+              v-if="screeningstate == 'Geblokkeerd'"
+            />
+            <img
+              src="@\assets\images\check.png"
+              v-if="screeningstate == 'Toegestaan'"
+            />
           </div>
         </div>
       </div>
@@ -138,37 +138,37 @@
         id="screening justify-content-center"
       >
         <div class="listing-icon iconHolder">
-          <div class="dropdown">
-            <button
-              class="btn dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton1"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                src="@\assets\images\screening1.png"
-                v-if="screeningstate == 'Geblokkeerd'"
-              />
-              <img
-                src="@\assets\images\check.png"
-                v-if="screeningstate == 'Toegestaan'"
-              />
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <select
-                class="dropdown-item"
-                v-model="screeningstate"
-                :disabled="!canUpdateUserScreening()"
-              >
-                <option
-                  v-for="screeningstate in Object.keys(this.screeningstates)"
-                  v-bind:key="screeningstate"
-                >
-                  {{ screeningstate }}
-                </option>
-              </select>
-            </ul>
+          <div v-if="userIsNotProtected()">
+            <img
+              style="cursor: pointer"
+              src="@\assets\images\screening1.png"
+              v-if="screeningstate == 'Geblokkeerd'"
+              @click="
+                () => {
+                  this.screeningstate = 'Toegestaan';
+                }
+              "
+            />
+            <img
+              style="cursor: pointer"
+              src="@\assets\images\check.png"
+              v-if="screeningstate == 'Toegestaan'"
+              @click="
+                () => {
+                  this.screeningstate = 'Geblokkeerd';
+                }
+              "
+            />
+          </div>
+          <div v-else>
+            <img
+              src="@\assets\images\screening1.png"
+              v-if="screeningstate == 'Geblokkeerd'"
+            />
+            <img
+              src="@\assets\images\check.png"
+              v-if="screeningstate == 'Toegestaan'"
+            />
           </div>
         </div>
       </div>
@@ -210,16 +210,22 @@ export default {
   watch: {
     screeningstate: async function (val) {
       if (val != this.previousScreeningstate) {
+        let action;
+        if (val == "Toegestaan") {
+          action = "deblokkeren";
+        } else {
+          action = "blokkeren";
+        }
         const ok = await this.$refs.confirmDialogue.show({
-          title: "Screening veranderen",
+          title: "Toegang veranderen",
           message:
-            'Wil je de screening status van de gebruiker "' +
+            'Wil je de gebruiker "' +
             this.user.first_name +
             " " +
             this.user.last_name +
-            '" echt veranderen naar "' +
-            val +
-            '"?',
+            '" echt  ' +
+            action +
+            "?",
         });
         if (ok) {
           const screeningstateId = this.screeningstates[val];
@@ -419,6 +425,5 @@ select {
 }
 .listing-icon {
   border-style: none;
-  cursor: pointer;
 }
 </style>
