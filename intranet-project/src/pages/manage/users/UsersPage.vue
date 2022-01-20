@@ -105,6 +105,7 @@
 </template>
 
 <script>
+import AlertService from "@/services/AlertService.js";
 import UserService from "@/services/UserService.js";
 import UsersHeader from "./UsersHeader.vue";
 import SearchBar from "@/shared_components/SearchBar.vue";
@@ -251,6 +252,10 @@ export default {
         if (err.response) {
           console.log(err.response.status);
         }
+        AlertService.alert(
+          "Er ging iets mis bij het laden van de pagina, probeer later opnieuw",
+          "error"
+        );
       });
   },
 };

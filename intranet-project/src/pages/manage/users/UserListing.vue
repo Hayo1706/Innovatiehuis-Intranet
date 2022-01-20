@@ -174,7 +174,10 @@
       </div>
 
       <div class="col d-lg-flex align-items-center justify-content-center">
-        <div @click="handleRemoveUser(this.user)" v-show="canDelete()">
+        <div
+          @click="handleRemoveUser(this.user)"
+          v-show="canDelete() && userIsNotProtected()"
+        >
           <div class="listing-icon iconHolder">
             <img src="@\assets\images\delete.png" />
           </div>
@@ -189,6 +192,7 @@ import VerticalHeader from "./VerticalHeader.vue";
 import UserService from "@/services/UserService.js";
 import PermissionService from "@/services/PermissionService.js";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
+import AlertService from "@/services/AlertService.js";
 export default {
   props: ["user", "all_roles"],
   components: { VerticalHeader, ConfirmDialogue },
@@ -242,7 +246,10 @@ export default {
             })
             .catch(() => {
               this.screeningstate = this.previousScreeningstate;
-              alert("Er ging iets mis!");
+              AlertService.alert(
+                "Er ging iets mis bij het " + action + " van de gebruiker",
+                "error"
+              );
             });
         } else {
           this.screeningstate = this.previousScreeningstate;
@@ -273,7 +280,10 @@ export default {
             })
             .catch(() => {
               this.selectedRole = this.previousRole;
-              alert("Er ging iets mis!");
+              AlertService.alert(
+                "Er ging iets mis bij het veranderen van de rol, probeer later opnieuw",
+                "error"
+              );
             });
         } else {
           this.selectedRole = this.previousRole;
@@ -347,6 +357,10 @@ export default {
             if (err.response) {
               console.log(err.response.status);
             }
+            AlertService.alert(
+              "Er ging iets mis bij het verwijderen van de gebruiker, probeer later opnieuw",
+              "error"
+            );
           });
       }
     },
