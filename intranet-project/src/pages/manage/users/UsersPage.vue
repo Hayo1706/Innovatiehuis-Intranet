@@ -74,7 +74,7 @@
         </button>
       </div>
     </div>
-    <UserCreateModal></UserCreateModal>
+    <UserCreateModal @reloadUsers="loadUsers()"></UserCreateModal>
     <div class="container-fluid d-sm-block d-lg-none">
       <div class="row">
         <SearchBar
@@ -163,6 +163,21 @@ export default {
           .includes(this.searchTerm.toLowerCase());
       }
     },
+    loadUsers() {
+      UserService.getUsers()
+        .then((response) => {
+          this.users = response;
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status);
+          }
+          AlertService.alert(
+            "Er ging iets mis bij het laden van de pagina, probeer later opnieuw",
+            "error"
+          );
+        });
+    },
     removeUser(userid) {
       this.users = this.users.filter(function (item) {
         return item.userid !== userid;
@@ -244,19 +259,7 @@ export default {
         }
       });
     this.$emit("newHeaderTitle", "Gebruikers - Overzicht");
-    UserService.getUsers()
-      .then((response) => {
-        this.users = response;
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
-        AlertService.alert(
-          "Er ging iets mis bij het laden van de pagina, probeer later opnieuw",
-          "error"
-        );
-      });
+    this.loadUsers();
   },
 };
 </script>

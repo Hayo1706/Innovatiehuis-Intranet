@@ -92,6 +92,7 @@
 <script>
 import UserService from "@/services/UserService.js";
 import { Modal } from "bootstrap";
+import AlertService from "@/services/AlertService.js";
 export default {
   name: "UserCreateModal",
   data: function () {
@@ -145,22 +146,17 @@ export default {
         roleid: this.selectedRoleId,
         screening_status: this.selectedScreeningStateId,
       })
-        .then((respsonse) => {
+        .then(() => {
+          this.$emit("reloadUsers");
           this.closeModal();
           var message =
             "De gebruiker '" +
             this.first_name +
             " " +
             this.last_name +
-            "' is toegevoegd!" +
-            "\nMail de volgende link naar " +
-            this.first_name +
-            " zodat ze hun wachtwoord kunnen instellen:" +
-            "\n" +
-            respsonse.response.link;
-          console.log(message);
-          alert(message);
-          window.location.reload();
+            "' is toegevoegd!";
+
+          AlertService.alert(message, "success");
         })
         .catch((err) => {
           if (err.response) {
