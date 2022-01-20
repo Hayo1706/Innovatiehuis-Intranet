@@ -39,7 +39,7 @@ def check_permissions(rule, *parameters):
                 return resp, 401
             screening_status = query("SELECT screening_status FROM users WHERE userid = %(user_id)s",
                                      {'user_id': get_jwt_identity()})[0]
-            if screening_status['screening_status'] == 2:
+            if screening_status['screening_status'] == 1:
                 user_perm = \
                     query("SELECT roles.* FROM users JOIN roles ON users.roleid = roles.roleid WHERE userid = %(user_id)s",
                           {'user_id': get_jwt_identity()})[0]

@@ -1,28 +1,41 @@
 <template>
-  <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
+  <div>
+    <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
 
-  <div class="col">
-    <div class="row" style="margin-right: 8px;">
-      <div class="col">
-        <div v-show="canArchive()">
-          <div v-if="project.is_archived" class="link" @click="handleArchiveProject(project)">
-            <span title="Project de-archiveren" class="listing-icon icon-holder">
-              <img src="@/assets/images/dearchive.png" />
-            </span>
-          </div>
-          <div v-else class="link" @click="handleArchiveProject(project)">
-            <span title="Project archiveren" class="listing-icon icon-holder">
-              <img src="@/assets/images/archive.png" />
-            </span>
+    <div class="col">
+      <div class="row" style="margin-right: 8px">
+        <div class="col">
+          <div v-show="canArchive()">
+            <div
+              v-if="project.is_archived"
+              class="link"
+              @click="handleArchiveProject(project)"
+            >
+              <span
+                title="Project de-archiveren"
+                class="listing-icon icon-holder"
+              >
+                <img src="@/assets/images/dearchive.png" />
+              </span>
+            </div>
+            <div v-else class="link" @click="handleArchiveProject(project)">
+              <span title="Project archiveren" class="listing-icon icon-holder">
+                <img src="@/assets/images/archive.png" />
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="col">
-        <div class="link" v-show="canDelete()" @click="handleDeleteProject(project)">
-          <span title="Project verwijderen" class="listing-icon icon-holder">
-            <img src="@/assets/images/delete.png" />
-          </span>
+        <div class="col">
+          <div
+            class="link"
+            v-show="canDelete()"
+            @click="handleDeleteProject(project)"
+          >
+            <span title="Project verwijderen" class="listing-icon icon-holder">
+              <img src="@/assets/images/delete.png" />
+            </span>
+          </div>
         </div>
       </div>
     </div>
