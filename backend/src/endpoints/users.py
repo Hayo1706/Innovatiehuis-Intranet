@@ -50,8 +50,9 @@ def create():
     serializer = URLSafeSerializer(PASSWORD_CHANGE_SECRET_KEY)
     d1 = date.today().strftime("%d/%m/%Y")
     userid = query("SELECT userid FROM users WHERE email=%(email)s", {'email': email})[0]['userid']
-    return response("User successfully added", 200, link=
-        DOMAIN_NAME + "/manage/resetpassword?resettoken=" + serializer.dumps([userid, password_hash]))
+    resp = DOMAIN_NAME + "/manage/resetpassword?resettoken=" + serializer.dumps([userid, password_hash])
+    print(resp)
+    return response("User successfully added", 200, link= resp)
 
 
 # PUT users/{id}

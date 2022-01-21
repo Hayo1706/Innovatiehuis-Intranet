@@ -13,11 +13,11 @@ def query_update(query, param=None):
         connection.exec_driver_sql(query, param)
 
 
-def response(message, code=200, **arguments):
-    data = {'response': {'resource': request.path, 'message': message}}
-    for key, value in arguments.items():
-        data['response'][key] = value
-    return data, code
+def response(message, code=200, data = None):
+    rsp = {'resource': request.path, 'message': message, 'data': data}
+    if not code == 200:
+        rsp['code'] = code
+    return rsp, code
 
 
 def is_boolean(value):
