@@ -24,7 +24,9 @@ var ProjectService = function () {
         return response;
     }
     async function getProjectsByUser(userid) {
-        const { response } = await axiosClient.get(`/users/${userid}/projects`, { timeout: 2000 });
+        const response = await axiosClient.get(`/users/${userid}/projects`, { timeout: 2000 });
+        console.log("henk:");
+        console.log({response});
         response.data.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
         return response;
     }

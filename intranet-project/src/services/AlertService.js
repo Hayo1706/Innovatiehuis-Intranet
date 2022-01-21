@@ -37,8 +37,6 @@ var AlertService = function () {
     }
 
     function handleError(err) {
-        console.log({err});
-        console.log("henk");
         if (err.data) {
             alert(err.data.response.message, "error");
             console.log("HTTP code " + err.status);
