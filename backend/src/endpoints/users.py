@@ -2,11 +2,10 @@ import secrets
 from datetime import date
 
 import connexion
-from flask_jwt_extended import jwt_required
 from ..config import PASSWORD_CHANGE_SECRET_KEY, DOMAIN_NAME
 from ..services.helper_functions import *
 from itsdangerous import URLSafeSerializer
-from ..services.permissions import Users, Projects
+from ..services.permissions import Users, Projects, Roles
 from ..services.permissions.permissions import check_permissions, check_jwt
 from ..services.extensions import bcrypt
 
@@ -42,7 +41,7 @@ def create():
         screening_status = body['screening_status']
         password_hash = bcrypt.generate_password_hash(secrets.token_urlsafe(16)).decode('utf-8')
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
     query_update(
         "INSERT INTO users (first_name, last_name, email, phone_number, roleid, screening_status, password_hash) "
         "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone_number)s, %(roleid)s, %(screening_status)s,%(password_hash)s)",
@@ -65,7 +64,7 @@ def update(user_id):
         email = body['email']
         phone_number = body['phone_number']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
 
     query_update(
         "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, "
@@ -87,7 +86,7 @@ def update_screening(user_id, screening_status):
 
 # PATCH users/{id}/role/{id}
 @check_permissions(Users.may_update_role)
-def update_role(user_id, role_id):
+def update_role_user(user_id, role_id):
     is_protected = query(
         "SELECT is_protected FROM roles WHERE roleid = %(role_id)s",
         {'role_id': role_id})[0]["is_protected"]
@@ -107,7 +106,7 @@ def update_password(user_id):
         body = connexion.request.json
         new_password_hash = body['password_hash']  # TODO: how to hash
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
     query_update("UPDATE users SET password_hash = %(hash)s WHERE userid = %(userid)s",
                  {'hash': new_password_hash, 'userid': user_id})
 
@@ -134,14 +133,8 @@ def add_project(user_id, project_id):
     try:
         body = connexion.request.json
     except KeyError:
-        return response("Invalid body", 400)
-    query_update(f"INSERT INTO users_have_projects (userid, projectid) VALUES (%(userid)s, %(projectid)s)",
+        return response("Foute aanvraag", 400)
+    query_update("INSERT INTO users_have_projects (userid, projectid) VALUES (%(userid)s, %(projectid)s)",
                  {'userid': user_id, 'projectid': project_id})
     return response(f"Successfully assigned {project_id} to project {project_id}")
 
-
-#GET roles
-@check_jwt()
-def get_roles():
-    return query(
-        "SELECT * FROM roles;")

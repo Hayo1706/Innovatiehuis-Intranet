@@ -29,7 +29,7 @@ def create():
         parentIds = body['parentids']
         childIds = body['childids']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
     query_update(
         "INSERT INTO projects (project_name, description) VALUES (%(project_name)s, %(description)s)",
         {'project_name': project_name, 'description': description}
@@ -53,7 +53,7 @@ def update(project_id):
         project_name = body['project_name']
         description = body['description']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
 
     query_update("UPDATE projects "
                  "SET project_name = %(project_name)s, description = %(description)s "
@@ -70,7 +70,7 @@ def update_archive(project_id):
         body = connexion.request.json['project']
         is_archived = body['is_archived']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
 
     is_boolean(is_archived)
     query_update("UPDATE projects "
@@ -106,7 +106,7 @@ def update_users(project_id):
         body = connexion.request.json
         new_ids = body['ids']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
 
     # 1 get all userids for project
     old_ids = [result["userid"] for result in query(
@@ -213,7 +213,7 @@ def update_shared_files(project_id, child_id):
         body = connexion.request.json['project']
         shared_files_string = body['shared_files']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
     query_update(
         "UPDATE projects_have_parents "
         "SET shared_files = %(shared_files)s "
@@ -260,7 +260,7 @@ def add_announcement(project_id):
         title = body['title']
         content = body['content']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) "
         "VALUES (%(userid)s, %(id)s, %(title)s, %(content)s)",

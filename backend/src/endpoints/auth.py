@@ -16,7 +16,7 @@ def login():
         email = connexion.request.form['username']
         send_password = connexion.request.form['password']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
 
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})
@@ -89,7 +89,7 @@ def change_existing_password(old_password, new_password):
             return set_password(new_password, user_id)
         return response("Incorrect current password", 401)
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
 
 
 def set_password(password, user_id):

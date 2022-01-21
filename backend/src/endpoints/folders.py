@@ -136,7 +136,7 @@ def create_dir(project_id):
         return response("Successfully created new folder", 200)
     except KeyError as e:
         print("Failed to created new folder: " + str(e))
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
     except Exception as e:
         print("Failed to created new folder: " + str(e))
         return response("Failed to created new folder", 400)

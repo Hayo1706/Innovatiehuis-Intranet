@@ -219,6 +219,10 @@ p {
   font-family: AddeleThin;
   src: url(./assets/fonts/AdelleSansEXT-Thin.ttf);
 }
+@font-face {
+    font-family: disks;
+    src: url(./assets/fonts/disks.ttf);
+}
 
 /* scrollbar width */
 ::-webkit-scrollbar {
