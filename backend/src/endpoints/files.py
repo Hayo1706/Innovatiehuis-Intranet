@@ -188,7 +188,6 @@ def move_file(project_id):
 
     return response("Failed to move file", 400)
 
-
 def rename_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
     requested_path = unquote(requested_path)

@@ -20,6 +20,8 @@
 import ProjectButton from "./ProjectButton.vue";
 import ProjectService from "@/services/ProjectService.js";
 import PermissionService from "@/services/PermissionService";
+import AlertService from "../services/AlertService";
+
 export default {
   components: { ProjectButton },
   name: "ProjectsWindow",
@@ -33,12 +35,10 @@ export default {
     ProjectService.getProjectsByUser(localStorage.getItem("userid"))
       .then((response) => {
         this.projects = response;
-        console.log("API RESPONDS: " + JSON.stringify(response));
+        AlertService.handleSuccess(response);
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
+        AlertService.handleError(err);
       });
   },
   methods: {

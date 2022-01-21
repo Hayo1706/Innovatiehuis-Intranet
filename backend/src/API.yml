@@ -107,6 +107,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+    put:
+      operationId: src.endpoints.projects.update_parents
+      tags:
+        - Projects
+      summary: Change the parents of this project by supplying a list of project IDs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDs'
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        200:
+          description: Successfully updated list of parent projects connected to this project
   /projects/{project_id}/parents/{parent_id}:
     post:
       operationId: src.endpoints.projects.add_parent
@@ -145,6 +161,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+    put:
+      operationId: src.endpoints.projects.update_children
+      tags:
+        - Projects
+      summary: Change the children of this project by supplying a list of project IDs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDs'
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        200:
+          description: Successfully updated list of child projects connected to this project
   /projects/{project_id}/children/{child_id}:
     post:
       operationId: src.endpoints.projects.add_child

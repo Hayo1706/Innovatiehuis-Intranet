@@ -1,4 +1,4 @@
-DEBUG_MODE = True
+DEBUG_MODE = False
 # IF TRUE, SWAGGER UI MAY BE USED TO TEST ENDPOINTS, BUT JWT VERIFICATION AND PERMISSION CHECKING ARE DISABLED!!!
 
 DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
@@ -23,7 +23,7 @@ FORCE_CAPITAL_LETTERS = True
 
 MAX_DIR_NAME = 16               # AMOUNT OF SAFE CHARS ALLOWED IN DIRECTORY NAME
 MAX_FILE_NAME = 256             # AMOUNT OF SAFE CHARS ALLOWED IN A FILE NAME
-ALLOWED_FILE_TYPES = ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'csv', 'xlsx', 'pptx', 'txt', 'json']
+ALLOWED_FILE_TYPES = ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'csv', 'xlsx', 'pptx', 'txt', 'json']  #HAS TO BE CONNECTED TO FRONTEND
 MAX_FILE_SIZE = 100000000       # AMOUNT OF BYTES ALLOWED PER FILE
 
 PASSWORD_CHANGE_SECRET_KEY = "{sPnF[{/Zn-U,&{3KsW\dk*+L%}M'/NW"

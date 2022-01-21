@@ -9,6 +9,12 @@
           {{ user.first_name + " " + user.last_name }}
         </div>
         <div class="mobileRow">
+          {{ user.email }}
+        </div>
+        <div class="mobileRow">
+          {{ user.phone_number }}
+        </div>
+        <div class="mobileRow">
           {{
             user.created.toLocaleString("nl-NL", {
               day: "numeric",
@@ -80,7 +86,7 @@
 
       <!-- large screens-->
       <div
-        class="col-3 d-none d-lg-flex align-items-center justify-content-start"
+        class="col d-none d-lg-flex align-items-center justify-content-start"
       >
         <router-link
           title="Naar profiel"
@@ -88,6 +94,16 @@
           class="name-button"
           >{{ user.first_name + " " + user.last_name }}</router-link
         >
+      </div>
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
+        {{ user.email }}
+      </div>
+      <div
+        class="col d-none d-lg-flex align-items-center justify-content-center"
+      >
+        {{ user.phone_number }}
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
@@ -193,6 +209,7 @@ import UserService from "@/services/UserService.js";
 import PermissionService from "@/services/PermissionService.js";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 import AlertService from "@/services/AlertService.js";
+
 export default {
   props: ["user", "all_roles"],
   components: { VerticalHeader, ConfirmDialogue },
@@ -235,21 +252,18 @@ export default {
           const screeningstateId = this.screeningstates[val];
 
           UserService.updateUserScreening(screeningstateId, this.user.userid)
-            .then(() => {
+            .then((response) => {
               this.previousScreeningstate = val;
               this.$emit(
                 "screeningChanged",
                 this.user.userid,
                 screeningstateId
               );
-              return;
+              AlertService.handleSuccess(response);
             })
-            .catch(() => {
+            .catch((err) => {
+              AlertService.handleError(err);
               this.screeningstate = this.previousScreeningstate;
-              AlertService.alert(
-                "Er ging iets mis bij het " + action + " van de gebruiker",
-                "error"
-              );
             });
         } else {
           this.screeningstate = this.previousScreeningstate;
@@ -273,17 +287,14 @@ export default {
           const roleid = this.roles[val];
 
           UserService.updateUserRole(roleid, this.user.userid)
-            .then(() => {
+            .then((response) => {
               this.previousRole = this.selectedRole;
               this.$emit("roleChanged", this.user.userid, roleid);
-              return;
+              AlertService.handleSuccess(response);
             })
-            .catch(() => {
+            .catch((err) => {
+              AlertService.handleError(err);
               this.selectedRole = this.previousRole;
-              AlertService.alert(
-                "Er ging iets mis bij het veranderen van de rol, probeer later opnieuw",
-                "error"
-              );
             });
         } else {
           this.selectedRole = this.previousRole;
@@ -350,17 +361,12 @@ export default {
 
       if (ok) {
         UserService.deleteUser(user.userid)
-          .then(() => {
+          .then((response) => {
             this.$emit("removeUser", user.userid);
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
-            AlertService.alert(
-              "Er ging iets mis bij het verwijderen van de gebruiker, probeer later opnieuw",
-              "error"
-            );
+            AlertService.handleError(err);
           });
       }
     },

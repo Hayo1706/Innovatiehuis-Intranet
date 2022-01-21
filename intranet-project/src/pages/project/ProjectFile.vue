@@ -12,31 +12,32 @@
             draggable="false"
             class="fileImage"
             :src="this.getTypeImage()"
-            v-bind:id="this.type"/>
+            v-bind:id="this.fileType"/>
         <input
-        v-on:keyup.enter="renameFile()"
-        class="fileName"
-        v-model="fileName"
-        v-bind:id="this.name"
-        draggable="false"
-
-        disabled
+          v-on:keyup.enter="renameFile()"
+          class="fileName"
+          v-model="fileName"
+          v-bind:id="this.name"
+          draggable="false"
+          disabled
         />
       </div>
     </div>
-      
+
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
-      <li v-if="this.shared == 'no'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
-      <li v-if="this.shared == 'no'" v-show="canMoveFile()" @click="moveMenu = true; setFolders(); viewMenu = false;">Verplaats</li>
+      <li v-if="this.type != 'shared'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
+      <li v-if="this.type != 'shared'" v-show="canMoveFile()" @click="moveMenu = true; viewMenu = false;">Verplaats</li>
       <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
-      <li v-if="this.shared == 'no'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
+      <li v-if="this.type != 'shared'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
     </ul>
-    <ul id="drop-down-menu" v-if="moveMenu == true && this.shared == 'no'">
+    <ul id="drop-down-menu" v-if="moveMenu == true && this.shared != 'no'">
       <li>Verplaatsen naar:</li>
       <ul id="drop-down-menu">
-        <li  v-for="folder in this.folders" :key="folder"  @click="confirmMove(folder)">
-          {{ folder }}
-        </li>
+        <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
+            <li v-if="folder.name != folderName && folder.type != 'shared'">
+              {{ folder.name }}
+            </li>
+          </span>
       </ul>
     </ul>
   </div>
@@ -45,24 +46,23 @@
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
 import PermissionService from "@/services/PermissionService.js";
+import AlertService from "../../services/AlertService";
 
 export default {
   name: "ProjectFile",
   props: {
-    projectid: { type: String, required: true },
+    projectID: { type: String, required: true },
     name: { type: String, required: true },
-    type: { type: String, required: false },
+    fileType: { type: String, required: false },
     path: { type: String, required: true },
-    directorypath: { type: String, required: true },
-    shared: { type: String, required: true },
+    type: { type: String, required: true },
+    currentFolders: { type: Array, required: true },
   },
   data: function () {
     return {
       viewMenu: false,
       moveMenu: false,
       fileName: this.name,
-      folders: [],
-      fileType: this.type,
       fileTypes: {
         jpg: require("./../../assets/images/file_icons/Jpg.png"),
         jpeg: require("./../../assets/images/file_icons/Jpeg.png"),
@@ -77,110 +77,98 @@ export default {
     };
   },
   methods: {
-      downloadFile(){
-        FilestorageService.downloadFile(this.projectid, this.path)
-        .then((response) => { 
-          const url = window.URL.createObjectURL(new Blob([response.data]))
-          const link = document.createElement('a')
-          link.href = url;
-          link.setAttribute('download', this.name);
-          document.body.appendChild(link);
-          link.click();
-          link.href = window.URL.createObjectURL(new Blob());
-        }).catch(console.error)
-      },
-      deleteFile(){
-        FilestorageService.deleteFile(this.projectid, this.path)
+    downloadFile(){
+      FilestorageService.downloadFile(this.projectID, this.path)
+      .then((response) => { 
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url;
+        link.setAttribute('download', this.name);
+        document.body.appendChild(link);
+        link.click();
+        link.href = window.URL.createObjectURL(new Blob());
+      })
+      .catch((err) => {
+        AlertService.handleError(err);
+      });
+    },
+    renameFile() {
+      this.disableInput();
+      var newFileName = this.fileName + "." + this.fileType
+      if(this.name != newFileName && newFileName != this.name + this.fileType){
+        FilestorageService.renameFile(this.projectID, this.path, newFileName)
+          .then(() => {
+            this.$emit("nameChanged");
+          })
+          .catch((err) => {
+            if (err.response) {
+              this.fileName = this.name
+              AlertService.handleError(err);
+            }
+          });
+      }
+      else{
+        this.fileName = this.name
+      }
+    },
+    enableInput(){
+      this.fileName = this.name.split(".")[0]
+      var inputName = document.getElementById(this.name)
+      inputName.removeAttribute("disabled")
+      this.viewMenu = false;
+      inputName.select();
+    },
+    disableInput(){
+      var inputName = document.getElementById(this.name)
+      inputName.setAttribute("disabled", "")
+    },
+    moveFile(target_folder) {
+      var target_path = target_folder.path
+      FilestorageService.moveFile(this.projectID, this.path, target_path)
         .then(() => {
-          this.$emit("fileDeleted");
+          this.$emit("fileMoved");
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
-      },
-      renameFile() {
-        this.disableInput();
-        var newFileName = this.fileName + "." + this.fileType
-        if(this.name != newFileName && newFileName != this.name + this.type){
-          FilestorageService.renameFile(this.projectid, this.path, newFileName)
-            .then((response) => {
-              console.log(response.data);
-              this.$emit("nameChanged");
-            })
-            .catch((err) => {
-              if (err.response) {
-                this.fileName = this.name
-                console.log(err.response.status);
-              }
-            });
-        }
-        else{
-          this.fileName = this.name
-        }
-      },
-      enableInput(){
-        this.fileName = this.name.split(".")[0]
-        var inputName = document.getElementById(this.name)
-        inputName.removeAttribute("disabled")
-        this.viewMenu = false;
-        inputName.select();
-      },
-      disableInput(){
-        var inputName = document.getElementById(this.name)
-        inputName.setAttribute("disabled", "")
-      },
-      setFolders() {
-        FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
-          .then((response) => {
-            this.folders = response;
-          })
-          .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
-          });
-      },
-      moveFile(target_folder) {
-        var target_path = this.directorypath + '/' + target_folder
-        FilestorageService.moveFile(this.projectid, this.path, target_path)
-        .then(() => {
-            this.$emit("fileMoved");
-          })
-          .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
-          });
-      },
-      getTypeImage() {
-        var result = this.fileTypes[this.type];
-        result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
-        return result
-      },
-      confirmMove(target_folder){
-        if(confirm("Are you sure you want to move " + this.name + " to " + target_folder + "?")){
-          this.moveFile(target_folder)
-        }
-      },
-      confirmDelete(file_name){
-        if(confirm("Are you sure you want to delete " + file_name + "?")){
-          this.deleteFile()
-        }
-      },
-      canDeleteFile(){
-        return PermissionService.userHasPermission("may_update_file_in_own_project");
-      },
-      canMoveFile(){
-        return PermissionService.userHasPermission("may_update_file_in_own_project");
-      },
-      canRenameFile(){
-        return PermissionService.userHasPermission("may_update_file_in_own_project");
-      },
-      canDownloadFile(){
-        return PermissionService.userHasPermission("may_read_own_project");
+    },
+    deleteFile() {
+      FilestorageService.deleteFile(this.projectID, this.path)
+        .then((response) => {
+          this.$emit("fileDeleted");
+          AlertService.handleSuccess(response);
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        });
+    },
+    getTypeImage() {
+      var result = this.fileTypes[this.fileType];
+      result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
+      return result
+    },
+    confirmMove(targetFolder){
+      if(confirm("Are you sure you want to move " + this.name + " to " + targetFolder.name + "?")){
+        this.moveFile(targetFolder)
       }
+    },
+    confirmDelete(file_name){
+      if(confirm("Are you sure you want to delete " + file_name + "?")){
+        this.deleteFile()
+      }
+    },
+    canDeleteFile() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canMoveFile() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canRenameFile() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canDownloadFile() {
+      return PermissionService.userHasPermission("may_read_own_project");
+    }
   },
 };
 </script>
@@ -193,7 +181,7 @@ export default {
   border-radius: 10px;
   border-width: 1px;
   margin-top: 1vh;
-  transition: .3s
+  transition: 0.3s;
 }
 .row {
   margin: 0;
@@ -203,44 +191,44 @@ export default {
   color: var(--blue1);
   border: 0;
   width: 90%;
-  pointer-events: none
+  pointer-events: none;
 }
 .fileImage {
-  margin:0 auto;
+  margin: 0 auto;
   display: block;
   overflow: hidden;
   width: min(80%, 150px);
 }
-.projectFile:hover{
+.projectFile:hover {
   background: white;
   border-radius: 10px;
-  transition: .3s
+  transition: 0.3s;
 }
 
-#drop-down-menu{
-    background: #FAFAFA;
-    border: 1px solid var(--blue1);
-    display: block;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    width: 250px;
-    z-index: 99;
+#drop-down-menu {
+  background: #fafafa;
+  border: 1px solid var(--blue1);
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 250px;
+  z-index: 99;
 }
 
 #drop-down-menu li {
-    border-bottom: 1px solid #E0E0E0;
-    margin: 0;
-    padding: 5px 35px;
+  border-bottom: 1px solid #e0e0e0;
+  margin: 0;
+  padding: 5px 35px;
 }
 
 #drop-down-menu li:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 #drop-down-menu li:hover {
-    background: var(--blue3);
-    color: #FAFAFA;
+  background: var(--blue3);
+  color: #fafafa;
 }
 </style>

@@ -38,6 +38,7 @@
 
 <script>
 import LoginService from "../../../services/LoginService";
+import AlertService from "../../../services/AlertService";
 
 export default {
   components: {},
@@ -59,14 +60,11 @@ export default {
           this.new_password1,
           ((this.$route.query.resettoken !== undefined) ? this.$route.query.resettoken : '')
         )
-          .then(() => {
-            console.log("Password changed");
+          .then((response) => {
             this.$router.push(this.redirectTarget);
+            AlertService.handleSuccess(response);
           }).catch((err) => {
-            console.log(err);
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       } else {
         alert("De twee opgegeven nieuwe wachtwoorden komen niet overeen.")

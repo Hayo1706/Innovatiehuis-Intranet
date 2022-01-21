@@ -128,7 +128,7 @@
       <form autocomplete="off">
         <SearchBar
           v-show="canUpdateProject()"
-          placeholder="Zoek projecten"
+          placeholder="Zoek projecten..."
           :id="'searchParentsBar' + this.project.projectid"
           autocomplete="off"
           class="searchbar"
@@ -187,7 +187,11 @@
       </div>
 
       <br />
-      <button class="addButton" @click="updateProjectDetails()">
+      <button
+        v-if="this.changes"
+        class="addButton"
+        @click="updateProjectDetails()"
+      >
         Wijzigingen opslaan
       </button>
     </div>
@@ -199,6 +203,7 @@ import ProjectService from "@/services/ProjectService.js";
 import UserService from "@/services/UserService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import PermissionService from "@/services/PermissionService.js";
+import AlertService from "@/services/AlertService.js";
 export default {
   props: ["project", "open"],
   components: { SearchBar },
@@ -211,8 +216,12 @@ export default {
       parentsOpen: false,
       childrenOpen: false,
       membersOpen: false,
+
       projectname: "",
       projectdescription: "",
+
+      new_projectname: false,
+      new_projectdescription: false,
 
       userSearchTerm: "",
       filteredUsers: [],
@@ -226,6 +235,8 @@ export default {
       childSearchTerm: "",
       filteredChildren: [],
       disabled: false,
+
+      changes: false,
     };
   },
   mounted() {
@@ -237,6 +248,7 @@ export default {
   },
   methods: {
     updateProjectDetails() {
+      let all_ok = true;
       const project = {
         project_name: this.projectname,
         description: this.projectdescription,
@@ -247,52 +259,97 @@ export default {
       )
         .then(() => {
           this.$emit("nameOrDescriptionChanged", project);
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging iets mis, probeer later opnieuw");
-        });
 
-      ProjectService.updateMembersOfProject(this.project.projectid, {
-        ids: this.getUserIds(this.members),
-      })
-        .then(() => {
-          console.log("users added");
+          ProjectService.updateMembersOfProject(this.project.projectid, {
+            ids: this.getUserIds(this.members),
+          })
+            .then(() => {
+              ProjectService.updateParentsOfProject(this.project.projectid, {
+                ids: this.getProjectIds(this.parents),
+              })
+                .then(() => {
+                  ProjectService.updateChildrenOfProject(
+                    this.project.projectid,
+                    {
+                      ids: this.getProjectIds(this.children),
+                    }
+                  )
+                    .then(() => {
+                      if (all_ok) {
+                        AlertService.alert(
+                          "De wijzigingen zijn opgeslagen!",
+                          "success"
+                        );
+                        this.changes = false;
+                      } else {
+                        //refresh
+                        this.openDetails();
+                      }
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                      //invalid operation on server
+                      if (err.response) {
+                        console.log(err.response.status);
+                      }
+                      AlertService.handleError(err);
+                      all_ok = false;
+                    });
+                })
+                .catch((err) => {
+                  console.log(err);
+                  //invalid operation on server
+                  if (err.response) {
+                    console.log(err.response.status);
+                  }
+                  AlertService.handleError(err);
+                  all_ok = false;
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+              //invalid operation on server
+              if (err.response) {
+                console.log(err.response.status);
+              }
+              AlertService.handleError(err);
+              all_ok = false;
+            });
         })
         .catch((err) => {
-          console.log(err);
           //invalid operation on server
           if (err.response) {
             console.log(err.response.status);
           }
-          alert("Er ging wat mis, probeer later opnieuw");
+          AlertService.handleError(err);
+          all_ok = false;
         });
-      this.refreshAllAcordeons();
-      this.openDetails();
     },
     selectUser(user) {
       this.members.push(user);
+      this.changes = true;
       this.userSearchTerm = "";
     },
     selectParent(project) {
       this.parents.push(project);
+      this.changes = true;
       this.parentSearchTerm = "";
     },
     selectChild(project) {
       this.children.push(project);
+      this.changes = true;
       this.childSearchTerm = "";
     },
     removeProjectFromList(list, id) {
       if (list == "parents") {
+        this.changes = true;
         this.parents = this.parents.filter((project) => {
           return project.projectid != id;
         });
         if (this.filteredParents.length != 0)
           this.filteredParents = this.getFilteredParents();
       } else if (list == "children") {
+        this.changes = true;
         this.children = this.children.filter((project) => {
           return project.projectid != id;
         });
@@ -306,44 +363,9 @@ export default {
       this.members = this.members.filter((user) => {
         return user.userid != id;
       });
+      this.changes = true;
       if (this.filteredUsers.length != 0)
         this.filteredUsers = this.getFilteredUsers();
-    },
-    addParents() {
-      ProjectService.addParentToProject(
-        this.project.projectid,
-        this.parentToAdd.projectid
-      )
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.parentToAdd = null;
-          this.loadParents();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
-    },
-    addChildren() {
-      ProjectService.addChildToProject(
-        this.project.projectid,
-        this.childToAdd.projectid
-      )
-        .then(() => {
-          this.refreshAllAcordeons();
-          this.childToAdd = null;
-          this.loadChildren();
-        })
-        .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
-          alert("Er ging wat mis, probeer later opnieuw");
-        });
     },
     userListContainsUser(userList, userid) {
       for (const user of userList) {
@@ -540,26 +562,23 @@ export default {
       }
       return ids;
     },
-    refreshAllAcordeons() {
-      var arr = document.getElementsByClassName("accordion_button");
-
-      for (let j = 0; j < arr.length; j++) {
-        if (
-          !arr[j]
-            .getAttribute("aria-controls")
-            .includes(this.project.projectid.toString()) &&
-          !arr[j].classList.contains("collapsed")
-        ) {
-          arr[j].click();
-          setTimeout(() => {
-            arr[j].click();
-          }, 500);
-        }
-      }
-    },
   },
 
   watch: {
+    projectname: function () {
+      if (this.new_projectname) {
+        this.changes = true;
+      } else {
+        this.new_projectname = true;
+      }
+    },
+    projectdescription: function () {
+      if (this.new_projectdescription) {
+        this.changes = true;
+      } else {
+        this.new_projectdescription = true;
+      }
+    },
     open: function () {
       if (this.open) {
         this.openDetails();

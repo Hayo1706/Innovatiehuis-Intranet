@@ -1,6 +1,8 @@
 <template>
   <div class="col">
     <div class="headerText extraLarge">Gebruiker</div>
+    <div class="headerText">Email</div>
+    <div class="headerText">Telefoonnummer</div>
     <div class="headerText">Geregistreerd</div>
     <div class="headerText">Laatst gezien</div>
     <div class="headerText">Rol</div>

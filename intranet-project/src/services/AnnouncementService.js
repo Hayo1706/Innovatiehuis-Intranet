@@ -18,7 +18,7 @@ var AnouncementService = function () {
         if (typeof projectid == 'undefined') {
             const { data } = await axiosClient.post(`/announcements`, { announcement }, { timeout: 2000 });
             return data;
-        } else {
+        } else {   
             const { data } = await axiosClient.post(`/projects/${projectid}/announcements`, { announcement }, { timeout: 2000 });
             return data;
         }

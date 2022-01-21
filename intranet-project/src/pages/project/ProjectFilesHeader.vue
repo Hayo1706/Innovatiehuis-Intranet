@@ -40,6 +40,8 @@
 import FilestorageService from "@/services/FilestorageService.js";
 import PermissionService from "@/services/PermissionService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
+import AlertService from "../../services/AlertService";
+
 export default {
   name: "ProjectFilesHeader",
   components: {
@@ -63,8 +65,9 @@ export default {
           this.path,
           formData
         )
-          .then(() => {
+          .then((response) => {
             this.$emit("newFilesUploaded");
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
             if (err.response.status === 409) {
@@ -75,13 +78,12 @@ export default {
                 formData,
                 confirmation
               )
-                .then(() => {
+                .then((response) => {
                   this.$emit("newFilesUploaded");
+                  AlertService.handleSuccess(response);
                 })
                 .catch((err) => {
-                  if (err.response) {
-                    console.log(err.response.status);
-                  }
+                  AlertService.handleError(err);
                 });
             }
           });

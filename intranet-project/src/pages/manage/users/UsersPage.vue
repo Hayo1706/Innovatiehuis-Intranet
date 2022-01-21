@@ -6,7 +6,7 @@
     />
     <button
       id="actionButton"
-      class="full btn pmd-btn-fab pmd-ripple-effect btn-primary"
+      class="full btn pmd-btn-fab pmd-ripple-effect btn-primary d-lg-none"
       data-bs-toggle="modal"
       data-bs-target="#createUserModal"
       type="button"
@@ -36,8 +36,24 @@
           <span v-if="sortingMethod == 'name'"
             ><i v-if="this.ascending" class="bi-caret-down-fill"></i
             ><i v-else class="bi-caret-up-fill"></i
-          ></span></button
-        ><button class="full-button col-3" @click="sort('created')">
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('email')">
+          Email
+          <span v-if="sortingMethod == 'email'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+        <button class="full-button col-3" @click="sort('phone')">
+          Telefoonnummer
+          <span v-if="sortingMethod == 'phone'"
+            ><i v-if="this.ascending" class="bi-caret-down-fill"></i
+            ><i v-else class="bi-caret-up-fill"></i
+          ></span>
+        </button>
+
+        <button class="full-button col-3" @click="sort('created')">
           Registreerdatum
           <span v-if="sortingMethod == 'created'"
             ><i v-if="this.ascending" class="bi-caret-down-fill"></i
@@ -112,6 +128,7 @@ import SearchBar from "@/shared_components/SearchBar.vue";
 import UserListing from "./UserListing.vue";
 import UserCreateModal from "./UserCreateModal.vue";
 import PermissionService from "@/services/PermissionService.js";
+
 export default {
   components: {
     UsersHeader,
@@ -172,10 +189,7 @@ export default {
           if (err.response) {
             console.log(err.response.status);
           }
-          AlertService.alert(
-            "Er ging iets mis bij het laden van de pagina, probeer later opnieuw",
-            "error"
-          );
+          AlertService.handleError(err);
         });
     },
     removeUser(userid) {
@@ -220,6 +234,18 @@ export default {
             fb = b.created;
           return this.sortingFunction(fa, fb);
         });
+      } else if (this.sortingMethod == "email") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.email,
+            fb = b.email;
+          return this.sortingFunction(fa, fb);
+        });
+      } else if (this.sortingMethod == "phone") {
+        filteredUsers = filteredUsers.sort((a, b) => {
+          let fa = a.phone_number,
+            fb = b.phone_number;
+          return this.sortingFunction(fa, fb);
+        });
       } else if (this.sortingMethod == "last_seen") {
         filteredUsers = filteredUsers.sort((a, b) => {
           let fa = a.last_seen,
@@ -254,9 +280,7 @@ export default {
         this.roles = response;
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status);
-        }
+        AlertService.handleError(err);
       });
     this.$emit("newHeaderTitle", "Gebruikers - Overzicht");
     this.loadUsers();
