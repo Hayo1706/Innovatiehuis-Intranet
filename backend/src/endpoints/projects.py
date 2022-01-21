@@ -72,7 +72,6 @@ def update_archive(project_id):
     except KeyError:
         return response("Foute aanvraag", 400)
 
-    is_boolean(is_archived)
     query_update("UPDATE projects "
                  "SET is_archived = %(is_archived)s "
                  "WHERE projectid = %(id)s",

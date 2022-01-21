@@ -124,7 +124,7 @@ export default {
     this.loggedInUser = localStorage.getItem('userid')
     AnnouncementService.getRepliesByAnnouncement(this.id)
       .then((response) => {
-        this.replies = response;
+        this.replies = response.data;
       })
       .catch((err) => {
         AlertService.handleError(err);

@@ -190,7 +190,7 @@ import AlertService from "@/services/AlertService";
 import PermissionService from "@/services/PermissionService";
 
 export default {
-  name: "AccesControlView",
+  name: "AccessControlView",
   data: function () {
     return {
       roles: '',
@@ -268,9 +268,8 @@ export default {
     },
     refreshRoles(){
       UserService.getRoles().then((response) => {
-        this.roles = response;
-        console.log(response);
-
+        this.roles = response.data;
+        AlertService.handleSuccess(response);
       }).catch((err) => {
         if (err.response) {
           AlertService.handleError(err);

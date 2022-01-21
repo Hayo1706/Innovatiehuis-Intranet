@@ -183,12 +183,10 @@ export default {
     loadUsers() {
       UserService.getUsers()
         .then((response) => {
-          this.users = response;
+          this.users = response.data;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status);
-          }
           AlertService.handleError(err);
         });
     },
@@ -277,7 +275,8 @@ export default {
   created() {
     UserService.getRoles()
       .then((response) => {
-        this.roles = response;
+        this.roles = response.data;
+        AlertService.handleSuccess(response);
       })
       .catch((err) => {
         AlertService.handleError(err);

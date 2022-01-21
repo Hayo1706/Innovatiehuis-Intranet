@@ -5,51 +5,51 @@ var AnouncementService = function () {
 
     async function getAnnouncementsByProject(projectid) {
         if (typeof projectid == 'undefined') {
-            const { data } = await axiosClient.get(`/announcements`, { timeout: 2000 });
-            data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
-            return data;
+            const { response } = await axiosClient.get(`/announcements`, { timeout: 2000 });
+            response.data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
+            return response;
         } else {
-            const { data } = await axiosClient.get(`/projects/${projectid}/announcements`, { timeout: 2000 });
-            data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
-            return data;
+            const { response } = await axiosClient.get(`/projects/${projectid}/announcements`, { timeout: 2000 });
+            response.data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
+            return response;
         }
     }
     async function postAnnouncement(projectid, announcement) {
         if (typeof projectid == 'undefined') {
-            const { data } = await axiosClient.post(`/announcements`, { announcement }, { timeout: 2000 });
-            return data;
+            const { response } = await axiosClient.post(`/announcements`, { announcement }, { timeout: 2000 });
+            return response;
         } else {   
-            const { data } = await axiosClient.post(`/projects/${projectid}/announcements`, { announcement }, { timeout: 2000 });
-            return data;
+            const { response } = await axiosClient.post(`/projects/${projectid}/announcements`, { announcement }, { timeout: 2000 });
+            return response;
         }
     }
     async function deleteAnnouncement(announcementid) {
-        const { data } = await axiosClient.delete(`/announcements/${announcementid}`, { timeout: 2000 });
+        const { response } = await axiosClient.delete(`/announcements/${announcementid}`, { timeout: 2000 });
         console.log("deleted announcement " + announcementid);
-        return data;
+        return response;
     }
     async function editAnnouncement(announcementid, announcement) {
-        const { data } = await axiosClient.put(`/announcements/${announcementid}`, { announcement }, { timeout: 2000 });
-        return data;
+        const { response } = await axiosClient.put(`/announcements/${announcementid}`, { announcement }, { timeout: 2000 });
+        return response;
     }
     async function getRepliesByAnnouncement(announcementid) {
-        const { data } = await axiosClient.get(`/announcements/${announcementid}/replies`, { timeout: 2000 });
-        data.forEach(reply => { reply.timestamp = jsonToJsDate(reply.timestamp) });
-        return data;
+        const { response } = await axiosClient.get(`/announcements/${announcementid}/replies`, { timeout: 2000 });
+        response.data.forEach(reply => { reply.timestamp = jsonToJsDate(reply.timestamp) });
+        return response;
     }
     async function addReply(announcementid, reply) {
-        const { data } = await axiosClient.post(`/announcements/${announcementid}/replies`, { reply }, { timeout: 2000 });
+        const { response } = await axiosClient.post(`/announcements/${announcementid}/replies`, { reply }, { timeout: 2000 });
         console.log("added Reply to announcement " + announcementid + ", reading: " + reply.content);
-        return data;
+        return response;
     }
     async function deleteReply(replyid) {
-        const { data } = await axiosClient.delete(`/replies/${replyid}`, { timeout: 2000 });
+        const { response } = await axiosClient.delete(`/replies/${replyid}`, { timeout: 2000 });
         console.log("deleted reply " + replyid);
-        return data;
+        return response;
     }
     async function editReply(replyid, reply) {
-        const { data } = await axiosClient.put(`/replies/${replyid}`, { reply }, { timeout: 2000 });
-        return data;
+        const { response } = await axiosClient.put(`/replies/${replyid}`, { reply }, { timeout: 2000 });
+        return response;
     }
 
     return {

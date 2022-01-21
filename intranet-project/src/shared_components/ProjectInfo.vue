@@ -457,14 +457,11 @@ export default {
     loadParents() {
       ProjectService.getParentsById(this.project.projectid)
         .then((response) => {
-          //remove the project from the view
-          this.parents = response;
+          this.parents = response.data;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     openDetails() {
@@ -481,12 +478,11 @@ export default {
         this.loadParents();
         ProjectService.getProjects()
           .then((response) => {
-            this.projects = response;
+            this.projects = response.data;
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       } else {
         this.parentSearchTerm = "";
@@ -495,14 +491,11 @@ export default {
     loadChildren() {
       ProjectService.getChildrenById(this.project.projectid)
         .then((response) => {
-          //remove the project from the view
-          this.children = response;
+          this.children = response.data;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     handleChildrenLoading() {
@@ -520,12 +513,11 @@ export default {
 
         UserService.getUsers()
           .then((response) => {
-            this.users = response;
+            this.users = response.data;
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       } else {
         this.userSearchTerm = "";
@@ -534,14 +526,11 @@ export default {
     loadMembers() {
       UserService.getUsersByProject(this.project.projectid)
         .then((response) => {
-          //remove the project from the view
-          this.members = response;
+          this.members = response.data;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
 

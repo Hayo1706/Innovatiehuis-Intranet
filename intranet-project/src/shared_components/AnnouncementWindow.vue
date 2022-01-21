@@ -121,8 +121,8 @@ export default {
     queryData() {
       AnnouncementService.getAnnouncementsByProject(this.pathArgs.project)
         .then((response) => {
-          this.announcements = response;
-          AlertService.handleSuccess(response);
+          this.announcements = response.data;
+          AlertService.handleSuccess(response.data);
         })
         .catch((err) => {
           AlertService.handleError(err);

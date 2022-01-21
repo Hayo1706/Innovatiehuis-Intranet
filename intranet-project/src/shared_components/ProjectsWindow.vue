@@ -34,7 +34,7 @@ export default {
   async created() {
     ProjectService.getProjectsByUser(localStorage.getItem("userid"))
       .then((response) => {
-        this.projects = response;
+        this.projects = response.data;
         AlertService.handleSuccess(response);
       })
       .catch((err) => {

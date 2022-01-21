@@ -7,12 +7,8 @@ var PermissionService = function () {
         return localStorage.getItem(permissionType) == 1;
     }
 
-
     return {
         userHasPermission
     }
-
-
-
 }
 export default PermissionService();

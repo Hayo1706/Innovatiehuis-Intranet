@@ -22,11 +22,9 @@ var AlertService = function () {
 
     function handleSuccess(response) {
         console.log({response});
-        let status = response.status;
-        console.log({status});
-        if (response.response.status) {
-            console.log(response.status, response.response.message);
-            AlertService.alert(response.response.message, "success");
+        if (response.status) {
+            console.log(response.status, response.message);
+            AlertService.alert(response.message, "success");
             return;
         }
         if (response.status == 200) {
@@ -40,10 +38,11 @@ var AlertService = function () {
 
     function handleError(err) {
         console.log({err});
-        if (err.response) {
-            alert(err.response.data.response.message, "error");
-            console.log("HTTP code " + err.response.status);
-            if (err.response.data.response.message) console.log(err.response.data.response.message);
+        console.log("henk");
+        if (err.data) {
+            alert(err.data.response.message, "error");
+            console.log("HTTP code " + err.status);
+            if (err.data.response.message) console.log(err.data.response.message);
           } else if (err.code == "ECONNABORTED") {
             alert("De server reageert niet. Probeer het later opnieuw of neem contact op met de beheerder.", "error");
             console.log({err});

@@ -73,7 +73,7 @@ export default {
     getUser() {
       UserService.getUserById(this.$route.params.id)
         .then((response) => {
-          this.user = response[0];
+          this.user = response.data[0];
           this.created = this.user.created.toLocaleString();
           this.last_seen = this.user.last_seen.toLocaleString();
           this.$emit(

@@ -13,17 +13,7 @@ def query_update(query, param=None):
         connection.exec_driver_sql(query, param)
 
 
-def response(message, code=200, data = None):
-    rsp = {'resource': request.path, 'message': message, 'data': data}
-    if not code == 200:
-        rsp['code'] = code
+def response(message="", code=200, data=None):
+    rsp = {'resource': request.path, 'code': code, 'message': message, 'data': data}
     return rsp, code
 
-
-def is_boolean(value):
-    try:
-        if int(value) == 0 or int(value) == 1:
-            return
-    except:
-        print()
-    response("Incorrect input", 404)

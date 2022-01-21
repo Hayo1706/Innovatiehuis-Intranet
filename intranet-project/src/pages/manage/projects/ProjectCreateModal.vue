@@ -201,15 +201,17 @@ export default {
     myModalEl.addEventListener("show.bs.modal", () => {
       UserService.getUsers()
         .then((response) => {
-          this.users = response;
+          this.users = response.data;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
           AlertService.handleError(err);
         });
       ProjectService.getProjects()
         .then((response) => {
-          this.parents = response;
-          this.children = response;
+          this.parents = response.data;
+          this.children = response.data;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
           AlertService.handleError(err);
