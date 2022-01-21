@@ -18,7 +18,7 @@ def get_roles():
 @check_permissions(Roles.check_role_permissions)
 def update_role(role_id):
     if not verify_password():
-        return response('Wachtwoord Incorrect, of niet gegeven', 400)
+        return response('Wachtwoord Incorrect', 400)
     body = connexion.request.json
     body.pop('password')
     if str(body['roleid']) == role_id:
@@ -64,7 +64,7 @@ def add_role():
 @check_permissions(Roles.check_role_permissions)
 def delete_role(role_id):
     if not verify_password():
-        return response('Wachtwoord Incorrect, of niet gegeven', 400)
+        return response('Wachtwoord Incorrect', 400)
 
     query_update("DELETE from roles WHERE roleid=%(role_id)s", {'role_id': role_id})
     return response('Rol verwijderd')

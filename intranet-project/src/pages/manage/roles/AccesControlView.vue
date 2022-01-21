@@ -234,35 +234,37 @@ export default {
     saveConfiguration(){
       this.selectedRole['password'] = this.$refs.password.value
       this.$refs.password.value = null
-      UserService.updateRole(this.selectedRole,this.selectedId).catch((err) => {
-            if (err.response) {
-              AlertService.handleError(err);
-            }
-          });
+      UserService.updateRole(this.selectedRole,this.selectedId).then((response) => {
+        AlertService.handleSuccess(response)
+      })
+      .catch((err) => {
+        AlertService.handleError(err);
+      });
+      this.$refs.password.value = null
+
     },
     addRole(){
-      UserService.addRole({'role_name': this.newRole}).then(() => {
+      UserService.addRole({'role_name': this.newRole}).then((response) => {
         this.refreshRoles();
         this.newRole = ''
+        AlertService.handleSuccess(response)
       }).catch((err) => {
-            if (err.response) {
-              AlertService.handleError(err);
-            }
-          });
+          AlertService.handleError(err);
+      });
 
     },
     deleteRole(){
-      UserService.deleteRole(this.selectedDeleteId, this.$refs.password.value).then(() => {
+      UserService.deleteRole(this.selectedDeleteId, this.$refs.password.value).then((response) => {
         this.refreshRoles();
-        this.$refs.password.value = null
         if (this.activeItem == this.selectedDeleteName){
           this.activeItem = 'admin'
         }
+        AlertService.handleSuccess(response)
       }).catch((err) => {
-        if (err.response) {
-          AlertService.handleError(err);
-        }
+        AlertService.handleError(err);
       });
+      this.$refs.password.value = null
+
     },
     refreshRoles(){
       UserService.getRoles().then((response) => {
@@ -275,6 +277,7 @@ export default {
         }
       });
     }
+
   },
 }
 </script>
