@@ -13,7 +13,7 @@ def query_update(query, param=None):
         connection.exec_driver_sql(query, param)
 
 
-def response(message="", code=200, data=None):
-    rsp = {'resource': request.path, 'code': code, 'message': message, 'data': data}
+def response(message="", code=200, result=None):
+    rsp = {'resource': request.path, 'code': code, 'message': message, 'result': result}
     return rsp, code
 
