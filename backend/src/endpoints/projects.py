@@ -210,7 +210,7 @@ def remove_parent(project_id, parent_id):
 # projects/{id}/children
 @check_permissions(Projects.may_read)  # TODO: placeholder for more specific permissions?
 def read_children(project_id):  # returns array of id/name/shared_files combinations
-    return response('Sucecs',200, query(
+    return response('Succes',200, query(
         "SELECT projectid, project_name, description, is_archived, created, projects.last_updated "
         "FROM projects_have_parents "
         "JOIN projects "

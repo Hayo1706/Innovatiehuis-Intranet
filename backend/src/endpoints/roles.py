@@ -10,7 +10,7 @@ from ..services.extensions import bcrypt
 
 @check_jwt()
 def get_roles():
-    return response('Sucecs',200, query(
+    return response('Succes',200, query(
         "SELECT * FROM roles;"))
 
 
