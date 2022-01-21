@@ -213,9 +213,6 @@ export default {
       parents: [],
       children: [],
       members: [],
-      parentsOpen: false,
-      childrenOpen: false,
-      membersOpen: false,
 
       projectname: "",
       projectdescription: "",
@@ -281,9 +278,11 @@ export default {
                           "success"
                         );
                         this.changes = false;
+                        this.refreshAllAcordeons();
                       } else {
                         //refresh
                         this.openDetails();
+                        this.refreshAllAcordeons();
                       }
                     })
                     .catch((err) => {
@@ -384,6 +383,22 @@ export default {
           !this.userListContainsUser(this.members, item.userid)
         );
       });
+    },
+    refreshAllAcordeons() {
+      var arr = document.getElementsByClassName("accordion_button");
+      for (let j = 0; j < arr.length; j++) {
+        if (
+          !arr[j]
+            .getAttribute("aria-controls")
+            .includes(this.project.projectid.toString()) &&
+          !arr[j].classList.contains("collapsed")
+        ) {
+          arr[j].click();
+          setTimeout(() => {
+            arr[j].click();
+          }, 500);
+        }
+      }
     },
     handleSearchUser(name) {
       if (name) {
