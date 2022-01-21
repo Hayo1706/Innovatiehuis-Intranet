@@ -21,7 +21,7 @@ def login():
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})
     if len(user) == 0:
-        return response("Wrong password or username", 401)
+        return response("Incorrect wachtwoord of gebruikersnaam", 401)
     user = user[0]
 
     if int(user['failed_login_count']) >= config.ATTEMPTS_BEFORE_COOLDOWN:
@@ -29,10 +29,10 @@ def login():
             query_update("UPDATE users SET failed_login_count = 0 where userid = %(userid)s",
                          {'userid': user['userid']})
         else:
-            return response("Access Denied, your account is blocked for " +
+            return response("Toegang geweigerd, je account is geblokkeerd voor " +
                             str(config.COOLDOWN_TIME_SECONDS - int((datetime.datetime.now() - user[
                                 'last_failed_login']).total_seconds())) +
-                            " more seconds", 401)
+                            " seconden", 401)
     try:
         if bcrypt.check_password_hash(user['password_hash'], send_password):
             access_token = create_access_token(identity=user['userid'])
@@ -48,7 +48,7 @@ def login():
         print('Password format incorrect')
     query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
                  "userid = %(userid)s", {'userid': user['userid']})
-    return response("Wrong password or username", 401)
+    return response("Incorrect wachtwoord of gebruikersnaam", 401)
 
 
 @check_jwt()
@@ -68,7 +68,7 @@ def change_password():
         try:
             return first_time_password(data[1], new_password, data[0])
         except Exception:
-            response('invalid token', 400)
+            response('Fout bij het veranderen van wachtwoord', 400)
     else:
         return change_existing_password(old_password, new_password)
 
@@ -77,7 +77,7 @@ def first_time_password(old_password, new_password, user_id):
     user = query("SELECT * FROM users WHERE userid =%(userid)s", {'userid': user_id})[0]
     if user['password_hash'] == old_password:
         return set_password(new_password, user_id)
-    return response("Token invalid", 401)
+    return response("Incorrect wachtwoord", 401)
 
 
 @check_jwt()
@@ -87,7 +87,7 @@ def change_existing_password(old_password, new_password):
         user = query("SELECT * FROM users WHERE userid =%(userid)s", {'userid': user_id})[0]
         if bcrypt.check_password_hash(user['password_hash'], old_password):
             return set_password(new_password, user_id)
-        return response("Incorrect current password", 401)
+        return response("Incorrect wachtwoord ", 401)
     except KeyError:
         return response("Foute aanvraag", 400)
 
@@ -106,28 +106,28 @@ def set_password(password, user_id):
 
     # calculating the length
     if len(password) > config.MAX_PASSWORD_LENGTH:
-        return response('Password length exceeded max length of ' + str(config.MAX_PASSWORD_LENGTH), 400)
+        return response('Wachtwoord te lang, maximale lengte is  ' + str(config.MAX_PASSWORD_LENGTH) + ' karakters', 400)
     if len(password) < config.MIN_PASSWORD_LENGTH:
-        return response('Password must be at least ' + str(config.MAX_PASSWORD_LENGTH) + "characters long", 400)
+        return response('Wachtwoord te kort, minimale lengte is ' + str(config.MAX_PASSWORD_LENGTH) + "karakters", 400)
 
     # searching for digits
     if config.FORCE_NUMBERS and re.search(r"\d", password) is None:
-        return response('Invalid password: No digits present',400)
+        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 cijfer',400)
 
     # searching for uppercase
     if config.FORCE_CAPITAL_LETTERS and re.search(r"[A-Z]", password) is None:
-        return response('Invalid password: No uppercase letters present',400)
+        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 hoofdletter',400)
 
     # searching for lowercase
     if re.search(r"[a-z]", password) is None:
-        return response('Invalid password: No lowercase letters present',400)
+        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 kleine letter',400)
 
     # searching for symbols
     if config.FORCE_SPECIAL_CHARACTER and re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None:
-        return response('Invalid password: No special characters present',400)
+        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 speciaal karakter: !,@,#,$,%,^,&, etc.. ',400)
 
     query_update(
         "UPDATE users SET password_hash=%(password_hash)s "
         "WHERE userid=%(userid)s",
         {"password_hash": bcrypt.generate_password_hash(password).decode('utf-8'), "userid": user_id})
-    return response("Password succesfully updated",200)
+    return response("Wachtwoord veranderd",200)

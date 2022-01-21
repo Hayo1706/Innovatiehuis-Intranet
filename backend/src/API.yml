@@ -272,18 +272,6 @@ paths:
       responses:
         200:
           description: Successfully removed user from project
-  /projects/{project_id}/users/last_seen:
-    patch:
-      operationId: src.endpoints.projects.update_last_seen
-      tags:
-        - Projects
-        - Users
-      summary: Lets the data model know when a user has last accessed the contents of a Project.
-      parameters:
-        - $ref: '#/components/parameters/project_id'
-      responses:
-        200:
-          description: Successfully updated the time when the given User last saw this Project.
 
   /projects/{project_id}/announcements:
     get:
@@ -763,28 +751,6 @@ paths:
                 $ref: '#/components/schemas/Project'
         404:
           description: Specified user not found
-    post:
-      operationId: src.endpoints.users.add_project
-      tags:
-        - Projects
-      summary: Assign a new project to a user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Project'
-      parameters:
-        - $ref: '#/components/parameters/user_id'
-      responses:
-        200:
-          description: Successfully assigned project to the user
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-        404:
-          description: Specified user or project not found
   /roles:
     get:
       operationId: src.endpoints.roles.get_roles

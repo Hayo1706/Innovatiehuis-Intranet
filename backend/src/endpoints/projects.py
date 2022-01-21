@@ -8,15 +8,15 @@ from ..services.permissions.permissions import check_permissions
 
 @check_permissions(Projects.may_read)
 def read_one(project_id):
-    return query(
+    return response("Succes",200,query(
         "SELECT projectid, project_name, description, is_archived, created, last_updated "
         "FROM projects WHERE projectid = %(id)s",
-        {'id': project_id})
+        {'id': project_id}))
 
 
 @check_permissions(Projects.may_read_all)
 def read_all():
-    return query("SELECT projectid, project_name, description, is_archived, created, last_updated FROM projects")
+    return response("Succes",200,query("SELECT projectid, project_name, description, is_archived, created, last_updated FROM projects"))
 
 
 @check_permissions(Projects.may_create)
@@ -43,7 +43,7 @@ def create():
         add_parent(project_id=projectid, parent_id=id)
     for id in childIds:
         add_child(project_id=projectid, child_id=id)
-    return response(f"New project '{project_name}' successfully created", 200)
+    return response("Project aangemaakt", 200)
 
 
 @check_permissions(Projects.may_update)
@@ -60,7 +60,7 @@ def update(project_id):
                  "WHERE projectid = %(projectid)s",
                  {'project_name': project_name, 'description': description,
                   'projectid': project_id})
-    return response(f"Project {project_id} successfully updated", 200)
+    return response("Project gewijzigd")
 
 
 # projects/{id}/archive
@@ -78,26 +78,27 @@ def update_archive(project_id):
                  "WHERE projectid = %(id)s",
                  {'is_archived': str(int(is_archived)),
                   'id': project_id})
-    return response(f"Archive status of Project {project_id} successfully updated", 200)
+    return response("Project gearchiveerd")
 
 
 @check_permissions(Projects.may_delete)
 def delete(project_id):
     query_update("DELETE FROM projects WHERE projectid = %(id)s", {'id': project_id})
-    return response(f"Project {project_id} successfully deleted", 200)
+    return response("Project verwijderd")
 
 
 # projects/{id}/users
 @check_permissions(Projects.may_read)   # TODO: placeholder for more specific permissions?
 def read_users(project_id):
-    return query(
-        "SELECT userid, last_seen, first_name, last_name, email, phone_number, roleid, role_name, screening_status, created "
+    return response("Succes",200,query(
+        "SELECT userid, last_seen, first_name, last_name, email, phone_number, roleid, role_name, screening_status, "
+        "created "
         "FROM users_have_projects "
         "LEFT JOIN users USING(userid) "
         "RIGHT JOIN roles USING(roleid) "
         "WHERE projectid = %(projectid)s",
         {'projectid': project_id}
-    )
+    ))
 
 
 @check_permissions(Projects.may_update)
@@ -127,7 +128,7 @@ def update_users(project_id):
             "DELETE FROM users_have_projects WHERE userid = %(id)s AND projectid = %(projectid)s;",
             {'id': old_id, 'projectid': project_id}
         )
-    return response(f"Successfully updated list of members in Project {project_id}", 200)
+    return response("Gebruikerslijst van project gewijzigd", 200)
 
 
 @check_permissions(Projects.may_update)
@@ -136,7 +137,7 @@ def add_user(project_id, user_id):
         "INSERT INTO users_have_projects (userid, projectid) VALUES (%(id)s, %(projectid)s);",
         {'id': user_id, 'projectid': project_id}
     )
-    return response(f"Successfully added user {user_id} to Project {project_id}", 200)
+    return response("Gebruiker toegevoegd aan project", 200)
 
 
 @check_permissions(Projects.may_update)
@@ -145,29 +146,19 @@ def remove_user(project_id, user_id):
         "DELETE FROM users_have_projects WHERE userid = %(id)s AND projectid = %(projectid)s;",
         {'id': user_id, 'projectid': project_id}
     )
-    return response(f"Successfully removed user {user_id} from Project {project_id}", 200)
-
-
-# projects/{id}/users/last_seen
-def update_last_seen(project_id):
-    query_update(
-        "UPDATE users_have_projects SET last_seen = NOW() WHERE userid = %(userid)s AND projectid = %(projectid)s",
-        {'userid': get_jwt_identity(), 'projectid': project_id}
-    )
-    return response(f"Successfully updated date and time when user {get_jwt_identity()} last saw project {project_id}.",
-                    200)
+    return response("Gebruiker verwijderd van project", 200)
 
 
 # projects/{id}/parents
 @check_permissions(Projects.may_read)  # TODO: placeholder for more specific permissions?
 def read_parents(project_id):
-    return query(
+    return response("Succes",200,query(
         "SELECT projectid, shared_files, project_name, description, is_archived, created, last_updated "
         "FROM projects_have_parents "
         "JOIN projects "
         "ON projects_have_parents.parentid = projects.projectid "
         "WHERE childid = %(projectid)s",
-        {'projectid': project_id})
+        {'projectid': project_id}))
 
 
 @check_permissions(Projects.may_update)
@@ -176,7 +167,7 @@ def update_parents(project_id):
         body = connexion.request.json
         new_ids = body['ids']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
 
     # 1 get all parent project ids
     old_ids = [result["parentid"] for result in query(
@@ -197,7 +188,7 @@ def update_parents(project_id):
             "DELETE FROM projects_have_parents WHERE parentid = %(old_id)s AND childid = %(projectid)s;",
             {'old_id': old_id, 'projectid': project_id}
         )
-    return response(f"Successfully updated list of parents in Project {project_id}", 200)
+    return response("Overkoepelende projecten van project gewijzigd", 200)
 
 
 @check_permissions(Projects.may_update)  # TODO: placeholder for more specific permissions?
@@ -205,7 +196,7 @@ def add_parent(project_id, parent_id):
     query_update(
         "INSERT INTO projects_have_parents (childid, parentid) VALUES (%(projectid)s, %(parentid)s)",
         {'projectid': project_id, 'parentid': parent_id})
-    return response(f"Successfully added parent project to project {project_id}.", 200)
+    return response("Overkoepelend project toegevoegd aan project")
 
 
 @check_permissions(Projects.may_update)  # TODO: placeholder for more specific permissions?
@@ -213,19 +204,19 @@ def remove_parent(project_id, parent_id):
     query_update(
         "DELETE FROM projects_have_parents WHERE childid = %(projectid)s AND parentid = %(parentid)s",
         {'projectid': project_id, 'parentid': parent_id})
-    return response(f"Successfully removed parent project from project {project_id}.", 200)
+    return response("Overkoepelend project verwijderd van project")
 
 
 # projects/{id}/children
 @check_permissions(Projects.may_read)  # TODO: placeholder for more specific permissions?
 def read_children(project_id):  # returns array of id/name/shared_files combinations
-    return query(
+    return response('Sucecs',200, query(
         "SELECT projectid, project_name, description, is_archived, created, projects.last_updated "
         "FROM projects_have_parents "
         "JOIN projects "
         "ON projects_have_parents.childid = projects.projectid "
         "WHERE parentid = %(projectid)s",
-        {'projectid': project_id})
+        {'projectid': project_id}))
 
 
 @check_permissions(Projects.may_update)
@@ -234,7 +225,7 @@ def update_children(project_id):
         body = connexion.request.json
         new_ids = body['ids']
     except KeyError:
-        return response("Invalid body", 400)
+        return response("Foute aanvraag", 400)
 
     # 1 get all parent project ids
     old_ids = [result["childid"] for result in query(
@@ -255,7 +246,7 @@ def update_children(project_id):
             "DELETE FROM projects_have_parents WHERE parentid = %(projectid)s AND childid = %(old_id)s;",
             {'old_id': old_id, 'projectid': project_id}
         )
-    return response(f"Successfully updated list of children in Project {project_id}", 200)
+    return response("Sub-projecten van project gewijzigd", 200)
 
 
 # projects/{id}/children/{id}
@@ -264,7 +255,7 @@ def add_child(project_id, child_id):
     query_update(
         "INSERT INTO projects_have_parents (childid, parentid) VALUES (%(childid)s, %(projectid)s)",
         {'projectid': project_id, 'childid': child_id})
-    return response(f"Successfully added child project to project {project_id}.", 200)
+    return response("Sub-project toegevoegd aan project")
 
 
 @check_permissions(Projects.may_update)  # TODO: placeholder for more specific permissions?
@@ -280,6 +271,7 @@ def update_shared_files(project_id, child_id):
         "WHERE parentid = %(projectid)s AND childid = %(childid)s",
         {'shared_files': shared_files_string, 'projectid': project_id, 'childid': child_id}
     )
+    #TODO dit nederlands maken
     return response(f"Successfully updated list of files shared between parent {project_id} and child {child_id}.", 200)
 
 
@@ -288,29 +280,29 @@ def remove_child(project_id, child_id):
     query_update(
         "DELETE FROM projects_have_parents WHERE childid = %(childid)s AND parentid = %(projectid)s",
         {'projectid': project_id, 'childid': child_id})
-    return response(f"Successfully removed child project from project {project_id}.", 200)
+    return response("Sub-project verwijderd van project", 200)
 
 
 # projects/{id}/announcements
 @check_permissions(Announcements.may_read_all_from_project)
 def read_announcements(project_id):
-    return query(
+    return response('Succes',200,query(
         "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
         "users.last_name, announcements.title, announcements.content FROM announcements JOIN users "
         "ON announcements.userid = users.userid "
         "WHERE announcements.projectid = %(id)s "
-        "ORDER BY announcements.timestamp DESC", {'id': project_id})
+        "ORDER BY announcements.timestamp DESC", {'id': project_id}))
 
 
 @check_permissions(Announcements.may_read_all_from_project)
 def read_announcements_recent(project_id):
     cutoff_date = config.CUTOFF_DATE
-    return query(
+    return response('Succes', 200,query(
         "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
         "users.last_name, announcements.title, announcements.content FROM announcements JOIN users "
         "ON announcements.userid = users.userid "
         "WHERE announcements.projectid = %(id)s AND announcements.timestamp > %(cutoff_date)s "
-        "ORDER BY announcements.timestamp DESC", {'id': project_id, 'cutoffdate': cutoff_date})
+        "ORDER BY announcements.timestamp DESC", {'id': project_id, 'cutoffdate': cutoff_date}))
 
 
 @check_permissions(Announcements.may_create_in_project)
@@ -325,4 +317,4 @@ def add_announcement(project_id):
         "INSERT INTO announcements (userid, projectid, title, content) "
         "VALUES (%(userid)s, %(id)s, %(title)s, %(content)s)",
         {'userid': get_jwt_identity(), 'id': project_id, 'content': content, 'title': title})
-    return response(f"Announcement in project {project_id} successfully posted", 200)
+    return response("Mededeling in project geplaatst", 200)

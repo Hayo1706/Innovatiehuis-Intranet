@@ -16,10 +16,10 @@ def update(reply_id):
     query_update(
         "UPDATE replies SET content=%(content)s WHERE replyid=%(id)s",
         {'id': reply_id, 'content': content})
-    return response(f"Reply {reply_id} successfully edited", 200)
+    return response("Reactie gewijzigd")
 
 
 @check_permissions(Announcements.may_update_delete_reply)
 def delete(reply_id):
     query_update("DELETE FROM replies WHERE replyid=%(id)s", {'id': reply_id})
-    return response(f"Reply {reply_id} successfully deleted", 200)
+    return response("Reactie verwijderd")

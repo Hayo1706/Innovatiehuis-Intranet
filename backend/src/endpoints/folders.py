@@ -9,33 +9,20 @@ from werkzeug.utils import secure_filename
 
 from src.services.helper_functions import response
 
-def path_exists(path):
-    if os.path.exists(path):
-        return True
-    else:
-        return False
 
 def dir_exists(path):
-    if path_exists(path) and os.path.isdir(path):
-        return True
-    else:
-        return False
-
+    return os.path.exists(path) and os.path.isdir(path)
 
 
 def name_valid(path, new_name):
-    if dir_exists(os.path.join(path, new_name)):
-        return False
-    return True
+    return not dir_exists(os.path.join(path, new_name))
+
 
 def move_valid(source_path, target_path, dir_path):
     if dir_exists(source_path) and dir_exists(target_path):
-        if dir_exists(target_path + dir_path):
-            return False
-        else:
-            return True
-
+        return dir_exists(target_path + dir_path)
     return False
+
 
 def delete_valid(folder_path):
     try:
@@ -43,6 +30,7 @@ def delete_valid(folder_path):
         return True
     except:
         return False
+
 
 def delete_elements_in_dir_valid(dir_path):
     try:
@@ -52,9 +40,9 @@ def delete_elements_in_dir_valid(dir_path):
         return False
 
 
-
 def get_project_path(project_id):
     return str(project_id)
+
 
 def get_unique_dir_path(new_dir, current_path, count):
     current_path = unquote(current_path)
@@ -64,9 +52,10 @@ def get_unique_dir_path(new_dir, current_path, count):
             return get_unique_dir_path(new_dir, current_path, count + 1)
         return path_to_check
     else:
-        if dir_exists(path_to_check  + " (" + str(count) + ")"):
+        if dir_exists(path_to_check + " (" + str(count) + ")"):
             return get_unique_dir_path(new_dir, current_path, count + 1)
         return path_to_check + " (" + str(count) + ")"
+
 
 def get_secure_name(name):
     secure_folder_name = secure_filename(name)
@@ -78,11 +67,12 @@ def get_secure_name(name):
 
     return secure_folder_name
 
+
 def get_folders_in_path(project_id):
     folder_path = connexion.request.values.get('path')
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + folder_path
     list_of_files = []
-    if path_exists(requested_path):
+    if os.path.exists(requested_path):
         paths_in_requested_path = os.listdir(requested_path)
         for path in paths_in_requested_path:
             if os.path.isdir(requested_path + "/" + path):
@@ -97,14 +87,10 @@ def move_dir(source_path, target_path):
             shutil.move(source_path, target_path, copy_function=shutil.copytree)
             if dir_exists(target_path + dir_path):
                 return response("Successfully moved folder", 200)
-            else:
-                return response("Something went wrong, please try again", 400)
         except:
-            print("Failed to move folder, system error")
-            return response("Failed to move folder, system error", 400)
+            return response("Kon de folder niet verplaatsen", 400)
+    return response("Kon de folder niet verplaatsen", 400)
 
-    print("Failed to move folder, invalid move")
-    return response("Failed to moved folder, invalid move", 400)
 
 def rename_dir(new_name, path):
     new_name = get_secure_name(new_name)
@@ -114,13 +100,9 @@ def rename_dir(new_name, path):
         if name_valid(sub_path, new_name):
             new_path = sub_path + "/" + new_name
             os.rename(path, new_path)
-            return response("Successfully renamed folder", 200)
+            return response("Foldernaam gewijzigd", 200)
+    return response("Kon foldernaam niet wijzigen", 400)
 
-        print("yes")
-        return response("Failed to rename folder", 400)
-
-    else:
-        return response("Failed to rename folder", 400)
 
 def create_dir(project_id):
     try:
@@ -132,14 +114,12 @@ def create_dir(project_id):
 
         new_dir_path = get_unique_dir_path(new_dir_name, current_path, 0)
         os.mkdir(new_dir_path)
-        print("Successfully created new folder")
-        return response("Successfully created new folder", 200)
+        return response("Folder aangemaakt", 200)
     except KeyError as e:
-        print("Failed to created new folder: " + str(e))
         return response("Foute aanvraag", 400)
     except Exception as e:
-        print("Failed to created new folder: " + str(e))
-        return response("Failed to created new folder", 400)
+        return response("Kon geen folder aanmaken", 400)
+
 
 def delete_dir(project_id):
     path_to_delete = connexion.request.values.get('path')
@@ -150,30 +130,22 @@ def delete_dir(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + path_to_delete
     if dir_exists(requested_path):
         if delete_valid(requested_path):
-            print("Succesfully deleted folder")
-            return response("Succesfully deleted folder", 200)
+            return response("Folder verwijderd", 200)
         else:
             if len(os.listdir(requested_path)) > 0:
                 if confirmation != 'true':
-                    print("An error occurred when trying to delete folder, there are elements inside")
-                    return response("An error occurred when trying to delete folder, there are elements inside", 409)
+                    return response("Folder niet verwijderd, er zitten elenenten in", 409)
                 else:
                     if delete_elements_in_dir_valid(requested_path):
-                        print("Succesfully deleted the folder and the elements in it")
-                        return response("Succesfully deleted folder and the elements in it", 200)
+                        return response("Folder met elementen verwijderd", 200)
                     else:
-                        print("An error occurred when trying to delete elements in folder")
-                        return response("An error occurred when trying to delete elements in folder", 400)
-            else:
-                print("An error occured when trying to delete folder, system error")
-                return response("An error occured when trying to delete folder, system error", 400)
-    else:
-        print("Folder could not be deleted, please refresh.")
-        return response("Folder could not be deleted, please refresh.", 400)
+                        return response("Element in de folder konden niet verwijderd worden", 400)
+    return response("Folder kon niet verwijderd worden, herlaad de pagina", 400)
+
 
 def update_dir(project_id):
-    new_name = connexion.request.json['rename'] # can be any string
-    path = connexion.request.json['from'] # must be put as /example/example
+    new_name = connexion.request.json['rename']  # can be any string
+    path = connexion.request.json['from']  # must be put as /example/example
     path = unquote(path)
     path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + path
 
@@ -193,4 +165,3 @@ if not dir_exists(config.FILE_STORAGE_ROOT):
         os.mkdir("../filestorage");
     if not dir_exists("../filestorage/root"):
         os.mkdir("../filestorage/root")
-
