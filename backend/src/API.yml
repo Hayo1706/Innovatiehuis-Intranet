@@ -711,7 +711,7 @@ paths:
           description: Request denied due to lack of permissions
   /users/{user_id}/role/{role_id}:
     patch:
-      operationId: src.endpoints.users.update_role
+      operationId: src.endpoints.users.update_role_user
       tags:
         - Users
         - Roles
@@ -787,13 +787,43 @@ paths:
           description: Specified user or project not found
   /roles:
     get:
-      operationId: src.endpoints.users.get_roles
+      operationId: src.endpoints.roles.get_roles
       tags:
         - Roles
       summary: Get all possible roles
       responses:
         200:
           description: Successfully retrieved all roles that exist on the platform
+    post:
+      operationId: src.endpoints.roles.add_role
+      tags:
+        - Roles
+      summary: Add role with no permission
+      responses:
+        200:
+          description: Successfully added role
+
+  /roles/{role_id}:
+    put:
+      operationId: src.endpoints.roles.update_role
+      tags:
+        - Roles
+      summary: Update specified role
+      parameters:
+        - $ref: '#/components/parameters/role_id'
+      responses:
+        200:
+          description: Successfully update role
+    delete:
+      operationId: src.endpoints.roles.delete_role
+      tags:
+        - Roles
+      summary: Deletes specified role
+      parameters:
+        - $ref: '#/components/parameters/role_id'
+      responses:
+        200:
+          description: Successfully deleted role
 # ========================================AUTH/LOGOUT==================================================
   /auth:
     post:

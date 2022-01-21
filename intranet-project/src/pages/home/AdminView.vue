@@ -75,6 +75,9 @@ export default {
     canSeeUsers() {
       return PermissionService.userHasPermission("may_read_any_user");
     },
+    canCrudRoles(){
+      return PermissionService.userHasPermission("may_crud_roles")
+    },
     canCreateProjects() {
       return PermissionService.userHasPermission("may_create_project");
     },

@@ -62,11 +62,26 @@ var UserService = function () {
         const { data } = await axiosClient.get(`/roles`, { timeout: 2000 });
         return data;
     }
+    async function updateRole(role, roleid) {
+        const { data } = await axiosClient.put(`/roles/${roleid}`, role,{ timeout: 2000 });
+        return data;
+    }
+    async function addRole(role) {
+        const { data } = await axiosClient.post(`/roles`, role,{ timeout: 2000 });
+        return data;
+    }
+    async function deleteRole(roleid,password) {
+        const { data } = await axiosClient.delete(`/roles/${roleid}`, { data: {password: password}, headers:{ timeout: 2000 }});
+        return data;
+    }
     return {
         getUsers,
+        deleteRole,
         getUserById,
+        addRole,
         addUser,
         deleteUser,
+        updateRole,
         updateUser,
         getUsersByProject,
         addUserToProject,
