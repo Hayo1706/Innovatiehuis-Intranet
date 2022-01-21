@@ -18,14 +18,14 @@
         </ul>
         <div class="tab-content py-3" id="myTabContent">
           <div class="tab-pane fade" v-for="(rolevalue, rolekey) in roles" v-bind:key="rolevalue.role_name" :class="{ 'active show': isActive(rolevalue.role_name) }" :id="rolevalue.role_name">
-            <hr>
+            <hr v-if="canCrudRoles && rolevalue.role_name !== 'admin'">
             <div style="height: 40px;
             margin: auto;
             max-width: 500px;
              display: flex;
              justify-content: space-around;
              align-items: center;"
-             v-if="canCrudRoles">
+             v-if="canCrudRoles && rolevalue.role_name !== 'admin'">
               
               <div>
               <img src="../../../assets/images/lock-icon-11.png" style="height: 40px;"/>
@@ -57,7 +57,7 @@
                 Opslaan
               </button>
             </div>
-            <hr>
+            <hr v-if="canCrudRoles && rolevalue.role_name !== 'admin'">
             <table style="margin: auto" >
             <tr v-for="(values, keys) in rolevalue" v-bind:key="keys">
               <td  v-if="keys !== 'role_name' && keys !== 'roleid'" style="padding-right: 10vw">
@@ -68,7 +68,7 @@
 
               </td>
               <td v-if="keys !== 'role_name' && keys !== 'roleid'">
-                <input type="checkbox" v-model="this.roles[rolekey][keys]" :disabled="uneditable" :true-value="1" :false-value="0">
+                <input type="checkbox" v-model="this.roles[rolekey][keys]" :disabled="rolevalue.role_name === 'admin' ? true : uneditable" :true-value="1" :false-value="0">
               </td>
             </tr>
             </table>
