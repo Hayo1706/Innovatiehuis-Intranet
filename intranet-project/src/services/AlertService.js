@@ -21,11 +21,25 @@ var AlertService = function () {
     }
 
     function handleSuccess(response) {
-        console.log(response.status, response.response.message);
-        AlertService.alert(response.response.message, "success");
+        console.log({response});
+        let status = response.status;
+        console.log({status});
+        if (response.response.status) {
+            console.log(response.status, response.response.message);
+            AlertService.alert(response.response.message, "success");
+            return;
+        }
+        if (response.status == 200) {
+            console.log(response.status, "Succesfully loaded resource:");
+            console.log({response});
+            return;
+        }
+        console.log(response.status, "Server returned the following response:");
+        console.log({response});
     }
 
     function handleError(err) {
+        console.log({err});
         if (err.response) {
             alert(err.response.data.response.message, "error");
             console.log("HTTP code " + err.response.status);
