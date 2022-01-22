@@ -25,10 +25,12 @@
     </div>
 
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
-      <li v-if="this.type != 'shared'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
-      <li v-if="this.type != 'shared'" v-show="canMoveFile()" @click="moveMenu = true; viewMenu = false;">Verplaats</li>
+      <li v-if="this.type == 'normal'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
+      <li v-if="this.type == 'normal'" v-show="canMoveFile()" @click="moveMenu = true; viewMenu = false;">Verplaats</li>
+      <li v-if="this.type == 'normal'" @click="shareMenu = true">Delen</li>
+      <li v-if="this.type == 'owned'" @click="stopSharingFile()">Delen Stoppen</li>
       <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
-      <li v-if="this.type != 'shared'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
+      <li v-if="this.type == 'normal'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
     </ul>
     <ul id="drop-down-menu" v-if="moveMenu == true && this.shared != 'no'">
       <li>Verplaatsen naar:</li>
@@ -57,6 +59,7 @@ export default {
     path: { type: String, required: true },
     type: { type: String, required: true },
     currentFolders: { type: Array, required: true },
+    currentFiles: { type: Array, required: true },
   },
   data: function () {
     return {
@@ -77,6 +80,12 @@ export default {
     };
   },
   methods: {
+    stopSharingFile(){
+      this.$emit("stopSharingFile", this.path, this.projectID)
+    },
+    addSharingFile(){
+      this.$emit("addSharingFile", this.path, this.projectID)
+    },
     downloadFile(){
       FilestorageService.downloadFile(this.projectID, this.path)
       .then((response) => { 

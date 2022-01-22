@@ -13,7 +13,7 @@
                 @currentFoldersChanged="currentFoldersChanged"
                 @currentFilesChanged="currentFilesChanged"
                 @currentPathChanged="currentPathChanged"
-                @fileMoved="$refs.child.setFiles()"
+                @fileMoved="currentFilesChanged"
               />
               <FilesView ref="child" 
               :currentPath="this.currentPath"
@@ -21,7 +21,9 @@
               :currentFolders="this.currentFolders"
               :currentFiles="this.currentFiles"
               
+              @sharedFilesChanged="sharedFilesChanged"
               @currentFilesChanged="currentFilesChanged"/>
+              
           </div>
         </div>
         <div class="col-sm-4">
@@ -55,6 +57,7 @@ export default {
       projectName: "",
       projectParents: [],
       parentID: this.$route.query.parent,
+      childID: this.$route.query.child, 
 
       previousPath: this.getPath(),
       currentPath: this.getPath(),
@@ -70,17 +73,37 @@ export default {
     currentFilesChanged(){
       this.setCurrentFiles();
     },
-    currentPathChanged(path, parentID) {
+    sharedFilesChanged(sharedFiles){
+      const project = {
+        shared_files: sharedFiles
+      }
+      ProjectService.updateSharedFilesOfProject(this.projectID, this.childID, project)
+      .then((response) => {
+        this.setCurrentFiles();
+        AlertService.handleSuccess(response);
+      })
+      .catch((err) => {
+        AlertService.handleError(err);
+      })
+    },
+    currentPathChanged(path, familyID) {
       this.projectID = this.getProjectId();
       this.previousPath = this.currentPath;
       this.$router.push("/project/" + this.projectID + path)
 
-      if(this.projectID == parentID){
+      if(this.projectID == familyID){
         this.parentID = null;
+        this.childID = null;
         this.currentPath = path
       }
       else{
-        this.parentID = parentID
+        this.currentPath = ""
+        if(path.includes("child")){
+          this.childID = familyID
+        }
+        else if(path.includes("parent")){
+          this.parentID = familyID
+        }
       }
       this.setCurrentFolders();
       this.setCurrentFiles();
@@ -97,7 +120,7 @@ export default {
     },
     setCurrentFolders() {
       this.currentFolders = []
-      if(this.parentID == null){
+      if(this.parentID == null && this.childID == null){
 
         FilestorageService.getFoldersOfProject(this.projectID, this.currentPath)
           .then((response) => {
@@ -114,13 +137,25 @@ export default {
               for(var parent in response){
                 var parentID = response[parent].projectid
                 var parentName = response[parent].project_name
-                var sharedFiles = response[parent].shared_files.split(" ")
-                this.currentFolders.push({'name': parentName, 'path': '/', 'projectID': parentID, 'type':'shared', 'files': sharedFiles})         
+                this.currentFolders.push({'name': parentName, 'path': '/', 'projectID': parentID, 'type':'shared'})         
               }
             })
             .catch((err) => {
               AlertService.handleError(err);
             })
+          
+          ProjectService.getChildrenById(this.projectID)
+          .then((response) => {
+            for(var child in response){
+              var childName = response[child].project_name
+              var childID = response[child].projectid
+              this.currentFolders.push({'name': childName, 'path': '/', 'projectID': childID, 'type':'owned'})
+            }
+          })
+          .catch((err) => {
+            AlertService.handleError(err)
+          })
+          
         }
       }
       else{
@@ -130,31 +165,30 @@ export default {
 
     },
     setCurrentFiles() {
-      if(this.parentID == null){
+      this.currentFiles = []
+      if(this.parentID == null && this.childID == null){
         FilestorageService.getFilesOfPath(this.projectID, this.currentPath)
         .then((response) => {
-          this.currentFiles = []
           for(var file in response){
             this.currentFiles.push({'name': response[file], 'path': this.currentPath + '/' + response[file], 'projectID': this.projectID, 'type':'normal'})
           }
-          return this.currentFiles
         })
         .catch((err) => {
           AlertService.handleError(err);
-          return []
         });
       }
       else{
-        ProjectService.getParentsById(this.projectID)
+        if(this.parentID != null){
+          ProjectService.getParentsById(this.projectID)
           .then((response) => {
-            this.currentFiles = []
+
             for(var parent in response){
               var parentID = response[parent].projectid
-              var sharedFiles = response[parent].shared_files.split(" ")
               if(this.parentID == parentID){
+                var sharedFiles = response[parent].shared_files.split(" ")
                 for(var file in sharedFiles){
                   var fileName = sharedFiles[file].split("/").pop()
-                  this.currentFiles.push({'name': fileName, 'path': "/" + sharedFiles[file], 'projectID': parentID, 'type':'shared'})
+                  this.currentFiles.push({'name': fileName, 'path': sharedFiles[file], 'projectID': parentID, 'type':'shared'})
                 }
               }              
             }
@@ -162,7 +196,27 @@ export default {
           .catch((err) => {
             AlertService.handleError(err);
           })
+        }
+        else{
+          ProjectService.getChildrenById(this.projectID)
+          .then((response) => {
+            for(var child of response){
+              var childID = child.projectid
+              if(childID == this.childID){
+                var sharedFiles = child.shared_files.split(" ")
+                for(var file of sharedFiles){
+                  var fileName = file.split("/").pop()
+                  this.currentFiles.push({'name': fileName, 'path': file, 'projectID': this.projectID, 'type':'owned'})
+                }
+              }
+            }
+          })
+          .catch((err) => {
+            AlertService.handleError(err)
+          })
+        }
       }
+      return this.currentFiles
     },
     setProjectName() {
       ProjectService.getProjectById(this.$route.params.id)
@@ -181,7 +235,6 @@ export default {
     this.setProjectName();
     this.setCurrentFolders();
     this.setCurrentFiles();
-
   },
 };
 </script>

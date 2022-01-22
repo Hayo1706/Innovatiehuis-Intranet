@@ -59,9 +59,13 @@ var ProjectService = function () {
         return data;
     }
 
-
     async function updateChildrenOfProject(projectid, childids) {
         const { data } = await axiosClient.put(`/projects/${projectid}/children`, childids, { timeout: 2000 });
+        return data;
+    }
+
+    async function updateSharedFilesOfProject(projectid, childid, project){
+        const { data } = await axiosClient.put(`/projects/${projectid}/children/${childid}/shared_files`, { project }, { timeout: 2000 });
         return data;
     }
 
@@ -77,7 +81,8 @@ var ProjectService = function () {
         updateProjectNameDescription,
         updateChildrenOfProject,
         updateMembersOfProject,
-        updateParentsOfProject
+        updateParentsOfProject,
+        updateSharedFilesOfProject,
 
 
     }

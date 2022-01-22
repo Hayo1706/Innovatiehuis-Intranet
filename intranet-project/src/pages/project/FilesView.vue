@@ -19,10 +19,15 @@
               :path="file.path"
               :type="file.type"
               :currentFolders="this.currentFolders"
+              :currentFiles="this.currentFiles"
 
               @fileDeleted="currentFilesChanged"
               @nameChanged="currentFilesChanged"
               @fileMoved="currentFilesChanged"
+              
+              @stopSharingFile="stopSharingFile"
+              @addSharingFile="addSharingFile"
+
               draggable="true"
               @dragstart="startDrag($event, file.path)"
             />
@@ -83,7 +88,34 @@ export default {
     },
     currentFilesChanged(){
       this.$emit("currentFilesChanged")
-    }
+    },
+    stopSharingFile(path, projectID){
+      var sharedFiles = []
+      for(var file of this.files){
+        if(file.projectID == projectID && file.type == 'owned'){
+          if(path != file.path){
+            sharedFiles.push(file.path)
+          }
+        }
+      }
+      if(sharedFiles.length > 0){
+        this.$emit("sharedFilesChanged", sharedFiles.join(" "))
+      }
+      else{
+        this.$emit("sharedFilesChanged", null)
+      }
+    },
+    addSharingFile(path, projectID){
+      var sharedFiles = []
+      for(var file of this.files && file.type == 'owned'){
+        if(file.projectID == projectID){
+          sharedFiles.push(file.path)
+        }
+      }
+      sharedFiles.push(path)
+      this.$emit("sharedFilesChanged", sharedFiles.join(" "))
+    },
+
   }
 };
 </script>

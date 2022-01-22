@@ -26,7 +26,7 @@
             />
             <img
               class="foldersImage"
-              v-if="this.folderType == 'shared'"
+              v-if="this.folderType == 'shared' || this.folderType == 'owned'"
               src=".\..\..\assets\images\shared_folder.png"
               draggable="false"
             />
@@ -177,8 +177,12 @@ export default {
         });
     },
     goToFolder() {
-      if(this.files != null){
+      if(this.folderType == 'shared'){
         this.$emit("currentPathChanged", "?parent=" + this.projectID, this.projectID);
+        return;
+      }
+      if(this.folderType == 'owned'){
+        this.$emit("currentPathChanged", "?child=" + this.projectID, this.projectID);
         return;
       }
       this.$emit("currentPathChanged", this.folderPath, this.projectID);
