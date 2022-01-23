@@ -6,8 +6,10 @@ var UserService = function () {
 
     async function getUsers() {
         const response = await axiosClient.get('/users', { timeout: 2000 });
-        response.data.forEach(user => { user.created = jsonToJsDate(user.created) });
-        response.data.forEach(user => {
+        console.log("HENK");
+        console.log({response});
+        response.data.result.forEach(user => { 
+            user.created = jsonToJsDate(user.created);
             user.last_seen = jsonToJsDate(user.last_seen)
         });
         return response;
@@ -15,8 +17,8 @@ var UserService = function () {
     async function getUsersByProject(projectid) {
 
         const response = await axiosClient.get(`/projects/${projectid}/users`, { timeout: 2000 });
-        response.data.forEach(user => { user.created = jsonToJsDate(user.created) });
-        response.data.forEach(user => {
+        response.data.result.forEach(user => { user.created = jsonToJsDate(user.created) });
+        response.data.result.forEach(user => {
             user.last_seen = jsonToJsDate(user.last_seen)
         });
         return response;
@@ -24,8 +26,8 @@ var UserService = function () {
     }
     async function getUserById(userid) {
         const response = await axiosClient.get(`/users/${userid}`, { timeout: 2000 });
-        response.data.forEach(user => { user.created = jsonToJsDate(user.created) });
-        response.data.forEach(user => {
+        response.data.result.forEach(user => { user.created = jsonToJsDate(user.created) });
+        response.data.result.forEach(user => {
             user.last_seen = jsonToJsDate(user.last_seen)
         });
         return response;

@@ -457,7 +457,7 @@ export default {
     loadParents() {
       ProjectService.getParentsById(this.project.projectid)
         .then((response) => {
-          this.parents = response.data;
+          this.parents = response.data.result;
           AlertService.handleSuccess(response);
         })
         .catch((err) => {
@@ -478,7 +478,7 @@ export default {
         this.loadParents();
         ProjectService.getProjects()
           .then((response) => {
-            this.projects = response.data;
+            this.projects = response.data.result;
             AlertService.handleSuccess(response);
           })
           .catch((err) => {
@@ -491,7 +491,7 @@ export default {
     loadChildren() {
       ProjectService.getChildrenById(this.project.projectid)
         .then((response) => {
-          this.children = response.data;
+          this.children = response.data.result;
           AlertService.handleSuccess(response);
         })
         .catch((err) => {
@@ -513,7 +513,7 @@ export default {
 
         UserService.getUsers()
           .then((response) => {
-            this.users = response.data;
+            this.users = response.data.result;
             AlertService.handleSuccess(response);
           })
           .catch((err) => {
@@ -526,7 +526,7 @@ export default {
     loadMembers() {
       UserService.getUsersByProject(this.project.projectid)
         .then((response) => {
-          this.members = response.data;
+          this.members = response.data.result;
           AlertService.handleSuccess(response);
         })
         .catch((err) => {

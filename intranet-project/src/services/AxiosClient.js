@@ -27,7 +27,7 @@ axiosClient.interceptors.response.use((config) => {
         return Promise.reject(error);
     }
     //catch login error
-    if (error.response.status == 401 && router.currentRoute.value.fullPath != '/login') {
+    if (error.response.status == 4010 && router.currentRoute.value.fullPath != '/login') {
         LoginService.logout();
         window.location.reload();
         console.log("User was logged out due to invalid or expired JSON Web Token.")

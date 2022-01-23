@@ -33,10 +33,10 @@ export default {
       .then((response) => {
         this.$emit(
           "newHeaderTitle",
-          response.data[0].project_name + ": Instellingen"
+          response.data.result[0].project_name + ": Instellingen"
         );
-        this.project = response.data[0];
-        AlertService.handleSuccess(response.data);
+        this.project = response.data.result[0];
+        AlertService.handleSuccess(response.data.result);
       })
       .catch((err) => {
         AlertService.handleError(err);

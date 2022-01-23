@@ -217,7 +217,7 @@ export default {
     loadProjects() {
       ProjectService.getProjects()
         .then((response) => {
-          this.projects = response.data;
+          this.projects = response.data.result;
           AlertService.handleSuccess(response);
         })
         .catch((err) => {

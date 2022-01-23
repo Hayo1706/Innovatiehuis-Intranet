@@ -6,11 +6,11 @@ var AnouncementService = function () {
     async function getAnnouncementsByProject(projectid) {
         if (typeof projectid == 'undefined') {
             const response = await axiosClient.get(`/announcements`, { timeout: 2000 });
-            response.data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
+            response.data.result.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
             return response;
         } else {
             const response = await axiosClient.get(`/projects/${projectid}/announcements`, { timeout: 2000 });
-            response.data.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
+            response.data.result.forEach(announcement => { announcement.timestamp = jsonToJsDate(announcement.timestamp) });
             return response;
         }
     }
@@ -34,7 +34,7 @@ var AnouncementService = function () {
     }
     async function getRepliesByAnnouncement(announcementid) {
         const response = await axiosClient.get(`/announcements/${announcementid}/replies`, { timeout: 2000 });
-        response.data.forEach(reply => { reply.timestamp = jsonToJsDate(reply.timestamp) });
+        response.data.result.forEach(reply => { reply.timestamp = jsonToJsDate(reply.timestamp) });
         return response;
     }
     async function addReply(announcementid, reply) {

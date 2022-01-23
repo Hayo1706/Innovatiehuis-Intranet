@@ -1,7 +1,7 @@
 import connexion
 import datetime
 import src.config as config
-from flask import jsonify
+from flask import jsonify, request
 from src.services.helper_functions import query, query_update, response
 from flask_jwt_extended import jwt_required, \
     create_access_token, create_refresh_token, get_jwt_identity, set_access_cookies, \
@@ -41,9 +41,11 @@ def login():
             dict[0]['first_name'] = user['first_name']
             dict[0]['last_name'] = user['last_name']
             dict[0]['screening_status'] = user['screening_status']
-            resp = jsonify(dict)  # TODO: misschien niet alle permissies dumpen?
-            set_access_cookies(resp, access_token)
-            return resp, 200
+            # TODO: misschien niet alle permissies dumpen?
+            rsp = {'resource': request.path, 'code': 200, 'message': 'Succes', 'result': dict}
+            rsp = jsonify(rsp)
+            set_access_cookies(rsp,access_token)
+            return rsp, 200
     except ValueError:
         print('Password format incorrect')
     query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "

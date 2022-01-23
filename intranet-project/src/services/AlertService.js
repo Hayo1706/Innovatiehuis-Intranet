@@ -24,7 +24,7 @@ var AlertService = function () {
         console.log({response});
         if (response.status) {
             console.log(response.status, response.message);
-            AlertService.alert(response.message, "success");
+            alert(response.message, "success");
             return;
         }
         if (response.status == 200) {

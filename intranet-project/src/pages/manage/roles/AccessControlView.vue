@@ -268,7 +268,7 @@ export default {
     },
     refreshRoles(){
       UserService.getRoles().then((response) => {
-        this.roles = response.data;
+        this.roles = response.data.result;
         AlertService.handleSuccess(response);
       }).catch((err) => {
         if (err.response) {

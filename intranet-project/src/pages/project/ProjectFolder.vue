@@ -165,9 +165,9 @@ export default {
       FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
         .then((response) => {
           this.folders = []
-          for(var folder in response.data){
-            if(response.data[folder] != this.name){
-              this.folders.push(response.data[folder])
+          for(var folder in response.data.result){
+            if(response.data.result[folder] != this.name){
+              this.folders.push(response.data.result[folder])
             }
           }
           AlertService.handleSuccess(response);

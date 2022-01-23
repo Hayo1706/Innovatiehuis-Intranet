@@ -101,8 +101,8 @@ export default {
 
         FilestorageService.getFoldersOfProject(this.projectID, this.currentPath)
           .then((response) => {
-            for(var folder in response.data){
-              this.currentFolders.push({'name': response.data[folder], 'path': this.currentPath + '/' + response.data[folder], 'projectID': this.projectID, 'type':'normal'})
+            for(var folder in response.data.result){
+              this.currentFolders.push({'name': response.data.result[folder], 'path': this.currentPath + '/' + response.data.result[folder], 'projectID': this.projectID, 'type':'normal'})
             }
             AlertService.handleSuccess(response);
           })
@@ -112,10 +112,10 @@ export default {
         if(this.currentPath == ''){
           ProjectService.getParentsById(this.projectID)
             .then((response) => {
-              for(var parent in response.data){
-                var parentID = response.data[parent].projectid
-                var parentName = response.data[parent].project_name
-                var sharedFiles = response.data[parent].shared_files.split(" ")
+              for(var parent in response.data.result){
+                var parentID = response.data.result[parent].projectid
+                var parentName = response.data.result[parent].project_name
+                var sharedFiles = response.data.result[parent].shared_files.split(" ")
                 this.currentFolders.push({'name': parentName, 'path': '/', 'projectID': parentID, 'type':'shared', 'files': sharedFiles})         
               }
               AlertService.handleSuccess(response);
@@ -136,8 +136,8 @@ export default {
         FilestorageService.getFilesOfPath(this.projectID, this.currentPath)
         .then((response) => {
           this.currentFiles = []
-          for(var file in response.data){
-            this.currentFiles.push({'name': response.data[file], 'path': this.currentPath + '/' + response.data[file], 'projectID': this.projectID, 'type':'normal'})
+          for(var file in response.data.result){
+            this.currentFiles.push({'name': response.data.result[file], 'path': this.currentPath + '/' + response.data.result[file], 'projectID': this.projectID, 'type':'normal'})
           }
           AlertService.handleSuccess(response);
         })
@@ -149,9 +149,9 @@ export default {
         ProjectService.getParentsById(this.projectID)
           .then((response) => {
             this.currentFiles = []
-            for(var parent in response.data){
-              var parentID = response.data[parent].projectid
-              var sharedFiles = response.data[parent].shared_files.split(" ")
+            for(var parent in response.data.result){
+              var parentID = response.data.result[parent].projectid
+              var sharedFiles = response.data.result[parent].shared_files.split(" ")
               if(this.parentID == parentID){
                 for(var file in sharedFiles){
                   var fileName = sharedFiles[file].split("/").pop()
@@ -169,8 +169,8 @@ export default {
     setProjectName() {
       ProjectService.getProjectById(this.$route.params.id)
       .then((response) => {
-        this.projectName = response.data[0].project_name;
-        this.$emit("newHeaderTitle", response.data[0].project_name);
+        this.projectName = response.data.result[0].project_name;
+        this.$emit("newHeaderTitle", response.data.result[0].project_name);
         AlertService.handleSuccess(response);
       })
       .catch((err) => {

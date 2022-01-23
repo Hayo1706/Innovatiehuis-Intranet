@@ -128,7 +128,7 @@ export default {
     UserService.getRoles()
       .then((response) => {
         console.log({response});
-        for (const role of response.data) {
+        for (const role of response.data.result) {
           this.roles[role.role_name] = role.roleid;
         }
         AlertService.handleSuccess(response);

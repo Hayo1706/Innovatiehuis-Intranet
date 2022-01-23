@@ -55,8 +55,8 @@ export default {
           console.log(response.status, "User logged in successfully");
 
           //set to local storage: user id and user permission data retrieved from API
-          for (var property in response.data[0]) {
-            localStorage.setItem(property, response.data[0][property]);
+          for (var property in response.data.result[0]) {
+            localStorage.setItem(property, response.data.result[0][property]);
           }
           localStorage.setItem("loggedIn", true);
 
