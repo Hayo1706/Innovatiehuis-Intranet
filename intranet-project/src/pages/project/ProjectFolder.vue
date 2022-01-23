@@ -161,21 +161,6 @@ export default {
         this.moveToFolder(folder)
       }
     },
-    getFolders() {
-      FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
-        .then((response) => {
-          this.folders = []
-          for(var folder in response){
-            if(response[folder] != this.name){
-              this.folders.push(response[folder])
-            }
-          }
-          AlertService.handleSuccess(response);
-        })
-        .catch((err) => {
-          AlertService.handleError(err);
-        });
-    },
     goToFolder() {
       if(this.folderType == 'shared'){
         this.$emit("currentPathChanged", "?parent=" + this.projectID, this.projectID);
@@ -199,10 +184,6 @@ export default {
     canSeeMenu(){
       return PermissionService.userHasPermission("may_update_file_in_own_project");
     },
-  },
-  async created() {
-    //this.$emit("newHeaderTitle", "NAAM + PAD");
-    this.getFolders();
   },
 };
 </script>

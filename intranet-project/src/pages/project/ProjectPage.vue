@@ -20,6 +20,7 @@
               :projectID="this.projectID"
               :currentFolders="this.currentFolders"
               :currentFiles="this.currentFiles"
+              :sharedChilds="this.sharedChilds"
               
               @sharedFilesChanged="sharedFilesChanged"
               @currentFilesChanged="currentFilesChanged"/>
@@ -63,7 +64,7 @@ export default {
       currentPath: this.getPath(),
       currentFiles: [],
       currentFolders: [],
-      sharedParents: [],
+      sharedChilds: [],
     };
   },
   methods: {
@@ -71,6 +72,7 @@ export default {
       this.setCurrentFolders();
     },
     currentFilesChanged(){
+      this.getChildProjects();
       this.setCurrentFiles();
     },
     sharedFilesChanged(sharedFiles){
@@ -105,9 +107,8 @@ export default {
           this.parentID = familyID
         }
       }
-      this.setCurrentFolders();
       this.setCurrentFiles();
-     
+      this.setCurrentFolders();     
     },
     reloadAnnouncementWindow() {
       this.announcementWindowKey += 1;
@@ -162,7 +163,6 @@ export default {
         this.currentFolders.push({'name': 'Go Back', 'path': this.previousPath, 'projectID': this.projectID, 'type':'goback'})
       }
       return this.currentFolders
-
     },
     setCurrentFiles() {
       this.currentFiles = []
@@ -228,13 +228,25 @@ export default {
       .catch((err) => {
         AlertService.handleError(err);
       });
+    },
+    getChildProjects(){
+      this.sharedChilds = []
+      ProjectService.getChildrenById(this.projectID)
+        .then((response) => {
+          for(var child of response){
+            this.sharedChilds.push(child)
+          }
+        })
+        .catch((err) => {
+          AlertService.handleError(err)
+        })
     }
   },
-  
   async created() {
     this.setProjectName();
     this.setCurrentFolders();
     this.setCurrentFiles();
+    this.getChildProjects();
   },
 };
 </script>

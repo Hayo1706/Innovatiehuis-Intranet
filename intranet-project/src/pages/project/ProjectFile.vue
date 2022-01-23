@@ -4,7 +4,8 @@
     @contextmenu="viewMenu = true"
     @long-press="viewMenu = true"
     @mouseleave="viewMenu = false;
-    moveMenu = false"
+    moveMenu = false;
+    shareMenu = false"
   >
     <div class="row">
       <div class="col s10">
@@ -27,7 +28,7 @@
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
       <li v-if="this.type == 'normal'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
       <li v-if="this.type == 'normal'" v-show="canMoveFile()" @click="moveMenu = true; viewMenu = false;">Verplaats</li>
-      <li v-if="this.type == 'normal'" @click="shareMenu = true">Delen</li>
+      <li v-if="this.type == 'normal'" @click="shareMenu = true; viewMenu = false">Delen</li>
       <li v-if="this.type == 'owned'" @click="stopSharingFile()">Delen Stoppen</li>
       <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
       <li v-if="this.type == 'normal'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
@@ -38,6 +39,16 @@
         <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
             <li v-if="folder.name != folderName && folder.type != 'shared'">
               {{ folder.name }}
+            </li>
+          </span>
+      </ul>
+    </ul>
+    <ul id="drop-down-menu" v-if="shareMenu == true">
+      <li>Delen met:</li>
+      <ul id="drop-down-menu">
+        <span v-for="child in this.sharedChilds" :key="child"  @click="addSharingFile(child.projectid)">
+            <li>
+              {{ child.project_name }}
             </li>
           </span>
       </ul>
@@ -60,11 +71,13 @@ export default {
     type: { type: String, required: true },
     currentFolders: { type: Array, required: true },
     currentFiles: { type: Array, required: true },
+    sharedChilds: { type: Array, required: false }
   },
   data: function () {
     return {
       viewMenu: false,
       moveMenu: false,
+      shareMenu: false,
       fileName: this.name,
       fileTypes: {
         jpg: require("./../../assets/images/file_icons/Jpg.png"),
@@ -83,8 +96,8 @@ export default {
     stopSharingFile(){
       this.$emit("stopSharingFile", this.path, this.projectID)
     },
-    addSharingFile(){
-      this.$emit("addSharingFile", this.path, this.projectID)
+    addSharingFile(childID){
+      this.$emit("addSharingFile", this.path, this.projectID, childID)
     },
     downloadFile(){
       FilestorageService.downloadFile(this.projectID, this.path)
@@ -101,6 +114,7 @@ export default {
         AlertService.handleError(err);
       });
     },
+
     renameFile() {
       this.disableInput();
       var newFileName = this.fileName + "." + this.fileType

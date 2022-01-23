@@ -10,7 +10,7 @@
         </ProjectFilesHeader>
     </div>
       <div class="row">
-        <div v-for="file in files" :key="file" class="col-sm-2">
+        <div v-for="file in currentFiles" :key="file" class="col-sm-2">
           <div v-if="fileNameInSearchterm(file.name)">
             <ProjectFile
               :projectID="file.projectID"
@@ -20,6 +20,7 @@
               :type="file.type"
               :currentFolders="this.currentFolders"
               :currentFiles="this.currentFiles"
+              :sharedChilds="this.sharedChilds"
 
               @fileDeleted="currentFilesChanged"
               @nameChanged="currentFilesChanged"
@@ -40,6 +41,8 @@
 <script>
 import ProjectFilesHeader from "./ProjectFilesHeader.vue";
 import ProjectFile from "./ProjectFile.vue";
+import AlertService from "../../services/AlertService";
+import ProjectService from "../../services/ProjectService";
 
 export default {
   setup(){
@@ -59,13 +62,10 @@ export default {
     ProjectFile,
   },
   name: "FilesView",
-  props: ['projectID', 'currentPath', 'currentFolders', 'currentFiles'],
-  watch: {
+  props: ['projectID', 'currentPath', 'sharedChilds', 'currentFolders', 'currentFiles'],
+watch: {
     currentPath: function(newPath){
       this.folderPath = newPath;
-    },
-    currentFiles(newFiles){
-      this.files = newFiles;
     },
     currentFolders(newFolders){
       this.folders = newFolders;
@@ -73,7 +73,6 @@ export default {
   },
   data: function () {
     return {
-      files: [],
       folders: [],
       folderPath: this.currentPath,
       searchTerm: "",
@@ -91,7 +90,7 @@ export default {
     },
     stopSharingFile(path, projectID){
       var sharedFiles = []
-      for(var file of this.files){
+      for(var file of this.currentFiles){
         if(file.projectID == projectID && file.type == 'owned'){
           if(path != file.path){
             sharedFiles.push(file.path)
@@ -105,18 +104,37 @@ export default {
         this.$emit("sharedFilesChanged", null)
       }
     },
-    addSharingFile(path, projectID){
-      var sharedFiles = []
-      for(var file of this.files && file.type == 'owned'){
-        if(file.projectID == projectID){
-          sharedFiles.push(file.path)
+    addSharingFile(path, projectID, childID){
+      var sharedFiles = ""
+      for(var child of this.sharedChilds){
+        console.log(child.shared_files)
+        if(child.projectid == childID){
+          sharedFiles = child.shared_files;
         }
       }
-      sharedFiles.push(path)
-      this.$emit("sharedFilesChanged", sharedFiles.join(" "))
-    },
+      
+      if(sharedFiles == null){
+        alert(sharedFiles)
+        sharedFiles = path;
+      }
+      else{
+        sharedFiles += " " + path;
+      }
 
-  }
+      const project = {
+        shared_files: sharedFiles
+      }
+
+      ProjectService.updateSharedFilesOfProject(projectID, childID, project)
+      .then((response) => {
+        this.$emit("currentFilesChanged")
+        AlertService.handleSuccess(response);
+      })
+      .catch((err) => {
+        AlertService.handleError(err);
+      })
+    },
+  },
 };
 </script>
 
