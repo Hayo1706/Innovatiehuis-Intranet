@@ -1,5 +1,6 @@
 <template>
   <div
+    oncontextmenu="return false;"
     class="projectFile"
     @contextmenu="viewMenu = true"
     @long-press="viewMenu = true"
