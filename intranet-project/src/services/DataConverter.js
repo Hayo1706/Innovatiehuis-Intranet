@@ -1,5 +1,4 @@
 export function jsonToJsDate(sqlDate){
-    console.log(sqlDate);
     //sqlDate in SQL DATETIME format ("yyyy-mm-ddThh:mm:ss.msZ")
     var sqlDateArr1 = sqlDate.split("-");
     //format of sqlDateArr1[] = ['yyyy','mm','dd hh:mm:ms']

@@ -122,7 +122,7 @@ export default {
       AnnouncementService.getAnnouncementsByProject(this.pathArgs.project)
         .then((response) => {
           this.announcements = response.data.result;
-          AlertService.handleSuccess(response.data.result);
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
           AlertService.handleError(err);

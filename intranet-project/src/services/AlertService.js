@@ -22,14 +22,14 @@ var AlertService = function () {
 
     function handleSuccess(response) {
         console.log({response});
-        if (response.status) {
-            console.log(response.status, response.message);
-            alert(response.message, "success");
+        if (response.config.method == "get") {
+            console.log(response.status, "Successfully loaded resource:");
+            console.log({response});
             return;
         }
-        if (response.status == 200) {
-            console.log(response.status, "Succesfully loaded resource:");
-            console.log({response});
+        if (response.status) {
+            console.log(response.status, response.data.message);
+            alert(response.data.message, "success");
             return;
         }
         console.log(response.status, "Server returned the following response:");
@@ -37,6 +37,7 @@ var AlertService = function () {
     }
 
     function handleError(err) {
+        console.log({err});
         if (err.data) {
             alert(err.data.response.message, "error");
             console.log("HTTP code " + err.status);

@@ -36,7 +36,7 @@ export default {
           response.data.result[0].project_name + ": Instellingen"
         );
         this.project = response.data.result[0];
-        AlertService.handleSuccess(response.data.result);
+        AlertService.handleSuccess(response);
       })
       .catch((err) => {
         AlertService.handleError(err);

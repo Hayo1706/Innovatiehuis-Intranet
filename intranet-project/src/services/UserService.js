@@ -6,8 +6,6 @@ var UserService = function () {
 
     async function getUsers() {
         const response = await axiosClient.get('/users', { timeout: 2000 });
-        console.log("HENK");
-        console.log({response});
         response.data.result.forEach(user => { 
             user.created = jsonToJsDate(user.created);
             user.last_seen = jsonToJsDate(user.last_seen)
