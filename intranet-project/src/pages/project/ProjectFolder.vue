@@ -34,7 +34,9 @@
           <div class="col-8" style="display: inline-block; position: relative">
             <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10"/>
             <div style="display:flex;align-items:center;width:100%;height:100%;">
-              <input
+              <textarea
+                maxlength="16"
+                rows="2"
                 v-on:keyup.enter="renameFolder()"
                 class="folderName"
                 v-model="newName"
@@ -230,7 +232,6 @@ export default {
 .foldersImage {
   margin:8px auto;
   top: 50%;
-  overflow: hidden;
   width: max(80%, 30px);
 }
 .folderName {
@@ -238,6 +239,7 @@ export default {
   background-color: transparent;
   color: var(--blue1);
   border: 0px;
-  width: 100%;
+  width: 90%;
+  resize: none;
 }
 </style>

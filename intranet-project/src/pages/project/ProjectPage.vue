@@ -138,7 +138,7 @@ export default {
               for(var parent in response){
                 var parentID = response[parent].projectid
                 var parentName = response[parent].project_name
-                this.currentFolders.push({'name': parentName, 'path': '/', 'projectID': parentID, 'type':'shared'})         
+                this.currentFolders.push({'name': "Gedeeld door:\n" + parentName, 'path': '/', 'projectID': parentID, 'type':'shared'})         
               }
             })
             .catch((err) => {
@@ -150,7 +150,7 @@ export default {
             for(var child in response){
               var childName = response[child].project_name
               var childID = response[child].projectid
-              this.currentFolders.push({'name': childName, 'path': '/', 'projectID': childID, 'type':'owned'})
+              this.currentFolders.push({'name': "Gedeeld met:\n" +childName, 'path': '/', 'projectID': childID, 'type':'owned'})
             }
           })
           .catch((err) => {
