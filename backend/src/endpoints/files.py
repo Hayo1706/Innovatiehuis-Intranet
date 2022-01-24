@@ -6,7 +6,7 @@ from ..endpoints.folders import *
 
 
 def get_unique_file_name(file_name_type, current_path, count):
-    index_split_name = file_name_type.rfind('.');
+    index_split_name = file_name_type.rfind('.')
     file_name = file_name_type[0: index_split_name]
     file_type = file_name_type[index_split_name::]
     if count == 0:
