@@ -95,7 +95,7 @@ export default {
   },
     watch: {
     $route() {
-      if(this.$route.fullPath.contains("/user/")){
+      if(this.$route.fullPath.includes("/user/")){
         this.getUser();
       }
     },
