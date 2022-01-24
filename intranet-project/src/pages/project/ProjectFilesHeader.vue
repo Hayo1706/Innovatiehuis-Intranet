@@ -15,7 +15,7 @@
           ></SearchBar>
         </div>
         <div v-show="canUploadFile()" class="col-1">
-          <input
+          <input v-show="this.uploadMenu == true"
             @change="uploadFiles"
             type="file"
             id="files"
@@ -23,13 +23,15 @@
             multiple
             hidden
           />
-          <label for="files" refs="files" class="file-btn">
+          <label v-show="this.uploadMenu == true" for="files" refs="files" class="file-btn">
             <img
               title="Upload bestand"
               class="component-header-button"
               src=".\..\..\assets\images\new_upload.png"
             />
           </label>
+          <div title="Uploading bestanden..." v-show="this.uploadMenu == false" class="spinner-border" role="status" alt="uploading...">
+          </div>
         </div>
       </div>
     </div>
@@ -51,11 +53,14 @@ export default {
   data: function () {
     return {
       files: [],
+      uploadMenu: true,
     };
   },
   methods: {
     uploadFiles(e) {
+      this.uploadMenu = false;
       var files = e.target.files;
+      var amountOfFiles = files.length;
       for (let i = 0; i < files.length; i++) {
         var formData = new FormData();
         formData.append(files[i].name, files[i]);
@@ -66,10 +71,19 @@ export default {
           formData
         )
           .then((response) => {
-            this.$emit("newFilesUploaded");
+            amountOfFiles--; 
+            if(amountOfFiles == 0){
+              this.uploadMenu = true;
+            }
             AlertService.handleSuccess(response);
+            this.$emit("newFilesUploaded");
           })
           .catch((err) => {
+            amountOfFiles--; 
+            if(amountOfFiles == 0){
+              this.uploadMenu = true;
+            }
+            AlertService.handleError(err);
             if (err.response.status === 409) {
               var confirmation = confirm(err.response.data.response.message);
               FilestorageService.uploadFiles(
@@ -79,10 +93,19 @@ export default {
                 confirmation
               )
                 .then((response) => {
-                  this.$emit("newFilesUploaded");
+                  amountOfFiles--; 
+                  if(amountOfFiles == 0){
+                    alert()
+                    this.uploadMenu = true;
+                  }
                   AlertService.handleSuccess(response);
+                  this.$emit("newFilesUploaded");
                 })
                 .catch((err) => {
+                  amountOfFiles--; 
+                  if(amountOfFiles == 0){
+                    this.uploadMenu = true;
+                  }
                   AlertService.handleError(err);
                 });
             }
