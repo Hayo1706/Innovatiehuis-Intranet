@@ -21,6 +21,10 @@ def login():
     except KeyError:
         return response("Foute aanvraag", 400)
 
+    # TODO 2-fa check here
+    if not config.DEBUG_MODE:
+        pass
+
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})
     if len(user) == 0:
