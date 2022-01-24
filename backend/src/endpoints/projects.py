@@ -77,7 +77,10 @@ def update_archive(project_id):
                  "WHERE projectid = %(id)s",
                  {'is_archived': str(int(is_archived)),
                   'id': project_id})
-    return response("Project gearchiveerd")
+    if is_archived:
+        return response("Project gearchiveerd")
+    else:
+        return response("Project gedearchiveerd")
 
 
 @check_permissions(Projects.may_delete)
