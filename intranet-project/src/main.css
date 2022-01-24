@@ -82,6 +82,10 @@ body {
   background-color: green;
   border-color: darkgreen;
 }
+.warning {
+  background-color: yellow;
+  border-color: orange;
+}
 .error {
   background-color: red;
   border-color: darkred;
@@ -218,6 +222,10 @@ p {
 @font-face {
   font-family: AddeleThin;
   src: url(./assets/fonts/AdelleSansEXT-Thin.ttf);
+}
+@font-face {
+    font-family: disks;
+    src: url(./assets/fonts/disks.ttf);
 }
 
 /* scrollbar width */

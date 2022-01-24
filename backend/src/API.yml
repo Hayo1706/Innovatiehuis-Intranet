@@ -272,18 +272,6 @@ paths:
       responses:
         200:
           description: Successfully removed user from project
-  /projects/{project_id}/users/last_seen:
-    patch:
-      operationId: src.endpoints.projects.update_last_seen
-      tags:
-        - Projects
-        - Users
-      summary: Lets the data model know when a user has last accessed the contents of a Project.
-      parameters:
-        - $ref: '#/components/parameters/project_id'
-      responses:
-        200:
-          description: Successfully updated the time when the given User last saw this Project.
 
   /projects/{project_id}/announcements:
     get:
@@ -711,7 +699,7 @@ paths:
           description: Request denied due to lack of permissions
   /users/{user_id}/role/{role_id}:
     patch:
-      operationId: src.endpoints.users.update_role
+      operationId: src.endpoints.users.update_role_user
       tags:
         - Users
         - Roles
@@ -763,37 +751,45 @@ paths:
                 $ref: '#/components/schemas/Project'
         404:
           description: Specified user not found
-    post:
-      operationId: src.endpoints.users.add_project
-      tags:
-        - Projects
-      summary: Assign a new project to a user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Project'
-      parameters:
-        - $ref: '#/components/parameters/user_id'
-      responses:
-        200:
-          description: Successfully assigned project to the user
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-        404:
-          description: Specified user or project not found
   /roles:
     get:
-      operationId: src.endpoints.users.get_roles
+      operationId: src.endpoints.roles.get_roles
       tags:
         - Roles
       summary: Get all possible roles
       responses:
         200:
           description: Successfully retrieved all roles that exist on the platform
+    post:
+      operationId: src.endpoints.roles.add_role
+      tags:
+        - Roles
+      summary: Add role with no permission
+      responses:
+        200:
+          description: Successfully added role
+
+  /roles/{role_id}:
+    put:
+      operationId: src.endpoints.roles.update_role
+      tags:
+        - Roles
+      summary: Update specified role
+      parameters:
+        - $ref: '#/components/parameters/role_id'
+      responses:
+        200:
+          description: Successfully update role
+    delete:
+      operationId: src.endpoints.roles.delete_role
+      tags:
+        - Roles
+      summary: Deletes specified role
+      parameters:
+        - $ref: '#/components/parameters/role_id'
+      responses:
+        200:
+          description: Successfully deleted role
 # ========================================AUTH/LOGOUT==================================================
   /auth:
     post:

@@ -127,9 +127,11 @@ export default {
   created() {
     UserService.getRoles()
       .then((response) => {
-        for (const role of response) {
+        console.log({response});
+        for (const role of response.data.result) {
           this.roles[role.role_name] = role.roleid;
         }
+        AlertService.handleSuccess(response);
       })
       .catch((err) => {
         AlertService.handleError(err);

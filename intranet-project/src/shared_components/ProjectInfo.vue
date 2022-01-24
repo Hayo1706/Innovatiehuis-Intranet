@@ -213,9 +213,6 @@ export default {
       parents: [],
       children: [],
       members: [],
-      parentsOpen: false,
-      childrenOpen: false,
-      membersOpen: false,
 
       projectname: "",
       projectdescription: "",
@@ -281,9 +278,11 @@ export default {
                           "success"
                         );
                         this.changes = false;
+                        this.refreshAllAcordeons();
                       } else {
                         //refresh
                         this.openDetails();
+                        this.refreshAllAcordeons();
                       }
                     })
                     .catch((err) => {
@@ -385,6 +384,22 @@ export default {
         );
       });
     },
+    refreshAllAcordeons() {
+      var arr = document.getElementsByClassName("accordion_button");
+      for (let j = 0; j < arr.length; j++) {
+        if (
+          !arr[j]
+            .getAttribute("aria-controls")
+            .includes(this.project.projectid.toString()) &&
+          !arr[j].classList.contains("collapsed")
+        ) {
+          arr[j].click();
+          setTimeout(() => {
+            arr[j].click();
+          }, 500);
+        }
+      }
+    },
     handleSearchUser(name) {
       if (name) {
         this.userSearchTerm = name;
@@ -442,14 +457,11 @@ export default {
     loadParents() {
       ProjectService.getParentsById(this.project.projectid)
         .then((response) => {
-          //remove the project from the view
-          this.parents = response;
+          this.parents = response.data.result;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     openDetails() {
@@ -466,12 +478,11 @@ export default {
         this.loadParents();
         ProjectService.getProjects()
           .then((response) => {
-            this.projects = response;
+            this.projects = response.data.result;
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       } else {
         this.parentSearchTerm = "";
@@ -480,14 +491,11 @@ export default {
     loadChildren() {
       ProjectService.getChildrenById(this.project.projectid)
         .then((response) => {
-          //remove the project from the view
-          this.children = response;
+          this.children = response.data.result;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
     handleChildrenLoading() {
@@ -505,12 +513,11 @@ export default {
 
         UserService.getUsers()
           .then((response) => {
-            this.users = response;
+            this.users = response.data.result;
+            AlertService.handleSuccess(response);
           })
           .catch((err) => {
-            if (err.response) {
-              console.log(err.response.status);
-            }
+            AlertService.handleError(err);
           });
       } else {
         this.userSearchTerm = "";
@@ -519,14 +526,11 @@ export default {
     loadMembers() {
       UserService.getUsersByProject(this.project.projectid)
         .then((response) => {
-          //remove the project from the view
-          this.members = response;
+          this.members = response.data.result;
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          //invalid operation on server
-          if (err.response) {
-            console.log(err.response.status);
-          }
+          AlertService.handleError(err);
         });
     },
 

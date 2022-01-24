@@ -3,70 +3,83 @@ import { jsonToJsDate } from './DataConverter';
 
 var UserService = function () {
 
-
     async function getUsers() {
-        const { data } = await axiosClient.get('/users', { timeout: 2000 });
-        data.forEach(user => { user.created = jsonToJsDate(user.created) });
-        data.forEach(user => {
-            user.last_seen = jsonToJsDate(user.last_seen)
+        const response = await axiosClient.get('/users', { timeout: 2000 });
+        response.data.result.forEach(user => { 
+            user.created = jsonToJsDate(user.created);
+            user.last_seen = jsonToJsDate(user.last_seen);
         });
-        return data;
+        return response;
     }
     async function getUsersByProject(projectid) {
-
-        const { data } = await axiosClient.get(`/projects/${projectid}/users`, { timeout: 2000 });
-        data.forEach(user => { user.created = jsonToJsDate(user.created) });
-        data.forEach(user => {
-            user.last_seen = jsonToJsDate(user.last_seen)
+        const response = await axiosClient.get(`/projects/${projectid}/users`, { timeout: 2000 });
+        response.data.result.forEach(user => {
+            user.created = jsonToJsDate(user.created);
+            user.last_seen = jsonToJsDate(user.last_seen);
         });
-        return data;
+        return response;
 
     }
     async function getUserById(userid) {
-        const { data } = await axiosClient.get(`/users/${userid}`, { timeout: 2000 });
-        data.forEach(user => { user.created = jsonToJsDate(user.created) });
-        data.forEach(user => {
-            user.last_seen = jsonToJsDate(user.last_seen)
+        const response = await axiosClient.get(`/users/${userid}`, { timeout: 2000 });
+        response.data.result.forEach(user => { 
+            user.created = jsonToJsDate(user.created);
+            user.last_seen = jsonToJsDate(user.last_seen);
         });
-        return data;
+        return response;
     }
     async function deleteUser(userid) {
-        const { data } = await axiosClient.delete(`/users/${userid}`, { timeout: 2000 });
-        return data;
+        const response = await axiosClient.delete(`/users/${userid}`, { timeout: 2000 });
+        return response;
     }
     async function addUser(user) {
-        const { data } = await axiosClient.post(`/users`, user, { timeout: 2000 });
-        return data;
+        const response = await axiosClient.post(`/users`, user, { timeout: 2000 });
+        return response;
     }
     async function addUserToProject(projectid, userid) {
-        const { data } = await axiosClient.post(`/projects/${projectid}/users/${userid}`, { timeout: 2000 });
-        return data;
+        const response = await axiosClient.post(`/projects/${projectid}/users/${userid}`, { timeout: 2000 });
+        return response;
     }
     async function removeUserFromProject(projectid, userid) {
-        const { data } = await axiosClient.delete(`/projects/${projectid}/users/${userid}`, { timeout: 2000 });
-        return data;
+        const response = await axiosClient.delete(`/projects/${projectid}/users/${userid}`, { timeout: 2000 });
+        return response;
     }
     async function updateUser(user, userid) {
-        const { data } = await axiosClient.put(`/users/${userid}`, user, { timeout: 2000 });
-        return data;
+        const response = await axiosClient.put(`/users/${userid}`, user, { timeout: 2000 });
+        return response;
     }
     async function updateUserRole(roleid, userid) {
-        const { data } = await axiosClient.patch(`/users/${userid}/role/${roleid}`, { timeout: 2000 });
-        return data;
+        const response = await axiosClient.patch(`/users/${userid}/role/${roleid}`, { timeout: 2000 });
+        return response;
     }
     async function updateUserScreening(screeningstatus, userid) {
-        const { data } = await axiosClient.patch(`/users/${userid}/screening/${screeningstatus}`, { timeout: 2000 });
-        return data;
+        const response = await axiosClient.patch(`/users/${userid}/screening/${screeningstatus}`, { timeout: 2000 });
+        return response;
     }
     async function getRoles() {
-        const { data } = await axiosClient.get(`/roles`, { timeout: 2000 });
-        return data;
+        const response = await axiosClient.get(`/roles`, { timeout: 2000 });
+        return response;
+    }
+    async function updateRole(role, roleid) {
+        const response = await axiosClient.put(`/roles/${roleid}`, role,{ timeout: 2000 });
+        return response;
+    }
+    async function addRole(role) {
+        const response = await axiosClient.post(`/roles`, role,{ timeout: 2000 });
+        return response;
+    }
+    async function deleteRole(roleid,password) {
+        const response = await axiosClient.delete(`/roles/${roleid}`, { data: {password: password}, headers:{ timeout: 2000 }});
+        return response;
     }
     return {
         getUsers,
+        deleteRole,
         getUserById,
+        addRole,
         addUser,
         deleteUser,
+        updateRole,
         updateUser,
         getUsersByProject,
         addUserToProject,

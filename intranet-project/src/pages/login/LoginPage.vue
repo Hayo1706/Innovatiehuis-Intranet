@@ -38,9 +38,7 @@ export default {
   data: function () {
     return {
       loginAttempt: { email: "", password: "" },
-      redirectTarget: "/home",
-      error: "",
-      enteredWrongPassword: false,
+      redirectTarget: "/home"
     };
   },
   methods: {
@@ -55,8 +53,8 @@ export default {
           console.log(response.status, "User logged in successfully");
 
           //set to local storage: user id and user permission data retrieved from API
-          for (var property in response.data[0]) {
-            localStorage.setItem(property, response.data[0][property]);
+          for (var property in response.data.result[0]) {
+            localStorage.setItem(property, response.data.result[0][property]);
           }
           localStorage.setItem("loggedIn", true);
 
@@ -77,7 +75,15 @@ export default {
     if (previousRoute) {
       this.redirectTarget = previousRoute;
     }
+    if (localStorage.getItem("userWasRedirected")) {
+      console.log("User was logged out due to invalid or expired JSON Web Token.");
+      AlertService.alert("Uw sessie is verlopen of ongeldig. Log in om terug te keren naar de vorige pagina.", "warning");
+      localStorage.removeItem("userWasRedirected");
+    }
   },
+  mounted() {
+    
+  }
 };
 </script>
 
