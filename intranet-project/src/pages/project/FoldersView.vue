@@ -48,7 +48,7 @@
           />
         </div>
 
-        <div v-for="folder in searchedFolders" :key="folder" class="col-sm-4">
+        <div v-for="folder in searchedFolders" :key="folder.name" class="col-sm-4">
           <ProjectFolder
             :folderName="folder.name"
             :folderType="folder.type"
@@ -137,7 +137,8 @@ export default {
         return
       if (event.dataTransfer.getData('type') === 'file') {
         FilestorageService.moveFile(id, path, to)
-            .then(() => {
+            .then((response) => {
+              AlertService.handleSuccess(response)
               this.$emit("currentFilesChanged");
             })
             .catch((err) => {
@@ -146,7 +147,8 @@ export default {
       }
       else{
         FilestorageService.moveFolder(this.projectID, path, to, '')
-            .then(() => {
+            .then((response) => {
+              AlertService.handleSuccess(response)
               this.$emit("currentFoldersChanged");
             })
             .catch((err) => {
