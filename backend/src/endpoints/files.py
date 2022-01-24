@@ -200,7 +200,6 @@ def rename_file(project_id):
 
 
 def file_rename_valid(old_path, new_path):
-
     if old_path != new_path:
         try:
             os.rename(old_path, new_path)
