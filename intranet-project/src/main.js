@@ -44,6 +44,7 @@ router.beforeEach((to, from, next) => {
     localStorage.setItem("previousRoute", to.fullPath);
   }
   if (!localStorage.getItem("loggedIn") && to.fullPath !== "/login" && to.path !== "/manage/resetpassword") {
+    localStorage.setItem("userWasRedirected", true);
     next({ path: '/login' });
   }
   next();

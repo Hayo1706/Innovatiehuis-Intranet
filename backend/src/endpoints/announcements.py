@@ -34,7 +34,6 @@ def create_global():
         content = body['content']
     except KeyError:
         return response("Foute aanvraag", 400)
-    raise Exception("Sorry, no numbers below zero")
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
         "%(content)s)",
@@ -46,7 +45,7 @@ def create_global():
 def update(announcement_id):
     try:
         body = connexion.request.json['announcement']
-        title = body['titole']
+        title = body['title']
         content = body['content']
     except KeyError:
         return response("Foute aanvraag", 400)
