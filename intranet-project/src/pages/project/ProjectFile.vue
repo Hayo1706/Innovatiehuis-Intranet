@@ -149,7 +149,8 @@ export default {
     moveFile(target_folder) {
       var target_path = target_folder.path
       FilestorageService.moveFile(this.projectID, this.path, target_path)
-        .then(() => {
+        .then((response) => {
+          AlertService.handleSuccess(response);
           this.$emit("fileMoved");
         })
         .catch((err) => {

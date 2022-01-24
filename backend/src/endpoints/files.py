@@ -2,7 +2,11 @@ import mimetypes
 from os.path import abspath
 
 from flask import Flask, request, send_file, send_from_directory
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request, jwt_required
+
+from .projects import read_children
 from ..endpoints.folders import *
+from ..services.permissions.permissions import check_jwt
 
 
 def get_unique_file_name(file_name_type, current_path, count):
@@ -94,7 +98,7 @@ def file_type_valid(file_type):
 def file_valid(file, file_type):
     return file_type_valid(file_type) and size_valid(file)
 
-
+@check_permissions(Projects.may_cud_files)
 def delete_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
     if file_path_valid(requested_path):
@@ -103,7 +107,7 @@ def delete_file(project_id):
 
     return response("Bestand kon niet verwijderd worden", 400)
 
-
+@check_permissions(Projects.may_cud_files)
 def request_to_upload_file(project_id):
     files = connexion.request.files
     current_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + "/" + unquote(
@@ -149,7 +153,8 @@ def upload_file(file, path, confirmation):
                             406)
     return response("Kon bestand niet uploaden", 424)
 
-
+#TODO schrijf permissie
+@check_permissions(Projects.may_read_files)
 def download_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
     requested_path = unquote(requested_path)
@@ -162,7 +167,7 @@ def download_file(project_id):
 
     return response("Bestand kon niet gedownload worden", 400)
 
-
+@check_permissions(Projects.may_cud_files)
 def move_file(project_id):
     source_path = unquote(connexion.request.json['from'])
     file_name = source_path.rsplit('/', 1)[1]
@@ -174,10 +179,11 @@ def move_file(project_id):
 
     if file_path_valid(source_path) and dir_exists(target_folder_path):
         if (file_move_valid(source_path, target_path)):
-            return response("Bestand verplaatst")
+            return response("Bestand verplaatst", 200)
 
     return response("Bestand kon niet verplaatst worden", 400)
 
+@check_permissions(Projects.may_cud_files)
 def rename_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
     requested_path = unquote(requested_path)

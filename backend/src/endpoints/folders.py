@@ -8,6 +8,8 @@ from flask import Flask, render_template, request, send_file
 from werkzeug.utils import secure_filename
 
 from src.services.helper_functions import response
+from src.services.permissions import Projects
+from src.services.permissions.permissions import check_permissions
 
 
 def dir_exists(path):
@@ -67,7 +69,7 @@ def get_secure_name(name):
 
     return secure_folder_name
 
-
+@check_permissions(Projects.may_read_files)
 def get_folders_in_path(project_id):
     folder_path = connexion.request.values.get('path')
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + folder_path
@@ -78,7 +80,6 @@ def get_folders_in_path(project_id):
             if os.path.isdir(requested_path + "/" + path):
                 list_of_files.append(path)
     return list_of_files
-
 
 def move_dir(source_path, target_path):
     dir_path = "/" + source_path.rsplit("/", 1)[1]
@@ -91,7 +92,6 @@ def move_dir(source_path, target_path):
             return response("Kon de folder niet verplaatsen", 400)
     return response("Kon de folder niet verplaatsen", 400)
 
-
 def rename_dir(new_name, path):
     new_name = get_secure_name(new_name)
     path = unquote(path)
@@ -103,7 +103,7 @@ def rename_dir(new_name, path):
             return response("Foldernaam gewijzigd", 200)
     return response("Kon foldernaam niet wijzigen", 400)
 
-
+@check_permissions(Projects.may_cud_files)
 def create_dir(project_id):
     try:
         requested_path = connexion.request.values.get('path')
@@ -120,7 +120,7 @@ def create_dir(project_id):
     except Exception as e:
         return response("Kon geen folder aanmaken", 400)
 
-
+@check_permissions(Projects.may_cud_files)
 def delete_dir(project_id):
     path_to_delete = connexion.request.values.get('path')
     path_to_delete = unquote(path_to_delete)
@@ -142,7 +142,7 @@ def delete_dir(project_id):
                         return response("Element in de folder konden niet verwijderd worden", 400)
     return response("Folder kon niet verwijderd worden, herlaad de pagina", 400)
 
-
+@check_permissions(Projects.may_cud_files)
 def update_dir(project_id):
     new_name = connexion.request.json['rename']  # can be any string
     path = connexion.request.json['from']  # must be put as /example/example
