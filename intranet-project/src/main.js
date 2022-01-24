@@ -35,12 +35,11 @@ const router = createRouter({
   routes
 })
 
-
 router.beforeEach((to, from, next) => {
-  if (to.fullPath !== "/login") {
+  if (!to.fullPath.includes('/login')) {
     localStorage.setItem("previousRoute", to.fullPath);
   }
-  if (!localStorage.getItem("loggedIn") && to.fullPath !== "/login" && to.path !== "/manage/resetpassword") {
+  if (!localStorage.getItem("loggedIn") && !to.fullPath.includes('/login') && to.path !== "/manage/resetpassword") {
     localStorage.setItem("userWasRedirected", true);
     next({ path: '/login' });
   }

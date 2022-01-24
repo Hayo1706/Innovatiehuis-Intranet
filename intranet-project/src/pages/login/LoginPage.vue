@@ -20,6 +20,13 @@
         placeholder="wachtwoord"
         v-on:keyup.enter="submit()"
       />
+            <input
+        v-model="this.loginAttempt.authenticator_code"
+        class="login-input"
+        type="password"
+        placeholder="authenticator code"
+        v-on:keyup.enter="submit()"
+      />
       <br />
       <div class="full-button" @click="submit()">
         Login
@@ -37,7 +44,7 @@ export default {
   name: "LoginPage",
   data: function () {
     return {
-      loginAttempt: { email: "", password: "" },
+      loginAttempt: { email: "", password: "", authenticator_code:"" },
       redirectTarget: "/home"
     };
   },
@@ -47,7 +54,9 @@ export default {
         "username=" +
         this.loginAttempt.email +
         "&password=" +
-        this.loginAttempt.password
+        this.loginAttempt.password+
+                "&authenticator_code=" +
+        this.loginAttempt.authenticator_code
       )
         .then((response) => {
           console.log(response.status, "User logged in successfully");

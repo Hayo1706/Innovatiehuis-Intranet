@@ -11,12 +11,19 @@ from ..services.extensions import bcrypt
 from itsdangerous import URLSafeSerializer
 import re
 
+
 def login():
     try:
         email = connexion.request.form['username']
         send_password = connexion.request.form['password']
+        authenticator_code = connexion.request.form['authenticator_code']
+   
     except KeyError:
         return response("Foute aanvraag", 400)
+
+    # TODO 2-fa check here
+    if not config.DEBUG_MODE:
+        pass
 
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})
@@ -44,7 +51,7 @@ def login():
             # TODO: misschien niet alle permissies dumpen?
             rsp = {'resource': request.path, 'code': 200, 'message': 'Succes', 'result': dict}
             rsp = jsonify(rsp)
-            set_access_cookies(rsp,access_token)
+            set_access_cookies(rsp, access_token)
             return rsp, 200
     except ValueError:
         print('Password format incorrect')
@@ -53,6 +60,7 @@ def login():
     return response("Incorrect wachtwoord of gebruikersnaam", 401)
 
 
+@check_jwt()
 def logout():
     resp = jsonify({'logout': True})
     unset_jwt_cookies(resp)
@@ -107,28 +115,29 @@ def set_password(password, user_id):
 
     # calculating the length
     if len(password) > config.MAX_PASSWORD_LENGTH:
-        return response('Wachtwoord te lang, maximale lengte is  ' + str(config.MAX_PASSWORD_LENGTH) + ' karakters', 400)
+        return response('Wachtwoord te lang, maximale lengte is  ' + str(config.MAX_PASSWORD_LENGTH) + ' karakters',
+                        400)
     if len(password) < config.MIN_PASSWORD_LENGTH:
         return response('Wachtwoord te kort, minimale lengte is ' + str(config.MAX_PASSWORD_LENGTH) + "karakters", 400)
 
     # searching for digits
     if config.FORCE_NUMBERS and re.search(r"\d", password) is None:
-        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 cijfer',400)
+        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 cijfer', 400)
 
     # searching for uppercase
     if config.FORCE_CAPITAL_LETTERS and re.search(r"[A-Z]", password) is None:
-        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 hoofdletter',400)
+        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 hoofdletter', 400)
 
     # searching for lowercase
     if re.search(r"[a-z]", password) is None:
-        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 kleine letter',400)
+        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 kleine letter', 400)
 
     # searching for symbols
-    if config.FORCE_SPECIAL_CHARACTER and re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None:
-        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 speciaal karakter: !,@,#,$,%,^,&, etc.. ',400)
+    if config.FORCE_SPECIAL_CHARACTER and re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~" + r'"]', password) is None:
+        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 speciaal karakter: !,@,#,$,%,^,&, etc.. ', 400)
 
     query_update(
         "UPDATE users SET password_hash=%(password_hash)s "
         "WHERE userid=%(userid)s",
         {"password_hash": bcrypt.generate_password_hash(password).decode('utf-8'), "userid": user_id})
-    return response("Wachtwoord veranderd",200)
+    return response("Wachtwoord veranderd", 200)
