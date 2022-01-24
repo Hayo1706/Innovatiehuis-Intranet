@@ -8,6 +8,7 @@ from itsdangerous import URLSafeSerializer
 from ..services.permissions import Users, Projects, Roles
 from ..services.permissions.permissions import check_permissions, check_jwt
 from ..services.extensions import bcrypt
+from flask_jwt_extended import get_jwt_identity
 
 
 # READ users
@@ -124,9 +125,23 @@ def delete(user_id):
 
 
 # READ users/{id}/projects
-@check_permissions(Users.may_read_user_projects)
+@check_jwt()
 def read_projects(user_id):
-    return response('Succes', 200, query("SELECT * FROM users_have_projects INNER JOIN projects "
-                                         "ON users_have_projects.projectid = projects.projectid "
-                                         "WHERE users_have_projects.userid = %(id)s AND projects.is_archived = 0",
-                                         {'id': user_id}))
+    # this endpoint only returns the projects that the requesting user is permitted to see
+    if get_jwt_identity() == user_id or check_permissions(Projects.may_read_all):
+        return response('Succes', 200, query("SELECT * FROM users_have_projects INNER JOIN projects "
+                                             "ON users_have_projects.projectid = projects.projectid "
+                                             "WHERE users_have_projects.userid = %(id)s AND projects.is_archived = 0",
+                                             {'id': user_id}))
+
+    permitted_projects = query("SELECT projectid FROM users_have_projects WHERE users_have_projects.userid = %(id)s",
+                               {'id': get_jwt_identity()})
+    permitted_ids = [project.projectid for project in permitted_projects]
+    data = []
+    for project in query("SELECT * FROM users_have_projects INNER JOIN projects "
+                         "ON users_have_projects.projectid = projects.projectid "
+                         "WHERE users_have_projects.userid = %(id)s AND projects.is_archived = 0",
+                         {'id': user_id}):
+        if project.projectid in permitted_ids:
+            data.append(project)
+    return response('Succes', 200, data)

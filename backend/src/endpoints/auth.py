@@ -53,7 +53,6 @@ def login():
     return response("Incorrect wachtwoord of gebruikersnaam", 401)
 
 
-@check_jwt()
 def logout():
     resp = jsonify({'logout': True})
     unset_jwt_cookies(resp)

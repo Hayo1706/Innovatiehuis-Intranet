@@ -5,14 +5,18 @@ var ProjectService = function () {
 
     async function getProjects() {
         const response = await axiosClient.get('/projects', { timeout: 2000 });
-        response.data.result.forEach(project => { project.created = jsonToJsDate(project.created) });
-        response.data.result.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
+        response.data.result.forEach(project => { 
+            project.created = jsonToJsDate(project.created) 
+            project.last_updated = jsonToJsDate(project.last_updated)
+        });
         return response;
     }
     async function getProjectById(projectid) {
         const response = await axiosClient.get(`/projects/${projectid}`, { timeout: 2000 });
-        response.data.result.forEach(project => { project.created = jsonToJsDate(project.created) });
-        response.data.result.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
+        response.data.result.forEach(project => { 
+            project.created = jsonToJsDate(project.created) 
+            project.last_updated = jsonToJsDate(project.last_updated)
+        });
         return response;
     }
     async function deleteProject(id) {
@@ -25,19 +29,27 @@ var ProjectService = function () {
     }
     async function getProjectsByUser(userid) {
         const response = await axiosClient.get(`/users/${userid}/projects`, { timeout: 2000 });
-        response.data.result.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
+        response.data.result.forEach(project => { 
+            project.created = jsonToJsDate(project.created) 
+            project.last_updated = jsonToJsDate(project.last_updated)
+            project.last_seen = jsonToJsDate(project.last_seen) 
+        });
         return response;
     }
     async function getParentsById(projectid) {
         const response = await axiosClient.get(`/projects/${projectid}/parents`, { timeout: 2000 });
-        response.data.result.forEach(project => { project.created = jsonToJsDate(project.created) });
-        response.data.result.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
+        response.data.result.forEach(project => { 
+            project.created = jsonToJsDate(project.created) 
+            project.last_updated = jsonToJsDate(project.last_updated)
+        });
         return response;
     }
     async function getChildrenById(projectid) {
         const response = await axiosClient.get(`/projects/${projectid}/children`, { timeout: 2000 });
-        response.data.result.forEach(project => { project.created = jsonToJsDate(project.created) });
-        response.data.result.forEach(project => { project.last_updated = jsonToJsDate(project.last_updated) });
+        response.data.result.forEach(project => { 
+            project.created = jsonToJsDate(project.created) 
+            project.last_updated = jsonToJsDate(project.last_updated)
+        });
         return response;
     }
     async function addProject(project) {

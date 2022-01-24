@@ -93,12 +93,6 @@ export default {
       this.$router.push("/manage/resetpassword");
     }
   },
-  watch: {
-    $route() {
-      this.getUser();
-    },
-
-  },
 };
 </script>
 

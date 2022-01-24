@@ -8,7 +8,6 @@ from ..services.permissions.permissions import check_permissions, check_jwt
 
 @check_permissions(Announcements.may_read)
 def read_one(announcement_id):
-    
     return response("Succes",200,query(
         "SELECT announcements.announcementid, announcements.timestamp, announcements.userid, users.first_name, "
         "users.last_name, announcements.title, announcements.content "
@@ -35,6 +34,7 @@ def create_global():
         content = body['content']
     except KeyError:
         return response("Foute aanvraag", 400)
+    raise Exception("Sorry, no numbers below zero")
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
         "%(content)s)",
@@ -44,10 +44,9 @@ def create_global():
 
 @check_permissions(Announcements.may_update_delete)
 def update(announcement_id):
-    
     try:
         body = connexion.request.json['announcement']
-        title = body['title']
+        title = body['titole']
         content = body['content']
     except KeyError:
         return response("Foute aanvraag", 400)
@@ -66,7 +65,6 @@ def delete(announcement_id):
 
 @check_permissions(Announcements.may_read_reply)
 def read_replies(announcement_id):
-    
     return response("Succes",200,query(
         "SELECT replies.replyid, replies.announcementid, replies.timestamp, replies.userid, users.first_name, "
         "users.last_name, replies.content FROM replies JOIN users "

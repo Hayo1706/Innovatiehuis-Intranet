@@ -3,30 +3,28 @@ import { jsonToJsDate } from './DataConverter';
 
 var UserService = function () {
 
-
     async function getUsers() {
         const response = await axiosClient.get('/users', { timeout: 2000 });
         response.data.result.forEach(user => { 
             user.created = jsonToJsDate(user.created);
-            user.last_seen = jsonToJsDate(user.last_seen)
+            user.last_seen = jsonToJsDate(user.last_seen);
         });
         return response;
     }
     async function getUsersByProject(projectid) {
-
         const response = await axiosClient.get(`/projects/${projectid}/users`, { timeout: 2000 });
-        response.data.result.forEach(user => { user.created = jsonToJsDate(user.created) });
         response.data.result.forEach(user => {
-            user.last_seen = jsonToJsDate(user.last_seen)
+            user.created = jsonToJsDate(user.created);
+            user.last_seen = jsonToJsDate(user.last_seen);
         });
         return response;
 
     }
     async function getUserById(userid) {
         const response = await axiosClient.get(`/users/${userid}`, { timeout: 2000 });
-        response.data.result.forEach(user => { user.created = jsonToJsDate(user.created) });
-        response.data.result.forEach(user => {
-            user.last_seen = jsonToJsDate(user.last_seen)
+        response.data.result.forEach(user => { 
+            user.created = jsonToJsDate(user.created);
+            user.last_seen = jsonToJsDate(user.last_seen);
         });
         return response;
     }

@@ -82,6 +82,10 @@ body {
   background-color: green;
   border-color: darkgreen;
 }
+.warning {
+  background-color: yellow;
+  border-color: orange;
+}
 .error {
   background-color: red;
   border-color: darkred;

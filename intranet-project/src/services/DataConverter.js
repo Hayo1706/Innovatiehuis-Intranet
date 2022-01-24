@@ -1,4 +1,6 @@
 export function jsonToJsDate(sqlDate){
+    if (!sqlDate) throw new Error('Date is undefined');
+
     //sqlDate in SQL DATETIME format ("yyyy-mm-ddThh:mm:ss.msZ")
     var sqlDateArr1 = sqlDate.split("-");
     //format of sqlDateArr1[] = ['yyyy','mm','dd hh:mm:ms']

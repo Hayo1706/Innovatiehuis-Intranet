@@ -38,9 +38,7 @@ export default {
   data: function () {
     return {
       loginAttempt: { email: "", password: "" },
-      redirectTarget: "/home",
-      error: "",
-      enteredWrongPassword: false,
+      redirectTarget: "/home"
     };
   },
   methods: {
@@ -77,7 +75,18 @@ export default {
     if (previousRoute) {
       this.redirectTarget = previousRoute;
     }
+    if (this.$route.query.userWasForciblyLoggedOut) {
+      console.log("User was logged out due to invalid or expired JSON Web Token.")
+      AlertService.alert("Uw sessie is verlopen. Log in om terug te keren naar de vorige pagina.", "warning")
+    }
+    if (this.$route.query.userWasRedirected) {
+      console.log("User was redirected to login because no JSON Web Token was found.")
+      AlertService.alert("U moet inloggen om toegang te krijgen tot deze pagina.", "warning")
+    }
   },
+  mounted() {
+    
+  }
 };
 </script>
 

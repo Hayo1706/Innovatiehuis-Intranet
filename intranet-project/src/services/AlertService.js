@@ -16,38 +16,40 @@ var AlertService = function () {
             alertEl.style.opacity = 0;
             setTimeout(function() {
                 alertEl.remove();
-            }, 1000);
-        }, 4000);
+            }, 1500);
+        }, 5000);
     }
 
     function handleSuccess(response) {
-        console.log({response});
         if (response.config.method == "get") {
-            console.log(response.status, "Successfully loaded resource:");
+            console.log("HTTP code " + response.status, "Successfully loaded resource:");
             console.log({response});
             return;
         }
         if (response.status) {
-            console.log(response.status, response.data.message);
+            console.log("HTTP code " + response.status, response.data.message);
             alert(response.data.message, "success");
             return;
         }
-        console.log(response.status, "Server returned the following response:");
+        console.log("HTTP code " + response.status, "Server returned the following response:");
         console.log({response});
     }
 
     function handleError(err) {
+        console.log("HENK");
         console.log({err});
-        if (err.data) {
-            alert(err.data.response.message, "error");
-            console.log("HTTP code " + err.status);
-            if (err.data.response.message) console.log(err.data.response.message);
+        if (err.response.data.message) {
+            console.log("HTTP code " + err.response.status, err.response.data.message);
+            alert(err.response.data.message, "error");
+          } else if (err.response.status) {
+            console.log("HTTP code " + err.response.status, err.response.statusText);
+            alert(err.response.statusText, "error");
           } else if (err.code == "ECONNABORTED") {
+            console.log({err});
             alert("De server reageert niet. Probeer het later opnieuw of neem contact op met de beheerder.", "error");
-            console.log({err});
           } else {
-            alert("Er is een onverwachte fout opgetreden. Neem contact op met de beheerder.", "error");
             console.log({err});
+            alert("Er is een onverwachte fout opgetreden. Neem contact op met de beheerder.", "error");
           }
     }
 
