@@ -86,7 +86,7 @@ def update_screening(user_id, screening_status):
     query_update(
         "UPDATE users SET screening_status=%(screening_status)s WHERE userid=%(userid)s",
         {'screening_status': screening_status, "userid": user_id})
-    return response("Screeningstatus van gebruiker gewijzigd")
+    return response("Toegang van gebruiker gewijzigd")
 
 
 # PATCH users/{id}/role/{id}
