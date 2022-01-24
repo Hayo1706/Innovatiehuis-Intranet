@@ -93,6 +93,14 @@ export default {
       this.$router.push("/manage/resetpassword");
     }
   },
+    watch: {
+    $route() {
+      if(this.$route.fullPath.contains("/user/")){
+        this.getUser();
+      }
+    },
+
+  },
 };
 </script>
 
