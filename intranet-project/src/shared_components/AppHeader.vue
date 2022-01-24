@@ -1,5 +1,5 @@
 <template>
-  <header v-if="this.$route.path !== '/login'">
+  <header v-if="!this.$route.path.includes('/login')">
     <div id="header-container">
         <router-link to="/home">
           <img 
