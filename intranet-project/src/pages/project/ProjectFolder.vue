@@ -26,7 +26,7 @@
             />
             <img
               class="foldersImage"
-              v-if="this.folderType == 'shared'"
+              v-if="this.folderType == 'shared' || this.folderType == 'owned'"
               src=".\..\..\assets\images\shared_folder.png"
               draggable="false"
             />
@@ -34,7 +34,9 @@
           <div class="col-8" style="display: inline-block; position: relative">
             <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10"/>
             <div style="display:flex;align-items:center;width:100%;height:100%;">
-              <input
+              <textarea
+                maxlength="16"
+                rows="2"
                 v-on:keyup.enter="renameFolder()"
                 class="folderName"
                 v-model="newName"
@@ -161,24 +163,13 @@ export default {
         this.moveToFolder(folder)
       }
     },
-    getFolders() {
-      FilestorageService.getFoldersOfProject(this.projectid, this.directorypath)
-        .then((response) => {
-          this.folders = []
-          for(var folder in response.data.result){
-            if(response.data.result[folder] != this.name){
-              this.folders.push(response.data.result[folder])
-            }
-          }
-          AlertService.handleSuccess(response);
-        })
-        .catch((err) => {
-          AlertService.handleError(err);
-        });
-    },
     goToFolder() {
-      if(this.files != null){
+      if(this.folderType == 'shared'){
         this.$emit("currentPathChanged", "?parent=" + this.projectID, this.projectID);
+        return;
+      }
+      if(this.folderType == 'owned'){
+        this.$emit("currentPathChanged", "?child=" + this.projectID, this.projectID);
         return;
       }
       this.$emit("currentPathChanged", this.folderPath, this.projectID);
@@ -195,10 +186,6 @@ export default {
     canSeeMenu(){
       return PermissionService.userHasPermission("may_update_file_in_own_project");
     },
-  },
-  async created() {
-    //this.$emit("newHeaderTitle", "NAAM + PAD");
-    this.getFolders();
   },
 };
 </script>
@@ -245,7 +232,6 @@ export default {
 .foldersImage {
   margin:8px auto;
   top: 50%;
-  overflow: hidden;
   width: max(80%, 30px);
 }
 .folderName {
@@ -253,6 +239,7 @@ export default {
   background-color: transparent;
   color: var(--blue1);
   border: 0px;
-  width: 100%;
+  width: 90%;
+  resize: none;
 }
 </style>

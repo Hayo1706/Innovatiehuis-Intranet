@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div oncontextmenu="return false;">
     <div class="component-header">
       <ProjectFolderHeader
           :path="this.folderPath"
