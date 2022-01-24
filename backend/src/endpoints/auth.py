@@ -15,6 +15,8 @@ def login():
     try:
         email = connexion.request.form['username']
         send_password = connexion.request.form['password']
+        authenticator_code = connexion.request.form['authenticator_code']
+   
     except KeyError:
         return response("Foute aanvraag", 400)
 
