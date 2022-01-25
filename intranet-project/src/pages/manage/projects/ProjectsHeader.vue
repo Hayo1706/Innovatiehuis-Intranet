@@ -11,9 +11,9 @@
       >
         <i class="material-icons pmd-sm">Project toevoegen</i>
       </button>
-      <ProjectsHideArchivedCheckbox
-        @hideArchived="(value) => $emit('hideArchived', value)"
-        v-bind:hideArchived="this.hideArchived"
+      <ProjectsShowArchivedCheckbox
+        @showArchived="(value) => $emit('showArchived', value)"
+        v-bind:showArchived="this.showArchived"
       />
     </div>
 
@@ -23,7 +23,7 @@
         @click="this.$emit('sortEvent', 'name')"
         style="position: relative"
       >
-        Project
+        Projectnaam
         <span v-if="sortingMethod == 'name'"
           ><i v-if="this.ascending" class="bi-caret-down-fill"></i
           ><i v-else class="bi-caret-up-fill"></i
@@ -72,12 +72,12 @@
 
 <script>
 import SearchBar from "@/shared_components/SearchBar.vue";
-import ProjectsHideArchivedCheckbox from "./ProjectsHideArchivedCheckbox.vue";
+import ProjectsShowArchivedCheckbox from "./ProjectsShowArchivedCheckbox.vue";
 import PermissionService from "@/services/PermissionService.js";
 export default {
-  components: { SearchBar, ProjectsHideArchivedCheckbox },
+  components: { SearchBar, ProjectsShowArchivedCheckbox },
   name: "ProjectsHeader",
-  props: ["searchTerm", "hideArchived", "sortingMethod", "ascending"],
+  props: ["searchTerm", "showArchived", "sortingMethod", "ascending"],
   data: function () {
     return {};
   },
@@ -97,6 +97,7 @@ export default {
   background-color: var(--blue1);
   color: white;
   font-size: 1.6vh;
+  padding: 11px 0 0 0;
 }
 #search-input {
   margin-right: 4px;
@@ -123,7 +124,17 @@ img {
 #actionButton {
   width: fit-content;
   display: inline-block;
-  position: absolute;
   left: 0px;
+  margin-left: 13px;
 }
+#projects-header-top{
+  padding-bottom: 11px;
+  margin: 0;
+}
+.form-switch{
+  margin-left: auto;
+  display: flex;
+  align-items: end;
+}
+
 </style>

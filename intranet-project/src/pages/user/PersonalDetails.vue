@@ -30,11 +30,6 @@
           <div class="item">Rol:</div>
           <div class="item">Geregistreerd:</div>
           <div class="item">Laatst gezien:</div>
-          <div
-            v-if="show_password"
-            class="full-button"
-            @click="toResetPassword()"
-          >Wachtwoord wijzigen</div>
         </div>
         <div class="col-6 d-none d-lg-block">
           <div class="item-text">{{ this.user.first_name }} {{ this.user.last_name }}</div>
@@ -45,6 +40,13 @@
           <div class="item-text">{{ this.last_seen }}</div>
           <div class="item-text"></div>
         </div>
+      </div>
+      <div class="button-wrapper">
+        <div
+          v-if="show_password"
+          class="full-button"
+          @click="toResetPassword()"
+        >Wachtwoord wijzigen</div>
       </div>
     </div>
   </div>
@@ -129,5 +131,20 @@ export default {
 
 .button {
   font-size: 15px;
+}
+.full-button{
+  margin-top: 43px;
+  display: inline-block;
+  width: initial;
+  padding: 6px 12px;
+}
+.button-wrapper{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.component-body .row{
+  margin: 13px 0 0 0;
 }
 </style>
