@@ -25,9 +25,9 @@
         }
       "
       @searchBarChanged="setSearchTerm"
-      @hideArchived="setHideArchived"
+      @showArchived="setShowArchived"
       v-bind:searchTerm="this.searchTerm"
-      v-bind:hideArchived="this.hideArchived"
+      v-bind:showArchived="this.showArchived"
     ></ProjectsHeader>
 
     <div class="container-fluid d-sm-block d-lg-none" id="sorting_space">
@@ -73,12 +73,6 @@
           placeholder="Filter op naam..."
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
-        <Projectshidarchivedcheckbox
-          id="hidarchivedcheckboxMobile"
-          class="col"
-          @hideArchived="setHideArchived"
-          v-bind:hideArchived="this.hideArchived"
-        ></Projectshidarchivedcheckbox>
       </div>
     </div>
     <div class="listing-container container-fluid">
@@ -101,7 +95,6 @@ import ProjectService from "@/services/ProjectService.js";
 import ProjectListing from "./ProjectListing.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
 import SearchBar from "@/shared_components/SearchBar.vue";
-import Projectshidarchivedcheckbox from "./ProjectsHideArchivedCheckbox.vue";
 import ProjectCreateModal from "./ProjectCreateModal.vue";
 import AlertService from "@/services/AlertService.js";
 import PermissionService from "@/services/PermissionService.js";
@@ -110,15 +103,14 @@ export default {
     ProjectListing,
     ProjectsHeader,
     SearchBar,
-    Projectshidarchivedcheckbox,
-    ProjectCreateModal,
+    ProjectCreateModal
   },
   name: "ProjectsPage",
   data: function () {
     return {
       projects: [],
       searchTerm: null,
-      hideArchived: true,
+      showArchived: false,
       sortingMethod: "name",
       ascending: true,
     };
@@ -133,8 +125,8 @@ export default {
     setSearchTerm(value) {
       this.searchTerm = value;
     },
-    setHideArchived(value) {
-      this.hideArchived = value;
+    setShowArchived(value) {
+      this.showArchived = value;
     },
     removeProject(id) {
       ProjectService.deleteProject(id)
@@ -182,7 +174,7 @@ export default {
       }
     },
     showArchivedWhenShould(project) {
-      if (!this.hideArchived) {
+      if (this.showArchived) {
         return true;
       } else {
         return project.is_archived == false;

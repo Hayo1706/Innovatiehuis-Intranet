@@ -218,7 +218,8 @@ export default {
     color: #FAFAFA;
 }
 .projectFolder {
- color: var(--blue1);
+  background-color: rgba(255, 255, 255, 0.7);
+  color: var(--blue1);
   width: 100%;
   border: solid;
   border-radius: 10px;

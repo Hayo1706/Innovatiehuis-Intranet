@@ -33,7 +33,8 @@ export default {
   font-size: 16pt;
   background: white;
   border-radius: 0 1rem 1rem 0;
-  color: var(--blue1);
+  color: #546472;
+  text-decoration: none;
   width: 95%;
   height: 10vh;
   align-items: center;
