@@ -46,7 +46,7 @@ def may_read_shared_files(user_perm, project_id):
     path = connexion.request.values.get('path')
     child_projects = query("SELECT childid, shared_files FROM projects_have_parents WHERE parentid = %(parentid)s",
                            {'parentid': project_id})
-    for child in [{'id': project.childid, 'shared_files': project.shared_files} for project in child_projects]:
+    for child in [{'id': project['childid'], 'shared_files': project['shared_files']} for project in child_projects]:
         if permissions.user_owns_project(child['id']):
             if path in child['shared_files']:
                 return True
