@@ -59,18 +59,33 @@
             </div>
             <hr v-if="canCrudRoles && rolevalue.role_name !== 'admin'">
             <table style="margin: auto" >
-            <tr v-for="(values, keys) in rolevalue" v-bind:key="keys">
-              <td  v-if="keys !== 'role_name' && keys !== 'roleid'" style="padding-right: 10vw">
-                {{keys}}
-              </td>
-              <td  v-if="keys !== 'role_name' && keys !== 'roleid'" style="padding-right: 10vw">
-                {{ values === 1 ? 'True' : 'False' }}
+              <tr>
+                <td style="padding-right: 10vw">power_level</td>
+                <td style="padding-right: 10vw"/>
+                <td v-if="excludedPerms(keys)">
+                  <input type="number" v-model="this.roles[rolekey]['power_level']" :disabled="rolevalue.role_name === 'admin' ? true : uneditable">
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-right: 10vw">may_cud_users_with_power_level_up_to</td>
+                <td style="padding-right: 10vw"/>
+                <td v-if="excludedPerms(keys)">
+                  <input type="number" v-model="this.roles[rolekey]['may_cud_users_with_power_level_up_to']" :disabled="rolevalue.role_name === 'admin' ? true : uneditable">
+                </td>
+              </tr>
+              <tr v-for="(values, keys) in rolevalue" v-bind:key="keys">
+                  <td  v-if="excludedPerms(keys)" style="padding-right: 10vw">
+                    {{keys}}
+                  </td>
+                  <td  v-if="excludedPerms(keys)" style="padding-right: 10vw">
+                    {{ values === 1 ? 'True' : 'False' }}
 
-              </td>
-              <td v-if="keys !== 'role_name' && keys !== 'roleid'">
-                <input type="checkbox" v-model="this.roles[rolekey][keys]" :disabled="rolevalue.role_name === 'admin' ? true : uneditable" :true-value="1" :false-value="0">
-              </td>
-            </tr>
+                  </td>
+                  <td v-if="excludedPerms(keys)">
+                    <input type="checkbox" v-model="this.roles[rolekey][keys]" :disabled="rolevalue.role_name === 'admin' ? true : uneditable" :true-value="1" :false-value="0">
+                  </td>
+              </tr>
+
             </table>
           </div>
         </div>
@@ -209,6 +224,10 @@ export default {
   methods: {
     getRoles(){
       return this.roles
+    },
+    excludedPerms(perm){
+      return !(perm === 'role_name' || perm === 'roleid'
+          || perm === 'power_level' || perm === 'may_cud_users_with_power_level_up_to')
     },
     selectDelete(id,name){
       this.selectedDeleteId = id;

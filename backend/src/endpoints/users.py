@@ -92,12 +92,6 @@ def update_screening(user_id, screening_status):
 # PATCH users/{id}/role/{id}
 @check_permissions(Users.may_update_role)
 def update_role_user(user_id, role_id):
-    is_protected = query(
-        "SELECT is_protected FROM roles WHERE roleid = %(role_id)s",
-        {'role_id': role_id})[0]["is_protected"]
-    if is_protected:
-        return response("Je hebt geen toegang om een gebruiker deze rol te geven", 403)
-
     query_update(
         "UPDATE users SET roleid=%(roleid)s WHERE userid=%(userid)s",
         {'roleid': role_id, "userid": user_id})
