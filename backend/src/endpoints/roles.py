@@ -3,7 +3,7 @@ import connexion
 from flask_jwt_extended import get_jwt_identity
 
 from src.services.helper_functions import query_update, query, response
-from src.services.permissions import Roles
+from src.services.permissions import Roles, Users
 from src.services.permissions.permissions import check_permissions, check_jwt
 from ..services.extensions import bcrypt
 
@@ -21,6 +21,13 @@ def update_role(role_id):
         return response('Wachtwoord Incorrect', 400)
     body = connexion.request.json
     body.pop('password')
+
+    role = query("SELECT power_level FROM roles WHERE roleid=%(roleid)s",{'roleid':role_id})
+    user = Users.get_power_level(get_jwt_identity())
+
+    if int(user['may_cud_users_with_power_level_up_to']) < int(role['power_level']):
+        return response('Je hebt geen permissie om deze rol aan te passen')
+
     if body['role_name'] == 'admin':
         return response('Admin mag niet gewijzigd worden', 400)
     if str(body['roleid']) != role_id:
