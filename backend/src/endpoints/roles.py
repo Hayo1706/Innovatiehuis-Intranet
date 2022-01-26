@@ -24,11 +24,12 @@ def update_role(role_id):
 
     role = query("SELECT power_level FROM roles WHERE roleid=%(roleid)s",{'roleid':role_id})
     user = Users.get_power_level(get_jwt_identity())
+    admin_power_level = query("SELECT power_level, roleid FROM roles WHERE role_name=admin")
 
     if int(user['may_cud_users_with_power_level_up_to']) < int(role['power_level']):
         return response('Je hebt geen permissie om deze rol aan te passen')
 
-    if body['role_name'] == 'admin':
+    if body['role_name'] == 'admin' and int(role_id) != int(admin_power_level['roleid']):
         return response('Admin mag niet gewijzigd worden', 400)
     if str(body['roleid']) != role_id:
         return response('Fout bij het updaten van rol', 400)
@@ -36,7 +37,6 @@ def update_role(role_id):
         return response('may_cud_users_with_power_level_up_to mag niet hoger zijn dan power_level', 400)
     if body['role_name'] == 'admin':
         return response('Admin mag niet gewijzigd worden', 400)
-    admin_power_level = query("SELECT power_level FROM roles WHERE role_name=admin")
     if int(body['power_level']) >= int(admin_power_level) or body[
         'may_cud_users_with_power_level_up_to'] >= admin_power_level:
         return response('Er mag geen rol bestaan met een hogere of gelijke power_level/ '
@@ -45,6 +45,7 @@ def update_role(role_id):
             int(body['may_cud_users_with_power_level_up_to']) < 0 or int(
         body['may_cud_users_with_power_level_up_to']) > 100:
         return response('may_cud_users_with_power_level_up_to en power_level moeten waardes hebben tussen 0 en 100')
+
     query_update(
         "UPDATE roles SET may_cud_users_with_power_level_up_to=%(may_cud_users_with_power_level_up_to)s,power_level=%("
         "power_level)s,may_archive_any_project=%(may_archive_any_project)s, "
