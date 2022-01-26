@@ -28,8 +28,8 @@
             @stopSharingFile="stopSharingFile"
             @addSharingFile="addSharingFile"
 
-            @fileSelected="fileSelected(file)"
-            @fileDeselected="fileDeselected(file)"
+            @fileSelected="this.$emit('fileSelected', file)"
+            @fileDeselected="this.$emit('fileDeselected', file)"
 
             draggable="true"
             @dragstart="startDrag($event, file.path)"
@@ -145,8 +145,8 @@ export default {
 
       ProjectService.updateSharedFilesOfProject(projectID, childID, project)
       .then((response) => {
-        this.$emit("currentFilesChanged")
         AlertService.handleSuccess(response);
+        this.$emit("currentFilesChanged")
       })
       .catch((err) => {
         AlertService.handleError(err);

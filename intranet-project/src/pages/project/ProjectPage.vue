@@ -111,7 +111,11 @@ export default {
     };
   },
   methods: {
-    deleteSelectedElements(){
+    resetSelectedElements(){
+      this.selectedFolders = []
+      this.selectedFiles = []
+    },
+    async deleteSelectedFolders(){
       for(var folder of this.selectedFolders){
         FilestorageService.deleteFolder(this.projectID, folder.path, false)
         .then((response) => {
@@ -134,8 +138,29 @@ export default {
           }
         });
       }
-      this.currentFoldersChanged();
-      this.selectedFolders = []
+    },
+    async deleteSelectedFiles(){
+      for(var file of this.selectedFiles){
+        FilestorageService.deleteFile(this.projectID, file.path)
+        .then((response) => {
+          AlertService.handleSuccess(response);
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        });
+      }
+    },
+    async deleteSelectedElements(){
+      await this.deleteSelectedFolders().then(() => {
+        this.currentFoldersChanged();
+      }).then(()=> {
+        this.deleteSelectedFiles().then(() => {
+          this.currentFilesChanged();
+        }).then(() => {
+          this.resetSelectedElements();
+        })
+      })
+      
     },
     selectFolder(folder){
       this.selectedFolders.push(folder)
@@ -147,12 +172,24 @@ export default {
         }
       }
     },
+    selectFile(file){
+      this.selectedFiles.push(file)
+    },
+    deselectFile(file){
+      for(var fileIndex in this.selectedFiles){
+        if(file.path == this.selectedFiles[fileIndex].path){
+          this.selectedFiles.splice(fileIndex, 1)
+        }
+      }
+    },
     currentFoldersChanged(){
       this.setCurrentFolders();
+      this.selectedFolders = [];
     },
     currentFilesChanged(){
       this.getChildProjects();
       this.setCurrentFiles();
+      this.selectedFiles = [];
     },
     sharedFilesChanged(sharedFiles){
       const project = {
@@ -317,8 +354,8 @@ export default {
     setProjectName() {
       ProjectService.getProjectById(this.$route.params.id)
       .then((response) => {
-        this.projectName = response.data[0].project_name;
-        this.$emit("newHeaderTitle", response.data[0].project_name);
+        this.projectName = response.data.result[0].project_name;
+        this.$emit("newHeaderTitle", response.data.result[0].project_name);
         AlertService.handleSuccess(response);
       })
       .catch((err) => {
@@ -329,7 +366,7 @@ export default {
       this.sharedChilds = []
       ProjectService.getChildrenById(this.projectID)
         .then((response) => {
-          for(var child of response){
+          for(var child of response.data.result){
             this.sharedChilds.push(child)
           }
         })

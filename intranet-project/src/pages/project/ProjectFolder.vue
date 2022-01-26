@@ -10,7 +10,7 @@
       @dblclick="goToFolder()"
       @mousedown.left="this.selected = !this.selected"
       @mouseup.left="selectFolder()"
-      v-bind:id="this.folderName"
+      v-bind:id="this.folderPath"
     >
       <div class="container" style="padding: 0px 12px 0px 12px;pointer-events: none;"  >
         <div class="row">
@@ -100,7 +100,7 @@ export default {
   methods: {
     selectFolder(){
       if(this.folderType == "normal"){
-        var folderDiv = document.getElementById(this.folderName);
+        var folderDiv = document.getElementById(this.folderPath);
         if(this.selected == true){
           folderDiv.style["border-width"] = "5px";
           this.$emit("folderSelected")

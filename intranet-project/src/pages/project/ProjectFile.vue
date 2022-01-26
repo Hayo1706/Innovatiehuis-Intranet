@@ -1,6 +1,6 @@
 <template>
   <div
-    v-bind:id="this.name"
+    v-bind:id="this.path"
     oncontextmenu="return false;"
     class="projectFile"
     @contextmenu="viewMenu = true"
@@ -8,10 +8,11 @@
     @mouseleave="viewMenu = false;
     moveMenu = false;
     shareMenu = false"
-    @mousedown.left="this.selected = !this.selected"
-    @mouseup.left="selectFile()"
   >
-    <div class="row">
+    <div class="row"
+      @mousedown.left="this.selected = !this.selected"
+      @mouseup.left="selectFile()
+    ">
       <div class="col s10">
         <img
             draggable="false"
@@ -100,7 +101,7 @@ export default {
   methods: {
     selectFile(){
       if(this.type == "normal"){
-        var fileDiv = document.getElementById(this.name);
+        var fileDiv = document.getElementById(this.path);
         if(this.selected == true){
           fileDiv.style["border-width"] = "5px";
           this.$emit("fileSelected")
