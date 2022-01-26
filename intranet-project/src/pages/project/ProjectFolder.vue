@@ -4,10 +4,13 @@
   >
     <div
       class="projectFolder hover"
-      @mousemove="set_coordinates"
       @contextmenu="viewMenu = true"
       @long-press="viewMenu = true"
-      @click="goToFolder()"
+      @touchstart="goToFolder()"
+      @dblclick="goToFolder()"
+      @mousedown.left="this.selected = !this.selected"
+      @mouseup.left="selectFolder()"
+      v-bind:id="this.folderName"
     >
       <div class="container" style="padding: 0px 12px 0px 12px;pointer-events: none;"  >
         <div class="row">
@@ -87,6 +90,7 @@ export default {
   },
   data: function () {
     return {
+      selected: false,
       viewMenu: false,
       moveMenu: false,
       newName: this.folderName,
@@ -94,6 +98,20 @@ export default {
     };
   },
   methods: {
+    selectFolder(){
+      if(this.folderType == "normal"){
+        var folderDiv = document.getElementById(this.folderName);
+        if(this.selected == true){
+          folderDiv.style["border-width"] = "5px";
+          this.$emit("folderSelected")
+        }
+        else{
+          folderDiv.style["border-width"] = "1px";
+          this.$emit("folderDeselected")
+        }
+      }
+      
+    },
     deleteFolder() {
       FilestorageService.deleteFolder(this.projectID, this.folderPath, false)
         .then((response) => {
@@ -148,6 +166,7 @@ export default {
       inputName.setAttribute("disabled", "")
     },
     moveToFolder(folder) {
+      console.log(folder.path, this.folderPath)
       var targetPath = folder.path;
       FilestorageService.moveFolder(this.projectID, this.folderPath, targetPath, "")
         .then((response) => {
@@ -226,6 +245,11 @@ export default {
   border-width: 1px;
   margin-top: 1vh;
   transition: .3s
+}
+.projectFolder:hover {
+  background-image: linear-gradient(to bottom right, rgba(84, 84, 218, 0.315), rgba(255, 255, 255, 0.7));
+  border-radius: 10px;
+  transition: 0.3s;
 }
 .container {
   position: relative;

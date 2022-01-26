@@ -1,5 +1,6 @@
 <template>
   <div
+    v-bind:id="this.name"
     oncontextmenu="return false;"
     class="projectFile"
     @contextmenu="viewMenu = true"
@@ -7,6 +8,8 @@
     @mouseleave="viewMenu = false;
     moveMenu = false;
     shareMenu = false"
+    @mousedown.left="this.selected = !this.selected"
+    @mouseup.left="selectFile()"
   >
     <div class="row">
       <div class="col s10">
@@ -76,6 +79,7 @@ export default {
   },
   data: function () {
     return {
+      selected: false,
       viewMenu: false,
       moveMenu: false,
       shareMenu: false,
@@ -94,6 +98,19 @@ export default {
     };
   },
   methods: {
+    selectFile(){
+      if(this.type == "normal"){
+        var fileDiv = document.getElementById(this.name);
+        if(this.selected == true){
+          fileDiv.style["border-width"] = "5px";
+          this.$emit("fileSelected")
+        }
+        else{
+          fileDiv.style["border-width"] = "1px";
+          this.$emit("fileDeselected")
+        }
+      }
+    },
     stopSharingFile(){
       this.$emit("stopSharingFile", this.path, this.projectID)
     },

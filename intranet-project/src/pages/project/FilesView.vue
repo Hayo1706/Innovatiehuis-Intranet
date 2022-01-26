@@ -3,36 +3,37 @@
     <div class="component-header">
         <ProjectFilesHeader
           :path="this.folderPath"
-          @searchBarChanged="setSearchTerm"
+          @searchBarChanged="setSearchedFiles"
           @newFilesUploaded="currentFilesChanged"
         >
         Bestanden
         </ProjectFilesHeader>
     </div>
       <div class="row">
-        <div v-for="file in currentFiles" :key="file" class="col-sm-2">
-          <div v-if="fileNameInSearchterm(file.name)">
-            <ProjectFile
-              :projectID="file.projectID"
-              :name="file.name"
-              :fileType="file.name.split('.').pop()"
-              :path="file.path"
-              :type="file.type"
-              :currentFolders="this.currentFolders"
-              :currentFiles="this.currentFiles"
-              :sharedChilds="this.sharedChilds"
+        <div v-for="file in searchedFiles" :key="file" class="col-sm-2">
+          <ProjectFile
+            :projectID="file.projectID"
+            :name="file.name"
+            :fileType="file.name.split('.').pop()"
+            :path="file.path"
+            :type="file.type"
+            :currentFolders="this.currentFolders"
+            :currentFiles="this.currentFiles"
+            :sharedChilds="this.sharedChilds"
 
-              @fileDeleted="currentFilesChanged"
-              @nameChanged="currentFilesChanged"
-              @fileMoved="currentFilesChanged"
-              
-              @stopSharingFile="stopSharingFile"
-              @addSharingFile="addSharingFile"
+            @fileDeleted="currentFilesChanged"
+            @nameChanged="currentFilesChanged"
+            @fileMoved="currentFilesChanged"
+            
+            @stopSharingFile="stopSharingFile"
+            @addSharingFile="addSharingFile"
 
-              draggable="true"
-              @dragstart="startDrag($event, file.path)"
-            />
-          </div>
+            @fileSelected="fileSelected(file)"
+            @fileDeselected="fileDeselected(file)"
+
+            draggable="true"
+            @dragstart="startDrag($event, file.path)"
+          />
         </div>
       </div>
   </div>
@@ -62,28 +63,45 @@ export default {
     ProjectFile,
   },
   name: "FilesView",
-  props: ['projectID', 'currentPath', 'sharedChilds', 'currentFolders', 'currentFiles'],
-watch: {
+  props: ['projectID', 'currentPath', 'sharedChilds', 'currentFolders', 'currentFiles', 'searchTerm'],
+  watch: {
+    searchTerm: function(){
+      this.setSearchedFiles(this.searchTerm);
+    },
     currentPath: function(newPath){
       this.folderPath = newPath;
     },
     currentFolders(newFolders){
       this.folders = newFolders;
+    },
+    currentFiles: function(){
+      this.setSearchedFiles(this.searchTerm);
     }
   },
   data: function () {
     return {
       folders: [],
+      searchedFiles: [],
       folderPath: this.currentPath,
-      searchTerm: "",
     };
   },
   methods: {
-    fileNameInSearchterm(name) {
-      return name.includes(this.searchTerm) || this.searchTerm == null;
+    setSearchedFiles(searchTerm){
+      if(searchTerm == "" || searchTerm == null){
+          this.searchedFiles = this.currentFiles;  
+      }
+      else{
+        this.searchedFiles = []
+        for(var folder_index in this.currentFiles){
+          var folderName = this.currentFiles[folder_index].name
+          if(this.fileNameInSearchterm(String(folderName), searchTerm)){
+            this.searchedFiles.push(this.currentFiles[folder_index])
+          }
+        }
+      }
     },
-    setSearchTerm(value) {
-      this.searchTerm = value;
+    fileNameInSearchterm(name, searchTerm) {
+      return name.includes(searchTerm) || searchTerm == null;
     },
     currentFilesChanged(){
       this.$emit("currentFilesChanged")
@@ -135,6 +153,9 @@ watch: {
       })
     },
   },
+  async created(){
+    this.setSearchedFiles();
+  }
 };
 </script>
 

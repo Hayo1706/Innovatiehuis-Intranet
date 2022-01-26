@@ -22,7 +22,7 @@ def name_valid(path, new_name):
 
 def move_valid(source_path, target_path, dir_path):
     if dir_exists(source_path) and dir_exists(target_path):
-        return dir_exists(target_path + dir_path)
+        return not dir_exists(target_path + dir_path)
     return False
 
 
@@ -82,7 +82,9 @@ def get_folders_in_path(project_id):
     return list_of_files
 
 def move_dir(source_path, target_path):
+
     dir_path = "/" + source_path.rsplit("/", 1)[1]
+    print(source_path, target_path, dir_path)
     if move_valid(source_path, target_path, dir_path):
         try:
             shutil.move(source_path, target_path, copy_function=shutil.copytree)

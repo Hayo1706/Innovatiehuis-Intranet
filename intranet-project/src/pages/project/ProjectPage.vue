@@ -4,15 +4,48 @@
       <div class="row">
         <div class="col-sm-8">
           <div class="component-container">
+            <div class="component-header">
+              <text v-if="this.currentPath == '' && this.parentID == null && this.childID == null">
+                Bestandsoverzicht
+              </text>
+               <text v-else
+                  class="hover"
+                  @click="currentPathChanged('', this.projectID)">
+                Home/                  
+              </text>
+              <span v-for="(path, index) in this.currentPath.split('/').slice(0,-1)" :key="path">
+                <text
+                  class="hover"
+                  @click="currentPathChanged('/' + this.currentPath.split('/').slice(1, index+1)[0], this.projectID)"
+                  v-if="path != ''">{{path}}/
+                </text>
+              </span>
+              <text>
+                {{this.currentPath.split('/').slice(-1)[0]}}
+              </text>
+
+
+              <ProjectPageHeader
+                :currentPath="this.currentPath"
+                @newFolderAdded="currentFoldersChanged()"
+                @newFilesUploaded="currentFilesChanged()"
+                @deleteSelectedElements="deleteSelectedElements()"
+                @searchBarChanged="setSearchTerm">
+              </ProjectPageHeader>
+            </div>
             <FoldersView
                 :previousPath="this.previousPath"
                 :currentPath="this.currentPath"
                 :projectID="this.projectID"
                 :currentFolders="this.currentFolders"
+                :searchTerm="this.searchTerm"
+
 
                 @currentFoldersChanged="currentFoldersChanged"
                 @currentFilesChanged="currentFilesChanged"
                 @currentPathChanged="currentPathChanged"
+                @folderSelected="selectFolder"
+                @folderDeselected="deselectFolder"
                 @fileMoved="currentFilesChanged"
               />
               <FilesView ref="child" 
@@ -21,9 +54,13 @@
               :currentFolders="this.currentFolders"
               :currentFiles="this.currentFiles"
               :sharedChilds="this.sharedChilds"
+              :searchTerm="this.searchTerm"
               
               @sharedFilesChanged="sharedFilesChanged"
-              @currentFilesChanged="currentFilesChanged"/>
+              @currentFilesChanged="currentFilesChanged"
+              @fileSelected="selectFile"
+              @fileDeselected="deselectFile"
+              />
               
           </div>
         </div>
@@ -42,13 +79,14 @@
 <script>
 import FilesView from "./FilesView.vue";
 import FoldersView from "./FoldersView.vue";
+import ProjectPageHeader from "./ProjectPageHeader.vue";
 import AnnouncementWindow from "../../shared_components/AnnouncementWindow.vue";
 import AlertService from "../../services/AlertService";
 import ProjectService from "../../services/ProjectService.js";
 import FilestorageService from "../../services/FilestorageService.js";
 
 export default {
-  components: { FilesView, FoldersView, AnnouncementWindow },
+  components: { FilesView, FoldersView, AnnouncementWindow, ProjectPageHeader  },
   name: "ProjectPage",
   data: function () {
     return {
@@ -60,14 +98,55 @@ export default {
       parentID: this.$route.query.parent,
       childID: this.$route.query.child, 
 
+      searchTerm: "",
+
       previousPath: this.getPath(),
       currentPath: this.getPath(),
       currentFiles: [],
       currentFolders: [],
       sharedChilds: [],
+
+      selectedFolders: [],
+      selectedFiles: [],
     };
   },
   methods: {
+    deleteSelectedElements(){
+      for(var folder of this.selectedFolders){
+        FilestorageService.deleteFolder(this.projectID, folder.path, false)
+        .then((response) => {
+          AlertService.handleSuccess(response);
+        })
+        .catch((err) => {
+          if(err.response.status === 409){
+            if(confirm("There are elements in " + folder.name + ", are you sure you want to delete it?")){
+              FilestorageService.deleteFolder(this.projectID, folder.path, true)
+              .then((response) => {
+                AlertService.handleSuccess(response);
+              })
+              .catch((err) => {
+                AlertService.handleError(err);
+              });
+            }
+          }
+          if (err.response) {
+            AlertService.handleError(err);
+          }
+        });
+      }
+      this.currentFoldersChanged();
+      this.selectedFolders = []
+    },
+    selectFolder(folder){
+      this.selectedFolders.push(folder)
+    },
+    deselectFolder(folder){
+      for(var folderIndex in this.selectedFolders){
+        if(folder.path == this.selectedFolders[folderIndex].path){
+          this.selectedFolders.splice(folderIndex, 1)
+        }
+      }
+    },
     currentFoldersChanged(){
       this.setCurrentFolders();
     },
@@ -118,6 +197,9 @@ export default {
     },
     getProjectId(){
       return this.$route.params.id
+    },
+    setSearchTerm(searchTerm) {
+      this.searchTerm = searchTerm;
     },
     setCurrentFolders() {
       this.currentFolders = []
