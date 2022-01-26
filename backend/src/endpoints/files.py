@@ -149,12 +149,12 @@ def upload_file(file, path, confirmation):
                 if file_save_valid(file, file_path):
                     return response("Bestand geupload", 200)
         else:
-            return response("Bedstandstype of grootte is fout, de maximum grootte is: " + str(config.MAX_FILE_SIZE),
+            return response("Bedstandstype of grootte is fout van, " + file_name + ", de maximum grootte is: " + str(config.MAX_FILE_SIZE/1000/1000) + "MB, de toegestaande bestandstypes zijn " + str(config.ALLOWED_FILE_TYPES),
                             406)
     return response("Kon bestand niet uploaden", 424)
 
 #TODO schrijf permissie
-@check_permissions(Projects.may_read_files)
+@check_permissions(Projects.may_read_shared_files)
 def download_file(project_id):
     requested_path = config.FILE_STORAGE_ROOT + get_project_path(project_id) + connexion.request.values.get('path')
     requested_path = unquote(requested_path)

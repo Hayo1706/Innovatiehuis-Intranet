@@ -32,9 +32,9 @@
               <label class="switch">
 
                 <input
-                    id="hidearchivedcheckbox"
+                    id="showarchivedcheckbox"
                     type="checkbox"
-                    name="hidearchivedcheckbox"
+                    name="showarchivedcheckbox"
                     v-model="uneditable"
                 />
                 <span class="slider round"></span>

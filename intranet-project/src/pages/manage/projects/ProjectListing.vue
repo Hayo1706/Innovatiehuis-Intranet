@@ -36,7 +36,7 @@
 
       <!-- large screens-->
       <div
-        class="col-3 d-none d-lg-flex align-items-center justify-content-center"
+        class="name-wrapper col-3 d-none d-lg-flex align-items-center justify-content-center"
       >
         <router-link
           title="Naar projectpagina"
@@ -190,5 +190,8 @@ export default {
 }
 .iconHolder {
   padding: 5px;
+}
+.name-wrapper{
+  padding-right: 0;
 }
 </style>
