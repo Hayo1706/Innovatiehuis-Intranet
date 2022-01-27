@@ -13,23 +13,9 @@
       </button>
     </div>
     <div class="row">
-      <div class="full-button col" @click="this.$emit('sortEvent', 'name')">
+      <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
         Gebruiker
         <span v-if="sortingMethod == 'name'">
-          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
-          <i v-else class="bi-caret-up-fill"></i>
-        </span>
-      </div>
-      <div class="full-button col" @click="this.$emit('sortEvent', 'email')">
-        Email
-        <span v-if="sortingMethod == 'email'">
-          <i v-if="this.ascending" class="bi-caret-down-fill"></i>
-          <i v-else class="bi-caret-up-fill"></i>
-        </span>
-      </div>
-      <div class="full-button col" @click="this.$emit('sortEvent', 'phone')">
-        Telefoonnummer
-        <span v-if="sortingMethod == 'phone'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
           <i v-else class="bi-caret-up-fill"></i>
         </span>
@@ -78,7 +64,7 @@
           <i v-else class="bi-caret-up-fill"></i>
         </span>
       </div>
-      <div class="col">
+      <div class="col-md-auto last-column">
         <SearchBar
           @searchBarChanged="
             (searchTerm) => $emit('searchBarChanged', searchTerm)
@@ -134,5 +120,8 @@ export default {
   width: fit-content;
   display: inline-block;
   left: 0px;
+}
+.last-column {
+  width: 16em;
 }
 </style>

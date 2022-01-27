@@ -5,15 +5,12 @@
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col d-block d-lg-none">
-        <div class="full-button mobileRow extraLarge" @click="onClick()">
-          {{ user.first_name + " " + user.last_name }}
-        </div>
-        <div class="mobileRow">
-          {{ user.email }}
-        </div>
-        <div class="mobileRow">
-          {{ user.phone_number }}
-        </div>
+        <div
+          class="full-button mobileRow extraLarge"
+          @click="onClick()"
+        >{{ user.first_name + " " + user.last_name }}</div>
+        <div class="mobileRow">{{ user.email }}</div>
+        <div class="mobileRow">{{ user.phone_number }}</div>
         <div class="mobileRow">
           {{
             user.created.toLocaleString("nl-NL", {
@@ -41,9 +38,7 @@
             :disabled="!canUpdateUserRole()"
             v-if="userIsNotProtected()"
           >
-            <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
-              {{ role }}
-            </option>
+            <option v-for="role in Object.keys(this.roles)" v-bind:key="role">{{ role }}</option>
           </select>
           <div v-else>{{ this.selectedRole }}</div>
         </div>
@@ -72,42 +67,21 @@
             />
           </div>
           <div v-else>
-            <img
-              src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
-            />
-            <img
-              src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
-            />
+            <img src="@\assets\images\screening1.png" v-if="screeningstate == 'Geblokkeerd'" />
+            <img src="@\assets\images\check.png" v-if="screeningstate == 'Toegestaan'" />
           </div>
         </div>
       </div>
 
       <!-- large screens-->
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-start"
-      >
+      <div class="col-3 d-none d-lg-flex align-items-center justify-content-start">
         <router-link
           title="Naar profiel"
           :to="'/user/' + this.user.userid"
           class="name-button"
-          >{{ user.first_name + " " + user.last_name }}</router-link
-        >
+        >{{ user.first_name + " " + user.last_name }}</router-link>
       </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
-        <a :href="'mailto:' + user.email">{{ user.email }}</a>
-      </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
-        {{ user.phone_number }}
-      </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
+      <div class="col d-none d-lg-flex align-items-center justify-content-center">
         {{
           user.created.toLocaleString("nl-NL", {
             day: "numeric",
@@ -116,9 +90,7 @@
           })
         }}
       </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
+      <div class="col d-none d-lg-flex align-items-center justify-content-center">
         {{
           user.last_seen.toLocaleString("nl-NL", {
             day: "numeric",
@@ -130,30 +102,20 @@
           })
         }}
       </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
-        <select
-          v-model="selectedRole"
-          :disabled="!canUpdateUserRole()"
-          v-if="userIsNotProtected()"
-        >
-          <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
-            {{ role }}
-          </option>
+      <div class="col d-none d-lg-flex align-items-center justify-content-center">
+        <select v-model="selectedRole" :disabled="!canUpdateUserRole()" v-if="userIsNotProtected()">
+          <option v-for="role in Object.keys(this.roles)" v-bind:key="role">{{ role }}</option>
         </select>
         <div v-else>{{ this.selectedRole }}</div>
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
-        {{ user.amountprojects }}
-      </div>
+      >{{ user.amountprojects }}</div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
         id="screening justify-content-center"
       >
-        <div class="listing-icon iconHolder">
+        <div class="iconHolder">
           <div v-if="userIsNotProtected()">
             <img
               style="cursor: pointer"
@@ -177,27 +139,19 @@
             />
           </div>
           <div v-else>
-            <img
-              src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
-            />
-            <img
-              src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
-            />
+            <img src="@\assets\images\screening1.png" v-if="screeningstate == 'Geblokkeerd'" />
+            <img src="@\assets\images\check.png" v-if="screeningstate == 'Toegestaan'" />
           </div>
         </div>
       </div>
 
       <div class="col d-lg-flex align-items-center justify-content-center">
-        <div
-          @click="handleRemoveUser(this.user)"
-          v-show="canDelete() && userIsNotProtected()"
-        >
-          <div class="listing-icon iconHolder">
-            <img src="@\assets\images\delete.png" />
-          </div>
-        </div>
+        <span class="button-span-right">
+          <UserButtons
+            @removeUser="handleRemoveUser(this.user)"
+            v-bind:user="this.user"
+          ></UserButtons>
+        </span>
       </div>
     </div>
   </div>
@@ -209,10 +163,11 @@ import UserService from "@/services/UserService.js";
 import PermissionService from "@/services/PermissionService.js";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 import AlertService from "@/services/AlertService.js";
+import UserButtons from "@/pages/manage/users/UserButtons.vue";
 
 export default {
   props: ["user", "all_roles"],
-  components: { VerticalHeader, ConfirmDialogue },
+  components: { VerticalHeader, ConfirmDialogue, UserButtons },
   name: "UserListing",
   data: function () {
     return {
@@ -435,6 +390,7 @@ select {
 }
 .iconHolder {
   border-radius: 10%;
+  border-style: none;
 }
 .row select {
   background: linear-gradient(
@@ -443,7 +399,8 @@ select {
     rgba(225, 225, 225, 0.9)
   );
 }
-.listing-icon {
-  border-style: none;
+
+.button-span-right {
+  margin-left: auto;
 }
 </style>
