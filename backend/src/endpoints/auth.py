@@ -10,7 +10,8 @@ from src.services.permissions.permissions import check_jwt
 from ..services.extensions import bcrypt
 from itsdangerous import URLSafeSerializer
 import re
-
+import pyotp
+import base64
 
 def login():
     try:
@@ -21,15 +22,22 @@ def login():
     except KeyError:
         return response("Foute aanvraag", 400)
 
-    # TODO 2-fa check here
-    if config.TWO_FACTOR:
-        pass
+
 
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})
     if len(user) == 0:
         return response("Incorrect wachtwoord of gebruikersnaam", 401)
     user = user[0]
+
+
+    if config.TWO_FACTOR:
+       user_auth_key = user.get('auth_key')
+       totp_code = pyotp.TOTP(str.encode(user_auth_key)).now()
+
+       if totp_code != authenticator_code:
+           return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
+
 
     if int(user['failed_login_count']) >= config.ATTEMPTS_BEFORE_COOLDOWN:
         if int((datetime.datetime.now() - user['last_failed_login']).total_seconds()) > config.COOLDOWN_TIME_SECONDS:
@@ -57,7 +65,7 @@ def login():
         print('Password format incorrect')
     query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
                  "userid = %(userid)s", {'userid': user['userid']})
-    return response("Incorrect wachtwoord of gebruikersnaam", 401)
+    return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
 
 
 @check_jwt()

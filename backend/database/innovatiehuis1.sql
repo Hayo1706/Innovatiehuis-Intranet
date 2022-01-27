@@ -241,17 +241,17 @@ CREATE TABLE IF NOT EXISTS `users` (
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`, `phone_number`, `password_hash`,`auth_key`, `roleid`, `screening_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
-	(1, 'Hayo', 'Riem', 'hayoriem@mail.com', '06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK','auth', 4, 1, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
-	(2, 'Peter', 'Beens', 'peterbeens@mail.com', '06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK','auth', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0),
-	(3, 'Singh', 'van Offeren', 'singhvano@mail.com', '06123456789', '123','auth', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0),
-	(4, 'Jochem', 'Hoekstra', 'joja@mail.com', '06123456789', '123','auth', 2, 1, '2021-11-30 17:48:47', '2021-11-30 17:48:47', NULL, 0),
-	(5, 'Niels', 'Doornbos', 'nielsprikkelbos@mail.com', '06123456789', '123','auth', 4, 1, '2021-11-30 17:49:09', '2021-11-30 17:49:09', NULL, 0),
-	(6, 'Jan', 'BaljÃ©', 'janbal@mail.com', '06123456789', '123','auth', 1, 1, '2021-11-30 17:49:49', '2021-11-30 17:49:49', NULL, 0),
-	(7, 'Tim', 'Dronebos', 'tim@mail.com', '06123456789', '123','auth', 3, 1, '2021-11-30 17:51:50', '2021-11-30 17:51:50', NULL, 0),
-	(8, 'pieter', 'van rosmalen', 'pvr@mail.com', '06123456789', '123458','auth', 3, 1, '2021-12-02 19:09:21', '2021-12-02 19:09:21', NULL, 0),
-	(9, 'Anna', 'van Rosmalen', 'anna3@mail.com', '06123456789', '123','auth', 2, 1, '2022-01-02 16:41:35', '2022-01-02 16:41:35', NULL, 0),
-	(10, 'a', 'b', 'ab@mail.com', '', '$2b$12$49TVZtcsed66ktN9lMlLyu8/1BXM0rzPKNGt6o8xod7N88T0RZtri','auth', 5, 0, '2022-01-21 13:10:21', '2022-01-21 13:10:21', NULL, 0),
-	(11, 'a', 'a', 'aa@mail.com', '', '$2b$12$gTtf1w6ADck28j3ob7ikAeeVZhHaMMFvamf.QFiGd2TNFL21brLGe','auth', 5, 0, '2022-01-21 13:12:52', '2022-01-21 13:12:52', NULL, 0);
+	(1, 'Hayo', 'Riem', 'hayoriem@mail.com', '06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 4, 1, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
+	(2, 'Peter', 'Beens', 'peterbeens@mail.com', '06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0),
+	(3, 'Singh', 'van Offeren', 'singhvano@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0),
+	(4, 'Jochem', 'Hoekstra', 'joja@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2021-11-30 17:48:47', '2021-11-30 17:48:47', NULL, 0),
+	(5, 'Niels', 'Doornbos', 'nielsprikkelbos@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 4, 1, '2021-11-30 17:49:09', '2021-11-30 17:49:09', NULL, 0),
+	(6, 'Jan', 'BaljÃ©', 'janbal@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 1, 1, '2021-11-30 17:49:49', '2021-11-30 17:49:49', NULL, 0),
+	(7, 'Tim', 'Dronebos', 'tim@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 3, 1, '2021-11-30 17:51:50', '2021-11-30 17:51:50', NULL, 0),
+	(8, 'pieter', 'van rosmalen', 'pvr@mail.com', '06123456789', '123458','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 3, 1, '2021-12-02 19:09:21', '2021-12-02 19:09:21', NULL, 0),
+	(9, 'Anna', 'van Rosmalen', 'anna3@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2022-01-02 16:41:35', '2022-01-02 16:41:35', NULL, 0),
+	(10, 'a', 'b', 'ab@mail.com', '', '$2b$12$49TVZtcsed66ktN9lMlLyu8/1BXM0rzPKNGt6o8xod7N88T0RZtri','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 5, 0, '2022-01-21 13:10:21', '2022-01-21 13:10:21', NULL, 0),
+	(11, 'a', 'a', 'aa@mail.com', '', '$2b$12$gTtf1w6ADck28j3ob7ikAeeVZhHaMMFvamf.QFiGd2TNFL21brLGe','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 5, 0, '2022-01-21 13:12:52', '2022-01-21 13:12:52', NULL, 0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 -- Structuur van  tabel innovatieplatform.users_have_projects wordt geschreven

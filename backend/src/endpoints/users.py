@@ -2,6 +2,7 @@ import secrets
 from datetime import date
 
 import connexion
+import pyotp
 from ..config import PASSWORD_CHANGE_SECRET_KEY, DOMAIN_NAME
 from ..services.helper_functions import *
 from itsdangerous import URLSafeSerializer
@@ -9,6 +10,9 @@ from ..services.permissions import Users, Projects, Roles
 from ..services.permissions.permissions import check_permissions, check_jwt
 from ..services.extensions import bcrypt
 from flask_jwt_extended import get_jwt_identity
+import threading
+import qrcode
+from PIL import Image
 
 
 # READ users
@@ -43,6 +47,11 @@ def create():
         roleid = body['roleid']
         screening_status = body['screening_status']
         password_hash = bcrypt.generate_password_hash(secrets.token_urlsafe(16)).decode('utf-8')
+        auth_key = pyotp.random_base32()
+
+        qr_thread = threading.Thread(target=lambda : generate_qr(auth_key, first_name))
+        qr_thread.start()
+
     except KeyError:
         return response("Foute aanvraag", 400)
 
@@ -51,11 +60,11 @@ def create():
         return response("Dit mailadres wordt al gebruikt door een bestaand account.", 400)
 
     query_update(
-        "INSERT INTO users (first_name, last_name, email, phone_number, roleid, screening_status, password_hash) "
-        "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone_number)s, %(roleid)s, %(screening_status)s,%(password_hash)s)",
+        "INSERT INTO users (first_name, last_name, email, phone_number, roleid, screening_status, password_hash, auth_key) "
+        "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone_number)s, %(roleid)s, %(screening_status)s,%(password_hash)s,%(auth_key)s)",
         {'first_name': first_name, 'last_name': last_name, 'email': email, 'phone_number': phone_number,
          'roleid': roleid,
-         'screening_status': screening_status, 'password_hash': password_hash})
+         'screening_status': screening_status, 'password_hash': password_hash, 'auth_key': auth_key})
     serializer = URLSafeSerializer(PASSWORD_CHANGE_SECRET_KEY)
     d1 = date.today().strftime("%d/%m/%Y")
     userid = query("SELECT userid FROM users WHERE email=%(email)s", {'email': email})[0]['userid']
@@ -63,6 +72,11 @@ def create():
     print(resp)
     return response("Gebruiker toegevoegd", 200, resp)
 
+def generate_qr(auth_key, first_name):
+    totp_url = pyotp.totp.TOTP(auth_key, interval=30).provisioning_uri(name=first_name + "@innovatiehuis",issuer_name='Innovatiehuis')
+    print(totp_url)
+    img = qrcode.make(totp_url)
+    img.show()
 
 # PUT users/{id}
 @check_permissions(Users.may_update)
