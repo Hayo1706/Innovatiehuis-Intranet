@@ -49,8 +49,7 @@ def create():
         password_hash = bcrypt.generate_password_hash(secrets.token_urlsafe(16)).decode('utf-8')
         auth_key = pyotp.random_base32()
 
-        qr_thread = threading.Thread(target=lambda : generate_qr(auth_key, first_name))
-        qr_thread.start()
+
 
     except KeyError:
         return response("Foute aanvraag", 400)
@@ -69,12 +68,16 @@ def create():
     d1 = date.today().strftime("%d/%m/%Y")
     userid = query("SELECT userid FROM users WHERE email=%(email)s", {'email': email})[0]['userid']
     resp = DOMAIN_NAME + "/manage/resetpassword?resettoken=" + serializer.dumps([userid, password_hash])
-    print(resp)
+
+    data_thread = threading.Thread(target=lambda: send_data_to_user(auth_key, first_name, email, resp))
+    data_thread.start()
+
     return response("Gebruiker toegevoegd", 200, resp)
 
-def generate_qr(auth_key, first_name):
-    totp_url = pyotp.totp.TOTP(auth_key, interval=30).provisioning_uri(name=first_name + "@innovatiehuis",issuer_name='Innovatiehuis')
-    print(totp_url)
+# TODO send data below to user via mail
+def send_data_to_user(auth_key, first_name, email, resp):
+    print(resp)
+    totp_url = pyotp.totp.TOTP(auth_key, interval=30).provisioning_uri(name=first_name+ "@innovatiehuis",issuer_name='Innovatiehuis')
     img = qrcode.make(totp_url)
     img.show()
 
