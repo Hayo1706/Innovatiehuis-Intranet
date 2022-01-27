@@ -26,7 +26,7 @@
           to="/manage/roles"
           v-if="this.canSeeUsers()"
       >
-        <img class="big-img" src="../../assets/images/users_icon.png" />Rollenoverzicht
+        <img class="big-img" src="../../assets/images/roles_icon.png" />Rollenoverzicht
       </router-link>
       <hr />
       <button
