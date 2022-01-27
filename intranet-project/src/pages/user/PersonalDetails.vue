@@ -33,8 +33,8 @@
         </div>
         <div class="col-6 d-none d-lg-block">
           <div class="item-text">{{ this.user.first_name }} {{ this.user.last_name }}</div>
-          <div class="item-text">{{ this.user.email }}</div>
-          <div class="item-text">{{ this.user.phone_number }}</div>
+          <div class="item-text"><a :href="'mailto:' + this.user.email">{{ this.user.email }}</a></div>
+          <div class="item-text"><a :href="'tel:' + this.user.phone_number">{{ this.user.phone_number }}</a></div>
           <div class="item-text">{{ this.user.role_name }}</div>
           <div class="item-text">{{ this.created }}</div>
           <div class="item-text">{{ this.last_seen }}</div>

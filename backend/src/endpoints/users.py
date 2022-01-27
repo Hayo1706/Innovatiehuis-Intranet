@@ -45,6 +45,11 @@ def create():
         password_hash = bcrypt.generate_password_hash(secrets.token_urlsafe(16)).decode('utf-8')
     except KeyError:
         return response("Foute aanvraag", 400)
+
+    emails_in_use = [user["email"] for user in query("SELECT email FROM users")]
+    if email in emails_in_use:
+        return response("Dit mailadres wordt al gebruikt door een bestaand account.", 400)
+
     query_update(
         "INSERT INTO users (first_name, last_name, email, phone_number, roleid, screening_status, password_hash) "
         "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone_number)s, %(roleid)s, %(screening_status)s,%(password_hash)s)",
@@ -77,7 +82,7 @@ def update(user_id):
         "WHERE userid=%(userid)s",
         {'first_name': first_name, 'last_name': last_name, 'email': email, 'phone_number': phone_number,
          "userid": user_id})
-    return response("Gebruiker gewijzigd", 200)
+    return response("Persoonsgegevens aangepast", 200)
 
 
 # PATCH users/{id}/screening/{status}
@@ -86,7 +91,7 @@ def update_screening(user_id, screening_status):
     query_update(
         "UPDATE users SET screening_status=%(screening_status)s WHERE userid=%(userid)s",
         {'screening_status': screening_status, "userid": user_id})
-    return response("Toegang van gebruiker gewijzigd")
+    return response("Toegang van gebruiker aangepast")
 
 
 # PATCH users/{id}/role/{id}
@@ -95,7 +100,7 @@ def update_role_user(user_id, role_id):
     query_update(
         "UPDATE users SET roleid=%(roleid)s WHERE userid=%(userid)s",
         {'roleid': role_id, "userid": user_id})
-    return response("Rol van gebruiker gewijzigd")
+    return response("Rol van gebruiker aangepast")
 
 
 # PATCH users/{id}/password
@@ -115,7 +120,7 @@ def update_password(user_id):
 @check_permissions(Users.may_delete_user)
 def delete(user_id):
     query_update("DELETE FROM users WHERE userid = %(id)s", {'id': user_id})
-    return response(f"Gebruiker {user_id} verwijderd")
+    return response(f"Gebruiker verwijderd")
 
 
 # READ users/{id}/projects

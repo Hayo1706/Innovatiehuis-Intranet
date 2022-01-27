@@ -98,7 +98,7 @@
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
       >
-        {{ user.email }}
+        <a :href="'mailto:' + user.email">{{ user.email }}</a>
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"

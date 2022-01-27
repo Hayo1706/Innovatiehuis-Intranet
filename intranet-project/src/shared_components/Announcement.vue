@@ -94,6 +94,7 @@
             v-model="this.newReply.content"
           />
           <div
+            :disabled="this.newReply.content === ''"
             type="button"
             class="full-button"
             style="width: fit-content;"
@@ -131,7 +132,7 @@ export default {
       editData: { title: this.title + "", content: this.content + "" },
       editing: false,
       replies: [],
-      newReply: { content: "" },
+      newReply: { content: "" }
     };
   },
   async created() {

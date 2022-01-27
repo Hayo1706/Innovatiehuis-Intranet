@@ -124,6 +124,11 @@ body div{
   transition: .3s;
   color: white;
 }
+.full-button:disabled{
+  background-color: var(--blue3);
+  transition: .3s;
+  color: white;
+}
 
 .confirm-btn {
   width: 9em;

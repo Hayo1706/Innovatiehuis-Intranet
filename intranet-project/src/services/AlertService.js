@@ -44,16 +44,16 @@ var AlertService = function () {
         if (err.response.data.message) {
             console.log("HTTP code " + err.response.status, err.response.data.message);
             console.log({err});
-            alert(err.response.status + " ERROR: " + err.response.data.message, "error");
+            alert(err.response.data.message, "error");
             return;
         }
         if (err.response.status) {
             console.log("HTTP code " + err.response.status, err.response.statusText);
             console.log({err});
-            alert(err.response.status + " ERROR: " + err.response.statusText, "error");
+            alert(err.response.statusText, "error");
             return;
         }
-        console.log("UNEXPECTED ERROR WHILE QUERYING DATA:");
+        console.log("UNEXPECTED ERROR WHILE QUERYING OR RETRIEVING DATA:");
         console.log({err});
         alert("Er is een onverwachte fout opgetreden. Neem contact op met de beheerder.", "error");
     }
