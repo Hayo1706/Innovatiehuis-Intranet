@@ -13,6 +13,7 @@
         v-on:reload="reload()"
       />
     </div>
+    <label v-if="projects.length == 0">Geen actieve projecten gevonden!</label>
   </div>
 </template>
 

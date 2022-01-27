@@ -2,7 +2,7 @@
   <div id="projectsHeader" class="container-fluid d-none d-lg-block">
     <div id="projects-header-top" class="row">
       <button
-        id="actionButton"
+        id="addProject"
         class="btn pmd-btn-fab pmd-ripple-effect btn-primary"
         data-bs-toggle="modal"
         data-bs-target="#createProjectModal"
@@ -19,7 +19,7 @@
 
     <div class="row">
       <div
-        class="full-button col-3"
+        class="col-3 column-title"
         @click="this.$emit('sortEvent', 'name')"
         style="position: relative"
       >
@@ -30,7 +30,7 @@
         ></span>
       </div>
 
-      <div class="full-button col" @click="this.$emit('sortEvent', 'created')">
+      <div class="col column-title" @click="this.$emit('sortEvent', 'created')">
         Aangemaakt
         <span v-if="sortingMethod == 'created'"
           ><i v-if="this.ascending" class="bi-caret-down-fill"></i
@@ -38,7 +38,7 @@
         ></span>
       </div>
       <div
-        class="full-button col"
+        class="col column-title"
         @click="this.$emit('sortEvent', 'last_updated')"
       >
         Laatst aangepast
@@ -48,7 +48,7 @@
         ></span>
       </div>
       <div
-        class="full-button col"
+        class="col column-title"
         @click="this.$emit('sortEvent', 'archive_status')"
       >
         Archiveerstatus
@@ -64,6 +64,7 @@
           "
           placeholder="Filter op naam..."
           v-bind:searchTerm="this.searchTerm"
+          style="margin-bottom: 4px;"
         ></SearchBar>
       </div>
     </div>
@@ -103,6 +104,18 @@ export default {
   margin-right: 4px;
   font-family: AddeleThin;
 }
+.column-title {
+  font-size: 16pt;
+  text-align: center;
+  background: rgb(204, 204, 204);
+  border-radius: 2vh 2vh 0 0;
+  border: 1px solid black;
+  border-bottom: 0px;
+}
+.column-title:hover {
+  cursor: pointer;
+  background: rgb(224, 224, 224);
+}
 img {
   width: calc(2vw + 3vh);
   padding-bottom: 10px;
@@ -121,11 +134,12 @@ img {
 #projectsHeader .full-button {
   margin: 0;
 }
-#actionButton {
+#addProject {
   width: fit-content;
   display: inline-block;
   left: 0px;
   margin-left: 13px;
+  background: var(--gold1);
 }
 #projects-header-top{
   padding-bottom: 11px;
@@ -134,7 +148,7 @@ img {
 .form-switch{
   margin-left: auto;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
 }
 
 </style>

@@ -36,19 +36,26 @@ var AlertService = function () {
     }
 
     function handleError(err) {
-        if (err.response.data.message) {
-            console.log("HTTP code " + err.response.status, err.response.data.message);
-            alert(err.response.data.message, "error");
-          } else if (err.response.status) {
-            console.log("HTTP code " + err.response.status, err.response.statusText);
-            alert(err.response.statusText, "error");
-          } else if (err.code == "ECONNABORTED") {
+        if (err.code == "ECONNABORTED") {
             console.log({err});
             alert("De server reageert niet. Probeer het later opnieuw of neem contact op met de beheerder.", "error");
-          } else {
+            return;
+        }
+        if (err.response.data.message) {
+            console.log("HTTP code " + err.response.status, err.response.data.message);
             console.log({err});
-            alert("Er is een onverwachte fout opgetreden. Neem contact op met de beheerder.", "error");
-          }
+            alert(err.response.status + " ERROR: " + err.response.data.message, "error");
+            return;
+        }
+        if (err.response.status) {
+            console.log("HTTP code " + err.response.status, err.response.statusText);
+            console.log({err});
+            alert(err.response.status + " ERROR: " + err.response.statusText, "error");
+            return;
+        }
+        console.log("UNEXPECTED ERROR WHILE QUERYING DATA:");
+        console.log({err});
+        alert("Er is een onverwachte fout opgetreden. Neem contact op met de beheerder.", "error");
     }
 
     return {

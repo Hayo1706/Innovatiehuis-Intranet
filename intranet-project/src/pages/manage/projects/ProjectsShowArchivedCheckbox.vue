@@ -33,5 +33,12 @@ export default {
   user-select: none;
   width: fit-content;
 }
+.form-check-input {
+  margin-bottom: 4px;
+  margin-right: 8px;
+}
+.form-check-label {
+  color: white;
+}
 
 </style>

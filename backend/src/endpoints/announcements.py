@@ -38,7 +38,7 @@ def create_global():
         "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
         "%(content)s)",
         {'userid': get_jwt_identity(), 'content': content, 'title': title})
-    return response("Globale mededeling geplaatst")
+    return response("Algemene mededeling geplaatst")
 
 
 @check_permissions(Announcements.may_update_delete)
@@ -82,4 +82,4 @@ def add_reply(announcement_id):
     query_update(
         "INSERT INTO replies (announcementid, userid, content) VALUES (%(id)s, %(userid)s, %(content)s)",
         {'id': announcement_id, 'userid': get_jwt_identity(), 'content': content})
-    return response("Reactie geplaatst onder mededeling")
+    return response("Reactie geplaatst")
