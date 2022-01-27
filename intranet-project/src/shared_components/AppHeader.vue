@@ -20,6 +20,23 @@
         <slot></slot>
 
         <div>
+          <router-link class="link" to="/manage/projects" v-if="this.canSeeProjects()">
+            <img 
+              data-toggle="tooltip" 
+              data-placement="bottom" 
+              title="Projectenoverzicht"
+              class="header-icon"
+              src=".\..\assets\images\projects_icon_yellow.png"
+            />
+          </router-link>
+          <router-link to="/manage/users" v-if="this.canSeeUsers()">
+            <img
+              title="Gebruikersoverzicht"
+              class="header-icon"
+              src=".\..\assets\images\users_icon_yellow.png"
+            />
+          </router-link>
+          
           <router-link :to="'/user/' + getUserId()">
             <img 
               title="Profiel"
