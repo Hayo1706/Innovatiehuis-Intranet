@@ -2,7 +2,7 @@
 DEBUG_MODE = False
 
 # SET TO FALSE TO TURN TWO_FACTOR AUTHENTICATION OFF
-TWO_FACTOR = True
+TWO_FACTOR = False
 
 
 DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
