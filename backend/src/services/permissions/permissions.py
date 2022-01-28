@@ -46,7 +46,7 @@ def check_permissions(rule, *parameters):
                 compare = parameters if len(parameters) > 0 else kwargs
                 if rule(user_perm, *[kwargs[v] for v in compare]) or config.DEBUG_MODE:
                     return fn(*args, **kwargs)
-            
+
             return response("TIP: De politie hacken is een slecht idee!", 403)
 
         return decorator

@@ -30,7 +30,7 @@ axiosClient.interceptors.response.use((config) => {
             LoginService.logout();
             window.location.reload();
         }
-        //catch users accessing pages they shouldn't, without letting them know the page exists
+        //catch users accessing pages they shouldn't, without letting them know the page exists, or if they have no acces at all, redirect them to the no_access page
         if (error.response.status == 403) {
             if (localStorage.getItem("access_status") == 0) {
                 router.push({ path: "/no_access" });

@@ -476,14 +476,16 @@ export default {
       if (this.accordeonIsOpen()) {
         this.parentSearchTerm = "";
         this.loadParents();
-        ProjectService.getProjects()
-          .then((response) => {
-            this.projects = response.data.result;
-            AlertService.handleSuccess(response);
-          })
-          .catch((err) => {
-            AlertService.handleError(err);
-          });
+        if (localStorage.getItem("may_read_any_project") == 1) {
+          ProjectService.getProjects()
+            .then((response) => {
+              this.projects = response.data.result;
+              AlertService.handleSuccess(response);
+            })
+            .catch((err) => {
+              AlertService.handleError(err);
+            });
+        }
       } else {
         this.parentSearchTerm = "";
       }
@@ -510,15 +512,16 @@ export default {
       if (this.accordeonIsOpen()) {
         this.userSearchTerm = "";
         this.loadMembers();
-
-        UserService.getUsers()
-          .then((response) => {
-            this.users = response.data.result;
-            AlertService.handleSuccess(response);
-          })
-          .catch((err) => {
-            AlertService.handleError(err);
-          });
+        if (localStorage.getItem("may_read_any_project") == 1) {
+          UserService.getUsers()
+            .then((response) => {
+              this.users = response.data.result;
+              AlertService.handleSuccess(response);
+            })
+            .catch((err) => {
+              AlertService.handleError(err);
+            });
+        }
       } else {
         this.userSearchTerm = "";
       }
@@ -545,8 +548,8 @@ export default {
     },
     canUpdateProject() {
       return (
-        PermissionService.userHasPermission("may_update_any_project") ||
-        PermissionService.userHasPermission("may_update_own_project")
+        PermissionService.userHasPermission("may_update_any_project") &&
+        PermissionService.userHasPermission("may_read_any_project")
       );
     },
     accordeonIsOpen() {
