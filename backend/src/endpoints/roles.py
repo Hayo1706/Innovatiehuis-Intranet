@@ -64,7 +64,7 @@ def update_role(role_id):
         "may_update_any_project)s,may_update_any_reply=%(may_update_any_reply)s,"
         "may_update_any_user_account=%(may_update_any_user_account)s,may_update_any_user_password=%("
         "may_update_any_user_password)s,may_update_any_user_role=%(may_update_any_user_role)s,"
-        "may_update_any_user_screening_status=%(may_update_any_user_screening_status)s,"
+        "may_update_any_user_access_status=%(may_update_any_user_access_status)s,"
         "may_update_file_in_own_project=%(may_update_file_in_own_project)s,may_update_own_chat_message=%("
         "may_update_own_chat_message)s,may_update_own_content=%(may_update_own_content)s,"
         "may_update_own_project=%(may_update_own_project)s,may_update_own_user_account=%("

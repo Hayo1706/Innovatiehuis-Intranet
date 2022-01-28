@@ -32,14 +32,13 @@ def may_update_password(user_perm, user_id):
 
 
 def may_update_role(user_perm, *ids):
-    print(get_power_level((get_jwt_identity())))
     return user_perm["may_update_any_user_role"] and not permissions.user_owns_account(ids[0]) \
            and has_high_enough_power_level(ids[0]) \
            and get_power_level(get_jwt_identity())['may_cud_users_with_power_level_up_to'] >= int(ids[1])
 
 
-def may_update_screening(user_perm, *ids):
-    return user_perm["may_update_any_user_screening_status"] and not permissions.user_owns_account(ids[0]) \
+def may_update_access(user_perm, *ids):
+    return user_perm["may_update_any_user_access_status"] and not permissions.user_owns_account(ids[0]) \
            and has_high_enough_power_level(ids[0])
 
 

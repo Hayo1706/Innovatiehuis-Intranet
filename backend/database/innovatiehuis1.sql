@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `may_update_own_user_password` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_any_user_account` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_own_user_account` tinyint(1) NOT NULL DEFAULT 0,
-  `may_update_any_user_screening_status` tinyint(1) NOT NULL DEFAULT 0,
+  `may_update_any_user_access_status` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_any_user_role` tinyint(1) NOT NULL DEFAULT 0,
   `may_delete_any_user` tinyint(1) NOT NULL DEFAULT 0,
   `may_crud_roles` tinyint(1) NOT NULL DEFAULT 0,
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
 -- Dumpen data van tabel innovatieplatform.roles: ~5 rows (ongeveer)
 DELETE FROM `roles`;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` (`roleid`, `role_name`, `power_level`, `may_cud_users_with_power_level_up_to`, `may_create_project`, `may_read_any_project`, `may_read_own_project`, `may_update_any_project`, `may_update_own_project`, `may_archive_any_project`, `may_delete_any_project`, `may_update_any_file`, `may_update_file_in_own_project`, `may_create_announcement_anywhere`, `may_create_announcement_in_own_project`, `may_update_any_announcement`, `may_create_reply_anywhere`, `may_create_reply_in_own_project`, `may_update_any_reply`, `may_update_own_content`, `may_create_users`, `may_read_any_user`, `may_read_user_in_own_project`, `may_update_any_user_password`, `may_update_own_user_password`, `may_update_any_user_account`, `may_update_own_user_account`, `may_update_any_user_screening_status`, `may_update_any_user_role`, `may_delete_any_user`, `may_crud_roles`, `may_create_chat_message_anywhere`, `may_create_chat_message_in_own_project`, `may_update_any_chat_message`, `may_update_own_chat_message`) VALUES
+INSERT INTO `roles` (`roleid`, `role_name`, `power_level`, `may_cud_users_with_power_level_up_to`, `may_create_project`, `may_read_any_project`, `may_read_own_project`, `may_update_any_project`, `may_update_own_project`, `may_archive_any_project`, `may_delete_any_project`, `may_update_any_file`, `may_update_file_in_own_project`, `may_create_announcement_anywhere`, `may_create_announcement_in_own_project`, `may_update_any_announcement`, `may_create_reply_anywhere`, `may_create_reply_in_own_project`, `may_update_any_reply`, `may_update_own_content`, `may_create_users`, `may_read_any_user`, `may_read_user_in_own_project`, `may_update_any_user_password`, `may_update_own_user_password`, `may_update_any_user_account`, `may_update_own_user_account`, `may_update_any_user_access_status`, `may_update_any_user_role`, `may_delete_any_user`, `may_crud_roles`, `may_create_chat_message_anywhere`, `may_create_chat_message_in_own_project`, `may_update_any_chat_message`, `may_update_own_chat_message`) VALUES
 	(1, 'observer', 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1),
 	(2, 'student', 2, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1),
 	(3, 'moderator', 3, 2, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1),
@@ -227,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password_hash` tinytext NOT NULL,
   `auth_key` tinytext NOT NULL,
   `roleid` int(11) NOT NULL DEFAULT 0,
-  `screening_status` tinyint(1) NOT NULL DEFAULT 0,
+  `access_status` tinyint(1) NOT NULL DEFAULT 0,
   `created` datetime NOT NULL DEFAULT current_timestamp(),
   `last_login` datetime DEFAULT current_timestamp(),
   `last_failed_login` datetime DEFAULT NULL,
@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumpen data van tabel innovatieplatform.users: ~11 rows (ongeveer)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`, `phone_number`, `password_hash`,`auth_key`, `roleid`, `screening_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
+INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`, `phone_number`, `password_hash`,`auth_key`, `roleid`, `access_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
 	(1, 'Hayo', 'Riem', 'hayoriem@mail.com', '06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 4, 1, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
 	(2, 'Peter', 'Beens', 'peterbeens@mail.com', '06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0),
 	(3, 'Singh', 'van Offeren', 'singhvano@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0),

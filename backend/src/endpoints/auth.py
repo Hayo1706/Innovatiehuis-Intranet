@@ -55,7 +55,7 @@ def login():
             dict[0]['userid'] = user['userid']
             dict[0]['first_name'] = user['first_name']
             dict[0]['last_name'] = user['last_name']
-            dict[0]['screening_status'] = user['screening_status']
+            dict[0]['access_status'] = user['access_status']
             # TODO: misschien niet alle permissies dumpen?
             rsp = {'resource': request.path, 'code': 200, 'message': 'Succes', 'result': dict}
             rsp = jsonify(rsp)

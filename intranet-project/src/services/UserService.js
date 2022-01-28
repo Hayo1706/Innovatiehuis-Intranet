@@ -52,8 +52,8 @@ var UserService = function () {
         const response = await axiosClient.patch(`/users/${userid}/role/${roleid}`, { timeout: 2000 });
         return response;
     }
-    async function updateUserAccess(screeningstatus, userid) {
-        const response = await axiosClient.patch(`/users/${userid}/screening/${screeningstatus}`, { timeout: 2000 });
+    async function updateUserAccess(access_status, userid) {
+        const response = await axiosClient.patch(`/users/${userid}/access/${access_status}`, { timeout: 2000 });
         return response;
     }
     async function getRoles() {

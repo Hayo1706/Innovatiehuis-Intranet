@@ -93,7 +93,7 @@ def delete(project_id):
 @check_permissions(Projects.may_read)   # TODO: placeholder for more specific permissions?
 def read_users(project_id):
     return response("Succes",200,query(
-        "SELECT userid, last_seen, first_name, last_name, email, phone_number, roleid, role_name, screening_status, "
+        "SELECT userid, last_seen, first_name, last_name, email, phone_number, roleid, role_name, access_status, "
         "created "
         "FROM users_have_projects "
         "LEFT JOIN users USING(userid) "

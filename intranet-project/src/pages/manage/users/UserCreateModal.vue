@@ -167,7 +167,7 @@ export default {
         email: this.email,
         phone_number: this.phone_number,
         roleid: this.selectedRoleId,
-        screening_status: this.selectedAccessId,
+        access_status: this.selectedAccessId,
       })
         .then((response) => {
           this.$emit("reloadUsers");

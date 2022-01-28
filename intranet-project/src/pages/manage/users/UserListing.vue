@@ -137,10 +137,10 @@
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
-        id="screening justify-content-center"
+        id="access justify-content-center"
       >
         <div class="iconHolder">
-          <div v-if="canCUDUser()">
+          <div v-if="canCUDUser() && canUpdateUserAccess()">
             <img
               style="cursor: pointer"
               src="@\assets\images\screening1.png"
@@ -297,11 +297,11 @@ export default {
 
     this.previous_access_state = this.getKeyByValue(
       this.access_states,
-      this.user.screening_status
+      this.user.access_status
     );
     this.access_state = this.getKeyByValue(
       this.access_states,
-      this.user.screening_status
+      this.user.access_status
     );
   },
   methods: {
@@ -317,10 +317,10 @@ export default {
         this.isNotLoggedInUser()
       );
     },
-    canUpdateUserScreening() {
+    canUpdateUserAccess() {
       return (
         PermissionService.userHasPermission(
-          "may_update_any_user_screening_status"
+          "may_update_any_user_access_status"
         ) && this.isNotLoggedInUser()
       );
     },
