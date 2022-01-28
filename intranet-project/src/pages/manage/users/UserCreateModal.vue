@@ -105,7 +105,7 @@ export default {
         Geblokkeerd: 0,
         Toegestaan: 1,
       },
-      selectedRole: "student",
+      selectedRole: "",
       selectedScreeningState: "Toegestaan",
 
       first_name: "",
@@ -136,6 +136,7 @@ export default {
             this.roles[role.role_name] = role.roleid;
           }
         }
+        this.selectedRole = Object.keys(this.roles)[0];
         AlertService.handleSuccess(response);
       })
       .catch((err) => {
