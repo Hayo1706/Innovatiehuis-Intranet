@@ -16,19 +16,21 @@ import LoginPage from './pages/login/LoginPage.vue';
 import NotFoundPage from './pages/notfound/NotFoundPage.vue';
 import ResetPasswordPage from './pages/manage/reset_password/ResetPasswordPage.vue';
 import AccessControlView from "@/pages/manage/roles/AccessControlView";
+import NoAccessPage from '@/pages/no_access/NoAccessPage.vue';
 const routes = [
   { path: '', redirect: '/login' },
   { path: '/manage/projects', component: ProjectsPage },
   { path: '/manage/users', component: UsersPage },
   { path: '/manage/resetpassword', component: ResetPasswordPage },
-    { path: '/manage/roles', component: AccessControlView },
-    { path: '/project/:id', component: ProjectPage },
+  { path: '/manage/roles', component: AccessControlView },
+  { path: '/project/:id', component: ProjectPage },
   { path: '/project/:id/:catchAll(.*)', component: ProjectPage },
   { path: '/project/:id/projectsettings', component: ProjectSettingsPage },
   { path: '/user/:id', component: UserPage },
   { path: '/home', component: HomePage },
   { path: '/login', component: LoginPage },
-    { path: '/:catchAll(.*)', component: NotFoundPage }
+  { path: '/no_access', component: NoAccessPage },
+  { path: '/:catchAll(.*)', component: NotFoundPage }
 ]
 const router = createRouter({
   history: createWebHistory(),

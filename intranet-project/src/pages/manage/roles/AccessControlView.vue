@@ -5,7 +5,7 @@
         class="component-header-button"
            data-bs-toggle="modal"
            data-bs-target="#roleModal"
-           v-if="canCrudRoles"
+           v-if="canCrudRoles()"
       >
 
     </div>
@@ -18,14 +18,14 @@
         </ul>
         <div class="tab-content py-3" id="myTabContent">
           <div class="tab-pane fade" v-for="(rolevalue, rolekey) in roles" v-bind:key="rolevalue.role_name" :class="{ 'active show': isActive(rolevalue.role_name) }" :id="rolevalue.role_name">
-            <hr v-if="canCrudRoles && rolevalue.role_name !== 'admin'">
+            <hr v-if="canCrudRoles() && rolevalue.role_name !== 'admin'">
             <div style="height: 40px;
             margin: auto;
             max-width: 500px;
              display: flex;
              justify-content: space-around;
              align-items: center;"
-             v-if="canCrudRoles && rolevalue.role_name !== 'admin'">
+             v-if="canCrudRoles() && rolevalue.role_name !== 'admin'">
               
               <div>
               <img src="../../../assets/images/lock-icon-11.png" style="height: 40px;"/>
@@ -57,7 +57,7 @@
                 Opslaan
               </button>
             </div>
-            <hr v-if="canCrudRoles && rolevalue.role_name !== 'admin'">
+            <hr v-if="canCrudRoles() && rolevalue.role_name !== 'admin'">
             <table style="margin: auto" >
               <tr>
                 <td style="padding-right: 10vw">power_level</td>

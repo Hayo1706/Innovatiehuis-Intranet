@@ -59,12 +59,12 @@
               </select>
               <br />
               Toegang: &nbsp;
-              <select v-model="selectedScreeningState">
+              <select v-model="selected_access_state">
                 <option
-                  v-for="screeningstate in Object.keys(this.screeningstates)"
-                  v-bind:key="screeningstate"
+                  v-for="access in Object.keys(this.access_states)"
+                  v-bind:key="access"
                 >
-                  {{ screeningstate }}
+                  {{ access }}
                 </option>
               </select>
               <br />
@@ -101,19 +101,21 @@ export default {
       errorMessage: "",
       modal: null,
       roles: {},
-      screeningstates: {
+      access_states: {
         Geblokkeerd: 0,
         Toegestaan: 1,
       },
-      selectedRole: "student",
-      selectedScreeningState: "Toegestaan",
+      selectedRole: "",
+
+      previous_access_state: "",
+      selected_access_state: "Toegestaan",
 
       first_name: "",
       last_name: "",
       email: "",
       phone_number: "",
       selectedRoleId: 2,
-      selectedScreeningStateId: 1,
+      selectedAccessId: 1,
     };
   },
 
@@ -127,10 +129,17 @@ export default {
   created() {
     UserService.getRoles()
       .then((response) => {
-        console.log({response});
+        console.log({ response });
         for (const role of response.data.result) {
-          this.roles[role.role_name] = role.roleid;
+          if (
+            role.power_level <=
+            localStorage.getItem("may_cud_users_with_power_level_up_to")
+          ) {
+            this.roles[role.role_name] = role.roleid;
+          }
         }
+        this.selectedRole = Object.keys(this.roles)[0];
+        this.selectedRoleId = this.roles[this.selectedRole];
         AlertService.handleSuccess(response);
       })
       .catch((err) => {
@@ -142,8 +151,8 @@ export default {
     selectedRole: function (val) {
       this.selectedRoleId = this.roles[val];
     },
-    selectedScreeningState: function (val) {
-      this.selectedScreeningStateId = this.screeningstates[val];
+    selected_access_state: function (val) {
+      this.selectedAccessId = this.access_states[val];
     },
   },
   methods: {
@@ -158,7 +167,7 @@ export default {
         email: this.email,
         phone_number: this.phone_number,
         roleid: this.selectedRoleId,
-        screening_status: this.selectedScreeningStateId,
+        access_status: this.selectedAccessId,
       })
         .then((response) => {
           this.$emit("reloadUsers");
@@ -201,10 +210,10 @@ export default {
       this.first_name = "";
       this.last_name = "";
       this.email = "";
-      this.selectedRole = "student";
-      this.selectedRoleId = 2;
-      this.selectedScreeningState = "Toegestaan";
-      this.selectedScreeningStateId = 0;
+      this.selectedRole = Object.keys(this.roles)[0];
+      this.selectedRoleId = this.roles[this.selectedRole];
+      this.selected_access_state = "Toegestaan";
+      this.selectedAccessId = 1;
       this.errorMessage = "";
     },
     closeModal() {

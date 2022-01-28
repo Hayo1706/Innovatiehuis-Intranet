@@ -6,3 +6,5 @@ pip install sqlalchemy
 pip install flask-jwt-extended 4.3.1
 pip install flask-bcrypt
 pip install -U itsdangerous
+pip install pyotp
+pip install qrcode[pil]

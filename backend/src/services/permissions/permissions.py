@@ -37,9 +37,9 @@ def check_permissions(rule, *parameters):
                 resp = jsonify({'logout': True})
                 unset_jwt_cookies(resp)
                 return resp, 401
-            screening_status = query("SELECT screening_status FROM users WHERE userid = %(user_id)s",
+            access_status = query("SELECT access_status FROM users WHERE userid = %(user_id)s",
                                      {'user_id': get_jwt_identity()})[0]
-            if screening_status['screening_status'] == 1:
+            if access_status['access_status'] == 1:
                 user_perm = \
                     query("SELECT roles.* FROM users JOIN roles ON users.roleid = roles.roleid WHERE userid = %(user_id)s",
                           {'user_id': get_jwt_identity()})[0]

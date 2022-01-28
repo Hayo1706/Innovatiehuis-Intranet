@@ -2,6 +2,7 @@ import secrets
 from datetime import date
 
 import connexion
+import pyotp
 from ..config import PASSWORD_CHANGE_SECRET_KEY, DOMAIN_NAME
 from ..services.helper_functions import *
 from itsdangerous import URLSafeSerializer
@@ -9,13 +10,16 @@ from ..services.permissions import Users, Projects, Roles
 from ..services.permissions.permissions import check_permissions, check_jwt
 from ..services.extensions import bcrypt
 from flask_jwt_extended import get_jwt_identity
+import threading
+import qrcode
+from PIL import Image
 
 
 # READ users
 @check_permissions(Users.may_read_all)
 def read_all():
     return response('Succes',200, query(
-        "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, screening_status, created, "
+        "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, power_level, access_status, created, "
         "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid"))
 
@@ -24,7 +28,7 @@ def read_all():
 @check_permissions(Users.may_read)
 def read_one(user_id):
     return response('Succes',200, query(
-        "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, screening_status, created, "
+        "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, access_status, created, "
         "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen), created) AS last_seen FROM (SELECT * FROM users "
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) "
         "WHERE userid= %(id)s",
@@ -41,8 +45,12 @@ def create():
         email = body['email']
         phone_number = body['phone_number']
         roleid = body['roleid']
-        screening_status = body['screening_status']
+        access_status = body['access_status']
         password_hash = bcrypt.generate_password_hash(secrets.token_urlsafe(16)).decode('utf-8')
+        auth_key = pyotp.random_base32()
+
+
+
     except KeyError:
         return response("Foute aanvraag", 400)
 
@@ -51,18 +59,27 @@ def create():
         return response("Dit mailadres wordt al gebruikt door een bestaand account.", 400)
 
     query_update(
-        "INSERT INTO users (first_name, last_name, email, phone_number, roleid, screening_status, password_hash) "
-        "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone_number)s, %(roleid)s, %(screening_status)s,%(password_hash)s)",
+        "INSERT INTO users (first_name, last_name, email, phone_number, roleid, access_status, password_hash, auth_key) "
+        "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone_number)s, %(roleid)s, %(access_status)s,%(password_hash)s,%(auth_key)s)",
         {'first_name': first_name, 'last_name': last_name, 'email': email, 'phone_number': phone_number,
          'roleid': roleid,
-         'screening_status': screening_status, 'password_hash': password_hash})
+         'access_status': access_status, 'password_hash': password_hash, 'auth_key': auth_key})
     serializer = URLSafeSerializer(PASSWORD_CHANGE_SECRET_KEY)
     d1 = date.today().strftime("%d/%m/%Y")
     userid = query("SELECT userid FROM users WHERE email=%(email)s", {'email': email})[0]['userid']
     resp = DOMAIN_NAME + "/manage/resetpassword?resettoken=" + serializer.dumps([userid, password_hash])
-    print(resp)
+
+    data_thread = threading.Thread(target=lambda: send_data_to_user(auth_key, first_name, email, resp))
+    data_thread.start()
+
     return response("Gebruiker toegevoegd", 200, resp)
 
+# TODO send data below to user via mail
+def send_data_to_user(auth_key, first_name, email, resp):
+    print(resp)
+    totp_url = pyotp.totp.TOTP(auth_key, interval=30).provisioning_uri(name=first_name+ "@innovatiehuis",issuer_name='Innovatiehuis')
+    img = qrcode.make(totp_url)
+    img.show()
 
 # PUT users/{id}
 @check_permissions(Users.may_update)
@@ -85,12 +102,12 @@ def update(user_id):
     return response("Persoonsgegevens aangepast", 200)
 
 
-# PATCH users/{id}/screening/{status}
-@check_permissions(Users.may_update_screening)
-def update_screening(user_id, screening_status):
+# PATCH users/{id}/access/{status}
+@check_permissions(Users.may_update_access)
+def update_access(user_id, access_status):
     query_update(
-        "UPDATE users SET screening_status=%(screening_status)s WHERE userid=%(userid)s",
-        {'screening_status': screening_status, "userid": user_id})
+        "UPDATE users SET access_status=%(access_status)s WHERE userid=%(userid)s",
+        {'access_status': access_status, "userid": user_id})
     return response("Toegang van gebruiker aangepast")
 
 

@@ -9,12 +9,12 @@ var AlertService = function () {
         alertEl.classList.add(type);
         document.querySelector("#alert-wrapper").appendChild(alertEl);
 
-        setTimeout(function() {
+        setTimeout(function () {
             var seconds = 1;
-            alertEl.style.transition = "opacity "+seconds+"s ease";
-    
+            alertEl.style.transition = "opacity " + seconds + "s ease";
+
             alertEl.style.opacity = 0;
-            setTimeout(function() {
+            setTimeout(function () {
                 alertEl.remove();
             }, 1500);
         }, 5000);
@@ -23,7 +23,7 @@ var AlertService = function () {
     function handleSuccess(response) {
         if (response.config.method == "get") {
             console.log("HTTP code " + response.status, "Successfully loaded resource:");
-            console.log({response});
+            console.log({ response });
             return;
         }
         if (response.status) {
@@ -32,29 +32,29 @@ var AlertService = function () {
             return;
         }
         console.log("HTTP code " + response.status, "Server returned the following response:");
-        console.log({response});
+        console.log({ response });
     }
 
     function handleError(err) {
         if (err.code == "ECONNABORTED") {
-            console.log({err});
+            console.log({ err });
             alert("De server reageert niet. Probeer het later opnieuw of neem contact op met de beheerder.", "error");
             return;
         }
         if (err.response.data.message) {
             console.log("HTTP code " + err.response.status, err.response.data.message);
-            console.log({err});
+            console.log({ err });
             alert(err.response.data.message, "error");
             return;
         }
         if (err.response.status) {
             console.log("HTTP code " + err.response.status, err.response.statusText);
-            console.log({err});
+            console.log({ err });
             alert(err.response.statusText, "error");
             return;
         }
         console.log("UNEXPECTED ERROR WHILE QUERYING OR RETRIEVING DATA:");
-        console.log({err});
+        console.log({ err });
         alert("Er is een onverwachte fout opgetreden. Neem contact op met de beheerder.", "error");
     }
 
