@@ -34,6 +34,7 @@ axiosClient.interceptors.response.use((config) => {
         if (error.response.status == 403) {
             if (localStorage.getItem("access_status") == 0) {
                 router.push({ path: "/no_access" });
+                return;
             } else {
                 router.push({ path: "/404" });
             }
