@@ -59,10 +59,10 @@
             <img
               style="cursor: pointer"
               src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
+              v-if="access_state == 'Toegestaan'"
               @click="
                 () => {
-                  this.screeningstate = 'Geblokkeerd';
+                  this.access_state = 'Geblokkeerd';
                 }
               "
             />
@@ -70,11 +70,11 @@
           <div v-else>
             <img
               src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
+              v-if="access_state == 'Geblokkeerd'"
             />
             <img
               src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
+              v-if="access_state == 'Toegestaan'"
             />
           </div>
         </div>
@@ -144,20 +144,20 @@
             <img
               style="cursor: pointer"
               src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
+              v-if="this.access_state == 'Geblokkeerd'"
               @click="
                 () => {
-                  this.screeningstate = 'Toegestaan';
+                  this.access_state = 'Toegestaan';
                 }
               "
             />
             <img
               style="cursor: pointer"
               src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
+              v-if="access_state == 'Toegestaan'"
               @click="
                 () => {
-                  this.screeningstate = 'Geblokkeerd';
+                  this.access_state = 'Geblokkeerd';
                 }
               "
             />
@@ -165,11 +165,11 @@
           <div v-else>
             <img
               src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
+              v-if="access_state == 'Geblokkeerd'"
             />
             <img
               src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
+              v-if="access_state == 'Toegestaan'"
             />
           </div>
         </div>
@@ -205,19 +205,19 @@ export default {
     return {
       previousRole: this.user.role_name,
       selectedRole: this.user.role_name,
-      screeningstates: {
+      access_states: {
         Geblokkeerd: 0,
         Toegestaan: 1,
       },
 
-      previousScreeningstate: "",
-      screeningstate: "",
+      previous_access_state: "",
+      access_state: "",
       roles: {},
     };
   },
   watch: {
-    screeningstate: async function (val) {
-      if (val != this.previousScreeningstate) {
+    access_state: async function (val) {
+      if (val != this.previous_access_state) {
         let action;
         if (val == "Toegestaan") {
           action = "deblokkeren";
@@ -236,24 +236,20 @@ export default {
             "?",
         });
         if (ok) {
-          const screeningstateId = this.screeningstates[val];
+          const access_state_Id = this.access_states[val];
 
-          UserService.updateUserScreening(screeningstateId, this.user.userid)
+          UserService.updateUserScreening(access_state_Id, this.user.userid)
             .then((response) => {
-              this.previousScreeningstate = val;
-              this.$emit(
-                "screeningChanged",
-                this.user.userid,
-                screeningstateId
-              );
+              this.previous_access_state = val;
+              this.$emit("screeningChanged", this.user.userid, access_state_Id);
               AlertService.handleSuccess(response);
             })
             .catch((err) => {
               AlertService.handleError(err);
-              this.screeningstate = this.previousScreeningstate;
+              this.access_states = this.previous_access_state;
             });
         } else {
-          this.screeningstate = this.previousScreeningstate;
+          this.access_states = this.previous_access_state;
         }
       }
     },
@@ -299,12 +295,12 @@ export default {
       }
     }
 
-    this.previousScreeningstate = this.getKeyByValue(
-      this.screeningstates,
+    this.previous_access_state = this.getKeyByValue(
+      this.access_states,
       this.user.screening_status
     );
-    this.screeningstate = this.getKeyByValue(
-      this.screeningstates,
+    this.access_state = this.getKeyByValue(
+      this.access_states,
       this.user.screening_status
     );
   },
