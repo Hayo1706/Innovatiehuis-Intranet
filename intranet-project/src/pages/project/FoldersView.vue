@@ -101,8 +101,8 @@ export default {
   name: "FoldersView",
   props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'searchTerm'],
   watch: {
-    currentFolders: function(newFolders){
-      this.setSearchedFolders(newFolders);
+    currentFolders: function(){
+      this.setSearchedFolders(this.searchTerm);
     },
     currentPath: function(newPath){
       this.folderPath = newPath;
@@ -171,6 +171,7 @@ export default {
           }
         }
       }
+      console.log("test2", this.searchedFolders)
     },
     folderSelected(folder){
       this.$emit("folderSelected", folder)

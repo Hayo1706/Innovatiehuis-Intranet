@@ -10,9 +10,7 @@
     shareMenu = false"
   >
     <div class="row"
-      @mousedown.left="this.selected = !this.selected"
-      @mouseup.left="selectFile()
-    ">
+      @click.shift="this.selected = !this.selected; selectFile()">
       <div class="col s10">
         <img
             draggable="false"
@@ -157,7 +155,6 @@ export default {
       this.fileName = this.name.split(".")[0]
       var inputName = document.getElementById(this.name)
       inputName.removeAttribute("disabled")
-      this.viewMenu = false;
       inputName.select();
     },
     disableInput(){

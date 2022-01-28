@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-sm-3">
+      <div class="col-sm-4" id="center">
         <SearchBar
           @searchBarChanged="
             (searchTerm) => $emit('searchBarChanged', searchTerm)
@@ -10,10 +10,9 @@
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
       </div>
-      <div class="col-sm-2">
-        <div class="row">
-          <div class="col-6">
-            <input
+      <div class="col-sm-8">
+        <nav class="mb-1 navbar navbar-expand-lg btn-blue">
+          <input
               @change="uploadFiles"
               type="file"
               id="files"
@@ -27,56 +26,41 @@
                 class="component-header-button"
                 src=".\..\..\assets\images\new_upload.png"
               />
-            </label>
-          </div> 
-          <div class="col-6">
-            <img
-              data-toggle="tooltip"
-              data-placement="bottom"
-              title="Map aanmaken"
-              class="component-header-button"
-              src=".\..\..\assets\images\newfolder.png"
-              data-bs-toggle="modal"
-              data-bs-target="#folderModal"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="row">
-          <div class="col-3" style="background-color: grey; border-radius: 10px 0px 0px 10px;">
-            <img
-              @click="this.$emit('deleteSelectedElements')"
-              title="Verwijderen"
-              class="component-header-button"
-              src=".\..\..\assets\images\delete.png"
-            />
-          </div>
-          <div class="col-3" style="background-color: grey;">
-            <img
-              title="Delen"
-              class="component-header-button"
-              src=".\..\..\assets\images\share_folder.png"
-            />
-          </div>
-          <div class="col-3" style="background-color: grey;">
-            <img
-              title="Bestanden verplaatsen"
-              class="component-header-button"
-              src=".\..\..\assets\images\move_folder.png"
-            />
-          </div>
-          <div class="col-3" style="background-color: grey; border-radius: 0px 10px 10px 0px;">
-            <img
-              title="Deselecteren"
-              class="component-header-button"
-              src=".\..\..\assets\images\x.png"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-3">
-        <slot></slot>
+          </label>
+          <img
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Map aanmaken"
+            class="component-header-button"
+            src=".\..\..\assets\images\newfolder.png"
+            data-bs-toggle="modal"
+            data-bs-target="#folderModal"
+          />
+          <img
+            @click="this.$emit('deleteSelectedElements')"
+            title="Verwijderen"
+            class="component-header-button"
+            src=".\..\..\assets\images\delete.png"
+          />
+          <img
+            @click="this.$emit('shareSelectedElements')"
+            title="Delen"
+            class="component-header-button"
+            src=".\..\..\assets\images\share_folder.png"
+          />
+          <img
+            @click="this.$emit('moveSelectedElements')"
+            title="Bestanden verplaatsen"
+            class="component-header-button"
+            src=".\..\..\assets\images\move_folder.png"
+          />
+          <img
+            @click="this.$emit('deselectSelectedElements')"
+            title="Deselecteren"
+            class="component-header-button"
+            src=".\..\..\assets\images\x.png"
+          />
+        </nav>
       </div>
     </div>
     <div
@@ -145,12 +129,11 @@ export default {
   components: {
     SearchBar,
   },
-  props: ["currentPath"],
+  props: ["currentPath", "sharedChilds", "selectedFolders", "selectedFiles"],
   data: function () {
     return {
       newFolderName: null,
       files: [],
-
     };
   },
   methods: {
