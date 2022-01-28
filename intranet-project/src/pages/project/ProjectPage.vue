@@ -9,6 +9,13 @@
                 Bestandsoverzicht
               </text>
                <text v-else
+                  @dragenter.prevent
+                  @dragover.prevent
+                  @drop="onDrop($event, '/')"
+                  @dragenter="addClass"
+                  @dragleave="removeClass"
+                  @mouseleave.self="removeClass"
+
                   class="hover"
                   @click="currentPathChanged('', this.projectID)">
                 Home/                  
@@ -124,6 +131,18 @@ export default {
       selectedFiles: [],
     };
   },
+  setup(){
+     const startDrag = (event, path) => {
+      event.dataTransfer.dropEffect = 'move'
+      event.dataTransfer.effectAllowed = 'move'
+      event.dataTransfer.setData('path', path)
+      event.dataTransfer.setData('type', 'folder')
+    }
+
+    return{
+      startDrag,
+    }
+  },
   watch: {
     $route() {
       if(this.$route.fullPath.includes("/project/")){
@@ -139,6 +158,40 @@ export default {
     },
   },
   methods: {
+    addClass: function (e) {
+      if (e.target.classList.contains("hover"))
+        e.target.classList.add("hoverDrag");
+    },
+    removeClass: function (e) {
+      if (e.target.classList.contains("hover"))
+        e.target.classList.remove("hoverDrag");
+    },
+    onDrop(event, to) {
+      const path = event.dataTransfer.getData('path')
+      let id = this.projectID
+      if (to === path)
+        return
+      if (event.dataTransfer.getData('type') === 'file') {
+        FilestorageService.moveFile(id, path, to)
+            .then((response) => {
+              AlertService.handleSuccess(response)
+              this.setCurrentFiles();
+            })
+            .catch((err) => {
+              AlertService.handleError(err);
+            });
+      }
+      else{
+        FilestorageService.moveFolder(this.projectID, path, to, '')
+            .then((response) => {
+              AlertService.handleSuccess(response)
+              this.setCurrentFolders();
+            })
+            .catch((err) => {
+              AlertService.handleError(err);
+            });
+      }
+    },
     resetSelectedElements(){
       this.selectedFolders = []
       this.selectedFiles = []
