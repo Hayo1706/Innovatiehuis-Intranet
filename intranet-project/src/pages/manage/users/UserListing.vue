@@ -49,10 +49,10 @@
             <img
               style="cursor: pointer"
               src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
+              v-if="access_state == 'Geblokkeerd'"
               @click="
                 () => {
-                  this.screeningstate = 'Toegestaan';
+                  this.access_state = 'Toegestaan';
                 }
               "
             />
@@ -238,10 +238,10 @@ export default {
         if (ok) {
           const access_state_Id = this.access_states[val];
 
-          UserService.updateUserScreening(access_state_Id, this.user.userid)
+          UserService.updateUserAccess(access_state_Id, this.user.userid)
             .then((response) => {
               this.previous_access_state = val;
-              this.$emit("screeningChanged", this.user.userid, access_state_Id);
+              this.$emit("accessChanged", this.user.userid, access_state_Id);
               AlertService.handleSuccess(response);
             })
             .catch((err) => {

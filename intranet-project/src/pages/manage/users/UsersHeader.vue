@@ -54,12 +54,9 @@
           <i v-else class="bi-caret-up-fill"></i>
         </span>
       </div>
-      <div
-        class="full-button col"
-        @click="this.$emit('sortEvent', 'screening')"
-      >
+      <div class="full-button col" @click="this.$emit('sortEvent', 'access')">
         Toegang
-        <span v-if="sortingMethod == 'screening'">
+        <span v-if="sortingMethod == 'access'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
           <i v-else class="bi-caret-up-fill"></i>
         </span>

@@ -5,7 +5,7 @@ var UserService = function () {
 
     async function getUsers() {
         const response = await axiosClient.get('/users', { timeout: 2000 });
-        response.data.result.forEach(user => { 
+        response.data.result.forEach(user => {
             user.created = jsonToJsDate(user.created);
             user.last_seen = jsonToJsDate(user.last_seen);
         });
@@ -22,7 +22,7 @@ var UserService = function () {
     }
     async function getUserById(userid) {
         const response = await axiosClient.get(`/users/${userid}`, { timeout: 2000 });
-        response.data.result.forEach(user => { 
+        response.data.result.forEach(user => {
             user.created = jsonToJsDate(user.created);
             user.last_seen = jsonToJsDate(user.last_seen);
         });
@@ -52,7 +52,7 @@ var UserService = function () {
         const response = await axiosClient.patch(`/users/${userid}/role/${roleid}`, { timeout: 2000 });
         return response;
     }
-    async function updateUserScreening(screeningstatus, userid) {
+    async function updateUserAccess(screeningstatus, userid) {
         const response = await axiosClient.patch(`/users/${userid}/screening/${screeningstatus}`, { timeout: 2000 });
         return response;
     }
@@ -61,15 +61,15 @@ var UserService = function () {
         return response;
     }
     async function updateRole(role, roleid) {
-        const response = await axiosClient.put(`/roles/${roleid}`, role,{ timeout: 2000 });
+        const response = await axiosClient.put(`/roles/${roleid}`, role, { timeout: 2000 });
         return response;
     }
     async function addRole(role) {
-        const response = await axiosClient.post(`/roles`, role,{ timeout: 2000 });
+        const response = await axiosClient.post(`/roles`, role, { timeout: 2000 });
         return response;
     }
-    async function deleteRole(roleid,password) {
-        const response = await axiosClient.delete(`/roles/${roleid}`, { data: {password: password}, headers:{ timeout: 2000 }});
+    async function deleteRole(roleid, password) {
+        const response = await axiosClient.delete(`/roles/${roleid}`, { data: { password: password }, headers: { timeout: 2000 } });
         return response;
     }
     return {
@@ -85,7 +85,7 @@ var UserService = function () {
         addUserToProject,
         removeUserFromProject,
         updateUserRole,
-        updateUserScreening,
+        updateUserAccess,
         getRoles
     }
 
