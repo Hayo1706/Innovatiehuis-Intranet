@@ -127,9 +127,14 @@ export default {
   created() {
     UserService.getRoles()
       .then((response) => {
-        console.log({response});
+        console.log({ response });
         for (const role of response.data.result) {
-          this.roles[role.role_name] = role.roleid;
+          if (
+            role.power_level <=
+            localStorage.getItem("may_cud_users_with_power_level_up_to")
+          ) {
+            this.roles[role.role_name] = role.roleid;
+          }
         }
         AlertService.handleSuccess(response);
       })

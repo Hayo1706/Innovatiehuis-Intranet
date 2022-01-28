@@ -18,10 +18,13 @@
         </a>
       </div>
       <div class="col">
-        <div @click="handleDeleteUser()" v-show="canDelete()">
+        <div @click="handleDeleteUser()" v-if="canDelete() && showRemove">
           <div class="iconHolder">
             <img src="@\assets\images\delete.png" />
           </div>
+        </div>
+        <div v-else>
+          <img style="visibility: hidden" src="@\assets\images\delete.png" />
         </div>
       </div>
     </div>
@@ -33,7 +36,7 @@ import PermissionService from "@/services/PermissionService.js";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 
 export default {
-  props: ["user"],
+  props: ["user", "showRemove"],
   components: { ConfirmDialogue },
   name: "UserButtons",
   data: function () {
@@ -45,18 +48,19 @@ export default {
     },
     async handleDeleteUser() {
       this.$emit("removeUser", this.user.userid);
-    }
+    },
   },
 };
 </script>
 <style scoped>
 .col {
   padding: 0 3px;
+  float: left;
 }
 img {
   height: 3em;
-  cursor: pointer;
   opacity: 60%;
+  cursor: pointer;
 }
 img:hover {
   opacity: 80%;

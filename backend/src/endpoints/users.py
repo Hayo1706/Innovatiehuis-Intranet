@@ -19,7 +19,7 @@ from PIL import Image
 @check_permissions(Users.may_read_all)
 def read_all():
     return response('Succes',200, query(
-        "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, screening_status, created, "
+        "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, power_level, screening_status, created, "
         "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid"))
 
