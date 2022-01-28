@@ -148,7 +148,7 @@ export default {
   },
   methods: {
     setUserAccess(id, new_access_id) {
-      this.users.find((user) => user.userid == id).screening_status =
+      this.users.find((user) => user.userid == id).access_status =
         new_access_id;
     },
     setUserRole(id, new_role_id) {
@@ -264,8 +264,8 @@ export default {
         });
       } else if (this.sortingMethod == "access") {
         filteredUsers = filteredUsers.sort((a, b) => {
-          let fa = a.screening_status,
-            fb = b.screening_status;
+          let fa = a.access_status,
+            fb = b.access_status;
           return this.sortingFunction(fa, fb);
         });
       }
