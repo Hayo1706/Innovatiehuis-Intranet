@@ -1,58 +1,63 @@
 <template>
   <header v-if="!this.$route.path.includes('/login')">
     <div id="header-container">
-        <router-link to="/home">
-          <img 
-            title="Hoofdpagina"
-            src=".\..\assets\images\logo\square.png" 
-            class="home-img"
-          />
-        </router-link>
+      <router-link to="/home" v-if="canSeePages()">
+        <img
+          title="Hoofdpagina"
+          src=".\..\assets\images\logo\square.png"
+          class="home-img"
+        />
+      </router-link>
 
-        <router-link :to=" '/project/'+ this.$route.params.id +'/projectsettings'">
+      <router-link
+        :to="'/project/' + this.$route.params.id + '/projectsettings'"
+      >
+        <img
+          title="Projectgegevens"
+          src=".\..\assets\images\gear_icon3.png"
+          v-if="this.$route.path.indexOf('/project/') > -1 && canSeePages()"
+        />
+      </router-link>
+
+      <slot></slot>
+
+      <div>
+        <router-link
+          class="link"
+          to="/manage/projects"
+          v-if="this.canSeeProjects() && canSeePages()"
+        >
           <img
-            title="Projectgegevens"
-            src=".\..\assets\images\gear_icon3.png"
-            v-if="this.$route.path.indexOf('/project/') > -1"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Projectenoverzicht"
+            class="header-icon"
+            src=".\..\assets\images\projects_icon_yellow.png"
+          />
+        </router-link>
+        <router-link
+          to="/manage/users"
+          v-if="this.canSeeUsers() && canSeePages()"
+        >
+          <img
+            title="Gebruikersoverzicht"
+            class="header-icon"
+            src=".\..\assets\images\users_icon_yellow.png"
           />
         </router-link>
 
-        <slot></slot>
-
-        <div>
-          <router-link class="link" to="/manage/projects" v-if="this.canSeeProjects()">
-            <img 
-              data-toggle="tooltip" 
-              data-placement="bottom" 
-              title="Projectenoverzicht"
-              class="header-icon"
-              src=".\..\assets\images\projects_icon_yellow.png"
-            />
-          </router-link>
-          <router-link to="/manage/users" v-if="this.canSeeUsers()">
-            <img
-              title="Gebruikersoverzicht"
-              class="header-icon"
-              src=".\..\assets\images\users_icon_yellow.png"
-            />
-          </router-link>
-          
-          <router-link :to="'/user/' + getUserId()">
-            <img 
-              title="Profiel"
-              src=".\..\assets\images\profile_icon.png" 
-            />
-          </router-link>
-          <a>
-            <img 
-              title="Uitloggen"
-              @click="logout()" 
-              src=".\..\assets\images\logout-icon.png" 
-            />
-          </a>
-        </div>
-
+        <router-link :to="'/user/' + getUserId()" v-if="canSeePages()">
+          <img title="Profiel" src=".\..\assets\images\profile_icon.png" />
+        </router-link>
+        <a>
+          <img
+            title="Uitloggen"
+            @click="logout()"
+            src=".\..\assets\images\logout-icon.png"
+          />
+        </a>
       </div>
+    </div>
   </header>
 </template>
 
@@ -74,33 +79,31 @@ export default {
       LoginService.logout();
       this.$router.push("/login");
     },
+    canSeePages() {
+      return localStorage.getItem("access_status") == 1;
+    },
     canSeeProjects() {
-      return (
-        PermissionService.userHasPermission('may_read_any_project')
-      )
+      return PermissionService.userHasPermission("may_read_any_project");
     },
     canSeeUsers() {
-      return (
-        PermissionService.userHasPermission('may_read_any_user')
-      )
-    }
+      return PermissionService.userHasPermission("may_read_any_user");
+    },
   },
 };
 </script>
 
 
 <style scoped>
-
 img {
   cursor: pointer;
   border-radius: 50%;
   height: 7vh;
   margin: 10px;
 }
-img:hover{
-    box-shadow: 0 0 0 3px var(--blue3)
+img:hover {
+  box-shadow: 0 0 0 3px var(--blue3);
 }
-.title{
+.title {
   flex-grow: 4;
   text-align: center;
   margin: auto;
@@ -124,5 +127,4 @@ header {
   max-width: 1500px;
   margin: auto;
 }
-
 </style>

@@ -19,23 +19,28 @@ axiosClient.interceptors.request.use(
 
 axiosClient.interceptors.response.use((config) => {
     return config;
-}, 
-(error) => {
-    //catch timeout error
-    if (error.code == "ECONNABORTED"){
+},
+    (error) => {
+        //catch timeout error
+        if (error.code == "ECONNABORTED") {
+            return Promise.reject(error);
+        }
+        //catch login error
+        if (error.response.status == 401 && !router.currentRoute.value.fullPath.includes('/login')) {
+            LoginService.logout();
+            window.location.reload();
+        }
+        //catch users accessing pages they shouldn't, without letting them know the page exists
+        if (error.response.status == 403) {
+            if (localStorage.getItem("access_status") == 0) {
+                router.push({ path: "/no_access" });
+            } else {
+                router.push({ path: "/404" });
+            }
+
+        }
         return Promise.reject(error);
-    }
-    //catch login error
-    if (error.response.status == 401 && !router.currentRoute.value.fullPath.includes('/login')) {
-        LoginService.logout();
-        window.location.reload();
-    }
-    //catch users accessing pages they shouldn't, without letting them know the page exists
-    if (error.response.status == 403) {
-        router.push({path:"/404"});
-    }
-    return Promise.reject(error);
-});
+    });
 
 
 export default axiosClient
