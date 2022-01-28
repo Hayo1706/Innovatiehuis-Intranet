@@ -27,7 +27,7 @@
         />
       </div>
     </div>
-
+    
     <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
       <li v-if="this.type == 'normal'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
       <li v-if="this.type == 'normal'" v-show="canMoveFile()" @click="moveMenu = true; viewMenu = false;">Verplaats</li>

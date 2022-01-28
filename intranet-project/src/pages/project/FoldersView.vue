@@ -1,47 +1,10 @@
 <template>
   <div oncontextmenu="return false;">
-    <div class="component-header">
-      <ProjectFolderHeader
-          :path="this.folderPath"
-          @newFolderAdded="currentFoldersChanged()"
-          @searchBarChanged="setSearchedFolders">
-          <div id="projectPath">
-            <text v-if="this.folderPath == ''">Mappen</text>
-          
-            <text 
-              @dragenter.prevent
-              @dragover.prevent
-              @drop="onDrop($event, '/')"
-              @dragenter="addClass"
-              @dragleave="removeClass"
-              @mouseleave.self="removeClass"
-
-              v-else class="hover"
-              @click="currentPathChanged('', this.projectID)"
-            >Home/</text>
-            <span v-for="(path, index) in fullPath = this.folderPath.split('/').slice(0,-1)" :key="path">
-              <text
-                  @drop="onDrop($event, '/'+ fullPath.slice(1, index+1)[0])"
-                  @dragenter.prevent
-                  @dragover.prevent
-                  @dragenter="addClass"
-                  @dragleave="removeClass"
-                  @mouseleave.self="removeClass"
-
-                  class="hover"
-                  @click="currentPathChanged('/'+fullPath.slice(1, index+1)[0], this.projectID)"
-                  v-if="path != ''">{{ path }}/</text>
-            </span>
-            <text>
-              {{this.folderPath.split('/').slice(-1)[0]}}
-            </text>
-          </div>
-        </ProjectFolderHeader>
-    </div>
 
     <div>
       <div class="row">
-        <div v-for="folder in searchedFolders" :key="folder.name" class="col-sm-4">
+        <h4>Mappen</h4>
+        <div v-for="folder in searchedNormalFolders" :key="folder.name" class="col-sm-4">
           <ProjectFolder
             :folderName="folder.name"
             :folderType="folder.type"
@@ -69,7 +32,19 @@
             @dragstart="startDrag($event, folder.path)"
           />
         </div>
+        <h4 v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h4>
+        <div v-for="folder in searchedSharedFolders" :key="folder.name" class="col-sm-4">
+          <ProjectFolder
+            :folderName="folder.name"
+            :folderType="folder.type"
+            :folderPath="folder.path"
+            :projectID="folder.projectID"
+            :currentFolders="this.currentFolders"
+            :files="folder.files"
 
+            @currentPathChanged="currentPathChanged"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -77,7 +52,6 @@
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
-import ProjectFolderHeader from "./ProjectFolderHeader.vue";
 import ProjectFolder from "./ProjectFolder.vue";
 import AlertService from "../../services/AlertService";
 
@@ -95,14 +69,13 @@ export default {
     }
   },
   components: {
-    ProjectFolderHeader,
     ProjectFolder,
   },
   name: "FoldersView",
   props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'searchTerm'],
   watch: {
     currentFolders: function(){
-      this.setSearchedFolders(this.searchTerm);
+      this.setSearchedFolders(null);
     },
     currentPath: function(newPath){
       this.folderPath = newPath;
@@ -116,7 +89,8 @@ export default {
     return {
       errorStatus: false,
       folderPath: this.currentPath,
-      searchedFolders: [],
+      searchedNormalFolders: [],
+      searchedSharedFolders: [],
     };
   },
   methods: {
@@ -155,23 +129,27 @@ export default {
       }
     },
     folderNameInSearchTerm(folderName, searchTerm) {
+      console.log("test2", folderName.includes(searchTerm) || searchTerm == null)
       return folderName.includes(searchTerm) || searchTerm == null;
     },   
     setSearchedFolders(searchTerm){
+      this.searchedNormalFolders = []
+      this.searchedSharedFolders = []
+      console.log("test2", this.currentFolders)
+      for(var folder of this.currentFolders){
+        if(this.folderNameInSearchTerm(folder.name, searchTerm)){
+          
+          if(folder.type == "normal"){
 
-      if(searchTerm == "" || searchTerm == null){
-          this.searchedFolders = this.currentFolders;  
-      }
-      else{
-        this.searchedFolders = []
-        for(var folder_index in this.currentFolders){
-          var folderName = this.currentFolders[folder_index].name
-          if(this.folderNameInSearchTerm(String(folderName), searchTerm)){
-            this.searchedFolders.push(this.currentFolders[folder_index])
+            this.searchedNormalFolders.push(folder)
+          }
+          else{
+            this.searchedSharedFolders.push(folder)
           }
         }
       }
-      console.log("test2", this.searchedFolders)
+      console.log("test2", this.searchedSharedFolders)
+      console.log("test2", this.searchedNormalFolders)
     },
     folderSelected(folder){
       this.$emit("folderSelected", folder)

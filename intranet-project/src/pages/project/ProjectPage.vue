@@ -37,7 +37,6 @@
                 {{this.currentPath.split('/').slice(-1)[0]}}
               </text>
 
-
               <ProjectPageHeader
                 :currentPath="this.currentPath"
                 :sharedChilds="this.sharedChilds"
@@ -398,7 +397,6 @@ export default {
     },
     setCurrentFolders() {
       this.currentFolders = []
-      console.log("test1", this.parentID)
       if(this.parentID == null && this.childID == null){
         FilestorageService.getFoldersOfProject(this.projectID, this.currentPath)
           .then((response) => {
@@ -559,6 +557,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

@@ -1,14 +1,6 @@
 <template>
   <div>
-    <div class="component-header">
-        <ProjectFilesHeader
-          :path="this.folderPath"
-          @searchBarChanged="setSearchedFiles"
-          @newFilesUploaded="currentFilesChanged"
-        >
-        Bestanden
-        </ProjectFilesHeader>
-    </div>
+    <h4>Bestanden</h4>
       <div class="row">
         <div v-for="file in searchedFiles" :key="file" class="col-sm-2">
           <ProjectFile
@@ -40,7 +32,6 @@
 </template>
 
 <script>
-import ProjectFilesHeader from "./ProjectFilesHeader.vue";
 import ProjectFile from "./ProjectFile.vue";
 import AlertService from "../../services/AlertService";
 import ProjectService from "../../services/ProjectService";
@@ -59,7 +50,6 @@ export default {
     }
   },
   components: {
-    ProjectFilesHeader,
     ProjectFile,
   },
   name: "FilesView",
@@ -154,12 +144,12 @@ export default {
     },
   },
   async created(){
-    this.setSearchedFiles();
+    this.setSearchedFiles(null);
   }
 };
 </script>
 
-<style scoped>
+<style>
 .component-container{
   height: auto;
   min-height: auto;
