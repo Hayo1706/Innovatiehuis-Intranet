@@ -20,46 +20,51 @@
               multiple
               hidden
             />
-            <label for="files" refs="files" class="file-btn">
+            <label v-if="this.uploadMenu == true" for="files" refs="files" class="file-btn">
               <img
                 title="Upload bestand"
                 class="component-header-button"
-                src=".\..\..\assets\images\new_upload.png"
+                src=".\..\..\assets\images\upload_file.png"
               />
           </label>
+          <div v-else title="Uploading bestanden..." class="spinner-border" role="status" alt="uploading...">
+          </div>
           <img
             data-toggle="tooltip"
             data-placement="bottom"
             title="Map aanmaken"
             class="component-header-button"
-            src=".\..\..\assets\images\newfolder.png"
+            src=".\..\..\assets\images\create_folder.png"
             data-bs-toggle="modal"
             data-bs-target="#folderModal"
           />
-          <img
-            @click="this.$emit('deleteSelectedElements')"
-            title="Verwijderen"
-            class="component-header-button"
-            src=".\..\..\assets\images\delete.png"
-          />
-          <img
-            @click="this.$emit('shareSelectedElements')"
-            title="Delen"
-            class="component-header-button"
-            src=".\..\..\assets\images\share_folder.png"
-          />
-          <img
-            @click="this.$emit('moveSelectedElements')"
-            title="Bestanden verplaatsen"
-            class="component-header-button"
-            src=".\..\..\assets\images\move_folder.png"
-          />
-          <img
-            @click="this.$emit('deselectSelectedElements')"
-            title="Deselecteren"
-            class="component-header-button"
-            src=".\..\..\assets\images\x.png"
-          />
+          <div v-if="this.selectedFiles.length + this.selectedFolders.length > 0">
+            <img
+              @click="this.$emit('deselectSelectedElements')"
+              title="Deselecteren"
+              class="component-header-button"
+              src=".\..\..\assets\images\cancel_selection.png"
+            />
+            <img
+              @click="this.$emit('deleteSelectedElements')"
+              title="Verwijderen"
+              class="component-header-button"
+              src=".\..\..\assets\images\delete.png"
+            />
+            <img
+              v-if="this.selectedFiles.length > 0 && this.selectedFolders.length == 0"
+              @click="this.$emit('shareSelectedElements')"
+              title="Bestanden delen"
+              class="component-header-button"
+              src=".\..\..\assets\images\share_files.png"
+            />
+            <img
+              @click="this.$emit('moveSelectedElements')"
+              title="Geselecteerde elementen verplaatsen"
+              class="component-header-button"
+              src=".\..\..\assets\images\move_selected.png"
+            />
+          </div>
         </nav>
       </div>
     </div>
@@ -133,6 +138,7 @@ export default {
   data: function () {
     return {
       newFolderName: null,
+      uploadMenu: true,
       files: [],
     };
   },
