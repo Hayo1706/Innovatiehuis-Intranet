@@ -47,6 +47,7 @@
                 @newFilesUploaded="currentFilesChanged()"
                 @deleteSelectedElements="deleteSelectedElements()"
                 @moveSelectedElements="moveSelectedElements()"
+                @deselectSelectedElements="resetSelectedElements()"
                 @shareSelectedElements="shareSelectedFiles()"
                 @searchBarChanged="setSearchTerm">
               </ProjectPageHeader>
@@ -151,6 +152,7 @@ export default {
         this.parentID = this.$route.query.parent;
         this.currentPath = this.getPath();
         this.previousPath = this.getPreviousPath(this.$route.path)
+        this.resetSelectedElements();
         this.setParentProjects();
         this.setChildProjects();
         this.setCurrentFolders();

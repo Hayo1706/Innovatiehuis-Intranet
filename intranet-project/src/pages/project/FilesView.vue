@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4>Bestanden</h4>
-      <div class="row">
+      <div class="row" style="min-height: 15vh">
         <div v-for="file in this.searchedFiles" :key="file" class="col-sm-2">
           <ProjectFile
             :projectID="file.projectID"
