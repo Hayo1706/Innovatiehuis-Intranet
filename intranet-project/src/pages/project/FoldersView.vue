@@ -3,7 +3,7 @@
 
     <div>
       <div class="row">
-        <h4>Mappen</h4>
+        <h4 v-if="this.searchedNormalFolders.length > 0">Mappen</h4>
         <div v-for="folder in searchedNormalFolders" :key="folder.name" class="col-sm-4">
           <ProjectFolder
             :folderName="folder.name"
@@ -72,25 +72,37 @@ export default {
     ProjectFolder,
   },
   name: "FoldersView",
-  props: ['projectID', 'currentPath', 'previousPath', 'currentFolders', 'searchTerm'],
-  watch: {
-    currentFolders: function(){
-      this.setSearchedFolders(null);
+  props: ['projectID', 'currentPath', 'previousPath', 'currentSharedFolders', 'currentFolders', 'searchTerm'],
+  computed: {
+    searchedSharedFolders: function () {
+      var searchedSharedFolders = []
+      for(var sharedFolder of this.currentSharedFolders){
+        var folderName = sharedFolder.name
+        if(this.folderNameInSearchTerm(String(folderName), this.searchTerm)){
+          searchedSharedFolders.push(sharedFolder)
+        }
+      }
+      return searchedSharedFolders
     },
-    currentPath: function(newPath){
-      this.folderPath = newPath;
-    },
-    searchTerm: function(){
-      this.setSearchedFolders(this.searchTerm);
+    searchedNormalFolders: function () {
+      if(this.searchTerm == "" || this.searchTerm == null){
+       return this.currentFolders;
+      }
+      else{
+        var searchedFolders = []
+        for(var folder_index in this.currentFolders){
+          var folderName = this.currentFolders[folder_index].name
+          if(this.folderNameInSearchTerm(String(folderName), this.searchTerm)){
+            searchedFolders.push(this.currentFolders[folder_index])
+          }
+        }
+        return searchedFolders
+      }
     }
-
   },
   data: function () {
     return {
-      errorStatus: false,
-      folderPath: this.currentPath,
-      searchedNormalFolders: [],
-      searchedSharedFolders: [],
+      searchedFolders: [],
     };
   },
   methods: {
@@ -129,27 +141,7 @@ export default {
       }
     },
     folderNameInSearchTerm(folderName, searchTerm) {
-      console.log("test2", folderName.includes(searchTerm) || searchTerm == null)
       return folderName.includes(searchTerm) || searchTerm == null;
-    },   
-    setSearchedFolders(searchTerm){
-      this.searchedNormalFolders = []
-      this.searchedSharedFolders = []
-      console.log("test2", this.currentFolders)
-      for(var folder of this.currentFolders){
-        if(this.folderNameInSearchTerm(folder.name, searchTerm)){
-          
-          if(folder.type == "normal"){
-
-            this.searchedNormalFolders.push(folder)
-          }
-          else{
-            this.searchedSharedFolders.push(folder)
-          }
-        }
-      }
-      console.log("test2", this.searchedSharedFolders)
-      console.log("test2", this.searchedNormalFolders)
     },
     folderSelected(folder){
       this.$emit("folderSelected", folder)
@@ -161,12 +153,8 @@ export default {
       this.$emit("currentFoldersChanged")
     },
     currentPathChanged(newPath, projectID){
-      this.folderPath = newPath;
       this.$emit("currentPathChanged", newPath, projectID);
     }
-  },
-  async created() {
-    this.setSearchedFolders();
   },
 };
 </script>
@@ -179,9 +167,5 @@ export default {
 .component-container{
   height: auto;
   min-height: auto;
-}
-
-#projectPath {
-  overflow: hidden;
 }
 </style>

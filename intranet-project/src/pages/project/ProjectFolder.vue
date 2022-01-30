@@ -188,7 +188,6 @@ export default {
       inputName.setAttribute("disabled", "")
     },
     moveToFolder(folder) {
-      console.log(folder.path, this.folderPath)
       var targetPath = folder.path;
       FilestorageService.moveFolder(this.projectID, this.folderPath, targetPath, "")
         .then((response) => {

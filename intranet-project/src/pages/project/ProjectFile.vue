@@ -3,9 +3,9 @@
     v-bind:id="this.path"
     oncontextmenu="return false;"
     class="projectFile"
-    @contextmenu="viewMenu = true"
-    @long-press="viewMenu = true"
-    @mouseleave="viewMenu = false;
+    @contextmenu="setViewMenu(this.getCoordinates())"
+    @long-press="setViewMenu(this.getCoordinates())"
+    @mouseleave="moveMenu = false; unsetMenus();
     moveMenu = false;
     shareMenu = false"
   >
@@ -28,34 +28,26 @@
       </div>
     </div>
     
-    <ul v-show="canDownloadFile()" id="drop-down-menu" v-if="viewMenu == true">
-      <li v-if="this.type == 'normal'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</li>
-      <li v-if="this.type == 'normal'" v-show="canMoveFile()" @click="moveMenu = true; viewMenu = false;">Verplaats</li>
-      <li v-if="this.type == 'normal'" @click="shareMenu = true; viewMenu = false">Delen</li>
-      <li v-if="this.type == 'owned'" @click="stopSharingFile()">Delen Stoppen</li>
-      <li v-show="canDownloadFile()" @click="downloadFile()">Download</li>
-      <li v-if="this.type == 'normal'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</li>
-    </ul>
-    <ul id="drop-down-menu" v-if="moveMenu == true && this.shared != 'no'">
-      <li>Verplaatsen naar:</li>
-      <ul id="drop-down-menu">
+    <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.projectID+this.path">
+      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</a>
+      <a class="dropdown-item" v-if="this.type == 'owned'">Stoppen met delen</a>
+      <a class="dropdown-item" v-show="canMoveFile()" v-if="this.currentFolders.length > 1" @click="setMoveMenu(this.getCoordinates())">Verplaatsen naar:</a>
+      <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+1">
         <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
-            <li v-if="folder.name != folderName && folder.type != 'shared'">
-              {{ folder.name }}
-            </li>
-          </span>
-      </ul>
-    </ul>
-    <ul id="drop-down-menu" v-if="shareMenu == true">
-      <li>Delen met:</li>
-      <ul id="drop-down-menu">
-        <span v-for="child in this.sharedChilds" :key="child"  @click="addSharingFile(child.projectid)">
-            <li>
-              {{ child.project_name }}
-            </li>
-          </span>
-      </ul>
-    </ul>
+          <a class="dropdown-item" v-if="folder.type == 'normal'">{{ folder.name }}</a>
+        </span>
+      </div>
+
+      <a class="dropdown-item" v-if="this.currentFolders.length > 1" @click="setShareMenu()">Delen met:</a>
+      <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+'shareMenu'">
+        <span v-for="child of this.sharedChilds" :key="child"  @click="addSharingFile(child.projectid); unsetMenus()">
+          <a class="dropdown-item">{{ child.project_name }}</a>
+        </span>
+      </div>
+
+      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</a>
+      <a class="dropdown-item" v-if="this.type != 'owned'" v-show="canDownloadFile()" @click="downloadFile()">Download</a>
+    </div>
   </div>
 </template>
 
@@ -152,6 +144,7 @@ export default {
       }
     },
     enableInput(){
+      this.unsetMenus();
       this.fileName = this.name.split(".")[0]
       var inputName = document.getElementById(this.name)
       inputName.removeAttribute("disabled")
@@ -197,6 +190,40 @@ export default {
         this.deleteFile()
       }
     },
+    setMoveMenu() {
+      if(this.type == 'normal'){
+        var element = document.getElementById(this.path+1)
+        element.style['display'] = 'block'
+      }
+    },
+    setShareMenu() {
+      if(this.type == 'normal'){
+        var element = document.getElementById(this.path+'shareMenu')
+        element.style['display'] = 'block'
+      }
+    },
+    setViewMenu(e) {
+      var top = e.top;
+      var left = e.left;
+      var element = document.getElementById(this.projectID+this.path)
+      element.style['display'] = 'block'
+      element.style['top'] = String(left) + 'px'
+      element.style['left'] = String(top) + 'px'
+    },
+    unsetMenus(){
+      var shareMenu = document.getElementById(this.path+"shareMenu")
+      shareMenu.style['display'] = 'none'
+      var viewMenu = document.getElementById(this.projectID+this.path)
+      viewMenu.style['display'] = 'none'
+      var moveMenu = document.getElementById(this.path+1)
+      moveMenu.style['display'] = 'none'
+    },
+    getCoordinates(){
+      var e = window.event;
+      var posX = e.clientX;
+      var posY = e.clientY;
+      return {'top':posX, 'left':posY}
+    },
     canDeleteFile() {
       return PermissionService.userHasPermission("may_update_file_in_own_project");
     },
@@ -208,6 +235,9 @@ export default {
     },
     canDownloadFile() {
       return PermissionService.userHasPermission("may_read_own_project");
+    },
+    canSeeMenu(){
+        return PermissionService.userHasPermission("may_update_file_in_own_project");
     }
   },
 };

@@ -56,6 +56,7 @@
                 :currentPath="this.currentPath"
                 :projectID="this.projectID"
                 :currentFolders="this.currentFolders"
+                :currentSharedFolders="this.currentSharedFolders"
                 :searchTerm="this.searchTerm"
 
 
@@ -122,6 +123,7 @@ export default {
       currentPath: this.getPath(),
       currentFiles: [],
       currentFolders: [],
+      currentSharedFolders: [],
 
       sharedChilds: [],
       sharedParents: [],
@@ -211,8 +213,6 @@ export default {
       return this.childID
     },
     getParentName(){
-
-      console.log("test", this.sharedParents)
       for(var parent of this.sharedParents){
         if(parent.projectid == this.parentID){
           return parent.project_name
@@ -397,6 +397,7 @@ export default {
     },
     setCurrentFolders() {
       this.currentFolders = []
+      this.currentSharedFolders = []
       if(this.parentID == null && this.childID == null){
         FilestorageService.getFoldersOfProject(this.projectID, this.currentPath)
           .then((response) => {
@@ -427,7 +428,7 @@ export default {
           for(var child in response.data.result){
             var childName = response.data.result[child].project_name
             var childID = response.data.result[child].projectid
-            this.currentFolders.push({'name': "Gedeeld met:\n" +childName, 'path': '/', 'projectID': childID, 'type':'owned'})
+            this.currentSharedFolders.push({'name': "Gedeeld met:\n" +childName, 'path': '/', 'projectID': childID, 'type':'owned'})
           }
         })
         .catch((err) => {
@@ -440,7 +441,7 @@ export default {
           for(var parent in response.data.result){
             var parentID = response.data.result[parent].projectid
             var parentName = response.data.result[parent].project_name
-            this.currentFolders.push({'name': "Gedeeld door:\n" + parentName, 'path': '/', 'projectID': parentID, 'type':'shared'})         
+            this.currentSharedFolders.push({'name': "Gedeeld door:\n" + parentName, 'path': '/', 'projectID': parentID, 'type':'shared'})         
           }
           AlertService.handleSuccess(response);
         })
@@ -550,10 +551,12 @@ export default {
   async created() {
     this.previousPath = this.getPreviousPath(this.$route.path)
     this.setProjectName();
-    this.setCurrentFolders();
-    this.setCurrentFiles();
     this.setChildProjects();
     this.setParentProjects();
+
+    this.setCurrentFolders();
+    this.setCurrentFiles();
+
   },
 };
 </script>

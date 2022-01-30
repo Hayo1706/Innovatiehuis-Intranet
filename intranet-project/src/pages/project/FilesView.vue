@@ -2,7 +2,7 @@
   <div>
     <h4>Bestanden</h4>
       <div class="row">
-        <div v-for="file in searchedFiles" :key="file" class="col-sm-2">
+        <div v-for="file in this.searchedFiles" :key="file" class="col-sm-2">
           <ProjectFile
             :projectID="file.projectID"
             :name="file.name"
@@ -54,42 +54,30 @@ export default {
   },
   name: "FilesView",
   props: ['projectID', 'currentPath', 'sharedChilds', 'currentFolders', 'currentFiles', 'searchTerm'],
-  watch: {
-    searchTerm: function(){
-      this.setSearchedFiles(this.searchTerm);
-    },
-    currentPath: function(newPath){
-      this.folderPath = newPath;
-    },
-    currentFolders(newFolders){
-      this.folders = newFolders;
-    },
-    currentFiles: function(){
-      this.setSearchedFiles(this.searchTerm);
+  computed: {
+    searchedFiles: function() {
+      if(this.searchTerm == "" || this.searchTerm == null){
+          return this.currentFiles;  
+      }
+      else{
+        var searchedFiles = []
+        for(var file_index in this.currentFiles){
+          var folderName = this.currentFiles[file_index].name
+          if(this.fileNameInSearchterm(String(folderName), this.searchTerm)){
+            searchedFiles.push(this.currentFiles[file_index])
+          }
+        }
+        return searchedFiles;
+      }
     }
   },
+
   data: function () {
     return {
       folders: [],
-      searchedFiles: [],
-      folderPath: this.currentPath,
     };
   },
   methods: {
-    setSearchedFiles(searchTerm){
-      if(searchTerm == "" || searchTerm == null){
-          this.searchedFiles = this.currentFiles;  
-      }
-      else{
-        this.searchedFiles = []
-        for(var folder_index in this.currentFiles){
-          var folderName = this.currentFiles[folder_index].name
-          if(this.fileNameInSearchterm(String(folderName), searchTerm)){
-            this.searchedFiles.push(this.currentFiles[folder_index])
-          }
-        }
-      }
-    },
     fileNameInSearchterm(name, searchTerm) {
       return name.includes(searchTerm) || searchTerm == null;
     },
@@ -115,14 +103,12 @@ export default {
     addSharingFile(path, projectID, childID){
       var sharedFiles = ""
       for(var child of this.sharedChilds){
-        console.log(child.shared_files)
         if(child.projectid == childID){
           sharedFiles = child.shared_files;
         }
       }
       
       if(sharedFiles == null){
-        alert(sharedFiles)
         sharedFiles = path;
       }
       else{
@@ -143,9 +129,6 @@ export default {
       })
     },
   },
-  async created(){
-    this.setSearchedFiles(null);
-  }
 };
 </script>
 
