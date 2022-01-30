@@ -4,15 +4,67 @@
       <div class="row">
         <div class="col-sm-8">
           <div class="component-container">
+            <div class="component-header" style="overflow: visible;">
+              <text v-if="this.currentPath == '' && this.parentID == null && this.childID == null">
+                Bestandsoverzicht
+              </text>
+               <text v-else
+                  @dragenter.prevent
+                  @dragover.prevent
+                  @drop="onDrop($event, '/')"
+                  @dragenter="addClass"
+                  @dragleave="removeClass"
+                  @mouseleave.self="removeClass"
+
+                  class="hover"
+                  @click="currentPathChanged('', this.projectID)">
+                Home/                  
+              </text>
+              <span v-for="(path, index) in this.currentPath.split('/').slice(0,-1)" :key="path">
+                <text
+                  class="hover"
+                  @click="currentPathChanged('/' + this.currentPath.split('/').slice(1, index+1)[0], this.projectID)"
+                  v-if="path != ''">{{path}}/
+                </text>
+              </span>
+              <text v-if="this.childID != null">
+                {{ "Gedeeld met: " + this.getChildName() }}
+              </text> 
+              <text v-if="this.parentID != null">
+                {{ "Gedeeld door: " + this.getParentName() }}
+              </text>
+              <text>
+                {{this.currentPath.split('/').slice(-1)[0]}}
+              </text>
+
+              <ProjectPageHeader
+                :currentPath="this.currentPath"
+                :sharedChilds="this.sharedChilds"
+                :selectedFolders="this.selectedFolders"
+                :selectedFiles="this.selectedFiles"
+
+                @newFolderAdded="currentFoldersChanged()"
+                @newFilesUploaded="currentFilesChanged()"
+                @deleteSelectedElements="deleteSelectedElements()"
+                @moveSelectedElements="moveSelectedElements()"
+                @shareSelectedElements="shareSelectedFiles()"
+                @searchBarChanged="setSearchTerm">
+              </ProjectPageHeader>
+            </div>
             <FoldersView
                 :previousPath="this.previousPath"
                 :currentPath="this.currentPath"
                 :projectID="this.projectID"
                 :currentFolders="this.currentFolders"
+                :currentSharedFolders="this.currentSharedFolders"
+                :searchTerm="this.searchTerm"
+
 
                 @currentFoldersChanged="currentFoldersChanged"
                 @currentFilesChanged="currentFilesChanged"
                 @currentPathChanged="currentPathChanged"
+                @folderSelected="selectFolder"
+                @folderDeselected="deselectFolder"
                 @fileMoved="currentFilesChanged"
               />
               <FilesView ref="child" 
@@ -21,9 +73,13 @@
               :currentFolders="this.currentFolders"
               :currentFiles="this.currentFiles"
               :sharedChilds="this.sharedChilds"
+              :searchTerm="this.searchTerm"
               
               @sharedFilesChanged="sharedFilesChanged"
-              @currentFilesChanged="currentFilesChanged"/>
+              @currentFilesChanged="currentFilesChanged"
+              @fileSelected="selectFile"
+              @fileDeselected="deselectFile"
+              />
               
           </div>
         </div>
@@ -42,13 +98,14 @@
 <script>
 import FilesView from "./FilesView.vue";
 import FoldersView from "./FoldersView.vue";
+import ProjectPageHeader from "./ProjectPageHeader.vue";
 import AnnouncementWindow from "../../shared_components/AnnouncementWindow.vue";
 import AlertService from "../../services/AlertService";
 import ProjectService from "../../services/ProjectService.js";
 import FilestorageService from "../../services/FilestorageService.js";
 
 export default {
-  components: { FilesView, FoldersView, AnnouncementWindow },
+  components: { FilesView, FoldersView, AnnouncementWindow, ProjectPageHeader  },
   name: "ProjectPage",
   data: function () {
     return {
@@ -56,24 +113,242 @@ export default {
 
       projectID: this.getProjectId(),
       projectName: "",
-      projectParents: [],
       parentID: this.$route.query.parent,
       childID: this.$route.query.child, 
+      toolMenu: false,
 
-      previousPath: this.getPath(),
+      searchTerm: "",
+
+      previousPath: "",
       currentPath: this.getPath(),
       currentFiles: [],
       currentFolders: [],
+      currentSharedFolders: [],
+
       sharedChilds: [],
+      sharedParents: [],
+
+      selectedFolders: [],
+      selectedFiles: [],
     };
   },
+  setup(){
+     const startDrag = (event, path) => {
+      event.dataTransfer.dropEffect = 'move'
+      event.dataTransfer.effectAllowed = 'move'
+      event.dataTransfer.setData('path', path)
+      event.dataTransfer.setData('type', 'folder')
+    }
+
+    return{
+      startDrag,
+    }
+  },
+  watch: {
+    $route() {
+      if(this.$route.fullPath.includes("/project/")){
+        this.childID = this.$route.query.child;
+        this.parentID = this.$route.query.parent;
+        this.currentPath = this.getPath();
+        this.previousPath = this.getPreviousPath(this.$route.path)
+        this.setParentProjects();
+        this.setChildProjects();
+        this.setCurrentFolders();
+        this.setCurrentFiles();        
+      }
+    },
+  },
   methods: {
+    addClass: function (e) {
+      if (e.target.classList.contains("hover"))
+        e.target.classList.add("hoverDrag");
+    },
+    removeClass: function (e) {
+      if (e.target.classList.contains("hover"))
+        e.target.classList.remove("hoverDrag");
+    },
+    onDrop(event, to) {
+      const path = event.dataTransfer.getData('path')
+      let id = this.projectID
+      if (to === path)
+        return
+      if (event.dataTransfer.getData('type') === 'file') {
+        FilestorageService.moveFile(id, path, to)
+            .then((response) => {
+              AlertService.handleSuccess(response)
+              this.setCurrentFiles();
+            })
+            .catch((err) => {
+              AlertService.handleError(err);
+            });
+      }
+      else{
+        FilestorageService.moveFolder(this.projectID, path, to, '')
+            .then((response) => {
+              AlertService.handleSuccess(response)
+              this.setCurrentFolders();
+            })
+            .catch((err) => {
+              AlertService.handleError(err);
+            });
+      }
+    },
+    resetSelectedElements(){
+      this.selectedFolders = []
+      this.selectedFiles = []
+    },
+    getPreviousPath(currentPath){
+      var previousPath =  "/" + currentPath.split("/project/" + this.projectID)[1].split("/").slice(1, -1).join("/")
+      if(previousPath == "/"){
+        return ""
+      }
+      return previousPath
+    },
+    getChildName(){
+      for(var child of this.sharedChilds){
+        if(child.projectid == this.childID){
+          return child.project_name
+        }
+      }
+      return this.childID
+    },
+    getParentName(){
+      for(var parent of this.sharedParents){
+        if(parent.projectid == this.parentID){
+          return parent.project_name
+        }
+      }
+      return this.parentID
+    },
+    async deleteSelectedFolders(){
+      for(var folder of this.selectedFolders){
+        await FilestorageService.deleteFolder(this.projectID, folder.path, false)
+        .then((response) => {
+          AlertService.handleSuccess(response);
+        })
+        .catch((err) => {
+          if(err.response.status === 409){
+            if(confirm("There are elements in " + folder.name + ", are you sure you want to delete it?")){
+              FilestorageService.deleteFolder(this.projectID, folder.path, true)
+              .then((response) => {
+                AlertService.handleSuccess(response);
+              })
+              .catch((err) => {
+                AlertService.handleError(err);
+              });
+            }
+          }
+          if (err.response) {
+            AlertService.handleError(err);
+          }
+        });
+      }
+    },
+    async deleteSelectedFiles(){
+      for(var file of this.selectedFiles){
+        await FilestorageService.deleteFile(this.projectID, file.path)
+        .then((response) => {
+          AlertService.handleSuccess(response);
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        });
+      }
+    },
+    async deleteSelectedElements(){
+      if(this.selectedElementsNotNull()){
+        await this.deleteSelectedFolders().then(() => {
+          this.currentFoldersChanged();
+        }).then(()=> {
+          this.deleteSelectedFiles().then(() => {
+            this.currentFilesChanged();
+          }).then(() => {
+            this.resetSelectedElements();
+          })
+        })
+      }
+    },
+    async moveSelectedElements(){
+      if(this.selectedElementsNotNull()){
+        await this.moveSelectedFolders().then(() => {
+          this.currentFoldersChanged();
+        }).then(() => {
+          this.moveSelectedFiles().then(() => {
+            this.currentFilesChanged();
+          }).then(() => {
+            this.resetSelectedElements();
+          })
+        })
+      }
+    },
+    async moveSelectedFiles(targetFolder){
+      for(var file of this.selectedFiles){
+        await FilestorageService.moveFile(this.projectID, file.path, targetFolder.path)
+        .then((response) => {
+          AlertService.handleSuccess(response);
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        });
+      }
+    },
+    async moveSelectedFolders(targetFolder){
+      for(var folder of this.selectedFolders){
+        await FilestorageService.moveFolder(this.projectID, folder.path, targetFolder.path, "")
+        .then((response) => {
+          AlertService.handleSuccess(response);
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        });
+      }
+      this.selectedFolders = []     
+    },  
+    async shareSelectedFiles(childID){
+      this.setChildProjects();
+      var newSharedFiles = ""
+      for(var child in this.sharedChilds){
+        if(child.projectid == childID){
+          newSharedFiles = child.shared_files
+        }
+      }
+      for(var file of this.selectedFiles){
+        newSharedFiles += " " + file.path
+      }
+      newSharedFiles
+    },
+    selectedElementsNotNull(){
+      return this.selectedFolders.length > 0 || this.selectedFiles.length > 0
+    },
+    selectFolder(folder){
+      this.selectedFolders.push(folder)
+    },
+    deselectFolder(folder){
+      for(var folderIndex in this.selectedFolders){
+        if(folder.path == this.selectedFolders[folderIndex].path){
+          this.selectedFolders.splice(folderIndex, 1)
+        }
+      }
+    },
+    selectFile(file){
+      this.selectedFiles.push(file)
+    },
+    deselectFile(file){
+      for(var fileIndex in this.selectedFiles){
+        if(file.path == this.selectedFiles[fileIndex].path){
+          this.selectedFiles.splice(fileIndex, 1)
+        }
+      }
+    },
     currentFoldersChanged(){
       this.setCurrentFolders();
+      this.selectedFolders = [];
     },
     currentFilesChanged(){
-      this.getChildProjects();
+      this.setChildProjects();
+      this.setParentProjects();
       this.setCurrentFiles();
+      this.selectedFiles = [];
     },
     sharedFilesChanged(sharedFiles){
       const project = {
@@ -106,9 +381,7 @@ export default {
         else if(path.includes("parent")){
           this.parentID = familyID
         }
-      }
-      this.setCurrentFiles();
-      this.setCurrentFolders();     
+      } 
     },
     reloadAnnouncementWindow() {
       this.announcementWindowKey += 1;
@@ -119,8 +392,12 @@ export default {
     getProjectId(){
       return this.$route.params.id
     },
+    setSearchTerm(searchTerm) {
+      this.searchTerm = searchTerm;
+    },
     setCurrentFolders() {
       this.currentFolders = []
+      this.currentSharedFolders = []
       if(this.parentID == null && this.childID == null){
         FilestorageService.getFoldersOfProject(this.projectID, this.currentPath)
           .then((response) => {
@@ -136,6 +413,9 @@ export default {
           this.setParentFolders();
           this.setChildFolders();       
         }
+        else{
+          this.currentFolders.push({'name': 'Ga Terug', 'path': this.previousPath, 'projectID': this.projectID, 'type':'goback'})
+        }
       }
       else{
         this.currentFolders.push({'name': 'Ga Terug', 'path': this.previousPath, 'projectID': this.projectID, 'type':'goback'})
@@ -148,7 +428,7 @@ export default {
           for(var child in response.data.result){
             var childName = response.data.result[child].project_name
             var childID = response.data.result[child].projectid
-            this.currentFolders.push({'name': "Gedeeld met:\n" +childName, 'path': '/', 'projectID': childID, 'type':'owned'})
+            this.currentSharedFolders.push({'name': "Gedeeld met:\n" +childName, 'path': '/', 'projectID': childID, 'type':'owned'})
           }
         })
         .catch((err) => {
@@ -161,7 +441,7 @@ export default {
           for(var parent in response.data.result){
             var parentID = response.data.result[parent].projectid
             var parentName = response.data.result[parent].project_name
-            this.currentFolders.push({'name': "Gedeeld door:\n" + parentName, 'path': '/', 'projectID': parentID, 'type':'shared'})         
+            this.currentSharedFolders.push({'name': "Gedeeld door:\n" + parentName, 'path': '/', 'projectID': parentID, 'type':'shared'})         
           }
           AlertService.handleSuccess(response);
         })
@@ -214,6 +494,18 @@ export default {
             AlertService.handleError(err);
           })
     },
+    setParentProjects(){
+      this.sharedParents = []
+      ProjectService.getParentsById(this.projectID)
+        .then((response) => {
+          for(var parent of response.data.result){
+            this.sharedParents.push(parent)
+          }
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        })
+    },
     setChildFiles(){
       ProjectService.getChildrenById(this.projectID)
         .then((response) => {
@@ -235,19 +527,19 @@ export default {
     setProjectName() {
       ProjectService.getProjectById(this.$route.params.id)
       .then((response) => {
-        this.projectName = response.data[0].project_name;
-        this.$emit("newHeaderTitle", response.data[0].project_name);
+        this.projectName = response.data.result[0].project_name;
+        this.$emit("newHeaderTitle", response.data.result[0].project_name);
         AlertService.handleSuccess(response);
       })
       .catch((err) => {
         AlertService.handleError(err);
       });
     },
-    getChildProjects(){
+    setChildProjects(){
       this.sharedChilds = []
       ProjectService.getChildrenById(this.projectID)
         .then((response) => {
-          for(var child of response){
+          for(var child of response.data.result){
             this.sharedChilds.push(child)
           }
         })
@@ -257,13 +549,14 @@ export default {
     }
   },
   async created() {
+    this.previousPath = this.getPreviousPath(this.$route.path)
     this.setProjectName();
+    this.setChildProjects();
+    this.setParentProjects();
+
     this.setCurrentFolders();
     this.setCurrentFiles();
-    this.getChildProjects();
+
   },
 };
 </script>
-
-<style>
-</style>

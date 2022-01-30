@@ -1,45 +1,37 @@
 <template>
   <div>
-    <div class="component-header">
-        <ProjectFilesHeader
-          :path="this.folderPath"
-          @searchBarChanged="setSearchTerm"
-          @newFilesUploaded="currentFilesChanged"
-        >
-        Bestanden
-        </ProjectFilesHeader>
-    </div>
+    <h4>Bestanden</h4>
       <div class="row">
-        <div v-for="file in currentFiles" :key="file" class="col-sm-2">
-          <div v-if="fileNameInSearchterm(file.name)">
-            <ProjectFile
-              :projectID="file.projectID"
-              :name="file.name"
-              :fileType="file.name.split('.').pop()"
-              :path="file.path"
-              :type="file.type"
-              :currentFolders="this.currentFolders"
-              :currentFiles="this.currentFiles"
-              :sharedChilds="this.sharedChilds"
+        <div v-for="file in this.searchedFiles" :key="file" class="col-sm-2">
+          <ProjectFile
+            :projectID="file.projectID"
+            :name="file.name"
+            :fileType="file.name.split('.').pop()"
+            :path="file.path"
+            :type="file.type"
+            :currentFolders="this.currentFolders"
+            :currentFiles="this.currentFiles"
+            :sharedChilds="this.sharedChilds"
 
-              @fileDeleted="currentFilesChanged"
-              @nameChanged="currentFilesChanged"
-              @fileMoved="currentFilesChanged"
-              
-              @stopSharingFile="stopSharingFile"
-              @addSharingFile="addSharingFile"
+            @fileDeleted="currentFilesChanged"
+            @nameChanged="currentFilesChanged"
+            @fileMoved="currentFilesChanged"
+            
+            @stopSharingFile="stopSharingFile"
+            @addSharingFile="addSharingFile"
 
-              draggable="true"
-              @dragstart="startDrag($event, file.path)"
-            />
-          </div>
+            @fileSelected="this.$emit('fileSelected', file)"
+            @fileDeselected="this.$emit('fileDeselected', file)"
+
+            draggable="true"
+            @dragstart="startDrag($event, file.path)"
+          />
         </div>
       </div>
   </div>
 </template>
 
 <script>
-import ProjectFilesHeader from "./ProjectFilesHeader.vue";
 import ProjectFile from "./ProjectFile.vue";
 import AlertService from "../../services/AlertService";
 import ProjectService from "../../services/ProjectService";
@@ -58,32 +50,36 @@ export default {
     }
   },
   components: {
-    ProjectFilesHeader,
     ProjectFile,
   },
   name: "FilesView",
-  props: ['projectID', 'currentPath', 'sharedChilds', 'currentFolders', 'currentFiles'],
-watch: {
-    currentPath: function(newPath){
-      this.folderPath = newPath;
-    },
-    currentFolders(newFolders){
-      this.folders = newFolders;
+  props: ['projectID', 'currentPath', 'sharedChilds', 'currentFolders', 'currentFiles', 'searchTerm'],
+  computed: {
+    searchedFiles: function() {
+      if(this.searchTerm == "" || this.searchTerm == null){
+          return this.currentFiles;  
+      }
+      else{
+        var searchedFiles = []
+        for(var file_index in this.currentFiles){
+          var folderName = this.currentFiles[file_index].name
+          if(this.fileNameInSearchterm(String(folderName), this.searchTerm)){
+            searchedFiles.push(this.currentFiles[file_index])
+          }
+        }
+        return searchedFiles;
+      }
     }
   },
+
   data: function () {
     return {
       folders: [],
-      folderPath: this.currentPath,
-      searchTerm: "",
     };
   },
   methods: {
-    fileNameInSearchterm(name) {
-      return name.includes(this.searchTerm) || this.searchTerm == null;
-    },
-    setSearchTerm(value) {
-      this.searchTerm = value;
+    fileNameInSearchterm(name, searchTerm) {
+      return name.includes(searchTerm) || searchTerm == null;
     },
     currentFilesChanged(){
       this.$emit("currentFilesChanged")
@@ -107,14 +103,12 @@ watch: {
     addSharingFile(path, projectID, childID){
       var sharedFiles = ""
       for(var child of this.sharedChilds){
-        console.log(child.shared_files)
         if(child.projectid == childID){
           sharedFiles = child.shared_files;
         }
       }
       
       if(sharedFiles == null){
-        alert(sharedFiles)
         sharedFiles = path;
       }
       else{
@@ -127,8 +121,8 @@ watch: {
 
       ProjectService.updateSharedFilesOfProject(projectID, childID, project)
       .then((response) => {
-        this.$emit("currentFilesChanged")
         AlertService.handleSuccess(response);
+        this.$emit("currentFilesChanged")
       })
       .catch((err) => {
         AlertService.handleError(err);
@@ -138,7 +132,7 @@ watch: {
 };
 </script>
 
-<style scoped>
+<style>
 .component-container{
   height: auto;
   min-height: auto;

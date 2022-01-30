@@ -1,54 +1,10 @@
 <template>
   <div oncontextmenu="return false;">
-    <div class="component-header">
-      <ProjectFolderHeader
-          :path="this.folderPath"
-          @newFolderAdded="currentFoldersChanged()"
-          @searchBarChanged="setSearchTerm">
-          <div id="projectPath">
-            <text v-if="this.folderPath == ''">Mappen</text>
-          
-            <text 
-              @dragenter.prevent
-              @dragover.prevent
-              @drop="onDrop($event, '/')"
-              @dragenter="addClass"
-              @dragleave="removeClass"
-              @mouseleave.self="removeClass"
-
-              v-else class="hover"
-              @click="currentPathChanged('', this.projectID)"
-            >Home/</text>
-            <span v-for="(path, index) in fullPath = this.folderPath.split('/').slice(0,-1)" :key="path">
-              <text
-                  @drop="onDrop($event, '/'+ fullPath.slice(1, index+1)[0])"
-                  @dragenter.prevent
-                  @dragover.prevent
-                  @dragenter="addClass"
-                  @dragleave="removeClass"
-                  @mouseleave.self="removeClass"
-
-                  class="hover"
-                  @click="currentPathChanged('/'+fullPath.slice(1, index+1)[0], this.projectID)"
-                  v-if="path != ''">{{ path }}/</text>
-            </span>
-            <text>
-              {{this.folderPath.split('/').slice(-1)[0]}}
-            </text>
-          </div>
-        </ProjectFolderHeader>
-    </div>
 
     <div>
       <div class="row">
-
-        <div col-sm-4>
-          <ProjectFolder
-          
-          />
-        </div>
-
-        <div v-for="folder in searchedFolders" :key="folder.name" class="col-sm-4">
+        <h4 v-if="this.searchedNormalFolders.length > 0">Mappen</h4>
+        <div v-for="folder in searchedNormalFolders" :key="folder.name" class="col-sm-4">
           <ProjectFolder
             :folderName="folder.name"
             :folderType="folder.type"
@@ -61,6 +17,8 @@
             @folderMoved="currentFoldersChanged()"
             @folderDeleted="currentFoldersChanged()"
             @nameChanged="currentFoldersChanged()"
+            @folderSelected="folderSelected(folder)"
+            @folderDeselected="folderDeselected(folder)"
             
     
             @dragenter="addClass"
@@ -74,7 +32,19 @@
             @dragstart="startDrag($event, folder.path)"
           />
         </div>
+        <h4 v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h4>
+        <div v-for="folder in searchedSharedFolders" :key="folder.name" class="col-sm-4">
+          <ProjectFolder
+            :folderName="folder.name"
+            :folderType="folder.type"
+            :folderPath="folder.path"
+            :projectID="folder.projectID"
+            :currentFolders="this.currentFolders"
+            :files="folder.files"
 
+            @currentPathChanged="currentPathChanged"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -82,7 +52,6 @@
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
-import ProjectFolderHeader from "./ProjectFolderHeader.vue";
 import ProjectFolder from "./ProjectFolder.vue";
 import AlertService from "../../services/AlertService";
 
@@ -100,25 +69,40 @@ export default {
     }
   },
   components: {
-    ProjectFolderHeader,
     ProjectFolder,
   },
   name: "FoldersView",
-  props: ['projectID', 'currentPath', 'previousPath', 'currentFolders'],
-  watch: {
-    currentFolders: function(newFolders){
-      this.setSearchedFolders(newFolders);
+  props: ['projectID', 'currentPath', 'previousPath', 'currentSharedFolders', 'currentFolders', 'searchTerm'],
+  computed: {
+    searchedSharedFolders: function () {
+      var searchedSharedFolders = []
+      for(var sharedFolder of this.currentSharedFolders){
+        var folderName = sharedFolder.name
+        if(this.folderNameInSearchTerm(String(folderName), this.searchTerm)){
+          searchedSharedFolders.push(sharedFolder)
+        }
+      }
+      return searchedSharedFolders
     },
-    currentPath: function(newPath){
-      this.folderPath = newPath;
-    },
+    searchedNormalFolders: function () {
+      if(this.searchTerm == "" || this.searchTerm == null){
+       return this.currentFolders;
+      }
+      else{
+        var searchedFolders = []
+        for(var folder_index in this.currentFolders){
+          var folderName = this.currentFolders[folder_index].name
+          if(this.folderNameInSearchTerm(String(folderName), this.searchTerm)){
+            searchedFolders.push(this.currentFolders[folder_index])
+          }
+        }
+        return searchedFolders
+      }
+    }
   },
   data: function () {
     return {
-      errorStatus: false,
-      folderPath: this.currentPath,
       searchedFolders: [],
-      searchTerm: "",
     };
   },
   methods: {
@@ -156,37 +140,21 @@ export default {
             });
       }
     },
-    setSearchTerm(searchTerm) {
-      this.searchTerm = searchTerm;
-      this.setSearchedFolders(this.searchTerm);
-    },
     folderNameInSearchTerm(folderName, searchTerm) {
       return folderName.includes(searchTerm) || searchTerm == null;
-    },   
-    setSearchedFolders(searchTerm){
-      if(searchTerm == "" || searchTerm == null){
-          this.searchedFolders = this.currentFolders;  
-      }
-      else{
-        this.searchedFolders = []
-        for(var folder_index in this.currentFolders){
-          var folderName = this.currentFolders[folder_index].name
-          if(this.folderNameInSearchTerm(String(folderName), this.searchTerm)){
-            this.searchedFolders.push(this.currentFolders[folder_index])
-          }
-        }
-      }
+    },
+    folderSelected(folder){
+      this.$emit("folderSelected", folder)
+    },
+    folderDeselected(folder){
+      this.$emit("folderDeselected", folder)
     },
     currentFoldersChanged(){
       this.$emit("currentFoldersChanged")
     },
     currentPathChanged(newPath, projectID){
-      this.folderPath = newPath;
       this.$emit("currentPathChanged", newPath, projectID);
     }
-  },
-  async created() {
-    this.setSearchedFolders();
   },
 };
 </script>
@@ -199,9 +167,5 @@ export default {
 .component-container{
   height: auto;
   min-height: auto;
-}
-
-#projectPath {
-  overflow: hidden;
 }
 </style>

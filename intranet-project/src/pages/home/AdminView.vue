@@ -30,7 +30,7 @@
       </router-link>
       <hr />
       <button
-        title="Project aanmaken"
+        title="Nieuw project aanmaken"
         class="full-button mobileRow extraLarge"
         data-bs-target="#createProjectModal"
         data-bs-toggle="modal"
@@ -38,10 +38,10 @@
         v-if="this.canCreateProjects()"
       >
         <img class="small-img" src="../../assets/images/add_project.png" />
-        Project aanmaken
+        Nieuw project
       </button>
       <button
-        title="Gebruiker aanmaken"
+        title="Nieuwe gebruiker toevoegen"
         class="full-button mobileRow extraLarge"
         data-bs-target="#createUserModal"
         data-bs-toggle="modal"
@@ -49,7 +49,7 @@
         v-if="this.canCreateUsers()"
       >
         <img class="small-img" src="../../assets/images/add_user.png" />
-        Gebruiker toevoegen
+        Nieuwe gebruiker
       </button>
     </div>
     <ProjectCreateModal></ProjectCreateModal>

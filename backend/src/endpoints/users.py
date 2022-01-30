@@ -125,7 +125,7 @@ def update_role_user(user_id, role_id):
 def update_password(user_id):
     try:
         body = connexion.request.json
-        new_password_hash = body['password_hash']  # TODO: how to hash
+        new_password_hash = body['password_hash']
     except KeyError:
         return response("Foute aanvraag", 400)
     query_update("UPDATE users SET password_hash = %(hash)s WHERE userid = %(userid)s",

@@ -48,6 +48,23 @@ table {
 *{
   font-family: AddeleSemiBold;
 }
+h4 {
+  padding-top: 10px;
+  display: flex;
+  flex-direction: row;
+}
+h4:before, h4:after{
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px solid;
+  margin: auto;
+}
+h4:before {
+  margin-right: 10px
+}
+h4:after {
+  margin-left: 10px
+}
 body {
   overflow-x: hidden;
   /*

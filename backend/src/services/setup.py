@@ -1,12 +1,10 @@
 from datetime import timezone, datetime, timedelta
 
 import connexion
-import src.config as config
-from flask_bcrypt import Bcrypt
-
+import os
 from .extensions import db, jwt, bcrypt
 import src.config as config
-from flask import request, jsonify
+import src.services.filestorage_service as fs_service
 
 from flask_jwt_extended import verify_jwt_in_request, get_jwt, create_access_token, get_jwt_identity, set_access_cookies
 from flask_jwt_extended import unset_jwt_cookies
@@ -34,6 +32,12 @@ def create_app():
 
     app.app.config['BCRYPT_HANDLE_LONG_PASSWORDS '] = True
     db.init_app(app.app)
+
+    if not fs_service.dir_exists(config.FILE_STORAGE_ROOT):
+        if not fs_service.dir_exists("../filestorage"):
+            os.mkdir("../filestorage");
+    if not fs_service.dir_exists("../filestorage/root"):
+        os.mkdir("../filestorage/root")
 
     @app.app.after_request
     def refresh_expiring_jwts(response):

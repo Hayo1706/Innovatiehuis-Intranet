@@ -1,13 +1,16 @@
 <template>
   <div
-    @mouseleave="viewMenu = false; moveMenu = false"
+    @mouseleave="moveMenu = false; unsetMenus()"
   >
     <div
       class="projectFolder hover"
-      @mousemove="set_coordinates"
-      @contextmenu="viewMenu = true"
-      @long-press="viewMenu = true"
-      @click="goToFolder()"
+      @contextmenu="setViewMenu(this.getCoordinates())"
+      @long-press="setViewMenu(this.getCoordinates())"
+      @touchstart="goToFolder()"
+      @dblclick="goToFolder()"
+
+      @click.shift="this.selected = !this.selected; selectFolder()"
+      v-bind:id="this.folderPath+2"
     >
       <div class="container" style="padding: 0px 12px 0px 12px;pointer-events: none;"  >
         <div class="row">
@@ -49,22 +52,16 @@
         </div>
       </div>
     </div>
-    <ul v-show="canSeeMenu() && this.folderType ==  'normal'" id="drop-down-menu" v-if="viewMenu == true">
-        <li v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</li>
-        <li v-show="canMoveFolder()" v-if="this.currentFolders.length > 1" @click="moveMenu = true; viewMenu = false;">Verplaats</li>
-        <li v-show="canDeleteFolder()" @click="deleteFolder()">Verwijder</li>
-    </ul>
-
-    <ul v-show="canSeeMenu()" id="drop-down-menu" v-if="moveMenu == true">
-        <li>Verplaatsen naar:</li>
-        <ul id="drop-down-menu">
-          <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
-            <li v-if="folder.name != folderName && folder.type != 'shared'">
-              {{ folder.name }}
-            </li>
-          </span>
-        </ul>
-    </ul>
+    <div v-show="canSeeMenu() && this.folderType ==  'normal'" class="dropdown-menu dropdown-menu-sm" v-bind:id="this.projectID+this.folderPath">
+      <a class="dropdown-item" v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</a>
+      <a class="dropdown-item" v-show="canMoveFolder()" v-if="this.currentFolders.length > 1" @click="moveMenu = true; setMoveMenu(this.getCoordinates())">Verplaatsen naar:</a>
+      <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.folderPath+1">
+        <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
+          <a class="dropdown-item" v-if="folder.name != folderName && folder.type == 'normal'">{{ folder.name }}</a>
+        </span>
+      </div>
+      <a class="dropdown-item" v-show="canDeleteFolder()" @click="deleteFolder()">Verwijder</a>
+    </div>
   </div>
 </template>
 
@@ -87,6 +84,7 @@ export default {
   },
   data: function () {
     return {
+      selected: false,
       viewMenu: false,
       moveMenu: false,
       newName: this.folderName,
@@ -94,6 +92,48 @@ export default {
     };
   },
   methods: {
+    selectFolder(){
+      if(this.folderType == "normal"){
+        var folderDiv = document.getElementById(this.folderPath+2);
+        if(this.selected == true){
+          folderDiv.style["border-width"] = "5px";
+          this.$emit("folderSelected")
+        }
+        else{
+          folderDiv.style["border-width"] = "1px";
+          this.$emit("folderDeselected")
+        }
+      }
+      
+    },
+    setMoveMenu() {
+      if(this.folderType == 'normal'){
+        var element = document.getElementById(this.folderPath+1)
+        element.style['display'] = 'block'
+      }
+    },
+    setViewMenu(e) {
+      if(this.folderType == 'normal'){
+        var top = e.top;
+        var left = e.left;
+        var element = document.getElementById(this.projectID+this.folderPath)
+        element.style['display'] = 'block'
+        element.style['top'] = String(left) + 'px'
+        element.style['left'] = String(top) + 'px'
+      }
+    },
+    unsetMenus(){
+      var viewMenu = document.getElementById(this.projectID+this.folderPath)
+      viewMenu.style['display'] = 'none'
+      var moveMenu = document.getElementById(this.folderPath+1)
+      moveMenu.style['display'] = 'none'
+    },
+    getCoordinates(){
+      var e = window.event;
+      var posX = e.clientX;
+      var posY = e.clientY;
+      return {'top':posX, 'left':posY}
+    },
     deleteFolder() {
       FilestorageService.deleteFolder(this.projectID, this.folderPath, false)
         .then((response) => {
@@ -138,10 +178,10 @@ export default {
       else this.newName = this.folderName
     },
     enableInput(){
+      this.unsetMenus();
       var inputName = document.getElementById(this.folderName)
       inputName.removeAttribute("disabled")
       inputName.select();
-      this.viewMenu = false;
     },
     disableInput(){
       var inputName = document.getElementById(this.folderName)
@@ -194,7 +234,6 @@ export default {
 #drop-down-menu{
     background: #FAFAFA;
     border: 1px solid var(--blue1);
-    display: block;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -226,6 +265,11 @@ export default {
   border-width: 1px;
   margin-top: 1vh;
   transition: .3s
+}
+.projectFolder:hover {
+  background-image: linear-gradient(to bottom right, rgba(84, 84, 218, 0.315), rgba(255, 255, 255, 0.7));
+  border-radius: 10px;
+  transition: 0.3s;
 }
 .container {
   position: relative;
