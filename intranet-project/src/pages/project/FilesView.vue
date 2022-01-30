@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h4>Bestanden</h4>
-      <div class="row" style="min-height: 15vh">
+    <h5>Bestanden</h5>
+      <div class="row" style="min-height: 15vh" id="drop_zone">
         <div v-for="file in this.searchedFiles" :key="file" class="col-sm-2">
           <ProjectFile
             :projectID="file.projectID"
@@ -111,7 +111,7 @@ export default {
       if(sharedFiles == null){
         sharedFiles = path;
       }
-      else{
+      else if(!sharedFiles.split(" ").includes(path)){
         sharedFiles += " " + path;
       }
 
@@ -121,10 +121,12 @@ export default {
 
       ProjectService.updateSharedFilesOfProject(projectID, childID, project)
       .then((response) => {
+        console.log(response)
         AlertService.handleSuccess(response);
         this.$emit("currentFilesChanged")
       })
       .catch((err) => {
+        console.log(err)
         AlertService.handleError(err);
       })
     },

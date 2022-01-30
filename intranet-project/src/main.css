@@ -48,21 +48,21 @@ table {
 *{
   font-family: AddeleSemiBold;
 }
-h4 {
+h5 {
   padding-top: 10px;
   display: flex;
   flex-direction: row;
 }
-h4:before, h4:after{
+h5:after, h5:before{
   content: "";
   flex: 1 1;
   border-bottom: 1px solid;
   margin: auto;
 }
-h4:before {
+h5:before {
   margin-right: 10px
 }
-h4:after {
+h5:after {
   margin-left: 10px
 }
 body {

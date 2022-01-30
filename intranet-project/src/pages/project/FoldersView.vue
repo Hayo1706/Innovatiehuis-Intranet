@@ -3,7 +3,7 @@
 
     <div>
       <div class="row">
-        <h4 v-if="this.searchedNormalFolders.length > 0">Mappen</h4>
+        <h5 v-if="this.searchedNormalFolders.length > 0">Mappen</h5>
         <div v-for="folder in searchedNormalFolders" :key="folder.name" class="col-sm-4">
           <ProjectFolder
             :folderName="folder.name"
@@ -32,7 +32,7 @@
             @dragstart="startDrag($event, folder.path)"
           />
         </div>
-        <h4 v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h4>
+        <h5 v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h5>
         <div v-for="folder in searchedSharedFolders" :key="folder.name" class="col-sm-4">
           <ProjectFolder
             :folderName="folder.name"
