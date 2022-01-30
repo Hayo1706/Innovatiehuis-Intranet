@@ -683,15 +683,15 @@ paths:
         200:
           description: Successfully deleted user
 
-  /users/{user_id}/screening/{screening_status}:
+  /users/{user_id}/access/{access_status}:
     patch:
-      operationId: src.endpoints.users.update_screening
+      operationId: src.endpoints.users.update_access
       tags:
         - Users
-      summary: Change screening status of specified user
+      summary: Change access status of specified user
       parameters:
         - $ref: '#/components/parameters/user_id'
-        - $ref: '#/components/parameters/screening_status'
+        - $ref: '#/components/parameters/access_status'
       responses:
         200:
           description: Successfully updated password
@@ -703,7 +703,7 @@ paths:
       tags:
         - Users
         - Roles
-      summary: Change screening status of specified user
+      summary: Change role of specified user
       parameters:
         - $ref: '#/components/parameters/user_id'
         - $ref: '#/components/parameters/role_id'
@@ -861,57 +861,57 @@ components:
       name: project_id
       required: true
       schema:
-        type: string
+        type: integer
       description: The ID number of a project
     parent_id:
       in: path
       name: parent_id
       required: true
       schema:
-        type: string
+        type: integer
       description: The ID number of a parent project
     child_id:
       in: path
       name: child_id
       required: true
       schema:
-        type: string
+        type: integer
       description: The ID number of a child project
     user_id:
       in: path
       name: user_id
       required: true
       schema:
-        type: string
+        type: integer
       description: The ID number of a user
     announcement_id:
       in: path
       name: announcement_id
       required: true
       schema:
-        type: string
+        type: integer
       description: The ID number of an announcement
     reply_id:
       in: path
       name: reply_id
       required: true
       schema:
-        type: string
+        type: integer
       description: The ID number of a reply
     role_id:
       in: path
       name: role_id
       required: true
       schema:
-        type: string
+        type: integer
       description: The ID number of a role
-    screening_status:
+    access_status:
       in: path
-      name: screening_status
+      name: access_status
       required: true
       schema:
-        type: string
-      description: Number representing screening status; 0 = unscreened, 1 = in progress, 2 = screened
+        type: integer
+      description: Number representing access status; 0 = no access, 1 = access
     path:
       in: query
       name: path
@@ -954,7 +954,7 @@ components:
           type: string
         roleid:
           type: integer
-        screening_status:
+        access_status:
           type: integer
         password_hash:
           type: string

@@ -81,9 +81,9 @@
             ><i v-else class="bi-caret-up-fill"></i
           ></span>
         </button>
-        <button class="full-button col-3" @click="sort('screening')">
-          Screening
-          <span v-if="sortingMethod == 'screening'"
+        <button class="full-button col-3" @click="sort('access')">
+          Toegang
+          <span v-if="sortingMethod == 'access'"
             ><i v-if="this.ascending" class="bi-caret-down-fill"></i
             ><i v-else class="bi-caret-up-fill"></i
           ></span>
@@ -108,7 +108,7 @@
           v-bind:user="user"
           v-bind:all_roles="roles"
           @removeUser="this.removeUser"
-          @screeningChanged="setUserScreening"
+          @accessChanged="setUserAccess"
           @roleChanged="setUserRole"
         ></UserListing>
       </div>
@@ -147,9 +147,9 @@ export default {
     };
   },
   methods: {
-    setUserScreening(id, new_screening_id) {
-      this.users.find((user) => user.userid == id).screening_status =
-        new_screening_id;
+    setUserAccess(id, new_access_id) {
+      this.users.find((user) => user.userid == id).access_status =
+        new_access_id;
     },
     setUserRole(id, new_role_id) {
       this.users.find((user) => user.userid == id).roleid = new_role_id;
@@ -262,10 +262,10 @@ export default {
             fb = b.amountprojects;
           return this.sortingFunction(fa, fb);
         });
-      } else if (this.sortingMethod == "screening") {
+      } else if (this.sortingMethod == "access") {
         filteredUsers = filteredUsers.sort((a, b) => {
-          let fa = a.screening_status,
-            fb = b.screening_status;
+          let fa = a.access_status,
+            fb = b.access_status;
           return this.sortingFunction(fa, fb);
         });
       }

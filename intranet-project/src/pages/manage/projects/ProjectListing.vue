@@ -1,5 +1,5 @@
 <template>
-  <div class="project-listing">
+  <div class="project-listing" v-bind:class="{ archived: this.project.is_archived }">
     <div class="row">
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
@@ -75,7 +75,7 @@
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
       >
-        <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
+        <div id="archivedText" v-if="this.project.is_archived">Gearchiveerd</div>
         <div v-else>Niet gearchiveerd</div>
       </div>
 
@@ -163,6 +163,10 @@ export default {
 .project-listing:last-child {
   border-bottom: none;
 }
+.archived {
+  background-color: var(--gold4);
+}
+
 .name-button {
   background-color: var(--blue2);
   width: 100%;

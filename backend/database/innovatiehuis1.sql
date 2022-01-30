@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               10.6.5-MariaDB - mariadb.org binary distribution
+-- Server versie:                10.6.5-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
--- HeidiSQL Version:             11.3.0.6295
+-- HeidiSQL Versie:              11.3.0.6295
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -13,12 +13,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Dumping database structure for innovatieplatform
+-- Databasestructuur van innovatieplatform wordt geschreven
 DROP DATABASE IF EXISTS `innovatieplatform`;
 CREATE DATABASE IF NOT EXISTS `innovatieplatform` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `innovatieplatform`;
 
--- Dumping structure for table innovatieplatform.announcements
+-- Structuur van  tabel innovatieplatform.announcements wordt geschreven
 DROP TABLE IF EXISTS `announcements`;
 CREATE TABLE IF NOT EXISTS `announcements` (
   `announcementid` int(11) NOT NULL AUTO_INCREMENT,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   CONSTRAINT `userid2_announcements` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.announcements: ~11 rows (approximately)
+-- Dumpen data van tabel innovatieplatform.announcements: ~10 rows (ongeveer)
 DELETE FROM `announcements`;
 /*!40000 ALTER TABLE `announcements` DISABLE KEYS */;
 INSERT INTO `announcements` (`announcementid`, `userid`, `projectid`, `content`, `title`, `timestamp`) VALUES
@@ -50,7 +50,7 @@ INSERT INTO `announcements` (`announcementid`, `userid`, `projectid`, `content`,
 	(61, 1, 10, 'Hier dus\n\nOp deze pagina', 'Mark Harmannni was hier', '2021-12-31 22:15:13');
 /*!40000 ALTER TABLE `announcements` ENABLE KEYS */;
 
--- Dumping structure for table innovatieplatform.chat_messages
+-- Structuur van  tabel innovatieplatform.chat_messages wordt geschreven
 DROP TABLE IF EXISTS `chat_messages`;
 CREATE TABLE IF NOT EXISTS `chat_messages` (
   `messageid` int(11) NOT NULL AUTO_INCREMENT,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `chat_messages` (
   CONSTRAINT `userid_chat` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.chat_messages: ~7 rows (approximately)
+-- Dumpen data van tabel innovatieplatform.chat_messages: ~7 rows (ongeveer)
 DELETE FROM `chat_messages`;
 /*!40000 ALTER TABLE `chat_messages` DISABLE KEYS */;
 INSERT INTO `chat_messages` (`messageid`, `userid`, `projectid`, `timestamp`, `content`) VALUES
@@ -78,7 +78,7 @@ INSERT INTO `chat_messages` (`messageid`, `userid`, `projectid`, `timestamp`, `c
 	(7, 3, 10, '2021-11-30 18:02:31', 'ik wil wel portal 2 met je spelen hayo');
 /*!40000 ALTER TABLE `chat_messages` ENABLE KEYS */;
 
--- Dumping structure for table innovatieplatform.projects
+-- Structuur van  tabel innovatieplatform.projects wordt geschreven
 DROP TABLE IF EXISTS `projects`;
 CREATE TABLE IF NOT EXISTS `projects` (
   `projectid` int(11) NOT NULL AUTO_INCREMENT,
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `projects` (
   PRIMARY KEY (`projectid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.projects: ~14 rows (approximately)
+-- Dumpen data van tabel innovatieplatform.projects: ~14 rows (ongeveer)
 DELETE FROM `projects`;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
 INSERT INTO `projects` (`projectid`, `project_name`, `is_archived`, `created`, `last_updated`, `description`) VALUES
@@ -110,7 +110,7 @@ INSERT INTO `projects` (`projectid`, `project_name`, `is_archived`, `created`, `
 	(15, 'AR Schietbaan', 0, '2021-11-25 12:47:44', '2021-12-27 22:55:07', 'Niet te verwarren met de aankomende Piraten-DLC "Arrrrrr Schietbaan"');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 
--- Dumping structure for table innovatieplatform.projects_have_parents
+-- Structuur van  tabel innovatieplatform.projects_have_parents wordt geschreven
 DROP TABLE IF EXISTS `projects_have_parents`;
 CREATE TABLE IF NOT EXISTS `projects_have_parents` (
   `parentid` int(11) NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `projects_have_parents` (
   CONSTRAINT `parentid` FOREIGN KEY (`parentid`) REFERENCES `projects` (`projectid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.projects_have_parents: ~6 rows (approximately)
+-- Dumpen data van tabel innovatieplatform.projects_have_parents: ~6 rows (ongeveer)
 DELETE FROM `projects_have_parents`;
 /*!40000 ALTER TABLE `projects_have_parents` DISABLE KEYS */;
 INSERT INTO `projects_have_parents` (`parentid`, `childid`, `shared_files`) VALUES
@@ -134,7 +134,7 @@ INSERT INTO `projects_have_parents` (`parentid`, `childid`, `shared_files`) VALU
 	(10, 14, 'file.txt folder/file.txt');
 /*!40000 ALTER TABLE `projects_have_parents` ENABLE KEYS */;
 
--- Dumping structure for table innovatieplatform.replies
+-- Structuur van  tabel innovatieplatform.replies wordt geschreven
 DROP TABLE IF EXISTS `replies`;
 CREATE TABLE IF NOT EXISTS `replies` (
   `replyid` int(11) NOT NULL AUTO_INCREMENT,
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `replies` (
   CONSTRAINT `userid_announcement_replies` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.replies: ~7 rows (approximately)
+-- Dumpen data van tabel innovatieplatform.replies: ~8 rows (ongeveer)
 DELETE FROM `replies`;
 /*!40000 ALTER TABLE `replies` DISABLE KEYS */;
 INSERT INTO `replies` (`replyid`, `announcementid`, `userid`, `content`, `timestamp`) VALUES
@@ -163,12 +163,13 @@ INSERT INTO `replies` (`replyid`, `announcementid`, `userid`, `content`, `timest
 	(17, 61, 1, 'Hallo', '2021-12-31 22:15:27');
 /*!40000 ALTER TABLE `replies` ENABLE KEYS */;
 
--- Dumping structure for table innovatieplatform.roles
+-- Structuur van  tabel innovatieplatform.roles wordt geschreven
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
   `roleid` int(11) NOT NULL AUTO_INCREMENT,
   `role_name` varchar(50) NOT NULL,
-  `is_protected` tinyint(1) NOT NULL DEFAULT 1,
+  `power_level` tinyint(1) NOT NULL DEFAULT 0,
+  `may_cud_users_with_power_level_up_to` tinyint(1) NOT NULL DEFAULT 0,
   `may_create_project` tinyint(1) NOT NULL DEFAULT 0,
   `may_read_any_project` tinyint(1) NOT NULL DEFAULT 0,
   `may_read_own_project` tinyint(1) NOT NULL DEFAULT 0,
@@ -192,29 +193,30 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `may_update_own_user_password` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_any_user_account` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_own_user_account` tinyint(1) NOT NULL DEFAULT 0,
-  `may_update_any_user_screening_status` tinyint(1) NOT NULL DEFAULT 0,
+  `may_update_any_user_access_status` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_any_user_role` tinyint(1) NOT NULL DEFAULT 0,
-  `may_elevate_to_protected_role` tinyint(1) NOT NULL DEFAULT 0,
   `may_delete_any_user` tinyint(1) NOT NULL DEFAULT 0,
   `may_crud_roles` tinyint(1) NOT NULL DEFAULT 0,
   `may_create_chat_message_anywhere` tinyint(1) NOT NULL DEFAULT 0,
   `may_create_chat_message_in_own_project` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_any_chat_message` tinyint(1) NOT NULL DEFAULT 0,
   `may_update_own_chat_message` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`roleid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`roleid`) USING BTREE,
+  UNIQUE KEY `role_name` (`role_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.roles: ~4 rows (approximately)
+-- Dumpen data van tabel innovatieplatform.roles: ~5 rows (ongeveer)
 DELETE FROM `roles`;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` (`roleid`, `role_name`, `is_protected`, `may_create_project`, `may_read_any_project`, `may_read_own_project`, `may_update_any_project`, `may_update_own_project`, `may_archive_any_project`, `may_delete_any_project`, `may_update_any_file`, `may_update_file_in_own_project`, `may_create_announcement_anywhere`, `may_create_announcement_in_own_project`, `may_update_any_announcement`, `may_create_reply_anywhere`, `may_create_reply_in_own_project`, `may_update_any_reply`, `may_update_own_content`, `may_create_users`, `may_read_any_user`, `may_read_user_in_own_project`, `may_update_any_user_password`, `may_update_own_user_password`, `may_update_any_user_account`, `may_update_own_user_account`, `may_update_any_user_screening_status`, `may_update_any_user_role`, `may_elevate_to_protected_role`, `may_delete_any_user`, `may_crud_roles`, `may_create_chat_message_anywhere`, `may_create_chat_message_in_own_project`, `may_update_any_chat_message`, `may_update_own_chat_message`) VALUES
-	(1, 'observer', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1),
-	(2, 'student', 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1),
-	(3, 'moderator', 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1),
-	(4, 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO `roles` (`roleid`, `role_name`, `power_level`, `may_cud_users_with_power_level_up_to`, `may_create_project`, `may_read_any_project`, `may_read_own_project`, `may_update_any_project`, `may_update_own_project`, `may_archive_any_project`, `may_delete_any_project`, `may_update_any_file`, `may_update_file_in_own_project`, `may_create_announcement_anywhere`, `may_create_announcement_in_own_project`, `may_update_any_announcement`, `may_create_reply_anywhere`, `may_create_reply_in_own_project`, `may_update_any_reply`, `may_update_own_content`, `may_create_users`, `may_read_any_user`, `may_read_user_in_own_project`, `may_update_any_user_password`, `may_update_own_user_password`, `may_update_any_user_account`, `may_update_own_user_account`, `may_update_any_user_access_status`, `may_update_any_user_role`, `may_delete_any_user`, `may_crud_roles`, `may_create_chat_message_anywhere`, `may_create_chat_message_in_own_project`, `may_update_any_chat_message`, `may_update_own_chat_message`) VALUES
+	(1, 'observer', 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1),
+	(2, 'student', 2, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1),
+	(3, 'moderator', 3, 2, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1),
+	(4, 'admin', 4, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+	(5, 'klop', 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 
--- Dumping structure for table innovatieplatform.users
+-- Structuur van  tabel innovatieplatform.users wordt geschreven
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `userid` int(11) NOT NULL AUTO_INCREMENT,
@@ -223,8 +225,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` tinytext NOT NULL,
   `phone_number` varchar(40) NOT NULL,
   `password_hash` tinytext NOT NULL,
+  `auth_key` tinytext NOT NULL,
   `roleid` int(11) NOT NULL DEFAULT 0,
-  `screening_status` tinyint(1) NOT NULL DEFAULT 0,
+  `access_status` tinyint(1) NOT NULL DEFAULT 0,
   `created` datetime NOT NULL DEFAULT current_timestamp(),
   `last_login` datetime DEFAULT current_timestamp(),
   `last_failed_login` datetime DEFAULT NULL,
@@ -232,24 +235,26 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`userid`),
   KEY `role` (`roleid`),
   CONSTRAINT `role` FOREIGN KEY (`roleid`) REFERENCES `roles` (`roleid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.users: ~9 rows (approximately)
+-- Dumpen data van tabel innovatieplatform.users: ~11 rows (ongeveer)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`,`phone_number`, `password_hash`, `roleid`, `screening_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
-	(1, 'Hayo', 'Riem', 'hayoriem@mail.com','06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK', 4, 1, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
-	(2, 'Peter', 'Beens', 'peterbeens@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0),
-	(3, 'Singh', 'van Offeren', 'singhvano@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0),
-	(4, 'Jochem', 'Hoekstra', 'joja@mail.com','06123456789', '123', 2, 1, '2021-11-30 17:48:47', '2021-11-30 17:48:47', NULL, 0),
-	(5, 'Niels', 'Doornbos', 'nielsprikkelbos@mail.com','06123456789', '123', 4, 1, '2021-11-30 17:49:09', '2021-11-30 17:49:09', NULL, 0),
-	(6, 'Jan', 'Baljé', 'janbal@mail.com','06123456789', '123', 1, 1, '2021-11-30 17:49:49', '2021-11-30 17:49:49', NULL, 0),
-	(7, 'Tim', 'Dronebos', 'tim@mail.com','06123456789', '123', 3, 1, '2021-11-30 17:51:50', '2021-11-30 17:51:50', NULL, 0),
-	(8, 'pieter', 'van rosmalen', 'pvr@mail.com','06123456789', '123458', 3, 1, '2021-12-02 19:09:21', '2021-12-02 19:09:21', NULL, 0),
-	(9, 'Anna', 'van Rosmalen', 'anna3@mail.com','06123456789', '123', 2, 1, '2022-01-02 16:41:35', '2022-01-02 16:41:35', NULL, 0);
+INSERT INTO `users` (`userid`, `first_name`, `last_name`, `email`, `phone_number`, `password_hash`,`auth_key`, `roleid`, `access_status`, `created`, `last_login`, `last_failed_login`, `failed_login_count`) VALUES
+	(1, 'Hayo', 'Riem', 'hayoriem@mail.com', '06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 4, 1, '2021-11-30 17:47:09', '2021-11-30 17:47:09', '2022-01-07 18:47:01', 2),
+	(2, 'Peter', 'Beens', 'peterbeens@mail.com', '06123456789', '$2b$12$CI7tg6gghJwnyKpJEGX7HOQmT42Z49RPtEQjT4mUpkeJafsFR4nRK','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2021-11-30 17:47:41', '2021-11-30 17:47:41', NULL, 0),
+	(3, 'Singh', 'van Offeren', 'singhvano@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2021-11-30 17:48:24', '2021-11-30 17:48:24', NULL, 0),
+	(4, 'Jochem', 'Hoekstra', 'joja@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2021-11-30 17:48:47', '2021-11-30 17:48:47', NULL, 0),
+	(5, 'Niels', 'Doornbos', 'nielsprikkelbos@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 4, 1, '2021-11-30 17:49:09', '2021-11-30 17:49:09', NULL, 0),
+	(6, 'Jan', 'BaljÃ©', 'janbal@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 1, 1, '2021-11-30 17:49:49', '2021-11-30 17:49:49', NULL, 0),
+	(7, 'Tim', 'Dronebos', 'tim@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 3, 1, '2021-11-30 17:51:50', '2021-11-30 17:51:50', NULL, 0),
+	(8, 'pieter', 'van rosmalen', 'pvr@mail.com', '06123456789', '123458','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 3, 1, '2021-12-02 19:09:21', '2021-12-02 19:09:21', NULL, 0),
+	(9, 'Anna', 'van Rosmalen', 'anna3@mail.com', '06123456789', '123','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 2, 1, '2022-01-02 16:41:35', '2022-01-02 16:41:35', NULL, 0),
+	(10, 'a', 'b', 'ab@mail.com', '', '$2b$12$49TVZtcsed66ktN9lMlLyu8/1BXM0rzPKNGt6o8xod7N88T0RZtri','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 5, 0, '2022-01-21 13:10:21', '2022-01-21 13:10:21', NULL, 0),
+	(11, 'a', 'a', 'aa@mail.com', '', '$2b$12$gTtf1w6ADck28j3ob7ikAeeVZhHaMMFvamf.QFiGd2TNFL21brLGe','TTULETKYKBHKVWMFXFXEXISZ6WIGVTTN', 5, 0, '2022-01-21 13:12:52', '2022-01-21 13:12:52', NULL, 0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
--- Dumping structure for table innovatieplatform.users_have_projects
+-- Structuur van  tabel innovatieplatform.users_have_projects wordt geschreven
 DROP TABLE IF EXISTS `users_have_projects`;
 CREATE TABLE IF NOT EXISTS `users_have_projects` (
   `userid` int(11) NOT NULL,
@@ -261,7 +266,7 @@ CREATE TABLE IF NOT EXISTS `users_have_projects` (
   CONSTRAINT `userid_user_has_projects` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table innovatieplatform.users_have_projects: ~15 rows (approximately)
+-- Dumpen data van tabel innovatieplatform.users_have_projects: ~15 rows (ongeveer)
 DELETE FROM `users_have_projects`;
 /*!40000 ALTER TABLE `users_have_projects` DISABLE KEYS */;
 INSERT INTO `users_have_projects` (`userid`, `projectid`, `last_seen`) VALUES

@@ -8,12 +8,8 @@
         <div class="full-button mobileRow extraLarge" @click="onClick()">
           {{ user.first_name + " " + user.last_name }}
         </div>
-        <div class="mobileRow">
-          {{ user.email }}
-        </div>
-        <div class="mobileRow">
-          {{ user.phone_number }}
-        </div>
+        <div class="mobileRow">{{ user.email }}</div>
+        <div class="mobileRow">{{ user.phone_number }}</div>
         <div class="mobileRow">
           {{
             user.created.toLocaleString("nl-NL", {
@@ -39,7 +35,7 @@
           <select
             v-model="selectedRole"
             :disabled="!canUpdateUserRole()"
-            v-if="userIsNotProtected()"
+            v-if="canCUDUser()"
           >
             <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
               {{ role }}
@@ -49,24 +45,24 @@
         </div>
         <div class="mobileRow">{{ user.amountprojects }}</div>
         <div class="mobileRow">
-          <div v-if="userIsNotProtected()">
+          <div v-if="canCUDUser()">
             <img
               style="cursor: pointer"
               src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
+              v-if="access_state == 'Geblokkeerd'"
               @click="
                 () => {
-                  this.screeningstate = 'Toegestaan';
+                  this.access_state = 'Toegestaan';
                 }
               "
             />
             <img
               style="cursor: pointer"
               src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
+              v-if="access_state == 'Toegestaan'"
               @click="
                 () => {
-                  this.screeningstate = 'Geblokkeerd';
+                  this.access_state = 'Geblokkeerd';
                 }
               "
             />
@@ -74,11 +70,11 @@
           <div v-else>
             <img
               src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
+              v-if="access_state == 'Geblokkeerd'"
             />
             <img
               src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
+              v-if="access_state == 'Toegestaan'"
             />
           </div>
         </div>
@@ -86,7 +82,7 @@
 
       <!-- large screens-->
       <div
-        class="col d-none d-lg-flex align-items-center justify-content-start"
+        class="col-3 d-none d-lg-flex align-items-center justify-content-start"
       >
         <router-link
           title="Naar profiel"
@@ -94,16 +90,6 @@
           class="name-button"
           >{{ user.first_name + " " + user.last_name }}</router-link
         >
-      </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
-        {{ user.email }}
-      </div>
-      <div
-        class="col d-none d-lg-flex align-items-center justify-content-center"
-      >
-        {{ user.phone_number }}
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
@@ -136,7 +122,7 @@
         <select
           v-model="selectedRole"
           :disabled="!canUpdateUserRole()"
-          v-if="userIsNotProtected()"
+          v-if="canCUDUser()"
         >
           <option v-for="role in Object.keys(this.roles)" v-bind:key="role">
             {{ role }}
@@ -151,27 +137,27 @@
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
-        id="screening justify-content-center"
+        id="access justify-content-center"
       >
-        <div class="listing-icon iconHolder">
-          <div v-if="userIsNotProtected()">
+        <div class="iconHolder">
+          <div v-if="canCUDUser() && canUpdateUserAccess()">
             <img
               style="cursor: pointer"
               src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
+              v-if="this.access_state == 'Geblokkeerd'"
               @click="
                 () => {
-                  this.screeningstate = 'Toegestaan';
+                  this.access_state = 'Toegestaan';
                 }
               "
             />
             <img
               style="cursor: pointer"
               src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
+              v-if="access_state == 'Toegestaan'"
               @click="
                 () => {
-                  this.screeningstate = 'Geblokkeerd';
+                  this.access_state = 'Geblokkeerd';
                 }
               "
             />
@@ -179,25 +165,25 @@
           <div v-else>
             <img
               src="@\assets\images\screening1.png"
-              v-if="screeningstate == 'Geblokkeerd'"
+              v-if="access_state == 'Geblokkeerd'"
             />
             <img
               src="@\assets\images\check.png"
-              v-if="screeningstate == 'Toegestaan'"
+              v-if="access_state == 'Toegestaan'"
             />
           </div>
         </div>
       </div>
 
       <div class="col d-lg-flex align-items-center justify-content-center">
-        <div
-          @click="handleRemoveUser(this.user)"
-          v-show="canDelete() && userIsNotProtected()"
-        >
-          <div class="listing-icon iconHolder">
-            <img src="@\assets\images\delete.png" />
-          </div>
-        </div>
+        <span class="button-span-right">
+          <UserButtons
+            v-if="isNotLoggedInUser()"
+            v-bind:showRemove="canCUDUser()"
+            @removeUser="handleRemoveUser(this.user)"
+            v-bind:user="this.user"
+          ></UserButtons>
+        </span>
       </div>
     </div>
   </div>
@@ -209,28 +195,29 @@ import UserService from "@/services/UserService.js";
 import PermissionService from "@/services/PermissionService.js";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 import AlertService from "@/services/AlertService.js";
+import UserButtons from "@/pages/manage/users/UserButtons.vue";
 
 export default {
   props: ["user", "all_roles"],
-  components: { VerticalHeader, ConfirmDialogue },
+  components: { VerticalHeader, ConfirmDialogue, UserButtons },
   name: "UserListing",
   data: function () {
     return {
       previousRole: this.user.role_name,
       selectedRole: this.user.role_name,
-      screeningstates: {
+      access_states: {
         Geblokkeerd: 0,
         Toegestaan: 1,
       },
 
-      previousScreeningstate: "",
-      screeningstate: "",
+      previous_access_state: "",
+      access_state: "",
       roles: {},
     };
   },
   watch: {
-    screeningstate: async function (val) {
-      if (val != this.previousScreeningstate) {
+    access_state: async function (val) {
+      if (val != this.previous_access_state) {
         let action;
         if (val == "Toegestaan") {
           action = "deblokkeren";
@@ -249,24 +236,20 @@ export default {
             "?",
         });
         if (ok) {
-          const screeningstateId = this.screeningstates[val];
+          const access_state_Id = this.access_states[val];
 
-          UserService.updateUserScreening(screeningstateId, this.user.userid)
+          UserService.updateUserAccess(access_state_Id, this.user.userid)
             .then((response) => {
-              this.previousScreeningstate = val;
-              this.$emit(
-                "screeningChanged",
-                this.user.userid,
-                screeningstateId
-              );
+              this.previous_access_state = val;
+              this.$emit("accessChanged", this.user.userid, access_state_Id);
               AlertService.handleSuccess(response);
             })
             .catch((err) => {
               AlertService.handleError(err);
-              this.screeningstate = this.previousScreeningstate;
+              this.access_states = this.previous_access_state;
             });
         } else {
-          this.screeningstate = this.previousScreeningstate;
+          this.access_states = this.previous_access_state;
         }
       }
     },
@@ -304,46 +287,51 @@ export default {
   },
   created() {
     for (const role of this.all_roles) {
-      if (role.is_protected != 1) {
+      if (
+        role.power_level <=
+        localStorage.getItem("may_cud_users_with_power_level_up_to")
+      ) {
         this.roles[role.role_name] = role.roleid;
       }
     }
 
-    this.previousScreeningstate = this.getKeyByValue(
-      this.screeningstates,
-      this.user.screening_status
+    this.previous_access_state = this.getKeyByValue(
+      this.access_states,
+      this.user.access_status
     );
-    this.screeningstate = this.getKeyByValue(
-      this.screeningstates,
-      this.user.screening_status
+    this.access_state = this.getKeyByValue(
+      this.access_states,
+      this.user.access_status
     );
   },
   methods: {
     canDelete() {
       return (
         PermissionService.userHasPermission("may_delete_any_user") &&
-        this.user.userid != localStorage.getItem("userid")
+        this.isNotLoggedInUser()
       );
     },
     canUpdateUserRole() {
       return (
         PermissionService.userHasPermission("may_update_any_user_role") &&
-        this.user.userid != localStorage.getItem("userid")
+        this.isNotLoggedInUser()
       );
     },
-    userIsNotProtected() {
-      for (const role of this.all_roles) {
-        if (role.roleid == this.user.roleid) {
-          return !role.is_protected;
-        }
-      }
-    },
-    canUpdateUserScreening() {
+    canUpdateUserAccess() {
       return (
         PermissionService.userHasPermission(
-          "may_update_any_user_screening_status"
-        ) && this.user.userid != localStorage.getItem("userid")
+          "may_update_any_user_access_status"
+        ) && this.isNotLoggedInUser()
       );
+    },
+    canCUDUser() {
+      return (
+        this.user.power_level <=
+        localStorage.getItem("may_cud_users_with_power_level_up_to")
+      );
+    },
+    isNotLoggedInUser() {
+      return this.user.userid != localStorage.getItem("userid");
     },
     onClick() {
       this.$router.push("/user/" + this.user.userid);
@@ -435,6 +423,7 @@ select {
 }
 .iconHolder {
   border-radius: 10%;
+  border-style: none;
 }
 .row select {
   background: linear-gradient(
@@ -443,7 +432,8 @@ select {
     rgba(225, 225, 225, 0.9)
   );
 }
-.listing-icon {
-  border-style: none;
+
+.button-span-right {
+  margin-left: auto;
 }
 </style>

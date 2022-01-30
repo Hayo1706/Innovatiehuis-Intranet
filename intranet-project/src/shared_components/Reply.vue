@@ -32,21 +32,21 @@
           style="height: 100px"
           v-model="this.editData.content"
         />
-        <button @click="toggleEdit()">Annuleren</button>
-        <button @click="saveEdits()">Opslaan</button>
+        <button class="cancel-btn" @click="toggleEdit()">Annuleren</button>
+        <button class="confirm-btn" @click="saveEdits()">Opslaan</button>
       </div>
       <div v-else>
-        <p style="margin-bottom: 0px">{{ this.content }}</p>
+        <p style="margin-bottom: 0px">{{ this.contentData }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import AnnouncementService from "@/services/AnnouncementService.js";
 import PermissionService from "@/services/PermissionService";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
-import AlertService from "../services/AlertService";
+import AlertService from "@/services/AlertService";
+import AnnouncementService from "@/services/AnnouncementService";
 
 export default {
   name: "Reply",
@@ -64,6 +64,7 @@ export default {
     return {
       editData: { content: this.content + "" },
       editing: false,
+      contentData: this.content
     };
   },
   async created() {
@@ -78,37 +79,18 @@ export default {
         (PermissionService.userHasPermission("may_update_own_content") && this.loggedInUser == this.userid)
     },
     async saveEdits() {
-      const ok = await this.$refs.confirmDialogue.show({
-        title: "Reactie aanpassen",
-        message: 'Wil je deze reactie echt aanpassen?'
-      });
-      if (ok) {
-        this.editing = false;
-        AnnouncementService.editReply(this.id, this.editData)
-          .then((response) => {
-            this.$emit("reload");
-            AlertService.handleSuccess(response);
-          })
-          .catch((err) => {
-            AlertService.handleError(err);
-          });
-      }
+      this.editing = false;
+      AnnouncementService.editReply(this.id, this.editData)
+        .then((response) => {
+          this.contentData = this.editData.content;
+          AlertService.handleSuccess(response);
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        });
     },
     async remove() {
-      const ok = await this.$refs.confirmDialogue.show({
-        title: "Reactie verwijderen",
-        message: 'Wil je deze reactie echt verwijderen?'
-      });
-      if (ok) {
-        AnnouncementService.deleteReply(this.id)
-          .then((response) => {
-            this.$emit("reload");
-            AlertService.handleSuccess(response);
-          })
-          .catch((err) => {
-            AlertService.handleError(err);
-          });
-      }
+      this.$emit("removeReply");
     },
   },
 };

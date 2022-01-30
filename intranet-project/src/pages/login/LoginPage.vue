@@ -70,6 +70,7 @@ export default {
           this.$router.push(this.redirectTarget);
         })
         .catch((err) => {
+          console.log("HENK");
           AlertService.handleError(err);
         });
     },

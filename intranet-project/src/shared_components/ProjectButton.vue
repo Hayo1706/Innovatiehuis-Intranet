@@ -1,14 +1,14 @@
 <template>
   <router-link :to="'/project/' + this.projectId" class="project-button">
-    <img
+    <!-- <img
       v-if="lastUpdated >= lastVisit"
       src=".\..\assets\images\logo\square.png"
     />
     <img
       v-if="lastUpdated < lastVisit"
       src=".\..\assets\images\logo\square_dark.png"
-    />
-    {{ this.projectName }}
+    /> -->
+    <label class="project-name">{{ this.projectName }}</label>
   </router-link>
 </template>
 
@@ -46,9 +46,13 @@ export default {
   transition: .3s;
 }
 .project-button:hover {
-  border-left: solid var(--gold1) 11px;
+  border-left: solid var(--gold1) 18px;
   -webkit-transition: .3s;
   transition: .3s;
+}
+.project-name {
+  font-size: 16pt;
+  margin: 8px;
 }
 img {
   height: 5vh;

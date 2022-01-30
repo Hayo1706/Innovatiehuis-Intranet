@@ -71,30 +71,4 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 }
-
-.confirm-btn {
-  width: 9em;
-  padding: 0.5em 1em;
-  margin: 0em 0.2em 0em 0.2em;
-  color: #e6e6e6;
-  background-color: var(--blue1);
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 16px;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.cancel-btn {
-  width: 9em;
-  padding: 0.5em 1em;
-  margin: 0em 0.2em 0em 0.2em;
-  color: var(--blue1);
-  background-color: #e6e6e6;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 16px;
-  text-transform: uppercase;
-  cursor: pointer;
-}
 </style>
