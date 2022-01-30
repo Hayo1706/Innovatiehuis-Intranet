@@ -17,6 +17,7 @@
 DROP DATABASE IF EXISTS `innovatieplatform`;
 CREATE DATABASE IF NOT EXISTS `innovatieplatform` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `innovatieplatform`;
+SET GLOBAL wait_timeout = 28800; /*8 hours*/
 
 -- Structuur van  tabel innovatieplatform.announcements wordt geschreven
 DROP TABLE IF EXISTS `announcements`;
