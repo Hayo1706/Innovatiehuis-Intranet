@@ -93,7 +93,7 @@ def user_owns_reply(reply_id):
 
 
 def user_owns_account(user_id):
-    return user_id == str(get_jwt_identity())
+    return user_id == int(get_jwt_identity())
 
 
 def get_user_projects(user_id):
