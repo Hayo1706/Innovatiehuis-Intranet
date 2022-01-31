@@ -26,11 +26,11 @@ var FilestorageService = function () {
         return response;
     }
     async function uploadFile(projectid, path, file, may_overwrite=false) {
-        const response = await axiosClient.post(`/projects/${projectid}/files?path=` + path + `&may_overwrite=` + may_overwrite, file , { timeout: 20000 })
+        const response = await axiosClient.post(`/projects/${projectid}/files?path=` + path + `&may_overwrite=` + may_overwrite, file , { timeout: 2000 })
         return response;
     }
     async function moveFile(projectid, from, to){
-        const response = await axiosClient.put(`/projects/${projectid}/files`, {from, to} , { timeout: 20000 })
+        const response = await axiosClient.put(`/projects/${projectid}/files`, {from, to} , { timeout: 2000 })
         return response;
     }
     async function downloadFile(projectid, path) {

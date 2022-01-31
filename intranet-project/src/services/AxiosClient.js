@@ -21,16 +21,16 @@ axiosClient.interceptors.response.use((config) => {
     return config;
 },
     (error) => {
-        //catch timeout error
+        // catch request timeouts expiring
         if (error.code == "ECONNABORTED") {
             return Promise.reject(error);
         }
-        //catch login error
+        // catch JWT auth expiring
         if (error.response.status == 401 && localStorage.getItem("loggedIn")  && !router.currentRoute.value.fullPath.includes('/login')) {
             LoginService.logout();
             window.location.reload();
         }
-        //catch users accessing pages they shouldn't, without letting them know the page exists, or if they have no acces at all, redirect them to the no_access page
+        // catch users accessing pages they shouldn't, without letting them know the page exists
         if (error.response.status == 403) {
             if (localStorage.getItem("access_status") == 0) {
                 router.push({ path: "/no_access" });
@@ -38,11 +38,8 @@ axiosClient.interceptors.response.use((config) => {
             } else {
                 router.push({ path: "/404" });
             }
-
         }
         return Promise.reject(error);
     });
 
-
 export default axiosClient
-

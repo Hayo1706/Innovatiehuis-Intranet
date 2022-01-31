@@ -312,7 +312,7 @@ paths:
       operationId: src.endpoints.files.get_files_in_path
       tags:
         - Files
-      summary: Returns file(s) in directory
+      summary: Returns list of all files in given directory
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
@@ -323,7 +323,7 @@ paths:
       operationId: src.endpoints.files.request_to_upload_file
       tags:
         - Files
-      summary: Upload file(s) in directory
+      summary: Upload file to given directory
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
@@ -382,7 +382,7 @@ paths:
       operationId: src.endpoints.files.delete_file
       tags:
         - Files
-      summary: Delete file(s) in directory
+      summary: Delete a given file in this directory
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
@@ -393,7 +393,7 @@ paths:
       operationId: src.endpoints.files.rename_file
       tags:
         - Files
-      summary: Update file
+      summary: Rename a file
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
@@ -441,7 +441,7 @@ paths:
       operationId: src.endpoints.folders.get_folders_in_path
       tags:
         - Folders
-      summary: Returns folder(s) in directory
+      summary: Returns list of all folders in given directory
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
