@@ -13,8 +13,8 @@ var FilestorageService = function () {
         const response = await axiosClient.post(`/projects/${projectid}/folders?path=` + path, { name }, { timeout: 2000 });
         return response;
     }
-    async function deleteFolder(projectid, path, conf) {
-        const response = await axiosClient.delete(`/projects/${projectid}/folders?path=` + path + `&conf=` + conf, { timeout: 2000 });
+    async function deleteFolder(projectid, path, may_delete_contents) {
+        const response = await axiosClient.delete(`/projects/${projectid}/folders?path=` + path + `&may_delete_contents=` + may_delete_contents, { timeout: 2000 });
         return response;
     }
     async function renameFolder(projectid, from, to, rename) {
@@ -25,8 +25,8 @@ var FilestorageService = function () {
         const response = await axiosClient.get(`/projects/${projectid}/files?path=` + path, { timeout: 2000 });
         return response;
     }
-    async function uploadFiles(projectid, path, file, conf) {
-        const response = await axiosClient.post(`/projects/${projectid}/files?path=` + path + `&conf=` + conf, file , { timeout: 20000 })
+    async function uploadFile(projectid, path, file, may_overwrite=false) {
+        const response = await axiosClient.post(`/projects/${projectid}/files?path=` + path + `&may_overwrite=` + may_overwrite, file , { timeout: 20000 })
         return response;
     }
     async function moveFile(projectid, from, to){
@@ -48,7 +48,7 @@ var FilestorageService = function () {
 
     return {
         getFilesOfPath,
-        uploadFiles,
+        uploadFile,
         downloadFile,
         deleteFile,
         moveFile,

@@ -34,12 +34,13 @@ def create_dir(project_id):
         new_dir_name = fs_service.get_secure_name(new_dir_name)
 
         new_dir_path = fs_service.get_unique_dir_path(new_dir_name, current_path, 0)
-        os.mkdir(new_dir_path)
-        return response("Folder aangemaakt", 200)
+        # fs_service.create_directory(new_dir_path) RECURSIVE
+        os.makedirs(new_dir_path)
+        return response("Map aangemaakt", 200)
     except KeyError as e:
-        return response("Foute aanvraag", 400)
+        return response("Het verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
     except Exception as e:
-        return response("Kon geen folder aanmaken", 400)
+        return response("Map kon niet worden aangemaakt", 500)
 
 # PUT /projects/{project_id}/folders
 @check_permissions(Projects.may_cud_files)
@@ -66,19 +67,19 @@ def delete_dir(project_id):
     path_to_delete = connexion.request.values.get('path')
     path_to_delete = unquote(path_to_delete)
 
-    confirmation = connexion.request.values.get('conf')
+    may_delete_contents = connexion.request.values.get('may_delete_contents')
 
     requested_path = config.FILE_STORAGE_ROOT + fs_service.get_project_path(project_id) + path_to_delete
     if fs_service.dir_exists(requested_path):
         if fs_service.delete_valid(requested_path):
-            return response("Folder verwijderd", 200)
+            return response("Map verwijderd", 200)
         else:
             if len(os.listdir(requested_path)) > 0:
-                if confirmation != 'true':
-                    return response("Folder niet verwijderd, er zitten elenenten in", 409)
+                if may_delete_contents != 'true':
+                    return response("Map kon niet verwijderd worden; is de map niet leeg?", 409)
                 else:
                     if fs_service.delete_elements_in_dir_valid(requested_path):
-                        return response("Folder met elementen verwijderd", 200)
+                        return response("Map (inclusief inhoud) verwijderd", 200)
                     else:
-                        return response("Element in de folder konden niet verwijderd worden", 400)
-    return response("Folder kon niet verwijderd worden, herlaad de pagina", 400)
+                        return response("Een deel van de inhoud van deze map kon niet verwijderd worden", 409)
+    return response("Map kon niet verwijderd worden; bestaat de map nog?", 409)

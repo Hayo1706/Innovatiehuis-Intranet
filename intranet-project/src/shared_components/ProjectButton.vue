@@ -51,8 +51,8 @@ export default {
   transition: .3s;
 }
 .project-name {
-  font-size: 16pt;
-  margin: 8px;
+  font-size: 20pt;
+  margin: 16px;
 }
 img {
   height: 5vh;

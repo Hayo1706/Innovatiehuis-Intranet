@@ -11,7 +11,7 @@ def update(reply_id):
         body = connexion.request.json['reply']
         content = body['content']
     except KeyError:
-        return response("Foute aanvraag", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
 
     query_update(
         "UPDATE replies SET content=%(content)s WHERE replyid=%(id)s",

@@ -1,8 +1,10 @@
 <template>
   <div id="login" class="component-container">
     <div class="component-header">
-      <img src=".\..\..\assets\images\logo\square.png">
-      <h2>Innovatiehuis Politie</h2>
+      <img 
+        id="logo"
+        src=".\..\..\assets\images\logo\full-logo.png"
+      >
     </div>
     <div style="text-align: center" class="component-body">
       <input
@@ -130,11 +132,11 @@ export default {
 }
 #login .component-header{
   display: flex;
-  height: 2.5em;
+  height: 5em;
   align-items: baseline;
 }
 #login .component-header img{
-  height: 2em;
+  height: 5em;
 }
 #login h2 {
   display: inline-block;
@@ -147,5 +149,12 @@ export default {
 }
 #login .component-body{
   padding-top: 14px;
+}
+#logo {
+  margin: auto;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>

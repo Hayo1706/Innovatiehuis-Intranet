@@ -18,7 +18,7 @@ def get_roles():
 @check_permissions(Roles.check_role_permissions)
 def update_role(role_id):
     if not verify_password():
-        return response('Wachtwoord Incorrect', 400)
+        return response('Wachtwoord incorrect', 400)
     body = connexion.request.json
     body.pop('password')
 
@@ -31,7 +31,7 @@ def update_role(role_id):
     if int(role_id) == int(admin_power_level['roleid']):
         return response('Admin mag niet gewijzigd worden', 400)
     if int(body['roleid']) != int(role_id):
-        return response('Fout bij het updaten van rol', 400)
+        return response('Fout bij het aanpassen van permissies', 400)
     permission = permission_role_request_check(body,admin_power_level)
     if permission == False:
         query_update(
@@ -58,24 +58,22 @@ def update_role(role_id):
             "may_update_own_project=%(may_update_own_project)s,may_update_own_user_account=%("
             "may_update_own_user_account)s,may_update_own_user_password=%(may_update_own_user_password)s,"
             "role_name=%(role_name)s WHERE roleid=%(roleid)s", body)
-
-        return response('Updaten van rol succesvol')
+        return response('Permissies van rol gewijzigd')
     return permission
 
 
 def permission_role_request_check(body, admin_power_level):
     if body['role_name'] == 'admin':
-        return response('Admin mag niet gewijzigd worden', 400)
+        return response('Permissies van de admin mogen nooit worden gewijzigd', 400)
     if int(body['may_cud_users_with_power_level_up_to']) > int(body['power_level']):
-        return response('may_cud_users_with_power_level_up_to mag niet hoger zijn dan power_level', 400)
+        return response("Element may_cud_users_with_power_level_up_to mag nooit hoger zijn dan power_level", 400)
     if int(body['power_level']) >= int(admin_power_level['power_level']) or int(body[
         'may_cud_users_with_power_level_up_to']) >= admin_power_level['power_level']:
-        return response('Er mag geen rol bestaan met een hogere of gelijke power_level/ '
-                        'may_cud_users_with_power_level_up_to als het power_level van die van de admin', 400)
+        return response('De admin moet altijd een hoger power_level hebben dan andere rollen', 400)
     if int(body['power_level']) < 0 or int(body['power_level']) > 100 or \
             int(body['may_cud_users_with_power_level_up_to']) < 0 or int(
         body['may_cud_users_with_power_level_up_to']) > 100:
-        return response('may_cud_users_with_power_level_up_to en power_level moeten waardes hebben tussen 0 en 100')
+        return response('power_level vereist een waarde van 0 to 100')
     return False
 
 
@@ -87,7 +85,7 @@ def add_role():
     try:
         name = connexion.request.json['role_name']
     except KeyError:
-        return response("Foute aanvraag", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
     query_update("INSERT INTO roles (role_name) VALUES (%(role_name)s)", {'role_name': name})
     return response('Rol toegevoegd')
 

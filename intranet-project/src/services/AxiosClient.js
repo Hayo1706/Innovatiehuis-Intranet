@@ -26,7 +26,7 @@ axiosClient.interceptors.response.use((config) => {
             return Promise.reject(error);
         }
         //catch login error
-        if (error.response.status == 401 && !router.currentRoute.value.fullPath.includes('/login')) {
+        if (error.response.status == 401 && localStorage.getItem("loggedIn")  && !router.currentRoute.value.fullPath.includes('/login')) {
             LoginService.logout();
             window.location.reload();
         }
