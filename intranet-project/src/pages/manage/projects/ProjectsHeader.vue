@@ -9,7 +9,7 @@
         type="button"
         v-show="canCreateProject()"
       >
-        <i class="material-icons pmd-sm">Project toevoegen</i>
+        <div class="material-icons pmd-sm">Project toevoegen</div>
       </button>
       <ProjectsShowArchivedCheckbox
         @showArchived="(value) => $emit('showArchived', value)"

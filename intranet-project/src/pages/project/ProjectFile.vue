@@ -30,7 +30,7 @@
     
     <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.projectID+this.path">
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</a>
-      <a class="dropdown-item" v-if="this.type == 'owned'">Stoppen met delen</a>
+      <a class="dropdown-item" v-if="this.type == 'owned'" @click="stopSharingFile()">Stoppen met delen</a>
       <a class="dropdown-item" v-show="canMoveFile()" v-if="this.currentFolders.length > 1" @click="setMoveMenu(this.getCoordinates())">Verplaatsen naar:</a>
       <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+1">
         <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">

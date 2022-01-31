@@ -312,7 +312,7 @@ paths:
       operationId: src.endpoints.files.get_files_in_path
       tags:
         - Files
-      summary: Returns file(s) in directory
+      summary: Returns list of all files in given directory
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
@@ -323,11 +323,11 @@ paths:
       operationId: src.endpoints.files.request_to_upload_file
       tags:
         - Files
-      summary: Upload file(s) in directory
+      summary: Upload file to given directory
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
-        - $ref: '#/components/parameters/conf'
+        - $ref: '#/components/parameters/may_overwrite'
       requestBody:
         required: true
         content:
@@ -341,7 +341,7 @@ paths:
         200:
           description: Succesfully uploaded file
         409:
-          description: A file with the same name already exists
+          description: A file with the same name already exists and no permission to overwrite was given
         400:
           description: Failed to upload files
     put:
@@ -374,6 +374,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
+        - $ref: '#/components/parameters/version'
       responses:
         200:
           description: Downloaded file
@@ -381,7 +382,7 @@ paths:
       operationId: src.endpoints.files.delete_file
       tags:
         - Files
-      summary: Delete file(s) in directory
+      summary: Delete a given file in this directory
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
@@ -392,7 +393,7 @@ paths:
       operationId: src.endpoints.files.rename_file
       tags:
         - Files
-      summary: Update file
+      summary: Rename a file
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
@@ -410,12 +411,37 @@ paths:
         200:
           description: Successfully updated file
 
+  /projects/{project_id}/files/deleted:
+    get:
+      operationId: src.endpoints.files.read_deleted
+      tags:
+        - Files
+      summary: Read a list of deleted files which still have a backup version available
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        200:
+          description: Successfully retrieved list of deleted files for this project
+
+  /projects/{project_id}/file/restore:
+    patch:
+      operationId: src.endpoints.files.restore_file
+      tags:
+        - Files
+      summary: Revert a file to its previous version from backup, or restore a deleted file from backup
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/path'
+      responses:
+        200:
+          description: File has been restored from backup
+
   /projects/{project_id}/folders:
     get:
       operationId: src.endpoints.folders.get_folders_in_path
       tags:
         - Folders
-      summary: Returns folder(s) in directory
+      summary: Returns list of all folders in given directory
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
@@ -451,18 +477,18 @@ paths:
       operationId: src.endpoints.folders.delete_dir
       tags:
         - Folders
-      summary: Delete folder and file(s) in directory
+      summary: Delete folder and (if granted permission) its contents
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
-        - $ref: '#/components/parameters/conf'
+        - $ref: '#/components/parameters/may_delete_contents'
       responses:
         200:
-          description: Succesfully delete folder
+          description: Succesfully deleted folder
         400:
           description: Failed to delete folder
         409: 
-          description: There are files or folders in this folder, requires confirmation
+          description: There are files or folders in this folder and no permission was granted to delete these
     post:
       operationId: src.endpoints.folders.create_dir
       tags:
@@ -919,13 +945,27 @@ components:
       schema:
         type: string
       description: The path to be used
-    conf:
+    version:
       in: query
-      name: conf
+      name: version
       required: false
       schema:
         type: string
-      description: Confirmation for an action
+      description: Denotes which version of a file this operation applies to
+    may_overwrite:
+      in: query
+      name: may_overwrite
+      required: false
+      schema:
+        type: string
+      description: Boolean permission to overwrite a file if necessary
+    may_delete_contents:
+      in: query
+      name: may_delete_contents
+      required: false
+      schema:
+        type: string
+      description: Boolean permission to delete contents of a folder if necessary
 
   schemas:
     Project:

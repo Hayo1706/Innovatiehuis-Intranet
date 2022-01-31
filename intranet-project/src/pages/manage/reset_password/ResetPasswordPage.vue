@@ -72,8 +72,7 @@ export default {
     },
   },
   created() {
-
-    this.$emit("newHeaderTitle", "Wachtwoord wijzigen");
+    this.$emit("newHeaderTitle", "Wachtwoord instellen");
   },
 };
 </script>

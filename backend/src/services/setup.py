@@ -35,11 +35,10 @@ def create_app():
     app.app.config['BCRYPT_HANDLE_LONG_PASSWORDS '] = True
     db.init_app(app.app)
 
+    if config.FILE_STORAGE_ROOT[-1] != "/":
+        raise Exception("FILE_STORAGE_ROOT must end with a '/'")
     if not fs_service.dir_exists(config.FILE_STORAGE_ROOT):
-        if not fs_service.dir_exists("../filestorage"):
-            os.mkdir("../filestorage");
-    if not fs_service.dir_exists("../filestorage/root"):
-        os.mkdir("../filestorage/root")
+        os.makedirs(config.FILE_STORAGE_ROOT)
 
     @app.app.after_request
     def refresh_expiring_jwts(response):
