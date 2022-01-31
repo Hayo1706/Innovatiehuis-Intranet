@@ -27,6 +27,8 @@ def create_app():
     app.app.config['JWT_COOKIE_SECURE'] = False  # TODO Change in production
 
     app.app.config['SQLALCHEMY_POOL_SIZE'] = 20
+    app.app.config['SQLALCHEMY_POOL_RECYCLE'] = 14400  # every 4 hours reset connection
+
     app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URL
 
