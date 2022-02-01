@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div @dragover.prevent @drop.prevent>
     <h5 class="directory-view-title">Bestanden</h5>
-      <div class="row" style="min-height: 15vh" id="drop_zone">
+      <div class="row" style="min-height: 15vh" @drop="uploadFile" @dragover="toggleDropZone(true)" @dragleave="toggleDropZone(false)" id="drop_zone">
         <div v-for="file in this.searchedFiles" :key="file" class="col-sm-2">
           <ProjectFile
             :projectID="file.projectID"
@@ -62,8 +62,8 @@ export default {
       else{
         var searchedFiles = []
         for(var file_index in this.currentFiles){
-          var folderName = this.currentFiles[file_index].name
-          if(this.fileNameInSearchterm(String(folderName), this.searchTerm)){
+          var folderName = this.currentFiles[file_index].name.toLowerCase();
+          if(this.fileNameInSearchterm(String(folderName), this.searchTerm.toLowerCase())){
             searchedFiles.push(this.currentFiles[file_index])
           }
         }
@@ -129,6 +129,22 @@ export default {
         console.log(err)
         AlertService.handleError(err);
       })
+    },
+    uploadFile(e){
+      this.toggleDropZone(false)
+      var files = e.dataTransfer.files
+      if(files.length > 0){
+        this.$emit("filesDropUpload", files)
+      }
+    },
+    toggleDropZone(showBoolean) {
+      var dropZone = document.getElementById("drop_zone")
+      if(showBoolean == true){
+        dropZone.style['background-color'] = "var(--blue4)";
+      }
+      else{
+        dropZone.style['background-color'] = "transparent"
+      }
     },
   },
 };
