@@ -11,10 +11,10 @@ def log_response_and_request(request, response, uid):
     request_str = request.data.decode("utf-8")
     response_obj = {}
 
+    # if response is no file
     if not response.direct_passthrough:
         response_str = response.data.decode("utf-8")
         response_obj = json.loads(response_str)
-
 
     response_message = ""
     if type(response_obj) == dict and "message" in response_obj.keys():
