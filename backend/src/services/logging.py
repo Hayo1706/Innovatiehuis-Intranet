@@ -7,10 +7,14 @@ import pytz
 
 # TODO Niels has to send the logging message to ElasticStack, maybe change it to his liking a bit first
 def log_response_and_request(request, response, uid):
+    response_str = ""
     request_str = request.data.decode("utf-8")
-    response_str = response.data.decode("utf-8")
+    response_obj = {}
 
-    response_obj = json.loads(response_str)
+    if not response.direct_passthrough:
+        response_str = response.data.decode("utf-8")
+        response_obj = json.loads(response_str)
+
 
     response_message = ""
     if type(response_obj) == dict and "message" in response_obj.keys():
