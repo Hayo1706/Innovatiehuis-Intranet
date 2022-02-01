@@ -33,7 +33,6 @@ def login():
     user = user[0]
 
     if int(user['failed_login_count']) >= config.ATTEMPTS_BEFORE_COOLDOWN:
-
         if int((datetime.datetime.now() - user['last_failed_login']).total_seconds()) > config.COOLDOWN_TIME_SECONDS:
             query_update("UPDATE users SET failed_login_count = 0 where userid = %(userid)s",
                          {'userid': user['userid']})
@@ -64,8 +63,8 @@ def login():
             return rsp, 200
     except ValueError:
         print('Input format incorrect')
-    query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
-                 "userid = %(userid)s", {'userid': user['userid']})
+    query_update("UPDATE users SET last_failed_login = %(failed_login_time)s, failed_login_count = failed_login_count + 1 WHERE "
+                 "userid = %(userid)s", {'userid': user['userid'], 'failed_login_time': datetime.datetime.now()})
     return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
 
 
