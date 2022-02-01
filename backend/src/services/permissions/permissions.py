@@ -8,29 +8,12 @@ from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity, unset_jw
     set_access_cookies
 
 
-# ###### HOW TO CHECK ######
-# ####### 1 RESOURCE #######
-# # if !user_has_permission(userid, "READ", "project", projectid):
-# #   abort(403, "Access Forbidden")
-# # return query("SQL")
-# ###### HOW TO CHECK ######
-# ### MULTIPLE RESOURCES ###
-# # data = query("SQL")
-# # for project in data:
-# #   if !user_has_permission(userid, "READ", "project", project["projectid"]):
-# #       remove project (with iteration?)
-# # if data.length = 0:
-# #   abort(403, "Access Forbidden")
-# # return data
-# ###### HOW TO CHECK ######
-# ######## FOR FILE ########
-# # use projectid as resource_id!!!
-#
-
 def check_permissions(rule, *parameters):
     def wrapper(fn):
         @wraps(fn)
         def decorator(*args, **kwargs):
+            if config.DEBUG_MODE:
+                return fn(*args, **kwargs)
             try:
                 verify_jwt_in_request()
             except Exception as e:
@@ -40,11 +23,11 @@ def check_permissions(rule, *parameters):
             access_status = query("SELECT access_status FROM users WHERE userid = %(user_id)s",
                                      {'user_id': get_jwt_identity()})[0]
             if access_status['access_status'] == 1:
-                user_perm = \
+                user_permissions = \
                     query("SELECT roles.* FROM users JOIN roles ON users.roleid = roles.roleid WHERE userid = %(user_id)s",
                           {'user_id': get_jwt_identity()})[0]
                 compare = parameters if len(parameters) > 0 else kwargs
-                if rule(user_perm, *[kwargs[v] for v in compare]) or config.DEBUG_MODE:
+                if rule(user_permissions, *[kwargs[v] for v in compare]):
                     return fn(*args, **kwargs)
 
             return response("TIP: De politie hacken is een slecht idee!", 403)
