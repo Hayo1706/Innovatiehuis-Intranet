@@ -40,12 +40,13 @@ def login():
             return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
 
     if int(user['failed_login_count']) >= config.ATTEMPTS_BEFORE_COOLDOWN:
-        if int((datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam')) - user['last_failed_login']).total_seconds()) > config.COOLDOWN_TIME_SECONDS:
+
+        if int((datetime.datetime.now() - user['last_failed_login']).total_seconds()) > config.COOLDOWN_TIME_SECONDS:
             query_update("UPDATE users SET failed_login_count = 0 where userid = %(userid)s",
                          {'userid': user['userid']})
         else:
             return response("Toegang geweigerd, je account is geblokkeerd voor " +
-                            str(config.COOLDOWN_TIME_SECONDS - int((datetime.datetime.now(tz=pytz.timezone('Europe/Amsterdam')) - user[
+                            str(config.COOLDOWN_TIME_SECONDS - int((datetime.datetime.now() - user[
                                 'last_failed_login']).total_seconds())) +
                             " seconden", 401)
     try:
