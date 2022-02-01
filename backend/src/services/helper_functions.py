@@ -1,3 +1,6 @@
+import json
+import connexion
+
 from flask import request
 from .extensions import db
 
@@ -16,4 +19,5 @@ def query_update(query, param=None):
 def response(message="", code=200, result=None):
     rsp = {'resource': request.path, 'code': code, 'message': message, 'result': result}
     return rsp, code
+
 
