@@ -32,13 +32,6 @@ def login():
         return response("Incorrect wachtwoord of gebruikersnaam", 401)
     user = user[0]
 
-    if config.TWO_FACTOR:
-        user_auth_key = user.get('auth_key')
-        totp_code = pyotp.TOTP(str.encode(user_auth_key)).now()
-
-        if totp_code != authenticator_code:
-            return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
-
     if int(user['failed_login_count']) >= config.ATTEMPTS_BEFORE_COOLDOWN:
 
         if int((datetime.datetime.now() - user['last_failed_login']).total_seconds()) > config.COOLDOWN_TIME_SECONDS:
@@ -50,6 +43,13 @@ def login():
                                 'last_failed_login']).total_seconds())) +
                             " seconden", 401)
     try:
+        if config.TWO_FACTOR:
+            user_auth_key = user.get('auth_key')
+            totp_code = pyotp.TOTP(str.encode(user_auth_key)).now()
+
+            if totp_code != authenticator_code:
+                raise ValueError
+
         if bcrypt.check_password_hash(user['password_hash'], send_password):
             access_token = create_access_token(identity=user['userid'])
             dict = query("SELECT * FROM roles WHERE roleid=%(roleid)s", {'roleid': user['roleid']})
@@ -63,7 +63,7 @@ def login():
             set_access_cookies(rsp, access_token)
             return rsp, 200
     except ValueError:
-        print('Password format incorrect')
+        print('Input format incorrect')
     query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
                  "userid = %(userid)s", {'userid': user['userid']})
     return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
