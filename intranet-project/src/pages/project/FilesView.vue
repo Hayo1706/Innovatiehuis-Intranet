@@ -1,7 +1,7 @@
 <template>
   <div @dragover.prevent @drop.prevent>
     <h5>Bestanden</h5>
-      <div class="row" style="min-height: 15vh" @drop="uploadFile">
+      <div class="row" style="min-height: 15vh" @drop="uploadFile" @dragover="toggleDropZone(true)" @dragleave="toggleDropZone(false)" id="drop_zone">
         <div v-for="file in this.searchedFiles" :key="file" class="col-sm-2">
           <ProjectFile
             :projectID="file.projectID"
@@ -131,9 +131,21 @@ export default {
       })
     },
     uploadFile(e){
+      this.toggleDropZone(false)
       var files = e.dataTransfer.files
-      this.$emit("filesDropUpload", files)
-    }
+      if(files.length > 0){
+        this.$emit("filesDropUpload", files)
+      }
+    },
+    toggleDropZone(showBoolean) {
+      var dropZone = document.getElementById("drop_zone")
+      if(showBoolean == true){
+        dropZone.style['background-color'] = "var(--blue4)";
+      }
+      else{
+        dropZone.style['background-color'] = "transparent"
+      }
+    },
   },
 };
 </script>
