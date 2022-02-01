@@ -32,13 +32,22 @@ export default {
 .form-switch{
   user-select: none;
   width: fit-content;
+  font-size: 1.3em;
+  padding-right: 30px;
+  padding-bottom: 4px;
 }
 .form-check-input {
   margin-bottom: 4px;
   margin-right: 8px;
 }
-.form-check-label {
-  color: white;
+/* .form-check-label {
+
+} */
+.form-switch .form-check-input:checked{
+  background-color: var(--blue2);
 }
+/* .form-check-input:focus{
+  background-color: darkgreen;
+} */
 
 </style>
