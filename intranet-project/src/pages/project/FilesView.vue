@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5>Bestanden</h5>
+    <h5 class="directory-view-title">Bestanden</h5>
       <div class="row" style="min-height: 15vh" id="drop_zone">
         <div v-for="file in this.searchedFiles" :key="file" class="col-sm-2">
           <ProjectFile

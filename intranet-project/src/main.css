@@ -48,21 +48,21 @@ table {
 *{
   font-family: AddeleSemiBold;
 }
-h5 {
+.directory-view-title {
   padding-top: 10px;
   display: flex;
   flex-direction: row;
 }
-h5:after, h5:before{
+.directory-view-title:after, .directory-view-title:before{
   content: "";
   flex: 1 1;
   border-bottom: 1px solid;
   margin: auto;
 }
-h5:before {
+.directory-view-title:before {
   margin-right: 10px
 }
-h5:after {
+.directory-view-title:after {
   margin-left: 10px
 }
 body {
@@ -336,4 +336,7 @@ p {
 }
 .accordion-button:focus{
   box-shadow: none !important;
+}
+#projectsHeader .row, .listing-container .row{
+  --bs-gutter-x: 0;
 }

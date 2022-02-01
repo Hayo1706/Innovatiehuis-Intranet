@@ -656,14 +656,20 @@ button {
   color: var(--blue1);
 }
 .member-item {
+  background-color: rgb(239, 239, 239);
   width: fit-content;
   height: fit-content;
-  background: var(--gold3);
-  border-radius: 2px;
+  border-radius: 0 5px 5px 0;
+  border-left-width: 0px;
+  border-color: #d4d4d4;
+  border-style: solid;
   cursor: pointer;
   margin-bottom: 5px;
   font-size: 14pt;
   max-width: 80%;
+}
+.member-item:hover{
+  background-color: rgb(231, 231, 231);
 }
 
 #save-button {
@@ -689,10 +695,15 @@ button {
   margin-bottom: 10px;
 }
 .deleteButton {
-  background-color: red;
+  background-color: #ff0808cf;
+  border-color: #d4d4d4;
   border-radius: 5px 0 0 5px;
+  border: 2px 0 2px 2px solid grey;
+  border-style: solid;
+  border-right-width: 0;
   color: white;
   font-size: 14pt;
+  width: 2.5ch;
 }
 .text {
   font-family: AddeleThin;

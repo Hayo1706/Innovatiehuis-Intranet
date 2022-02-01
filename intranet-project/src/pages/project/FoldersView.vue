@@ -3,7 +3,20 @@
 
     <div>
       <div class="row">
-        <h5 v-if="this.searchedNormalFolders.length > 0">Mappen</h5>
+        <h5 class="directory-view-title" v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h5>
+        <div v-for="folder in searchedSharedFolders" :key="folder.name" class="col-sm-4">
+          <ProjectFolder
+            :folderName="folder.name"
+            :folderType="folder.type"
+            :folderPath="folder.path"
+            :projectID="folder.projectID"
+            :currentFolders="this.currentFolders"
+            :files="folder.files"
+
+            @currentPathChanged="currentPathChanged"
+          />
+        </div>
+        <h5 class="directory-view-title" v-if="this.searchedNormalFolders.length > 0">Mappen</h5>
         <div v-for="folder in searchedNormalFolders" :key="folder.name" class="col-sm-4">
           <ProjectFolder
             :folderName="folder.name"
@@ -30,19 +43,6 @@
             @dragover.prevent
             draggable="true"
             @dragstart="startDrag($event, folder.path)"
-          />
-        </div>
-        <h5 v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h5>
-        <div v-for="folder in searchedSharedFolders" :key="folder.name" class="col-sm-4">
-          <ProjectFolder
-            :folderName="folder.name"
-            :folderType="folder.type"
-            :folderPath="folder.path"
-            :projectID="folder.projectID"
-            :currentFolders="this.currentFolders"
-            :files="folder.files"
-
-            @currentPathChanged="currentPathChanged"
           />
         </div>
       </div>
