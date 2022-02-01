@@ -52,11 +52,11 @@ def create():
 
 
     except KeyError:
-        return response("Foute aanvraag", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
 
     emails_in_use = [user["email"] for user in query("SELECT email FROM users")]
     if email in emails_in_use:
-        return response("Dit mailadres wordt al gebruikt door een bestaand account.", 400)
+        return response("Dit mailadres is al in gebruik!", 400)
 
     query_update(
         "INSERT INTO users (first_name, last_name, email, phone_number, roleid, access_status, password_hash, auth_key) "
@@ -91,7 +91,7 @@ def update(user_id):
         email = body['email']
         phone_number = body['phone_number']
     except KeyError:
-        return response("Foute aanvraag", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
 
     query_update(
         "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, "
@@ -127,7 +127,7 @@ def update_password(user_id):
         body = connexion.request.json
         new_password_hash = body['password_hash']
     except KeyError:
-        return response("Foute aanvraag", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
     query_update("UPDATE users SET password_hash = %(hash)s WHERE userid = %(userid)s",
                  {'hash': new_password_hash, 'userid': user_id})
     response('Wachtwoord gewijzigd')

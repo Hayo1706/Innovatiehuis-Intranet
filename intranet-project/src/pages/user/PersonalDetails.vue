@@ -1,12 +1,13 @@
 <template>
   <div class="component-container">
-    
-      <div class="component-header">Persoonsgegevens</div>
-        <div class="component-body">
-          <div class="row list">
+    <div class="component-header">Persoonsgegevens</div>
+    <div class="component-body">
+      <div class="row list">
         <div class="d-block d-lg-none">
           <div>Naam:</div>
-          <div class="item-text">{{ this.user.first_name }} {{ this.user.last_name }}</div>
+          <div class="item-text">
+            {{ this.user.first_name }} {{ this.user.last_name }}
+          </div>
           <div>Email:</div>
           <div class="item-text">{{ this.user.email }}</div>
           <div>Telefoonnummer:</div>
@@ -21,7 +22,9 @@
             v-if="show_password"
             class="full-button"
             @click="toResetPassword()"
-          >Wachtwoord wijzigen</div>
+          >
+            Wachtwoord wijzigen
+          </div>
         </div>
         <div class="col-6 d-none d-lg-block">
           <div class="item">Naam:</div>
@@ -32,9 +35,20 @@
           <div class="item">Laatst gezien:</div>
         </div>
         <div class="col-6 d-none d-lg-block">
-          <div class="item-text">{{ this.user.first_name }} {{ this.user.last_name }}</div>
-          <div class="item-text"><a :href="'mailto:' + this.user.email">{{ this.user.email }}</a></div>
-          <div class="item-text"><a :href="'tel:' + this.user.phone_number">{{ this.user.phone_number }}</a></div>
+          <div class="item-text">
+            {{ this.user.first_name }} {{ this.user.last_name }}
+          </div>
+          <div class="item-text">
+            <a :href="'mailto:' + this.user.email">{{ this.user.email }}</a>
+          </div>
+          <div class="item-text">
+            <a
+              :href="'tel:' + this.user.phone_number"
+              v-if="this.user.phone_number"
+              >{{ this.user.phone_number }}</a
+            >
+            <div v-else><br /></div>
+          </div>
           <div class="item-text">{{ this.user.role_name }}</div>
           <div class="item-text">{{ this.created }}</div>
           <div class="item-text">{{ this.last_seen }}</div>
@@ -46,7 +60,9 @@
           v-if="show_password"
           class="full-button"
           @click="toResetPassword()"
-        >Wachtwoord wijzigen</div>
+        >
+          Wachtwoord wijzigen
+        </div>
       </div>
     </div>
   </div>
@@ -93,15 +109,14 @@ export default {
     },
     toResetPassword() {
       this.$router.push("/manage/resetpassword");
-    }
+    },
   },
-    watch: {
+  watch: {
     $route() {
-      if(this.$route.fullPath.includes("/user/")){
+      if (this.$route.fullPath.includes("/user/")) {
         this.getUser();
       }
     },
-
   },
 };
 </script>
@@ -114,7 +129,7 @@ export default {
   font-size: 20px;
 }
 .component-body {
-  background-color: rgba(255,255,255,0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   border-radius: 1em;
   padding: 10px;
   margin-top: 10px;
@@ -127,24 +142,25 @@ export default {
   margin-bottom: 1vh;
   white-space: initial;
   font-family: AddeleThin;
+  display: block;
 }
 
 .button {
   font-size: 15px;
 }
-.full-button{
+.full-button {
   margin-top: 43px;
   display: inline-block;
   width: initial;
   padding: 6px 12px;
 }
-.button-wrapper{
+.button-wrapper {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.component-body .row{
+.component-body .row {
   margin: 13px 0 0 0;
 }
 </style>

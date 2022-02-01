@@ -1,10 +1,22 @@
 <template>
-  <div class="project-listing" v-bind:class="{ archived: this.project.is_archived }">
-    <div class="row">
+  <div
+    class="project-listing"
+    v-bind:class="{ archived: this.project.is_archived }"
+  >
+    <div
+      class="row collapsed accordion_button"
+      type="button"
+      data-bs-toggle="collapse"
+      :data-bs-target="'#collapseName' + this.project.projectid"
+      aria-expanded="false"
+      :aria-controls="'collapseName' + this.project.projectid"
+      :id="'collapseDetailsButton' + this.project.projectid"
+      @click="this.open = !this.open"
+    >
       <VerticalHeader class="d-block d-lg-none"></VerticalHeader>
       <!-- small screens-->
       <div class="col-3 d-block d-lg-none">
-        <div class="name-button mobileRow" @click="onClick()">
+        <div class="mobileRow">
           {{ projectname }}
         </div>
         <div class="mobileRow">
@@ -36,14 +48,15 @@
 
       <!-- large screens-->
       <div
-        class="name-wrapper col-3 d-none d-lg-flex align-items-center justify-content-center"
+        class="
+          name-wrapper
+          col-3
+          d-none d-lg-flex
+          align-items-center
+          justify-content-center
+        "
       >
-        <router-link
-          title="Naar projectpagina"
-          :to="'/project/' + this.project.projectid"
-          class="name-button mobileRow"
-          >{{ projectname }}</router-link
-        >
+        {{ projectname }}
       </div>
       <div
         title="Aangemaakt"
@@ -75,11 +88,15 @@
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
       >
-        <div id="archivedText" v-if="this.project.is_archived">Gearchiveerd</div>
+        <div id="archivedText" v-if="this.project.is_archived">
+          Gearchiveerd
+        </div>
         <div v-else>Niet gearchiveerd</div>
       </div>
 
-      <div class="col-lg d-lg-flex align-items-center justify-content-center">
+      <div
+        class="col col-lg d-lg-flex align-items-center justify-content-center"
+      >
         <span class="button-span-right">
           <ProjectButtons
             @removeProject="(id) => $emit('removeProject', id)"
@@ -89,16 +106,13 @@
         </span>
         <h2 class="accordion-header" :id="'heading' + this.project.projectid">
           <button
-            class="full-button accordion_button collapsed"
+            class="full-button openProjectButton"
             type="button"
-            data-bs-toggle="collapse"
-            :data-bs-target="'#collapseName' + this.project.projectid"
-            aria-expanded="false"
-            :aria-controls="'collapseName' + this.project.projectid"
-            :id="'collapseDetailsButton' + this.project.projectid"
-            @click="this.open = !this.open"
+            @click.left="visitProjectPage()"
+            @click.middle="visitProjectPage()"
           >
-            Details
+            <img src="@/assets/images/open_page.png" />
+            Projectpagina
           </button>
         </h2>
       </div>
@@ -142,7 +156,7 @@ export default {
     this.projectname = this.project.project_name;
   },
   methods: {
-    onClick() {
+    visitProjectPage() {
       this.$router.push("/project/" + this.project.projectid);
     },
   },
@@ -155,16 +169,21 @@ export default {
   color: var(--blue1);
   overflow: visible;
   background-color: rgb(234, 234, 234);
-  border-radius: 0 0.2rem 0.2rem 0;
   /* margin-bottom: 0.3rem; */
   font-size: 1.6vh;
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 1px solid hsl(0deg 0% 86%);
 }
 .project-listing:last-child {
   border-bottom: none;
 }
+.project-listing:hover {
+  background-color: rgb(230, 230, 230);
+}
 .archived {
-  background-color: var(--gold4);
+  background-color: rgb(223, 223, 223);
+}
+.archived:hover {
+  background-color: rgb(227, 227, 227);
 }
 
 .name-button {
@@ -195,7 +214,18 @@ export default {
 .iconHolder {
   padding: 5px;
 }
-.name-wrapper{
+.name-wrapper {
   padding-right: 0;
+}
+.openProjectButton img {
+  margin-right: 6px;
+  height: 1em;
+}
+.openProjectButton {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.col {
+  border-left: 1px solid hsl(0deg 0% 89%);
 }
 </style>

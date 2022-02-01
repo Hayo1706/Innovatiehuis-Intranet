@@ -272,6 +272,10 @@ export default {
   border-radius: 0px 0px 10px 10px;
   background-color: rgba(255, 255, 255, 0.3);
 }
+.listing-container .project-listing:last-child{
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
 .container {
   padding: 0;
 }

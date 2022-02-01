@@ -183,7 +183,7 @@ export default {
         var formData = new FormData();
         formData.append(files[i].name, files[i]);
 
-        FilestorageService.uploadFiles(
+        FilestorageService.uploadFile(
           this.$route.params.id,
           this.currentPath,
           formData

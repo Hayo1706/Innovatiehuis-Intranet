@@ -33,7 +33,7 @@ def create_global():
         title = body['title']
         content = body['content']
     except KeyError:
-        return response("Foute aanvraag", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
     query_update(
         "INSERT INTO announcements (userid, projectid, title, content) VALUES (%(userid)s, NULL, %(title)s, "
         "%(content)s)",
@@ -48,7 +48,7 @@ def update(announcement_id):
         title = body['title']
         content = body['content']
     except KeyError:
-        return response("Foute aanvraag", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
     query_update(
         "UPDATE announcements SET title=%(title)s, content=%(content)s WHERE announcementid=%(id)s",
         {'id': announcement_id, 'content': content, 'title': title})
@@ -78,7 +78,7 @@ def add_reply(announcement_id):
         body = connexion.request.json['reply']
         content = body['content']
     except KeyError:
-        return response("Foute aanvraag", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
     query_update(
         "INSERT INTO replies (announcementid, userid, content) VALUES (%(id)s, %(userid)s, %(content)s)",
         {'id': announcement_id, 'userid': get_jwt_identity(), 'content': content})

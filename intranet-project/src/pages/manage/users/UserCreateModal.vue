@@ -68,8 +68,7 @@
                 </option>
               </select>
               <br />
-              (De gebruiker heeft pas rechten die bij zijn rol horen, als hij
-              toegang heeft gekregen.)
+              LET OP: Indien de gebruiker nog documenten t.b.v. screening dient in te vullen, voeg deze dan toe als "geblokkeerd" om voorlopig de toegang tot het platform te ontzeggen.
             </div>
           </form>
         </div>

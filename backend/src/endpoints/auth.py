@@ -1,5 +1,8 @@
 import connexion
 import datetime
+
+import pytz
+
 import src.config as config
 from flask import jsonify, request
 from src.services.helper_functions import query, query_update, response
@@ -13,31 +16,21 @@ import re
 import pyotp
 import base64
 
+
 def login():
     try:
         email = connexion.request.form['username']
         send_password = connexion.request.form['password']
         authenticator_code = connexion.request.form['authenticator_code']
-   
     except KeyError:
-        return response("Foute aanvraag", 400)
-
-
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!",
+                        400)
 
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})
     if len(user) == 0:
-        return response("Incorrect wachtwoord of gebruikersnaam", 401)
+        return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
     user = user[0]
-
-
-    if config.TWO_FACTOR:
-       user_auth_key = user.get('auth_key')
-       totp_code = pyotp.TOTP(str.encode(user_auth_key)).now()
-
-       if totp_code != authenticator_code:
-           return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
-
 
     if int(user['failed_login_count']) >= config.ATTEMPTS_BEFORE_COOLDOWN:
         if int((datetime.datetime.now() - user['last_failed_login']).total_seconds()) > config.COOLDOWN_TIME_SECONDS:
@@ -49,6 +42,13 @@ def login():
                                 'last_failed_login']).total_seconds())) +
                             " seconden", 401)
     try:
+        if config.TWO_FACTOR:
+            user_auth_key = user.get('auth_key')
+            totp_code = pyotp.TOTP(str.encode(user_auth_key)).now()
+
+            if totp_code != authenticator_code:
+                raise ValueError
+
         if bcrypt.check_password_hash(user['password_hash'], send_password):
             access_token = create_access_token(identity=user['userid'])
             dict = query("SELECT * FROM roles WHERE roleid=%(roleid)s", {'roleid': user['roleid']})
@@ -62,9 +62,9 @@ def login():
             set_access_cookies(rsp, access_token)
             return rsp, 200
     except ValueError:
-        print('Password format incorrect')
-    query_update("UPDATE users SET last_failed_login = NOW(), failed_login_count = failed_login_count + 1 WHERE "
-                 "userid = %(userid)s", {'userid': user['userid']})
+        print('Input format incorrect')
+    query_update("UPDATE users SET last_failed_login = %(failed_login_time)s, failed_login_count = failed_login_count + 1 WHERE "
+                 "userid = %(userid)s", {'userid': user['userid'], 'failed_login_time': datetime.datetime.now()})
     return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
 
 
@@ -106,7 +106,8 @@ def change_existing_password(old_password, new_password):
             return set_password(new_password, user_id)
         return response("Incorrect wachtwoord ", 401)
     except KeyError:
-        return response("Foute aanvraag", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!",
+                        400)
 
 
 def set_password(password, user_id):
@@ -123,10 +124,13 @@ def set_password(password, user_id):
 
     # calculating the length
     if len(password) > config.MAX_PASSWORD_LENGTH:
-        return response('Wachtwoord te lang, maximale lengte is  ' + str(config.MAX_PASSWORD_LENGTH) + ' karakters',
-                        400)
+        return response(
+            f'Wachtwoord is {len(password)} lang, maximale lengte is {str(config.MAX_PASSWORD_LENGTH)} karakters',
+            400)
     if len(password) < config.MIN_PASSWORD_LENGTH:
-        return response('Wachtwoord te kort, minimale lengte is ' + str(config.MAX_PASSWORD_LENGTH) + "karakters", 400)
+        return response(
+            f'Wachtwoord is {len(password)} lang, minimale lengte is {str(config.MAX_PASSWORD_LENGTH)} karakters',
+            400)
 
     # searching for digits
     if config.FORCE_NUMBERS and re.search(r"\d", password) is None:
@@ -141,8 +145,9 @@ def set_password(password, user_id):
         return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 kleine letter', 400)
 
     # searching for symbols
-    if config.FORCE_SPECIAL_CHARACTER and re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~" + r'"]', password) is None:
-        return response('Wachtwoord voldoet niet aan eisen: Minimaal 1 speciaal karakter: !,@,#,$,%,^,&, etc.. ', 400)
+    if config.FORCE_SPECIAL_CHARACTER and re.search(r"[ !#:;$%&'()*+,-./[\\\]^_`{|}~" + r'"]', password) is None:
+        return response(
+            'Wachtwoord voldoet niet aan eisen: Minimaal 1 van de volgende tekens: !#:;$%&()*+,-./\\[]^_`{}|~', 400)
 
     query_update(
         "UPDATE users SET password_hash=%(password_hash)s "
