@@ -45,7 +45,7 @@
           <a class="dropdown-item">{{ child.project_name }}</a>
         </span>
       </div>
-      
+
       <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="setRecoverMenu()">Vorige versie</a>
       <div class="dropdown-menu dropdown-menu-sm" v-if="this.type == 'normal'" v-bind:id="this.path+'recoverMenu'">
         <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="recoverBackupFile">Herstellen</a>
@@ -54,6 +54,7 @@
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</a>
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDownloadFile()" @click="downloadFile('active')">Download</a>
       <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canDownloadFile()" @click="downloadFile('backup')">Download</a>
+      <a class="dropdown-item" v-show="this.type == 'backup' && canMoveFile()" @click="recoverBackupFile">Herstellen</a>
     </div>
   </div>
 </template>

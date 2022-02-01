@@ -178,7 +178,7 @@ export default {
           .then((response) => {
             this.olderFiles = []
             for(var file in response.data){
-              this.olderFiles.push({'name': response.data[file].split("\\").pop(), 'path': response.data[file], 'projectID': this.projectID, 'type':'backup'})
+              this.olderFiles.push({'name': response.data[file].split("\\").pop(), 'path': response.data[file].split("\\").join("/"), 'projectID': this.projectID, 'type':'backup'})
             }
             AlertService.handleSuccess(response);
           })
