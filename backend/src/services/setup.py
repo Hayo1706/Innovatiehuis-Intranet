@@ -3,7 +3,7 @@ from datetime import timezone, datetime, timedelta
 import connexion
 import os
 
-import pytz
+
 from flask import request
 
 from .extensions import db, jwt, bcrypt
@@ -62,7 +62,7 @@ def create_app():
     def refresh_expiring_jwts(response):
         try:
             exp_timestamp = get_jwt()["exp"]
-            now = datetime.now(tz=pytz.timezone('Europe/Amsterdam'))
+            now = datetime.now()
             target_timestamp = datetime.timestamp(now + timedelta(minutes=1))
             if target_timestamp > exp_timestamp:
                 access_token = create_access_token(identity=get_jwt_identity())
