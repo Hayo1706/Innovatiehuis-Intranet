@@ -151,7 +151,7 @@ def update_shared_files_entries(project_id, path_to_replace, new_path):
             culled_list = [file for file in updated_list if file != '']
             new_shared_files_string = ' '.join(culled_list)
             if new_shared_files_string == "":
-                new_shared_files_string == "null"
+                new_shared_files_string = None
             query_update("UPDATE projects_have_parents SET shared_files = %(shared_files)s WHERE parentid = %(projectid)s "
                          "AND childid = %(childid)s",
                          {'shared_files': new_shared_files_string, 'projectid': project_id, 'childid': entry['childid']})

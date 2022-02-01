@@ -44,9 +44,13 @@
           <a class="dropdown-item">{{ child.project_name }}</a>
         </span>
       </div>
-
+      <a class="dropdown-item" v-if="this.type != 'owned'" v-show="canDownloadFile()" @click="setRecoverMenu()">Vorige versie</a>
+      <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+'recoverMenu'">
+        <a class="dropdown-item" @click="recoverBackupFile">Herstellen</a>
+        <a class="dropdown-item" @click="downloadFile('backup')">Downloaden</a>
+      </div>
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</a>
-      <a class="dropdown-item" v-if="this.type != 'owned'" v-show="canDownloadFile()" @click="downloadFile()">Download</a>
+      <a class="dropdown-item" v-if="this.type != 'owned'" v-show="canDownloadFile()" @click="downloadFile('active')">Download</a>
     </div>
   </div>
 </template>
@@ -74,6 +78,7 @@ export default {
       viewMenu: false,
       moveMenu: false,
       shareMenu: false,
+      recoverMenu: false,
       fileName: this.name,
       fileTypes: {
         jpg: require("./../../assets/images/file_icons/Jpg.png"),
@@ -108,8 +113,8 @@ export default {
     addSharingFile(childID){
       this.$emit("addSharingFile", this.path, this.projectID, childID)
     },
-    downloadFile(){
-      FilestorageService.downloadFile(this.projectID, this.path)
+    downloadFile(version){
+      FilestorageService.downloadFile(this.projectID, this.path, version)
       .then((response) => { 
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
@@ -123,7 +128,6 @@ export default {
         AlertService.handleError(err);
       });
     },
-
     renameFile() {
       this.disableInput();
       var newFileName = this.fileName + "." + this.fileType
@@ -175,6 +179,15 @@ export default {
           AlertService.handleError(err);
         });
     },
+    recoverBackupFile() {
+      FilestorageService.recoverFile(this.projectID, this.path)
+      .then((response) => {
+        AlertService.handleSuccess(response)
+      })
+      .catch((err) => {
+        AlertService.handleError(err);
+      });
+    },
     getTypeImage() {
       var result = this.fileTypes[this.fileType];
       result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
@@ -210,6 +223,10 @@ export default {
       element.style['top'] = String(left) + 'px'
       element.style['left'] = String(top) + 'px'
     },
+    setRecoverMenu() {
+      var recoverMenu = document.getElementById(this.path+"recoverMenu")
+      recoverMenu.style['display'] = 'block'
+    },
     unsetMenus(){
       var shareMenu = document.getElementById(this.path+"shareMenu")
       shareMenu.style['display'] = 'none'
@@ -217,6 +234,8 @@ export default {
       viewMenu.style['display'] = 'none'
       var moveMenu = document.getElementById(this.path+1)
       moveMenu.style['display'] = 'none'
+      var recoverMenu = document.getElementById(this.path+"recoverMenu")
+      recoverMenu.style['display'] = 'none'
     },
     getCoordinates(){
       var e = window.event;

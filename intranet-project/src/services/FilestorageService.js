@@ -33,8 +33,8 @@ var FilestorageService = function () {
         const response = await axiosClient.put(`/projects/${projectid}/files`, {from, to} , { timeout: 2000 })
         return response;
     }
-    async function downloadFile(projectid, path) {
-       const response = await axiosClient.get(`/projects/${projectid}/file?path=` + path + `&randomized=` + Math.random(), { responseType: "blob", timeout: 2000 })
+    async function downloadFile(projectid, path, version) {
+       const response = await axiosClient.get(`/projects/${projectid}/file?path=` + path + `&version=` + version + `&randomized=` + Math.random(), { responseType: "blob", timeout: 2000 })
        return response;
     }
     async function renameFile(projectid, path, name, type) {
@@ -45,6 +45,11 @@ var FilestorageService = function () {
         const response = await axiosClient.delete(`/projects/${projectid}/file?path=` + path, { timeout: 2000 })
         return response;
     }
+    async function recoverFile(projectid, path) {
+        const response = await axiosClient.patch(`/projects/${projectid}/file/restore?path=` + path, { timeout: 2000 })
+        return response
+    }
+
 
     return {
         getFilesOfPath,
@@ -57,7 +62,8 @@ var FilestorageService = function () {
         createFolder,
         deleteFolder,
         renameFolder,
-        moveFolder
+        moveFolder, 
+        recoverFile
     }
 }
 export default FilestorageService();

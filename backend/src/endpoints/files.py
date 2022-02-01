@@ -107,7 +107,7 @@ def download_file(project_id):
     except KeyError:
         version = None
 
-    if (version):
+    if (version == "backup"):
         requested_path = unquote(
             config.FILE_STORAGE_ROOT + fs_service.get_project_path(project_id, version) + connexion.request.values.get('path')
         )
@@ -164,10 +164,11 @@ def read_deleted(project_id):
 @check_permissions(Projects.may_cud_files)
 def restore_file(project_id):
     path = connexion.request.values.get('path')
-    project_root = os.sep.join([config.FILE_STORAGE_ROOT, project_id])
+    project_root = config.FILE_STORAGE_ROOT + fs_service.get_project_path(project_id)
 
-    active_path = os.sep.join([project_root, path])
-    backup_path = os.sep.join([project_root, "backup", path])
+    active_path = project_root + path
+    backup_path = config.FILE_STORAGE_ROOT + fs_service.get_project_path(project_id, "backup") + path
+
     if not fs_service.file_exists(active_path):
         # restore a deleted file
         fs_service.move_file(backup_path, active_path)
