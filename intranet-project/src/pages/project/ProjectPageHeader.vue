@@ -38,6 +38,12 @@
             data-bs-toggle="modal"
             data-bs-target="#folderModal"
           />
+          <img
+            title="Vorige versies bestanden"
+            class="component-header-button"
+            @click="this.$emit('showOlderFiles')"
+            src=".\..\..\assets\images\restore.png"
+          />
           <div v-if="this.selectedFiles.length + this.selectedFolders.length > 0">
             <img
               @click="this.$emit('deselectSelectedElements')"

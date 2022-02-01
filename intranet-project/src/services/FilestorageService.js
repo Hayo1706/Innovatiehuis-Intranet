@@ -49,6 +49,10 @@ var FilestorageService = function () {
         const response = await axiosClient.patch(`/projects/${projectid}/file/restore?path=` + path, { timeout: 2000 })
         return response
     }
+    async function getOlderFiles(projectid){
+        const response = await axiosClient.get(`/projects/${projectid}/files/deleted`, {timeout: 2000 })
+        return response
+    }
 
 
     return {
@@ -63,7 +67,8 @@ var FilestorageService = function () {
         deleteFolder,
         renameFolder,
         moveFolder, 
-        recoverFile
+        recoverFile,
+        getOlderFiles,
     }
 }
 export default FilestorageService();

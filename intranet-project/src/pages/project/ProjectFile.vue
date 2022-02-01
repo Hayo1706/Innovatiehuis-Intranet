@@ -1,5 +1,6 @@
 <template>
   <div
+    v-bind:title="this.path"
     v-bind:id="this.path"
     oncontextmenu="return false;"
     class="projectFile"
@@ -31,26 +32,28 @@
     <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.projectID+this.path">
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</a>
       <a class="dropdown-item" v-if="this.type == 'owned'" @click="stopSharingFile()">Stoppen met delen</a>
-      <a class="dropdown-item" v-show="canMoveFile()" v-if="this.currentFolders.length > 1" @click="setMoveMenu(this.getCoordinates())">Verplaatsen naar:</a>
+      <a class="dropdown-item" v-show="canMoveFile() && this.type == 'normal'" v-if="this.currentFolders.length > 1" @click="setMoveMenu(this.getCoordinates())">Verplaatsen naar:</a>
       <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+1">
         <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
           <a class="dropdown-item" v-if="folder.type == 'normal'">{{ folder.name }}</a>
         </span>
       </div>
 
-      <a class="dropdown-item" v-if="this.currentFolders.length > 1" @click="setShareMenu()">Delen met:</a>
+      <a class="dropdown-item" v-if="this.currentFolders.length > 1 && this.type == 'normal'" @click="setShareMenu()">Delen met:</a>
       <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+'shareMenu'">
         <span v-for="child of this.sharedChilds" :key="child"  @click="addSharingFile(child.projectid); unsetMenus()">
           <a class="dropdown-item">{{ child.project_name }}</a>
         </span>
       </div>
-      <a class="dropdown-item" v-if="this.type != 'owned'" v-show="canDownloadFile()" @click="setRecoverMenu()">Vorige versie</a>
-      <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+'recoverMenu'">
-        <a class="dropdown-item" @click="recoverBackupFile">Herstellen</a>
-        <a class="dropdown-item" @click="downloadFile('backup')">Downloaden</a>
+      
+      <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="setRecoverMenu()">Vorige versie</a>
+      <div class="dropdown-menu dropdown-menu-sm" v-if="this.type == 'normal'" v-bind:id="this.path+'recoverMenu'">
+        <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="recoverBackupFile">Herstellen</a>
+        <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="downloadFile('backup')">Downloaden</a>
       </div>
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</a>
-      <a class="dropdown-item" v-if="this.type != 'owned'" v-show="canDownloadFile()" @click="downloadFile('active')">Download</a>
+      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDownloadFile()" @click="downloadFile('active')">Download</a>
+      <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canDownloadFile()" @click="downloadFile('backup')">Download</a>
     </div>
   </div>
 </template>

@@ -26,8 +26,22 @@
             draggable="true"
             @dragstart="startDrag($event, file.path)"
           />
-        </div>
+          </div>
       </div>
+    <h5 v-if="this.showOldFiles" class="directory-view-title">Oudere versies van bestanden</h5>
+    <div v-if="this.showOldFiles" class="row">
+      <div v-for="file in this.olderVersionFiles" :key="file" class="col-sm-2">
+        <ProjectFile
+          :projectID="file.projectID"
+          :name="file.name"
+          :fileType="file.name.split('.').pop()"
+          :path="file.path"
+          :type="file.type"
+          :currentFolders="this.currentFolders"
+          :currentFiles="this.currentFiles"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -53,8 +67,11 @@ export default {
     ProjectFile,
   },
   name: "FilesView",
-  props: ['projectID', 'currentPath', 'sharedChilds', 'currentFolders', 'currentFiles', 'searchTerm'],
+  props: ['projectID', 'currentPath', 'sharedChilds', 'currentFolders', 'currentFiles', 'olderFiles', 'searchTerm', 'previousFilesMenu'],
   computed: {
+    showOldFiles: function() {
+      return this.previousFilesMenu
+    },
     searchedFiles: function() {
       if(this.searchTerm == "" || this.searchTerm == null){
           return this.currentFiles;  
@@ -69,7 +86,22 @@ export default {
         }
         return searchedFiles;
       }
-    }
+    },
+    olderVersionFiles: function() {
+      if(this.searchTerm == "" || this.searchTerm == null){
+          return this.olderFiles;  
+      }
+      else{
+        var searchedFiles = []
+        for(var file_index in this.olderFiles){
+          var folderName = this.olderFiles[file_index].name.toLowerCase();
+          if(this.fileNameInSearchterm(String(folderName), this.searchTerm.toLowerCase())){
+            searchedFiles.push(this.olderFiles[file_index])
+          }
+        }
+        return searchedFiles;
+      }     
+    },
   },
 
   data: function () {
@@ -146,6 +178,9 @@ export default {
         dropZone.style['background-color'] = "transparent"
       }
     },
+    test() {
+      alert();
+    }
   },
 };
 </script>

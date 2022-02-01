@@ -46,6 +46,7 @@
 
                 @newFolderAdded="currentFoldersChanged()"
                 @newFilesUploaded="currentFilesChanged()"
+                @showOlderFiles="togglePreviousFilesMenu()"
                 @deleteSelectedElements="deleteSelectedElements()"
                 @moveSelectedElements="moveSelectedElements()"
                 @deselectSelectedElements="resetSelectedElements()"
@@ -74,8 +75,11 @@
               :projectID="this.projectID"
               :currentFolders="this.currentFolders"
               :currentFiles="this.currentFiles"
+              :olderFiles="this.olderFiles"
+              :previousFilesMenu="this.previousFilesMenu"
               :sharedChilds="this.sharedChilds"
               :searchTerm="this.searchTerm"
+
               
               @sharedFilesChanged="sharedFilesChanged"
               @currentFilesChanged="currentFilesChanged"
@@ -119,6 +123,8 @@ export default {
       parentID: this.$route.query.parent,
       childID: this.$route.query.child, 
       toolMenu: false,
+      previousFilesMenu: false,
+      olderFiles: [], 
       droppedFiles: null,
 
       searchTerm: "",
@@ -164,6 +170,24 @@ export default {
     },
   },
   methods: {
+    togglePreviousFilesMenu(){
+      this.previousFilesMenu = !this.previousFilesMenu
+      if(this.previousFilesMenu == true){
+        if(this.parentID == null && this.childID == null){
+          FilestorageService.getOlderFiles(this.projectID)
+          .then((response) => {
+            this.olderFiles = []
+            for(var file in response.data){
+              this.olderFiles.push({'name': response.data[file].split("\\").pop(), 'path': response.data[file], 'projectID': this.projectID, 'type':'backup'})
+            }
+            AlertService.handleSuccess(response);
+          })
+          .catch((err) => {
+            AlertService.handleError(err);
+          });
+        }
+      }
+    },
     setFilesDropUpload: function (fileList) {
       this.droppedFiles = fileList
     },
