@@ -29,7 +29,7 @@ def login():
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})
     if len(user) == 0:
-        return response("Incorrect wachtwoord of gebruikersnaam", 401)
+        return response("Incorrect wachtwoord, gebruikersnaam of authenticatiecode", 401)
     user = user[0]
 
     if int(user['failed_login_count']) >= config.ATTEMPTS_BEFORE_COOLDOWN:
