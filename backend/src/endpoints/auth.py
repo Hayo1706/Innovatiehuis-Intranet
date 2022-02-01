@@ -1,7 +1,6 @@
 import connexion
 import datetime
 
-import pytz
 
 import src.config as config
 from flask import jsonify, request
