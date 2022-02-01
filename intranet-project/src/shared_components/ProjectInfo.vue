@@ -35,8 +35,8 @@
             >
               x
             </button>
-            <button class="member-item" @click="navigateUser(member.userid)"
-              >{{ member.first_name }} {{ member.last_name }}
+            <button class="member-item" @click="navigateUser(member.userid)">
+              {{ member.first_name }} {{ member.last_name }}
             </button>
             <br />
           </div>
@@ -58,7 +58,8 @@
             <button
               class="member-item"
               @click="navigateProject(parent.projectid)"
-              >{{ parent.project_name }}
+            >
+              {{ parent.project_name }}
             </button>
           </div>
           <div v-if="this.parents.length == 0" class="text">
@@ -78,7 +79,8 @@
             <button
               class="member-item"
               @click="navigateProject(child.projectid)"
-              >{{ child.project_name }}
+            >
+              {{ child.project_name }}
             </button>
           </div>
           <div v-if="this.children.length == 0" class="text">
@@ -283,7 +285,6 @@ export default {
                         this.changes = false;
                         this.refreshAllAcordeons();
                       } else {
-                        //refresh
                         this.openDetails();
                         this.refreshAllAcordeons();
                       }
@@ -668,7 +669,7 @@ button {
   font-size: 14pt;
   max-width: 80%;
 }
-.member-item:hover{
+.member-item:hover {
   background-color: rgb(231, 231, 231);
 }
 

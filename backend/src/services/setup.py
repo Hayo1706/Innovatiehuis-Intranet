@@ -2,12 +2,18 @@ from datetime import timezone, datetime, timedelta
 
 import connexion
 import os
+
+import pytz
+from flask import request
+
 from .extensions import db, jwt, bcrypt
 import src.config as config
 import src.services.filestorage_service as fs_service
 
 from flask_jwt_extended import verify_jwt_in_request, get_jwt, create_access_token, get_jwt_identity, set_access_cookies
 from flask_jwt_extended import unset_jwt_cookies
+
+from .logging import log_response_and_request
 
 
 def create_app():
@@ -40,11 +46,23 @@ def create_app():
     if not fs_service.dir_exists(config.FILE_STORAGE_ROOT):
         os.makedirs(config.FILE_STORAGE_ROOT)
 
+    def getUID():
+        try:
+            uid = get_jwt_identity()
+            return uid
+        except RuntimeError:
+            return None
+
     @app.app.after_request
+    def handle_after_request(response):
+        response = refresh_expiring_jwts(response)
+        log_response_and_request(request, response, getUID())
+        return response
+
     def refresh_expiring_jwts(response):
         try:
             exp_timestamp = get_jwt()["exp"]
-            now = datetime.now(timezone.utc)
+            now = datetime.now(tz=pytz.timezone('Europe/Amsterdam'))
             target_timestamp = datetime.timestamp(now + timedelta(minutes=1))
             if target_timestamp > exp_timestamp:
                 access_token = create_access_token(identity=get_jwt_identity())

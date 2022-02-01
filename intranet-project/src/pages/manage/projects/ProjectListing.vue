@@ -1,6 +1,10 @@
 <template>
-  <div class="project-listing" v-bind:class="{ archived: this.project.is_archived }">
-    <div class="row collapsed"   
+  <div
+    class="project-listing"
+    v-bind:class="{ archived: this.project.is_archived }"
+  >
+    <div
+      class="row collapsed accordion_button"
       type="button"
       data-bs-toggle="collapse"
       :data-bs-target="'#collapseName' + this.project.projectid"
@@ -44,8 +48,16 @@
 
       <!-- large screens-->
       <div
-        class="name-wrapper col-3 d-none d-lg-flex align-items-center justify-content-center"
-      >{{ projectname }}</div>
+        class="
+          name-wrapper
+          col-3
+          d-none d-lg-flex
+          align-items-center
+          justify-content-center
+        "
+      >
+        {{ projectname }}
+      </div>
       <div
         title="Aangemaakt"
         class="col d-none d-lg-flex align-items-center justify-content-center"
@@ -76,11 +88,15 @@
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
       >
-        <div id="archivedText" v-if="this.project.is_archived">Gearchiveerd</div>
+        <div id="archivedText" v-if="this.project.is_archived">
+          Gearchiveerd
+        </div>
         <div v-else>Niet gearchiveerd</div>
       </div>
 
-      <div class="col col-lg d-lg-flex align-items-center justify-content-center">
+      <div
+        class="col col-lg d-lg-flex align-items-center justify-content-center"
+      >
         <span class="button-span-right">
           <ProjectButtons
             @removeProject="(id) => $emit('removeProject', id)"
@@ -90,12 +106,12 @@
         </span>
         <h2 class="accordion-header" :id="'heading' + this.project.projectid">
           <button
-            class="full-button openProjectButton accordion_button collapsed"
+            class="full-button openProjectButton"
             type="button"
             @click.left="visitProjectPage()"
             @click.middle="visitProjectPage()"
           >
-            <img src="@/assets/images/open_page.png">
+            <img src="@/assets/images/open_page.png" />
             Projectpagina
           </button>
         </h2>
@@ -160,7 +176,7 @@ export default {
 .project-listing:last-child {
   border-bottom: none;
 }
-.project-listing:hover{
+.project-listing:hover {
   background-color: rgb(230, 230, 230);
 }
 .archived {
@@ -198,18 +214,18 @@ export default {
 .iconHolder {
   padding: 5px;
 }
-.name-wrapper{
+.name-wrapper {
   padding-right: 0;
 }
-.openProjectButton img{
+.openProjectButton img {
   margin-right: 6px;
   height: 1em;
 }
-.openProjectButton{
+.openProjectButton {
   padding-right: 10px;
   padding-left: 10px;
 }
-.col{
+.col {
   border-left: 1px solid hsl(0deg 0% 89%);
 }
 </style>

@@ -145,13 +145,16 @@ def update_shared_files_entries(project_id, path_to_replace, new_path):
     data = query("SELECT childid, shared_files FROM projects_have_parents WHERE parentid = %(projectid)s",
                  {'projectid': project_id})
     for entry in data:
-        shared_files_list = entry["shared_files"].split(' ')
-        updated_list = [new_path if file == path_to_replace else file for file in shared_files_list]
-        culled_list = [file for file in updated_list if file != '']
-        new_shared_files_string = ' '.join(culled_list)
-        query_update("UPDATE projects_have_parents SET shared_files = %(shared_files)s WHERE parentid = %(projectid)s "
-                     "AND childid = %(childid)s",
-                     {'shared_files': new_shared_files_string, 'projectid': project_id, 'childid': entry['childid']})
+        if entry["shared_files"] is not None:
+            shared_files_list = entry["shared_files"].split(' ')
+            updated_list = [new_path if file == path_to_replace else file for file in shared_files_list]
+            culled_list = [file for file in updated_list if file != '']
+            new_shared_files_string = ' '.join(culled_list)
+            if new_shared_files_string == "":
+                new_shared_files_string == "null"
+            query_update("UPDATE projects_have_parents SET shared_files = %(shared_files)s WHERE parentid = %(projectid)s "
+                         "AND childid = %(childid)s",
+                         {'shared_files': new_shared_files_string, 'projectid': project_id, 'childid': entry['childid']})
 
 
 def move_file_to_backup(source_path):
