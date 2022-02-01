@@ -42,6 +42,7 @@
                 :sharedChilds="this.sharedChilds"
                 :selectedFolders="this.selectedFolders"
                 :selectedFiles="this.selectedFiles"
+                :droppedFiles="this.droppedFiles"
 
                 @newFolderAdded="currentFoldersChanged()"
                 @newFilesUploaded="currentFilesChanged()"
@@ -80,6 +81,7 @@
               @currentFilesChanged="currentFilesChanged"
               @fileSelected="selectFile"
               @fileDeselected="deselectFile"
+              @filesDropUpload="setFilesDropUpload"
               />
               
           </div>
@@ -117,6 +119,7 @@ export default {
       parentID: this.$route.query.parent,
       childID: this.$route.query.child, 
       toolMenu: false,
+      droppedFiles: null,
 
       searchTerm: "",
 
@@ -161,6 +164,9 @@ export default {
     },
   },
   methods: {
+    setFilesDropUpload: function (fileList) {
+      this.droppedFiles = fileList
+    },
     addClass: function (e) {
       if (e.target.classList.contains("hover"))
         e.target.classList.add("hoverDrag");

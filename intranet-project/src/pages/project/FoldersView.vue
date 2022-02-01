@@ -76,13 +76,21 @@ export default {
   computed: {
     searchedSharedFolders: function () {
       var searchedSharedFolders = []
-      for(var sharedFolder of this.currentSharedFolders){
-        var folderName = sharedFolder.name
-        if(this.folderNameInSearchTerm(String(folderName), this.searchTerm)){
-          searchedSharedFolders.push(sharedFolder)
+      if(this.searchTerm == "" || this.searchTerm == null){
+        for(var anySharedFolder of this.currentSharedFolders){
+          searchedSharedFolders.push(anySharedFolder)
         }
+        return searchedSharedFolders
       }
-      return searchedSharedFolders
+      else{
+        for(var sharedFolder of this.currentSharedFolders){
+          var folderName = sharedFolder.name.toLowerCase()
+          if(this.folderNameInSearchTerm(String(folderName), this.searchTerm.toLowerCase())){
+            searchedSharedFolders.push(sharedFolder)
+          }
+        }
+        return searchedSharedFolders
+      }
     },
     searchedNormalFolders: function () {
       if(this.searchTerm == "" || this.searchTerm == null){
@@ -91,8 +99,8 @@ export default {
       else{
         var searchedFolders = []
         for(var folder_index in this.currentFolders){
-          var folderName = this.currentFolders[folder_index].name
-          if(this.folderNameInSearchTerm(String(folderName), this.searchTerm)){
+          var folderName = this.currentFolders[folder_index].name.toLowerCase()
+          if(this.folderNameInSearchTerm(String(folderName), this.searchTerm.toLowerCase())){
             searchedFolders.push(this.currentFolders[folder_index])
           }
         }

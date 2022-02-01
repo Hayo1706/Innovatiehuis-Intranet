@@ -13,7 +13,7 @@
       <div class="col-sm-8">
         <nav class="mb-1 navbar navbar-expand-lg btn-blue">
           <input
-              @change="uploadFiles"
+              @change="selectUpload"
               type="file"
               id="files"
               name="files"
@@ -134,13 +134,18 @@ export default {
   components: {
     SearchBar,
   },
-  props: ["currentPath", "sharedChilds", "selectedFolders", "selectedFiles"],
+  props: ["currentPath", "sharedChilds", "selectedFolders", "selectedFiles", "droppedFiles"],
   data: function () {
     return {
       newFolderName: null,
       uploadMenu: true,
       files: [],
     };
+  },
+  watch: {
+    droppedFiles: function(newFiles) {
+      this.uploadFiles(newFiles)
+    }
   },
   methods: {
     addNewFolder() {
@@ -166,9 +171,13 @@ export default {
         "may_update_file_in_own_project"
       );
     },
-    uploadFiles(e) {
-      this.uploadMenu = false;
+    selectUpload(e){
       var files = e.target.files;
+      this.uploadFiles(files)
+      document.getElementById("files").value = null;
+    },
+    uploadFiles(files) {
+      this.uploadMenu = false;
       var amountOfFiles = files.length;
       for (let i = 0; i < files.length; i++) {
         var formData = new FormData();
@@ -220,7 +229,6 @@ export default {
             }
           });
       }
-      document.getElementById("files").value = null;
     },
     canUploadFile() {
       return PermissionService.userHasPermission(

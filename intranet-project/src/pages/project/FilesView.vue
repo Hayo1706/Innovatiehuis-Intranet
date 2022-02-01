@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div @dragover.prevent @drop.prevent>
     <h5>Bestanden</h5>
-      <div class="row" style="min-height: 15vh" id="drop_zone">
+      <div class="row" style="min-height: 15vh" @drop="uploadFile">
         <div v-for="file in this.searchedFiles" :key="file" class="col-sm-2">
           <ProjectFile
             :projectID="file.projectID"
@@ -62,8 +62,8 @@ export default {
       else{
         var searchedFiles = []
         for(var file_index in this.currentFiles){
-          var folderName = this.currentFiles[file_index].name
-          if(this.fileNameInSearchterm(String(folderName), this.searchTerm)){
+          var folderName = this.currentFiles[file_index].name.toLowerCase();
+          if(this.fileNameInSearchterm(String(folderName), this.searchTerm.toLowerCase())){
             searchedFiles.push(this.currentFiles[file_index])
           }
         }
@@ -130,6 +130,10 @@ export default {
         AlertService.handleError(err);
       })
     },
+    uploadFile(e){
+      var files = e.dataTransfer.files
+      this.$emit("filesDropUpload", files)
+    }
   },
 };
 </script>
