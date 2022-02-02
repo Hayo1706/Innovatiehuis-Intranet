@@ -27,6 +27,4 @@ class BackupRunner(Thread):
         self.done = True
 
 
-if __name__ == '__main__':
-    backupRunner = BackupRunner()
-    backupRunner.start()
+
