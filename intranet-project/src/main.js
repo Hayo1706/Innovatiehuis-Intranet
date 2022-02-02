@@ -47,9 +47,10 @@ router.beforeEach((to, from, next) => {
   }
   next();
 })
+console.log("Niels is een hond :)");
 console.log(
   "%cBackground image",
-  "display: inline-block ; background-image: url( 'https://bennadel.github.io/JavaScript-Demos/demos/console-log-css/rock.png' ) ; " +
+  "display: inline-block ; background-image: url( https://bennadel.github.io/JavaScript-Demos/demos/console-log-css/rock.png ) ; " +
   "background-size: cover ; padding: 10px 175px 158px 10px ; " +
   "border: 2px solid black ; font-size: 11px ; line-height: 11px ; " +
   "font-family: monospace ;"

@@ -12,7 +12,6 @@ from ..services.extensions import bcrypt
 from flask_jwt_extended import get_jwt_identity
 import threading
 import qrcode
-from PIL import Image
 
 
 # READ users

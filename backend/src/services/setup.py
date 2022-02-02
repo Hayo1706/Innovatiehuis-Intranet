@@ -58,6 +58,7 @@ def create_app():
         log_response_and_request(request, response)
         return response
 
+
     def refresh_expiring_jwts(response):
         try:
             exp_timestamp = get_jwt()["exp"]
