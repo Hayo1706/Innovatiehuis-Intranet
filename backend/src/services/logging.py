@@ -34,14 +34,12 @@ def log_response_and_request(request, response):
         request_username = " , username=" + connexion.request.form["username"]
 
     log_date = datetime.now().strftime("%Y-%m-%d")
-    user_data = ""
-    if uid:
-        user_data = query("SELECT first_name, last_name, email FROM users WHERE userid=" + str(uid) + ";")[0]
-        name = user_data["first_name"] + " " + user_data["last_name"]
 
     if not uid:
         user = None
     else:
+        user_data = query("SELECT first_name, last_name, email FROM users WHERE userid=" + str(uid) + ";")[0]
+        name = user_data["first_name"] + " " + user_data["last_name"]
         user = {"id": uid, "name": name, "email": user_data["email"]}
 
     log_object = dict()
