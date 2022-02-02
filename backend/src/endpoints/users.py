@@ -1,3 +1,4 @@
+import datetime
 import secrets
 from datetime import date
 import src.config as config
@@ -58,11 +59,11 @@ def create():
         return response("Dit mailadres is al in gebruik!", 400)
 
     query_update(
-        "INSERT INTO users (first_name, last_name, email, phone_number, roleid, access_status, password_hash, auth_key) "
-        "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone_number)s, %(roleid)s, %(access_status)s,%(password_hash)s,%(auth_key)s)",
+        "INSERT INTO users (first_name, last_name, email, phone_number, roleid, access_status, password_hash, auth_key, created, last_login) "
+        "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone_number)s, %(roleid)s, %(access_status)s,%(password_hash)s,%(auth_key)s,%(created_time)s, %(created_time)s)",
         {'first_name': first_name, 'last_name': last_name, 'email': email, 'phone_number': phone_number,
          'roleid': roleid,
-         'access_status': access_status, 'password_hash': password_hash, 'auth_key': auth_key})
+         'access_status': access_status, 'password_hash': password_hash, 'auth_key': auth_key, 'created_time':datetime.datetime.now()})
     serializer = URLSafeSerializer(PASSWORD_CHANGE_SECRET_KEY)
     d1 = date.today().strftime("%d/%m/%Y")
     userid = query("SELECT userid FROM users WHERE email=%(email)s", {'email': email})[0]['userid']
