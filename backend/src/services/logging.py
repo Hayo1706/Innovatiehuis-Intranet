@@ -6,7 +6,13 @@ import connexion
 
 
 # TODO Niels has to send the logging message to ElasticStack, maybe change it to his liking a bit first
-def log_response_and_request(request, response, uid):
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
+
+@jwt_required(optional=True)
+def log_response_and_request(request, response):
+    uid = get_jwt_identity()
+
     response_str = ""
     request_str = request.data.decode("utf-8")
     response_obj = {}
