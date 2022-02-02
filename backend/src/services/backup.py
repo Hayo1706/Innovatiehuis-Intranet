@@ -1,30 +1,26 @@
 import shutil
 import time
-from threading import Thread
+
 
 from src import config
+
 
 def backup():
     print("Backup started, don't stop the program.")
     shutil.rmtree(config.BACKUP_ROOT_PATH)
     shutil.copytree(config.FILE_STORAGE_ROOT, config.BACKUP_ROOT_PATH)
-    print("Backup complete, program can be stopped now, "
+    print("Backup complete, "
           "in " + str(config.BACKUP_FREQUENCY) + " minutes, the backup will start again.")
 
 
-class BackupRunner(Thread):
-    done = False
-
-    def start(self):
-        while not self.done:
+def run_backup():
+    while True:
+        try:
             backup()
-            try:
-                time.sleep(config.BACKUP_FREQUENCY * 60)
-            except KeyboardInterrupt:
-                print("Backup program stopped")
+            time.sleep(config.BACKUP_FREQUENCY * 60)
+        except KeyboardInterrupt:
+            break
 
-    def set_done(self):
-        self.done = True
 
 
 
