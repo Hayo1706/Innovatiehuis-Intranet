@@ -7,6 +7,10 @@ TWO_FACTOR = False
 # ROOT DIRECTORY FOR ALL DATA FILES - MUST ALWAYS END IN A '/'!
 FILE_STORAGE_ROOT = '../filestorage/root/'
 
+# Unit: every ... minutes
+BACKUP_FREQUENCY = 1
+BACKUP_ROOT_PATH = '../filestorage/backup/'
+
 DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
 
 JWT_ISSUER = 'innovatieplatform'
