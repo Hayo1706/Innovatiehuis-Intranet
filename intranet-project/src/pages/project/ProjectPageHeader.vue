@@ -203,12 +203,14 @@ export default {
             this.$emit("newFilesUploaded");
           })
           .catch((err) => {
-            amountOfFiles--; 
             if(amountOfFiles == 0){
               this.uploadMenu = true;
             }
-            AlertService.handleError(err);
-            if (err.response.status === 409) {
+            if(err instanceof TypeError){
+              AlertService.alert("Uw upload is mislukt! De server is weggevallen. Contacteer een van onze medewerkers.", "error")
+              return;
+            }
+            else if(err.response.status === 409){
               var confirmation = confirm(err.response.data.response.message);
               FilestorageService.uploadFiles(
                 this.$route.params.id,
@@ -232,6 +234,9 @@ export default {
                   }
                   AlertService.handleError(err);
                 });
+            }
+            else{
+              console.log('test', err)
             }
           });
       }

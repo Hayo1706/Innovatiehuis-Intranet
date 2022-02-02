@@ -99,7 +99,6 @@ def rename_file(project_id):
 
 
 # GET /projects/{project_id}/file
-#TODO schrijf permissie
 @check_permissions(Projects.may_read_shared_files)
 def download_file(project_id):
     try:
