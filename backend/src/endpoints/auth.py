@@ -59,6 +59,9 @@ def login():
             rsp = {'resource': request.path, 'code': 200, 'message': 'Succes', 'result': dict}
             rsp = jsonify(rsp)
             set_access_cookies(rsp, access_token)
+            query_update(
+                "UPDATE users SET last_login = %(last_login_time)s WHERE "
+                "userid = %(userid)s", {'userid': user['userid'], 'last_login_time': datetime.datetime.now()})
             return rsp, 200
     except ValueError:
         print('Input format incorrect')

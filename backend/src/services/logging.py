@@ -6,8 +6,18 @@ import connexion
 
 
 # TODO Niels has to send the logging message to ElasticStack, maybe change it to his liking a bit first
-def log_response_and_request(request, response, uid):
-    response_str = ""
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+from flask_jwt_extended.exceptions import NoAuthorizationError
+from jwt import ExpiredSignatureError
+
+
+def log_response_and_request(request, response):
+    try:
+        verify_jwt_in_request()
+        uid = get_jwt_identity()
+    except (ExpiredSignatureError, NoAuthorizationError):
+        uid = None
+
     request_str = request.data.decode("utf-8")
     response_obj = {}
 

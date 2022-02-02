@@ -449,7 +449,7 @@ paths:
         200:
           description: Successfully retrieved folders at given path
     put:
-      operationId: src.endpoints.folders.update_dir
+      operationId: src.endpoints.folders.update_folder
       tags:
         - Folders
       summary: Move folder to another directory
@@ -474,7 +474,7 @@ paths:
         400:
           description: Failed to move folder
     delete:
-      operationId: src.endpoints.folders.delete_dir
+      operationId: src.endpoints.folders.delete_folder
       tags:
         - Folders
       summary: Delete folder and (if granted permission) its contents
@@ -490,7 +490,7 @@ paths:
         409: 
           description: There are files or folders in this folder and no permission was granted to delete these
     post:
-      operationId: src.endpoints.folders.create_dir
+      operationId: src.endpoints.folders.create_folder
       tags:
         - Folders
       summary: Place new folder directory

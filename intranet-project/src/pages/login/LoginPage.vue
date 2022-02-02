@@ -25,7 +25,6 @@
             <input
         v-model="this.loginAttempt.authenticator_code"
         class="login-input"
-        type="password"
         placeholder="authenticator code"
         v-on:keyup.enter="submit()"
       />

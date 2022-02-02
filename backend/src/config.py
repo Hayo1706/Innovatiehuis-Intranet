@@ -7,6 +7,10 @@ TWO_FACTOR = False
 # ROOT DIRECTORY FOR ALL DATA FILES - MUST ALWAYS END IN A '/'!
 FILE_STORAGE_ROOT = '../filestorage/root/'
 
+# Unit: every ... minutes
+BACKUP_FREQUENCY = 1
+BACKUP_ROOT_PATH = '../filestorage/backup/'
+
 DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
 
 JWT_ISSUER = 'innovatieplatform'
@@ -30,8 +34,16 @@ FORCE_SPECIAL_CHARACTER = True
 FORCE_NUMBERS = True
 FORCE_CAPITAL_LETTERS = True
 
-MAX_DIR_NAME = 16               # AMOUNT OF SAFE CHARS ALLOWED IN DIRECTORY NAME
-MAX_FILE_NAME = 256             # AMOUNT OF SAFE CHARS ALLOWED IN A FILE NAME
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 465
+MAIL_USERNAME = 'innovatiehuis.platform@gmail.com'
+MAIL_PASSWORD = '2SvNyLGPqeEkJ57'
+MAIL_USE_TLS = False
+MAIL_USE_SSL = True
+
+
+
+MAX_NAME_LENGTH = 36            # AMOUNT OF SAFE CHARS ALLOWED IN FOLDER AND FILE NAMES
 ALLOWED_FILE_TYPES = ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'csv', 'xlsx', 'pptx', 'txt', 'json']  #HAS TO BE CONNECTED TO FRONTEND
 MAX_FILE_SIZE = 100000000000       # AMOUNT OF BYTES ALLOWED PER FILE
 
