@@ -49,7 +49,7 @@ def create_app():
 
     @app.app.before_request
     def handle_before_request():
-        if 'folder' in request.url or 'file' in request.url and request.method != 'GET':
+        if ('folder' in request.url or 'file' in request.url) and request.method != 'GET':
             return response("Operatie is nu niet beschikbaar wegens backup, probeer later weer", 503)
 
     @app.app.after_request
