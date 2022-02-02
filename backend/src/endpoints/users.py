@@ -1,7 +1,6 @@
 import secrets
 from datetime import date
-
-import connexion
+import src.config as config
 import pyotp
 from ..config import PASSWORD_CHANGE_SECRET_KEY, DOMAIN_NAME
 from ..services.helper_functions import *
@@ -144,7 +143,7 @@ def delete(user_id):
 @check_jwt()
 def read_projects(user_id):
     # this endpoint only returns the projects that the requesting user is permitted to see
-    if get_jwt_identity() == user_id or check_permissions(Projects.may_read_all):
+    if config.DEBUG_MODE or get_jwt_identity() == user_id or check_permissions(Projects.may_read_all):
         return response('Succes', 200, query("SELECT * FROM users_have_projects INNER JOIN projects "
                                              "ON users_have_projects.projectid = projects.projectid "
                                              "WHERE users_have_projects.userid = %(id)s AND projects.is_archived = 0",
