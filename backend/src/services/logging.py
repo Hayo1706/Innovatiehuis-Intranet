@@ -13,7 +13,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 def log_response_and_request(request, response):
     uid = get_jwt_identity()
 
-    response_str = ""
     request_str = request.data.decode("utf-8")
     response_obj = {}
 
