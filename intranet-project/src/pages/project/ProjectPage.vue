@@ -38,6 +38,7 @@
 
                 @newFolderAdded="currentFoldersChanged()"
                 @newFilesUploaded="currentFilesChanged()"
+                @elementsMoved="currentFilesChanged(); currentFoldersChanged();"
                 @showOlderFiles="togglePreviousFilesMenu()"
                 @deleteSelectedElements="deleteSelectedElements()"
                 @moveSelectedElements="moveSelectedElements()"

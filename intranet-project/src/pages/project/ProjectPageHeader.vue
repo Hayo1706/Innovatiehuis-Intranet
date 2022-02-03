@@ -72,14 +72,13 @@
             </div>
             <div class="dropdown">
               <img
-                @click="this.$emit('moveSelectedElements')"
                 title="Geselecteerde elementen verplaatsen"
                 class="component-header-button"
                 src=".\..\..\assets\images\move_selected.png"
               />
               <div class="dropdown-content">
                 <a>Verplaatsen naar:</a>
-                <a v-for="folder in this.currentFolders" :key="folder"  >{{ folder.name }}</a>
+                <a v-for="folder in this.currentFolders" :key="folder"  @click="moveSelectedElements(folder).then(() => {this.$emit('elementsMoved');} )">{{ folder.name }}</a>
               </div>
             </div>
           </div>
@@ -181,6 +180,26 @@ export default {
     }
   },
   methods: {
+    async moveSelectedElements(folder){
+      var targetPath = folder.path
+      for(var file of this.selectedFiles){
+        FilestorageService.moveFile(this.projectID, file.path, targetPath)
+        .then(() => {
+        })
+        .catch((err) => {
+          AlertService.handleError(err)
+        });
+      }
+      for(var selectedFolder of this.selectedFolders){
+        FilestorageService.moveFolder(this.projectID, selectedFolder.path, targetPath, "")
+        .then(() => {
+          this.$emit("folderMoved")
+        })
+        .catch((err) => {
+          AlertService.handleError(err);
+        })
+      }
+    },
     shareSelectedFiles(childID, sharedFiles){
       var newSharedFiles = sharedFiles
       for(var file of this.selectedFiles){
