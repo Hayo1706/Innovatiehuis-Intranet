@@ -416,7 +416,7 @@ paths:
       operationId: src.endpoints.files.read_deleted
       tags:
         - Files
-      summary: Read a list of deleted files which still have a backup version available
+      summary: Read a list of deleted files which still have an archived version available
       parameters:
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -428,13 +428,13 @@ paths:
       operationId: src.endpoints.files.restore_file
       tags:
         - Files
-      summary: Revert a file to its previous version from backup, or restore a deleted file from backup
+      summary: Revert a file to a previous version from archive, or restore a deleted file from archive
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/path'
       responses:
         200:
-          description: File has been restored from backup
+          description: File has been restored from archived
 
   /projects/{project_id}/folders:
     get:
