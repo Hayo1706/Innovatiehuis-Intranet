@@ -43,11 +43,16 @@ export default {
 </script>
 <style  scoped>
 #search-input {
+  font-size: 16px;
+  height: 34px;
+  background-color: #f5f5f5;
+  background-image: url("../assets/images/search_icon.png");
+  background-size: 24px;
+  background-position: 5px 5px; 
+  background-repeat: no-repeat;
+  padding: 12px 20px 12px 40px;
+  outline: none;
   margin-right: 4px;
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0.8),
-    rgba(225, 225, 225, 0.9)
-  );
+  border-style: ridge;
 }
 </style>

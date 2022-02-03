@@ -42,7 +42,7 @@
           </div>
 
           <div v-if="this.members.length == 0" class="text">
-            Geen resultaten
+            Geen
           </div>
         </div>
         <div class="col">
@@ -63,7 +63,7 @@
             </button>
           </div>
           <div v-if="this.parents.length == 0" class="text">
-            Geen resultaten
+            Geen
           </div>
         </div>
         <div class="col">
@@ -84,7 +84,7 @@
             </button>
           </div>
           <div v-if="this.children.length == 0" class="text">
-            Geen resultaten
+            Geen
           </div>
         </div>
       </div>

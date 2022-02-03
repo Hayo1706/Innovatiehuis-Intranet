@@ -3,7 +3,6 @@ from datetime import timezone, datetime, timedelta
 import connexion
 import os
 
-
 from flask import request
 
 from .extensions import db, jwt, bcrypt, mail
@@ -14,6 +13,7 @@ from flask_jwt_extended import verify_jwt_in_request, get_jwt, create_access_tok
     set_access_cookies, jwt_required
 from flask_jwt_extended import unset_jwt_cookies
 
+from .helper_functions import response
 from .logging import log_response_and_request
 
 
@@ -54,6 +54,11 @@ def create_app():
     if not fs_service.dir_exists(config.FILE_STORAGE_ROOT):
         os.makedirs(config.FILE_STORAGE_ROOT)
 
+    @app.app.before_request
+    def handle_before_request():
+        if ('folder' in request.url or 'file' in request.url) and request.method != 'GET':
+         # return response("Operatie is nu niet beschikbaar wegens backup, probeer later weer", 503)
+         pass
 
     @app.app.after_request
     def handle_after_request(response):

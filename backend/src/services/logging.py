@@ -2,13 +2,12 @@ import json
 from datetime import datetime, timezone
 
 import connexion
-
-
-
-# TODO Niels has to send the logging message to ElasticStack, maybe change it to his liking a bit first
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from flask_jwt_extended.exceptions import NoAuthorizationError
 from jwt import ExpiredSignatureError
+
+# TODO Niels has to send the logging message to ElasticStack, maybe change it to his liking a bit first
+from src.services.helper_functions import query
 
 
 def log_response_and_request(request, response):
@@ -34,20 +33,22 @@ def log_response_and_request(request, response):
     if "username" in connexion.request.form.keys():
         request_username = " , username=" + connexion.request.form["username"]
 
-    uid_message = "\nNo user is logged in\n"
-    if uid:
-        uid_message = "\nUser is logged in. Id of the user: " + str(uid) + "\n"
+    log_date = datetime.now().strftime("%Y-%m-%d")
 
-    response_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+    if not uid:
+        user = None
+    else:
+        user_data = query("SELECT first_name, last_name, email FROM users WHERE userid=" + str(uid) + ";")[0]
+        name = user_data["first_name"] + " " + user_data["last_name"]
+        user = {"id": uid, "name": name, "email": user_data["email"]}
 
-    log_message = "\nRequest  - url : {request_url} , method: {request_method}" \
-                  " , body: {request_body} {request_username}\n" \
-                  "Response - status : {response_code} , message: {response_message}" \
-                  "{uid_message}" \
-                  "Time of the response: {response_time}\n" \
-        .format(request_url=request.url, request_method=request.method, request_body=request_str,
-                request_username=request_username,
-                response_code=response.status,
-                response_message=response_message, uid_message=uid_message, response_time=response_time)
+    log_object = dict()
+    log_object["Date"] = log_date
+    log_object["User"] = user
+    log_object["Action"] = request.method + " " + request.path
+    log_object["IP Address"] = request.remote_addr
+    log_object["Request"] = request_str + request_username
+    log_object["Response"] = response.status + " " + response_message
+    log_message = json.dumps(log_object)
 
     print(log_message)

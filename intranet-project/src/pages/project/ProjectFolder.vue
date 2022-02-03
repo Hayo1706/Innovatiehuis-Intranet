@@ -1,18 +1,16 @@
 <template>
-  <div
-    @mouseleave="moveMenu = false; unsetMenus()"
-  >
+  <div @mouseleave="moveMenu = false; unsetMenus()">
+    <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <div
       class="projectFolder hover"
       @contextmenu="setViewMenu(this.getCoordinates())"
       @long-press="setViewMenu(this.getCoordinates())"
       @touchstart="goToFolder()"
       @dblclick="goToFolder()"
-
       @click.shift="this.selected = !this.selected; selectFolder()"
-      v-bind:id="this.folderPath+2"
+      v-bind:id="this.folderPath + 2"
     >
-      <div class="container" style="padding: 0px 12px 0px 12px;pointer-events: none;"  >
+      <div class="container" style="padding: 0px 12px 0px 12px;pointer-events: none;">
         <div class="row">
           <div class="col-4">
             <img
@@ -35,7 +33,7 @@
             />
           </div>
           <div class="col-8" style="display: inline-block; position: relative">
-            <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10"/>
+            <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10" />
             <div style="display:flex;align-items:center;width:100%;height:100%;">
               <textarea
                 maxlength="16"
@@ -52,12 +50,24 @@
         </div>
       </div>
     </div>
-    <div v-show="canSeeMenu() && this.folderType ==  'normal'" class="dropdown-menu dropdown-menu-sm" v-bind:id="this.projectID+this.folderPath">
+    <div
+      v-show="canSeeMenu() && this.folderType == 'normal'"
+      class="dropdown-menu dropdown-menu-sm"
+      v-bind:id="this.projectID + this.folderPath"
+    >
       <a class="dropdown-item" v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</a>
-      <a class="dropdown-item" v-show="canMoveFolder()" v-if="this.currentFolders.length > 1" @click="moveMenu = true; setMoveMenu(this.getCoordinates())">Verplaatsen naar:</a>
-      <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.folderPath+1">
-        <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
-          <a class="dropdown-item" v-if="folder.name != folderName && folder.type == 'normal'">{{ folder.name }}</a>
+      <a
+        class="dropdown-item"
+        v-show="canMoveFolder()"
+        v-if="this.currentFolders.length > 1"
+        @click="moveMenu = true; setMoveMenu(this.getCoordinates())"
+      >Verplaatsen naar:</a>
+      <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.folderPath + 1">
+        <span v-for="folder in this.currentFolders" :key="folder" @click="confirmMove(folder)">
+          <a
+            class="dropdown-item"
+            v-if="folder.name != folderName && folder.type == 'normal'"
+          >{{ folder.name }}</a>
         </span>
       </div>
       <a class="dropdown-item" v-show="canDeleteFolder()" @click="deleteFolder()">Verwijder</a>
@@ -69,6 +79,7 @@
 import FilestorageService from "@/services/FilestorageService.js";
 import PermissionService from "@/services/PermissionService.js";
 import AlertService from "../../services/AlertService";
+import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 
 export default {
   name: "ProjectFolder",
@@ -80,8 +91,9 @@ export default {
     projectID: { type: String, required: true },
     currentFolders: { type: Array, required: true },
 
-    files: { type: Array, required: false}
+    files: { type: Array, required: false }
   },
+  components: { ConfirmDialogue },
   data: function () {
     return {
       selected: false,
@@ -92,47 +104,47 @@ export default {
     };
   },
   methods: {
-    selectFolder(){
-      if(this.folderType == "normal"){
-        var folderDiv = document.getElementById(this.folderPath+2);
-        if(this.selected == true){
+    selectFolder() {
+      if (this.folderType == "normal") {
+        var folderDiv = document.getElementById(this.folderPath + 2);
+        if (this.selected == true) {
           folderDiv.style["border-width"] = "5px";
           this.$emit("folderSelected")
         }
-        else{
+        else {
           folderDiv.style["border-width"] = "1px";
           this.$emit("folderDeselected")
         }
       }
-      
+
     },
     setMoveMenu() {
-      if(this.folderType == 'normal'){
-        var element = document.getElementById(this.folderPath+1)
+      if (this.folderType == 'normal') {
+        var element = document.getElementById(this.folderPath + 1)
         element.style['display'] = 'block'
       }
     },
     setViewMenu(e) {
-      if(this.folderType == 'normal'){
+      if (this.folderType == 'normal') {
         var top = e.top;
         var left = e.left;
-        var element = document.getElementById(this.projectID+this.folderPath)
+        var element = document.getElementById(this.projectID + this.folderPath)
         element.style['display'] = 'block'
         element.style['top'] = String(left) + 'px'
         element.style['left'] = String(top) + 'px'
       }
     },
-    unsetMenus(){
-      var viewMenu = document.getElementById(this.projectID+this.folderPath)
+    unsetMenus() {
+      var viewMenu = document.getElementById(this.projectID + this.folderPath)
       viewMenu.style['display'] = 'none'
-      var moveMenu = document.getElementById(this.folderPath+1)
+      var moveMenu = document.getElementById(this.folderPath + 1)
       moveMenu.style['display'] = 'none'
     },
-    getCoordinates(){
+    getCoordinates() {
       var e = window.event;
       var posX = e.clientX;
       var posY = e.clientY;
-      return {'top':posX, 'left':posY}
+      return { 'top': posX, 'left': posY }
     },
     deleteFolder() {
       FilestorageService.deleteFolder(this.projectID, this.folderPath, false)
@@ -141,22 +153,30 @@ export default {
           AlertService.handleSuccess(response);
         })
         .catch((err) => {
-          if(err.response.status === 409){
-            if(confirm("There are elements within this folder, are you sure?")){
-              FilestorageService.deleteFolder(this.projectID, this.folderPath, true)
-              .then((response) => {
-                this.$emit("folderDeleted");
-                AlertService.handleSuccess(response);
-              })
-              .catch((err) => {
-                AlertService.handleError(err);
-              });
-            }
+          if (err.response.status === 409) {
+            this.confirmDeleteContents()
           }
-          if (err.response) {
+          else {
             AlertService.handleError(err);
           }
         });
+    },
+    async confirmDeleteContents() {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Map verwijderen",
+        message:
+          'Deze map is niet leeg. Weet je zeker dat je ook de inhoud wilt verwijderen?',
+      });
+      if (ok) {
+        FilestorageService.deleteFolder(this.projectID, this.folderPath, true)
+          .then((response) => {
+            this.$emit("folderDeleted");
+            AlertService.handleSuccess(response);
+          })
+          .catch((err) => {
+            AlertService.handleError(err);
+          });
+      }
     },
     renameFolder() {
       this.disableInput();
@@ -167,23 +187,23 @@ export default {
           "",
           this.newName
         )
-        .then(() => {
-          this.$emit("nameChanged");
-        })
-        .catch((err) => {
-          this.newName = this.folderName
-          AlertService.handleError(err);
-        });
+          .then(() => {
+            this.$emit("nameChanged");
+          })
+          .catch((err) => {
+            this.newName = this.folderName
+            AlertService.handleError(err);
+          });
       }
       else this.newName = this.folderName
     },
-    enableInput(){
+    enableInput() {
       this.unsetMenus();
       var inputName = document.getElementById(this.folderName)
       inputName.removeAttribute("disabled")
       inputName.select();
     },
-    disableInput(){
+    disableInput() {
       var inputName = document.getElementById(this.folderName)
       inputName.setAttribute("disabled", "")
     },
@@ -198,32 +218,32 @@ export default {
           AlertService.handleError(err);
         });
     },
-    confirmMove(folder){
-      if(confirm("Are you sure you want to move " + this.folderName + " to " + folder.name + "?")){
+    confirmMove(folder) {
+      if (confirm("Are you sure you want to move " + this.folderName + " to " + folder.name + "?")) {
         this.moveToFolder(folder)
       }
     },
     goToFolder() {
-      if(this.folderType == 'shared'){
+      if (this.folderType == 'shared') {
         this.$emit("currentPathChanged", "?parent=" + this.projectID, this.projectID);
         return;
       }
-      if(this.folderType == 'owned'){
+      if (this.folderType == 'owned') {
         this.$emit("currentPathChanged", "?child=" + this.projectID, this.projectID);
         return;
       }
       this.$emit("currentPathChanged", this.folderPath, this.projectID);
     },
-    canDeleteFolder(){
-    return PermissionService.userHasPermission("may_update_file_in_own_project");
-    },
-    canMoveFolder(){
+    canDeleteFolder() {
       return PermissionService.userHasPermission("may_update_file_in_own_project");
     },
-    canRenameFolder(){
+    canMoveFolder() {
       return PermissionService.userHasPermission("may_update_file_in_own_project");
     },
-    canSeeMenu(){
+    canRenameFolder() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canSeeMenu() {
       return PermissionService.userHasPermission("may_update_file_in_own_project");
     },
   },
@@ -231,30 +251,30 @@ export default {
 </script>
 
 <style scoped>
-#drop-down-menu{
-    background: #FAFAFA;
-    border: 1px solid var(--blue1);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    width: 250px;
-    z-index: 99;
+#drop-down-menu {
+  background: #fafafa;
+  border: 1px solid var(--blue1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 250px;
+  z-index: 99;
 }
 
 #drop-down-menu li {
-    border-bottom: 1px solid #E0E0E0;
-    margin: 0;
-    padding: 5px 35px;
+  border-bottom: 1px solid #e0e0e0;
+  margin: 0;
+  padding: 5px 35px;
 }
 
 #drop-down-menu li:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 #drop-down-menu li:hover {
-    background: var(--blue3);
-    color: #FAFAFA;
+  background: var(--blue3);
+  color: #fafafa;
 }
 .projectFolder {
   background-color: rgba(255, 255, 255, 0.7);
@@ -264,10 +284,14 @@ export default {
   border-radius: 10px;
   border-width: 1px;
   margin-top: 1vh;
-  transition: .3s
+  transition: 0.3s;
 }
 .projectFolder:hover {
-  background-image: linear-gradient(to bottom right, rgba(84, 84, 218, 0.315), rgba(255, 255, 255, 0.7));
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(84, 84, 218, 0.315),
+    rgba(255, 255, 255, 0.7)
+  );
   border-radius: 10px;
   transition: 0.3s;
 }
@@ -275,7 +299,7 @@ export default {
   position: relative;
 }
 .foldersImage {
-  margin:8px auto;
+  margin: 8px auto;
   top: 50%;
   width: max(80%, 30px);
 }
