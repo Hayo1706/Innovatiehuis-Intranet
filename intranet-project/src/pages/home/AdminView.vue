@@ -1,5 +1,5 @@
 <template>
-  <div class="component-container" style="min-height: fit-content" v-if="canSeeAdminView()">
+  <div id="AdminView" class="component-container" v-if="canSeeAdminView()">
     <div class="component-header">
       <slot></slot>
     </div>
@@ -92,6 +92,9 @@ export default {
 </script>
 
 <style scoped>
+#AdminView {
+  min-height: fit-content;
+}
 button:hover {
   padding-left: 15px;
 }

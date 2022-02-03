@@ -29,12 +29,12 @@ def delete_valid(folder_path):
 def delete_folder_contents(dir_path):
     for root, dirs, files in os.walk(dir_path):
         for name in files:
-            move_file_to_backup(pathify(root, name), remove_references=True)
+            move_file_to_archive(pathify(root, name), remove_references=True)
 
 
 def get_project_path(project_id, version=None):
-    if (version == "backup"):
-        return str(project_id) + "backup"
+    if (version == "archive"):
+        return str(project_id) + "archive"
     else:
         return str(project_id)
 
@@ -142,15 +142,15 @@ def update_shared_files_entries(project_id, path_to_replace, new_path):
                          {'shared_files': new_shared_files_string, 'projectid': project_id, 'childid': entry['childid']})
 
 
-def move_file_to_backup(source_path, remove_references=False):
+def move_file_to_archive(source_path, remove_references=False):
     sub_path = source_path.replace(config.FILE_STORAGE_ROOT, "")
     index = sub_path.find("/")
 
     if remove_references:
         update_shared_files_entries(sub_path[:index], sub_path[index:], "")
 
-    backup_path = sub_path[:index] + "backup" + sub_path[index:]
-    target_path = pathify(config.FILE_STORAGE_ROOT, backup_path)
+    archive_path = pathify(get_project_path(int(sub_path[:index]), "archive"), sub_path[index:])
+    target_path = pathify(config.FILE_STORAGE_ROOT, archive_path)
     if file_exists(target_path):
         os.remove(target_path)
     target_folder = target_path.rsplit('/', 1)[0]
@@ -173,7 +173,7 @@ def move_file(source_path, target_path, update_references=False):
 
 def file_replace_valid(file, file_path):
     try:
-        move_file_to_backup(file_path)
+        move_file_to_archive(file_path)
     except:
         return False
     return file_save_valid(file, file_path)

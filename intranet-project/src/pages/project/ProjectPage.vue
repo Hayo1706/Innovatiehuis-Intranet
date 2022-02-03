@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container-fluid">
+    <div id="ProjectPage" class="container-fluid">
       <div class="row">
         <div class="col-sm-8">
           <div class="component-container">
@@ -24,8 +24,8 @@
                   v-if="path != ''"
                 >{{ path }}</text>
               </span>
-              <text v-if="this.childID != null">{{ "Gedeeld met: " + this.getChildName() }}</text>
-              <text v-if="this.parentID != null">{{ "Gedeeld door: " + this.getParentName() }}</text>
+              <text v-if="this.childID != null"> / {{ "Gedeeld met: " + this.getChildName() }}</text>
+              <text v-if="this.parentID != null"> / {{ "Gedeeld door: " + this.getParentName() }}</text>
 
               <ProjectPageHeader
                 :currentPath="this.currentPath"
@@ -380,10 +380,6 @@ export default {
         })
     },
     currentPathChanged(path, familyID) {
-      console.log("CURRENT PATH: " + this.currentPath);
-      console.log(path);
-      if (this.currentPath == path) return;
-
       this.projectID = this.getProjectId();
       this.previousPath = this.currentPath;
       this.$router.push("/project/" + this.projectID + path);
@@ -433,12 +429,6 @@ export default {
           this.setParentFolders();
           this.setChildFolders();
         }
-        else {
-          this.currentFolders.push({ 'name': 'Ga Terug', 'path': this.previousPath, 'projectID': this.projectID, 'type': 'goback' })
-        }
-      }
-      else {
-        this.currentFolders.push({ 'name': 'Ga Terug', 'path': this.previousPath, 'projectID': this.projectID, 'type': 'goback' })
       }
       return this.currentFolders
     },
@@ -580,6 +570,9 @@ export default {
 </script>
 
 <style>
+#ProjectPage {
+  
+}
 .directory {
   cursor: pointer;
 }
