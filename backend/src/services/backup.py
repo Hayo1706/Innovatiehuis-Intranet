@@ -16,8 +16,8 @@ def backup():
 def run_backup():
     while True:
         try:
-            backup()
             time.sleep(config.BACKUP_FREQUENCY * 60)
+            backup()
         except KeyboardInterrupt:
             break
 
