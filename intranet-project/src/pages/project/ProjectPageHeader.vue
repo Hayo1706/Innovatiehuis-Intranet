@@ -40,7 +40,7 @@
             data-bs-target="#folderModal"
           />
           <img
-            title="Vorige versies bestanden"
+            title="Verwijderde bestanden terughalen"
             class="component-header-button"
             @click="this.$emit('showOlderFiles')"
             src=".\..\..\assets\images\restore.png"
@@ -58,19 +58,30 @@
               class="component-header-button"
               src=".\..\..\assets\images\delete.png"
             />
-            <img
-              v-if="this.selectedFiles.length > 0 && this.selectedFolders.length == 0"
-              @click="this.$emit('shareSelectedElements')"
-              title="Bestanden delen"
-              class="component-header-button"
-              src=".\..\..\assets\images\share_files.png"
-            />
-            <img
-              @click="this.$emit('moveSelectedElements')"
-              title="Geselecteerde elementen verplaatsen"
-              class="component-header-button"
-              src=".\..\..\assets\images\move_selected.png"
-            />
+            <div class="dropdown">
+              <img
+                v-if="this.selectedFiles.length > 0 && this.selectedFolders.length == 0"
+                title="Bestanden delen"
+                class="component-header-button"
+                src=".\..\..\assets\images\share_files.png"
+              />
+              <div class="dropdown-content">
+                <a>Delen met:</a>
+                <a v-for="child in this.sharedChilds" :key="child" @click="shareSelectedFiles(child.projectid, child.shared_files)">{{ child.project_name }}</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <img
+                @click="this.$emit('moveSelectedElements')"
+                title="Geselecteerde elementen verplaatsen"
+                class="component-header-button"
+                src=".\..\..\assets\images\move_selected.png"
+              />
+              <div class="dropdown-content">
+                <a>Verplaatsen naar:</a>
+                <a v-for="folder in this.currentFolders" :key="folder"  >{{ folder.name }}</a>
+              </div>
+            </div>
           </div>
         </nav>
       </div>
@@ -113,6 +124,7 @@
                   class="form-control"
                   id="message-text"
                   placeholder="Nieuwe_Map"
+                  v-on:keydown.enter="addNewFolder()"
                 />
               </div>
             </form>
@@ -146,6 +158,7 @@ import PermissionService from "@/services/PermissionService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import AlertService from "../../services/AlertService";
 import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
+import ProjectService from '../../services/ProjectService';
 
 export default {
   name: "ProjectFolderHeader",
@@ -153,7 +166,7 @@ export default {
     SearchBar,
     ConfirmDialogue
   },
-  props: ["currentPath", "sharedChilds", "selectedFolders", "selectedFiles", "droppedFiles"],
+  props: ["projectID", "currentPath", "currentFolders", "sharedChilds", "selectedFolders", "selectedFiles", "droppedFiles"],
   data: function () {
     return {
       newFolderName: null,
@@ -168,6 +181,31 @@ export default {
     }
   },
   methods: {
+    shareSelectedFiles(childID, sharedFiles){
+      var newSharedFiles = sharedFiles
+      for(var file of this.selectedFiles){
+        if(newSharedFiles == null){
+          newSharedFiles = file.path
+        }
+        else if(!sharedFiles.split(" ").includes(file.path)){
+          newSharedFiles += " " + file.path
+        }
+      }
+      const project = {
+        shared_files: newSharedFiles
+      }
+
+      ProjectService.updateSharedFilesOfProject(this.projectID, childID, project)
+      .then((response) => {
+        console.log(response)
+        AlertService.handleSuccess(response);
+        this.$emit("currentFilesChanged")
+      })
+      .catch((err) => {
+        console.log(err)
+        AlertService.handleError(err);
+      })
+    },
     addNewFolder() {
       if (this.newFolderName == null) {
         this.newFolderName = "Nieuwe_Map";
@@ -294,3 +332,32 @@ export default {
 
 };
 </script>
+<style scoped>
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 16px;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+</style>

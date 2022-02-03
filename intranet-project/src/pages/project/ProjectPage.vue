@@ -33,6 +33,9 @@
                 :selectedFolders="this.selectedFolders"
                 :selectedFiles="this.selectedFiles"
                 :droppedFiles="this.droppedFiles"
+                :currentFolders="this.currentFolders"
+                :projectID="this.projectID"
+
                 @newFolderAdded="currentFoldersChanged()"
                 @newFilesUploaded="currentFilesChanged()"
                 @showOlderFiles="togglePreviousFilesMenu()"
@@ -43,7 +46,7 @@
                 @searchBarChanged="setSearchTerm"
               ></ProjectPageHeader>
             </div>
-            <div>
+            <div class="scrollable">
               <FoldersView
                   :previousPath="this.previousPath"
                   :currentPath="this.currentPath"
@@ -366,7 +369,9 @@ export default {
       this.selectedFolders = [];
     },
     currentFilesChanged() {
+      alert();
       this.setChildProjects();
+      this.togglePreviousFilesMenu();
       this.setParentProjects();
       this.setCurrentFiles();
       this.selectedFiles = [];
@@ -591,4 +596,9 @@ export default {
 .directory:hover {
   color:var(--gold1);
 }
+.scrollable {
+  overflow: scroll;
+  height: 70vh;
+}
+
 </style>

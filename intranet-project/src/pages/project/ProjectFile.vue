@@ -8,7 +8,7 @@
     @long-press="setViewMenu(this.getCoordinates())"
     @mouseleave="moveMenu = false; unsetMenus();
     moveMenu = false;
-    shareMenu = false"
+    shareMenu = false;"
   >
     <div class="row"
       @click.ctrl="this.selected = !this.selected; selectFile()"
@@ -21,7 +21,7 @@
             v-bind:id="this.fileType"/>
         <input
           style="width: 100%"
-          v-on:keyup.enter="renameFile()"
+          v-on:keydown.enter="renameFile()"
           class="fileName"
           v-model="fileName"
           v-bind:id="this.name"
@@ -186,9 +186,9 @@ export default {
         });
     },
     recoverBackupFile() {
-      alert(this.path)
       FilestorageService.recoverFile(this.projectID, this.path)
       .then((response) => {
+        this.$emit("fileMoved");
         AlertService.handleSuccess(response)
       })
       .catch((err) => {

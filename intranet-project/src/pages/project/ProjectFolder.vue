@@ -1,5 +1,5 @@
 <template>
-  <div @mouseleave="moveMenu = false; unsetMenus()">
+  <div @mouseleave="moveMenu = false; unsetMenus();">
     <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <div
       class="projectFolder hover"
