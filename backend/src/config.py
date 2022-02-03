@@ -8,7 +8,7 @@ TWO_FACTOR = False
 FILE_STORAGE_ROOT = '../filestorage/root/'
 
 # Unit: every ... minutes
-BACKUP_FREQUENCY = 30
+BACKUP_FREQUENCY = 5
 BACKUP_ROOT_PATH = '../filestorage/backup/'
 
 DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'

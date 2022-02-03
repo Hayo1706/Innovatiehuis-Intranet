@@ -9,6 +9,7 @@ from .setup import create_app
 from .. import config
 
 app = create_app()
+app.app.backup = False
 
 DB_HOST = 'localhost'
 DB_USER = 'root'
