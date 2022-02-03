@@ -5,7 +5,7 @@ import os
 
 from flask import request
 
-from .extensions import db, jwt, bcrypt
+from .extensions import db, jwt, bcrypt, mail
 import src.config as config
 import src.services.filestorage_service as fs_service
 
@@ -40,8 +40,15 @@ def create_app():
     app.app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URL
 
     app.app.config['BCRYPT_HANDLE_LONG_PASSWORDS '] = True
-    db.init_app(app.app)
 
+    app.app.config['MAIL_SERVER'] = config.MAIL_SERVER
+    app.app.config['MAIL_PORT'] = config.MAIL_PORT
+    app.app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
+    app.app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
+    app.app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
+    app.app.config['MAIL_USE_SSL'] = config.MAIL_USE_SSL
+
+    db.init_app(app.app)
     if config.FILE_STORAGE_ROOT[-1] != "/":
         raise Exception("FILE_STORAGE_ROOT must end with a '/'")
     if not fs_service.dir_exists(config.FILE_STORAGE_ROOT):
@@ -52,6 +59,7 @@ def create_app():
         if ('folder' in request.url or 'file' in request.url) and request.method != 'GET':
          # return response("Operatie is nu niet beschikbaar wegens backup, probeer later weer", 503)
          pass
+
     @app.app.after_request
     def handle_after_request(response):
         response = refresh_expiring_jwts(response)
@@ -76,4 +84,5 @@ def create_app():
         db.create_engine(config.DATABASE_URL, {})
         jwt.init_app(app.app)
         bcrypt.init_app(app.app)
+        mail.init_app(app.app)
         return app

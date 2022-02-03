@@ -27,6 +27,7 @@
             @dragstart="startDrag($event, file.path)"
           />
           </div>
+          <div v-if="this.searchedFiles.length == 0">Geen resultaten.</div>
       </div>
     <h5 v-if="this.showOldFiles" class="directory-view-title">Oudere versies van bestanden</h5>
     <div v-if="this.showOldFiles" class="row">

@@ -52,13 +52,13 @@
         class="col column-title"
         @click="this.$emit('sortEvent', 'archive_status')"
       >
-        Archiveerstatus
+        Status
         <span v-if="sortingMethod == 'archive_status'"
           ><i v-if="this.ascending" class="bi-caret-down-fill"></i
           ><i v-else class="bi-caret-up-fill"></i
         ></span>
       </div>
-      <div class="col">
+      <div class="col search-col">
         <SearchBar
           @searchBarChanged="
             (searchTerm) => $emit('searchBarChanged', searchTerm)
@@ -100,6 +100,7 @@ export default {
   color: white;
   font-size: 1.6vh;
   padding: 11px 0 0 0;
+  border-bottom: 2px solid #3b3b3b;
 }
 #search-input {
   margin-right: 4px;
@@ -110,7 +111,7 @@ export default {
   text-align: center;
   background: rgb(204, 204, 204);
   border-radius: 2vh 2vh 0 0;
-  border: 1px solid black;
+  border: 1px solid #646464;
   border-bottom: 0px;
 }
 .column-title:hover {
@@ -131,6 +132,9 @@ img {
 }
 .col {
   font-family: AddeleSemiBold;
+}
+.search-col {
+  padding: 0 4px;
 }
 #projectsHeader .full-button {
   margin: 0;

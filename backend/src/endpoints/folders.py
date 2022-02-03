@@ -31,7 +31,7 @@ def create_folder(project_id):
         current_path = fs_service.pathify(config.FILE_STORAGE_ROOT, fs_service.get_project_path(project_id), requested_path)
         new_folder_name = fs_service.sanitize_name(connexion.request.json['name'], "folder")
 
-        new_dir_path = fs_service.get_unique_folder_path(new_folder_name, current_path, 0)
+        new_dir_path = fs_service.get_unique_folder_path(fs_service.pathify(current_path, new_folder_name), 0)
         os.makedirs(new_dir_path)
         return response("Map aangemaakt", 200)
     except KeyError as e:
@@ -66,16 +66,17 @@ def delete_folder(project_id):
     requested_path = fs_service.pathify(config.FILE_STORAGE_ROOT, fs_service.get_project_path(project_id), path_to_delete)
     if not fs_service.dir_exists(requested_path):
         return response("Map kon niet verwijderd worden; bestaat de map nog?", 409)
-    if fs_service.delete_valid(requested_path):
-        return response("Map verwijderd", 200)
-    else:
-        if len(os.listdir(requested_path)) > 0:
-            if may_delete_contents != 'true':
-                return response("Map kon niet verwijderd worden omdat deze niet leeg is; herlaad de pagina", 409)
-            else:
-                try:
-                    fs_service.delete_folder_contents(requested_path)
-                except:
-                    return response("Een deel van de inhoud van deze map kon niet verwijderd worden", 409)
-                response("Map (inclusief inhoud) verwijderd", 200)
+    if len(os.listdir(requested_path)) > 0:
+        if may_delete_contents != 'true':
+            return response(
+                "Map kon niet verwijderd worden omdat er recent bestanden zijn toegevoegd; herlaad de pagina", 409)
+        else:
+            try:
+                fs_service.delete_folder_contents(requested_path)
+            except:
+                return response("Een deel van de inhoud van deze map kon niet verwijderd worden", 409)
+    if not fs_service.delete_valid(requested_path):
+        return response(
+            "Map kon niet verwijderd worden, waarschijnlijk omdat iemand anders ermee bezig is; herlaad de pagina", 409)
+    return response("Map verwijderd", 200)
 
