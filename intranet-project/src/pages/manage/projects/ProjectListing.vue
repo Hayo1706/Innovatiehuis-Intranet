@@ -42,7 +42,7 @@
         </div>
         <div class="mobileRow">
           <div id="archivedText" v-if="project.is_archived">Gearchiveerd</div>
-          <div v-else>Niet gearchiveerd</div>
+          <div v-else>Actief</div>
         </div>
       </div>
 
@@ -91,7 +91,7 @@
         <div id="archivedText" v-if="this.project.is_archived">
           Gearchiveerd
         </div>
-        <div v-else>Niet gearchiveerd</div>
+        <div v-else>Actief</div>
       </div>
 
       <div

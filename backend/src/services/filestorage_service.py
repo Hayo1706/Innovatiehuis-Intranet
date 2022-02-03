@@ -20,7 +20,7 @@ def move_valid(source_path, target_path, dir_path):
 
 def delete_valid(folder_path):
     try:
-        os.rmdir(folder_path)
+        shutil.rmtree(folder_path)
         return True
     except:
         return False
@@ -40,16 +40,14 @@ def get_project_path(project_id, version=None):
 
 
 # This function adds a (1), (2), (3)... to the folder name if a folder with the same name already exists
-def get_unique_folder_path(folder_name, directory, count):
-    directory = unquote(directory)
-    path_to_check = pathify(directory, folder_name)
+def get_unique_folder_path(path_to_check, count):
     if count == 0:
         if dir_exists(path_to_check):
-            return get_unique_folder_path(folder_name, directory, count + 1)
+            return get_unique_folder_path(path_to_check, count + 1)
         return path_to_check
     else:
         if dir_exists(path_to_check + " (" + str(count) + ")"):
-            return get_unique_folder_path(folder_name, directory, count + 1)
+            return get_unique_folder_path(path_to_check, count + 1)
         return path_to_check + " (" + str(count) + ")"
 
 
@@ -90,10 +88,14 @@ def move_folder(source_path, target_path):
         try:
             for root, dirs, files in os.walk(source_path, topdown=True):
                 subdir = root.replace(source_path, "")
-                for name in dirs:
-                    os.makedirs(pathify(target_path, subdir, name))
-                for name in files:
-                    move_file(pathify(root, name), pathify(target_path, subdir, name), update_references=True)
+                for dir_to_move in dirs:
+                    path = pathify(target_path, folder_name, subdir, dir_to_move)
+                    if dir_exists(path):
+                        path = get_unique_folder_path(path, 0)
+                    os.makedirs(path)
+                for file_to_move in files:
+                    file_name = get_unique_file_name(file_to_move, pathify(target_path, folder_name, subdir), 0)
+                    move_file(pathify(root, file_name), pathify(target_path, folder_name, subdir), update_references=True)
             shutil.rmtree(source_path)
             return response("Map gewijzigd", 200)
         except:
@@ -159,11 +161,12 @@ def move_file(source_path, target_path, update_references=False):
     if not dir_exists(target_path):
         os.makedirs(target_path)
 
+    file_name = source_path.rsplit('/', 1)[1]
     if update_references:
         sub_path = source_path.replace(config.FILE_STORAGE_ROOT, "")
-        target_sub_path = target_path(config.FILE_STORAGE_ROOT, "")
+        target_sub_path = target_path.replace(config.FILE_STORAGE_ROOT, "")
         index = sub_path.find("/")
-        update_shared_files_entries(sub_path[:index], sub_path[index:], target_sub_path[index:])
+        update_shared_files_entries(sub_path[:index], sub_path[index:], pathify(target_sub_path[index:], file_name))
 
     shutil.move(source_path, target_path)
 
@@ -224,4 +227,4 @@ def file_rename_valid(file_path, new_name):
 
 
 def pathify(*paths):
-    return "/".join([path.replace("\\", "/").strip("/") for path in paths])
+    return "/".join([path.replace("\\", "/").strip("/") for path in paths if path.replace("\\", "/").strip("/") != ""])
