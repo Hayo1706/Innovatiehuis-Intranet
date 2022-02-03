@@ -1,6 +1,11 @@
 import datetime
 import secrets
+import base64
 from datetime import date
+import io
+
+from flask import copy_current_request_context, render_template
+
 import src.config as config
 import pyotp
 from ..config import PASSWORD_CHANGE_SECRET_KEY, DOMAIN_NAME
@@ -10,6 +15,9 @@ from ..services.permissions import Users, Projects, Roles
 from ..services.permissions.permissions import check_permissions, check_jwt
 from ..services.extensions import bcrypt
 from flask_jwt_extended import get_jwt_identity
+from ..services.extensions import mail
+from flask_mail import Message
+from PIL import Image
 import threading
 import qrcode
 
@@ -17,7 +25,7 @@ import qrcode
 # READ users
 @check_permissions(Users.may_read_all)
 def read_all():
-    return response('Succes',200, query(
+    return response('Succes', 200, query(
         "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, power_level, access_status, created, "
         "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen),created) AS last_seen FROM (SELECT * FROM users "
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) GROUP BY userid"))
@@ -26,7 +34,7 @@ def read_all():
 # READ users/{id}
 @check_permissions(Users.may_read)
 def read_one(user_id):
-    return response('Succes',200, query(
+    return response('Succes', 200, query(
         "SELECT userid, first_name, last_name, email, phone_number, roleid, role_name, access_status, created, "
         "COUNT(projectid) AS amountprojects, IFNULL(MAX(last_seen), created) AS last_seen FROM (SELECT * FROM users "
         "LEFT JOIN roles USING(roleid)) as users LEFT JOIN users_have_projects USING(userid) "
@@ -47,11 +55,9 @@ def create():
         access_status = body['access_status']
         password_hash = bcrypt.generate_password_hash(secrets.token_urlsafe(16)).decode('utf-8')
         auth_key = pyotp.random_base32()
-
-
-
     except KeyError:
-        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!",
+                        400)
 
     emails_in_use = [user["email"] for user in query("SELECT email FROM users")]
     if email in emails_in_use:
@@ -62,23 +68,38 @@ def create():
         "VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone_number)s, %(roleid)s, %(access_status)s,%(password_hash)s,%(auth_key)s,%(created_time)s, %(created_time)s)",
         {'first_name': first_name, 'last_name': last_name, 'email': email, 'phone_number': phone_number,
          'roleid': roleid,
-         'access_status': access_status, 'password_hash': password_hash, 'auth_key': auth_key, 'created_time':datetime.datetime.now()})
+         'access_status': access_status, 'password_hash': password_hash, 'auth_key': auth_key,
+         'created_time': datetime.datetime.now()})
     serializer = URLSafeSerializer(PASSWORD_CHANGE_SECRET_KEY)
     d1 = date.today().strftime("%d/%m/%Y")
     userid = query("SELECT userid FROM users WHERE email=%(email)s", {'email': email})[0]['userid']
     resp = DOMAIN_NAME + "/manage/resetpassword?resettoken=" + serializer.dumps([userid, password_hash])
+
+    @copy_current_request_context
+    def send_data_to_user(auth_key, first_name, email, resp):
+        print(resp)
+        totp_url = pyotp.totp.TOTP(auth_key, interval=30).provisioning_uri(name=first_name + "@innovatiehuis",
+                                                                           issuer_name='Innovatiehuis')
+        img = qrcode.make(totp_url)
+
+        image_io = io.BytesIO()
+        img.convert('RGBA').save(image_io, format='PNG', quality=100)
+        image_io.seek(0, 0)
+        dataurl = base64.b64encode(image_io.getvalue()).decode('ascii')
+
+        msg = Message('Account activeren innovatieplatform', sender=config.MAIL_USERNAME, recipients=[email])
+        msg.html = render_template('image.html', img=dataurl, Naam=first_name + " " + last_name, OTP= resp)
+        mail.send(msg)
 
     data_thread = threading.Thread(target=lambda: send_data_to_user(auth_key, first_name, email, resp))
     data_thread.start()
 
     return response("Gebruiker toegevoegd", 200, resp)
 
+
 # TODO send data below to user via mail
-def send_data_to_user(auth_key, first_name, email, resp):
-    print(resp)
-    totp_url = pyotp.totp.TOTP(auth_key, interval=30).provisioning_uri(name=first_name+ "@innovatiehuis",issuer_name='Innovatiehuis')
-    img = qrcode.make(totp_url)
-    img.show()
+
+
 
 # PUT users/{id}
 @check_permissions(Users.may_update)
@@ -90,7 +111,8 @@ def update(user_id):
         email = body['email']
         phone_number = body['phone_number']
     except KeyError:
-        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!",
+                        400)
 
     query_update(
         "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, "
@@ -126,7 +148,8 @@ def update_password(user_id):
         body = connexion.request.json
         new_password_hash = body['password_hash']
     except KeyError:
-        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!", 400)
+        return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!",
+                        400)
     query_update("UPDATE users SET password_hash = %(hash)s WHERE userid = %(userid)s",
                  {'hash': new_password_hash, 'userid': user_id})
     response('Wachtwoord gewijzigd')
