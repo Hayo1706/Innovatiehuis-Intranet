@@ -1,5 +1,6 @@
 <template>
   <div>
+    <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <div class="row">
       <div class="col-sm-4" id="center">
         <SearchBar
@@ -144,11 +145,13 @@ import FilestorageService from "@/services/FilestorageService.js";
 import PermissionService from "@/services/PermissionService.js";
 import SearchBar from "@/shared_components/SearchBar.vue";
 import AlertService from "../../services/AlertService";
+import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 
 export default {
   name: "ProjectFolderHeader",
   components: {
     SearchBar,
+    ConfirmDialogue
   },
   props: ["currentPath", "sharedChilds", "selectedFolders", "selectedFiles", "droppedFiles"],
   data: function () {
@@ -196,10 +199,24 @@ export default {
     updateUploadingFile(index, name, percentage){
       this.uploadingFiles[index] = {"name": name, "percentage": percentage}
     },
+    async confirmAction(message){
+      const confirmation = await this.$refs.confirmDialogue.show({
+        title: "",
+        message:
+          message,
+      });
+      return confirmation
+    },
     uploadFiles(files) {
       this.uploadMenu = false;
       var amountOfFiles = files.length;
       for (let i = 0; i < files.length; i++) {
+
+        amountOfFiles--; 
+        if(amountOfFiles == 0){
+          this.uploadMenu = true;
+          this.uploadingFiles = []
+        }
 
         this.uploadingFiles.push({"name": files[i].name, "percentage": 0})
         var formData = new FormData();
@@ -207,9 +224,10 @@ export default {
         
         var config = { 
           onUploadProgress: function(progressEvent) {
-            var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+             var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
             console.log(percentCompleted, progressEvent)
-          } 
+            this.uploadingFiles[i]['percentage'] = percentCompleted
+          }.bind(this)
         }
 
         FilestorageService.uploadFile(
@@ -220,51 +238,49 @@ export default {
           config
         )
           .then((response) => {
-            amountOfFiles--; 
-            if(amountOfFiles == 0){
-              this.uploadMenu = true;
-              this.uploadingFiles = []
-            }
             AlertService.handleSuccess(response);
             this.$emit("newFilesUploaded");
           })
           .catch((err) => {
-            if(amountOfFiles == 0){
+            if(err instanceof TypeError){
               this.uploadMenu = true;
               this.uploadingFiles = []
-            }
-            if(err instanceof TypeError){
               AlertService.alert("Uw upload is mislukt! De server is weggevallen. Contacteer een van onze medewerkers.", "error")
               return;
             }
             else if(err.response.status === 409){
-              var confirmation = confirm(err.response.data.response.message);
-              FilestorageService.uploadFiles(
+              console.log(err.response.data.message)
+              this.confirmAction(err.response.data.message).then((confirmation) => {
+              FilestorageService.uploadFile(
                 this.$route.params.id,
-                this.path,
+                this.currentPath,
                 formData,
                 confirmation,
                 config
               )
                 .then((response) => {
-                  amountOfFiles--; 
                   if(amountOfFiles == 0){
-                    alert()
-                    this.uploadMenu = true;
+                    this.uploadingFiles = []
                   }
                   AlertService.handleSuccess(response);
                   this.$emit("newFilesUploaded");
                 })
                 .catch((err) => {
-                  amountOfFiles--; 
                   if(amountOfFiles == 0){
+                    this.uploadingFiles = []
+                  }
+                  else if(err instanceof TypeError){
                     this.uploadMenu = true;
+                    this.uploadingFiles = []
+                    AlertService.alert("Uw upload is mislukt! De server is weggevallen. Contacteer een van onze medewerkers.", "error")
+                    return;
                   }
                   AlertService.handleError(err);
                 });
+              })
             }
             else{
-              console.log('test', err)
+              AlertService.handleError(err);
             }
           });
       }

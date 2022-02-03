@@ -158,6 +158,7 @@ def move_file_to_backup(source_path, remove_references=False):
 
 
 def move_file(source_path, target_path, update_references=False):
+    print(target_path)
     if not dir_exists(target_path):
         os.makedirs(target_path)
 
@@ -167,6 +168,8 @@ def move_file(source_path, target_path, update_references=False):
         target_sub_path = target_path.replace(config.FILE_STORAGE_ROOT, "")
         index = sub_path.find("/")
         update_shared_files_entries(sub_path[:index], sub_path[index:], pathify(target_sub_path[index:], file_name))
+
+    print(target_path)
 
     shutil.move(source_path, target_path)
 
@@ -201,16 +204,19 @@ def upload_file(file, full_path, may_overwrite):
                 f"{str(config.MAX_FILE_SIZE/1000/1000)}MB", 406)
     if file_exists(file_path):
         # REPLACE FILE?
-        if may_overwrite:
+        print(may_overwrite)
+        if may_overwrite == 'true':
             if not file_replace_valid(file, file_path):
                 return response(f"Er ging iets fout bij het overschrijven van {file_name}", 424)
             return response("Bestand vervangen", 200)
-        else:
+        elif may_overwrite == 'false':
             numbered_file_name = get_unique_file_name(file_name, full_path, 0)
             numbered_file_path = pathify(full_path, numbered_file_name)
             if not file_save_valid(file, numbered_file_path):
                 return response(f"Er ging iets fout bij het uploaden van {numbered_file_name}", 424)
             return response("Bestand geüpload", 200)
+        else:
+            return response("Er bestaat al een bestand genaamd " + file_name + " wil je deze vervangen?", 409)
     if not file_save_valid(file, file_path):
         return response(f"Er ging iets fout bij het uploaden van {file_name}", 424)
 
