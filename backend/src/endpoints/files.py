@@ -100,7 +100,6 @@ def rename_file(project_id):
 
 
 # GET /projects/{project_id}/file
-#TODO schrijf permissie
 @check_permissions(Projects.may_read_shared_files)
 def download_file(project_id):
     try:
@@ -140,7 +139,7 @@ def delete_file(project_id):
     if not fs_service.file_exists(full_target_path):
         return response("Bestand kon niet worden gevonden", 404)
     fs_service.update_shared_files_entries(project_id, target_path, new_path='')
-    fs_service.move_file_to_backup(full_target_path, stop_sharing=True)
+    fs_service.move_file_to_backup(full_target_path, remove_references=True)
     return response("Bestand verwijderd", 200)
 
 
