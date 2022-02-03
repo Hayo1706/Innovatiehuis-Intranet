@@ -25,12 +25,8 @@ var FilestorageService = function () {
         const response = await axiosClient.get(`/projects/${projectid}/files?path=` + path, { timeout: 2000 });
         return response;
     }
-    async function uploadFile(projectid, path, file, may_overwrite=false) {
-        const response = await axiosClient.post(`/projects/${projectid}/files?path=` + path + `&may_overwrite=` + may_overwrite, file , { 
-            onUploadProgress: function(progressEvent) {
-                var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                console.log(percentCompleted)
-            }})
+    async function uploadFile(projectid, path, file, may_overwrite=false, config) {
+        const response = await axiosClient.post(`/projects/${projectid}/files?path=` + path + `&may_overwrite=` + may_overwrite, file , config)
         return response;
     }
     async function moveFile(projectid, from, to){

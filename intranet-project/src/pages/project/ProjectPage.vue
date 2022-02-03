@@ -2,7 +2,7 @@
   <div>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-9">
           <div class="component-container">
             <div class="component-header" style="overflow: visible;">
               <text v-if="this.currentPath == '' && this.parentID == null && this.childID == null">
@@ -54,43 +54,44 @@
                 @searchBarChanged="setSearchTerm">
               </ProjectPageHeader>
             </div>
-            <FoldersView
-                :previousPath="this.previousPath"
+            <div>
+              <FoldersView
+                  :previousPath="this.previousPath"
+                  :currentPath="this.currentPath"
+                  :projectID="this.projectID"
+                  :currentFolders="this.currentFolders"
+                  :currentSharedFolders="this.currentSharedFolders"
+                  :searchTerm="this.searchTerm"
+
+
+                  @currentFoldersChanged="currentFoldersChanged"
+                  @currentFilesChanged="currentFilesChanged"
+                  @currentPathChanged="currentPathChanged"
+                  @folderSelected="selectFolder"
+                  @folderDeselected="deselectFolder"
+                  @fileMoved="currentFilesChanged"
+               />
+               <FilesView ref="child" 
                 :currentPath="this.currentPath"
                 :projectID="this.projectID"
                 :currentFolders="this.currentFolders"
-                :currentSharedFolders="this.currentSharedFolders"
+                :currentFiles="this.currentFiles"
+                :olderFiles="this.olderFiles"
+                :previousFilesMenu="this.previousFilesMenu"
+                :sharedChilds="this.sharedChilds"
                 :searchTerm="this.searchTerm"
 
-
-                @currentFoldersChanged="currentFoldersChanged"
+                
+                @sharedFilesChanged="sharedFilesChanged"
                 @currentFilesChanged="currentFilesChanged"
-                @currentPathChanged="currentPathChanged"
-                @folderSelected="selectFolder"
-                @folderDeselected="deselectFolder"
-                @fileMoved="currentFilesChanged"
+                @fileSelected="selectFile"
+                @fileDeselected="deselectFile"
+                @filesDropUpload="setFilesDropUpload"
               />
-              <FilesView ref="child" 
-              :currentPath="this.currentPath"
-              :projectID="this.projectID"
-              :currentFolders="this.currentFolders"
-              :currentFiles="this.currentFiles"
-              :olderFiles="this.olderFiles"
-              :previousFilesMenu="this.previousFilesMenu"
-              :sharedChilds="this.sharedChilds"
-              :searchTerm="this.searchTerm"
-
-              
-              @sharedFilesChanged="sharedFilesChanged"
-              @currentFilesChanged="currentFilesChanged"
-              @fileSelected="selectFile"
-              @fileDeselected="deselectFile"
-              @filesDropUpload="setFilesDropUpload"
-              />
-              
+            </div>
           </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <AnnouncementWindow
               @reload="reloadAnnouncementWindow()"
               :key="this.announcementWindowKey"
@@ -178,7 +179,7 @@ export default {
           .then((response) => {
             this.olderFiles = []
             for(var file in response.data){
-              this.olderFiles.push({'name': response.data[file].split("\\").pop(), 'path': response.data[file].split("\\").join("/"), 'projectID': this.projectID, 'type':'backup'})
+              this.olderFiles.push({'name': response.data[file].split('/').pop(), 'path': response.data[file], 'projectID': this.projectID, 'type':'backup'})
             }
             AlertService.handleSuccess(response);
           })

@@ -73,6 +73,16 @@
           </div>
         </nav>
       </div>
+      <div class='row' v-for="file of this.uploadingFiles" :key='file'>
+        <div class='col-sm-8'>
+          <h5>{{ file.name }}</h5>
+        </div>
+        <div class='col-sm-4'>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" :style="{width: file.percentage + '%'}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <div
       class="modal fade"
@@ -146,6 +156,7 @@ export default {
       newFolderName: null,
       uploadMenu: true,
       files: [],
+      uploadingFiles: [],
     };
   },
   watch: {
@@ -182,22 +193,37 @@ export default {
       this.uploadFiles(files)
       document.getElementById("files").value = null;
     },
+    updateUploadingFile(index, name, percentage){
+      this.uploadingFiles[index] = {"name": name, "percentage": percentage}
+    },
     uploadFiles(files) {
       this.uploadMenu = false;
       var amountOfFiles = files.length;
       for (let i = 0; i < files.length; i++) {
+
+        this.uploadingFiles.push({"name": files[i].name, "percentage": 0})
         var formData = new FormData();
         formData.append(files[i].name, files[i]);
+        
+        var config = { 
+          onUploadProgress: function(progressEvent) {
+            var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            console.log(percentCompleted, progressEvent)
+          } 
+        }
 
         FilestorageService.uploadFile(
           this.$route.params.id,
           this.currentPath,
-          formData
+          formData,
+          null,
+          config
         )
           .then((response) => {
             amountOfFiles--; 
             if(amountOfFiles == 0){
               this.uploadMenu = true;
+              this.uploadingFiles = []
             }
             AlertService.handleSuccess(response);
             this.$emit("newFilesUploaded");
@@ -205,6 +231,7 @@ export default {
           .catch((err) => {
             if(amountOfFiles == 0){
               this.uploadMenu = true;
+              this.uploadingFiles = []
             }
             if(err instanceof TypeError){
               AlertService.alert("Uw upload is mislukt! De server is weggevallen. Contacteer een van onze medewerkers.", "error")
@@ -216,7 +243,8 @@ export default {
                 this.$route.params.id,
                 this.path,
                 formData,
-                confirmation
+                confirmation,
+                config
               )
                 .then((response) => {
                   amountOfFiles--; 

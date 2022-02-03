@@ -4,7 +4,7 @@
     <div>
       <div class="row">
         <h5 class="directory-view-title" v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h5>
-        <div v-for="folder in searchedSharedFolders" :key="folder.name" class="col-sm-4">
+        <div v-for="folder in searchedSharedFolders" :key="folder.name" class="col-sm-3">
           <ProjectFolder
             :folderName="folder.name"
             :folderType="folder.type"
@@ -17,7 +17,7 @@
           />
         </div>
         <h5 class="directory-view-title" v-if="this.searchedNormalFolders.length > 0">Mappen</h5>
-        <div v-for="folder in searchedNormalFolders" :key="folder.name" class="col-sm-4">
+        <div v-for="folder in searchedNormalFolders" :key="folder.name" class="col-sm-3">
           <ProjectFolder
             :folderName="folder.name"
             :folderType="folder.type"

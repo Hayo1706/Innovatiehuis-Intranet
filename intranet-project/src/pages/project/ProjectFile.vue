@@ -11,7 +11,8 @@
     shareMenu = false"
   >
     <div class="row"
-      @click.shift="this.selected = !this.selected; selectFile()">
+      @click.ctrl="this.selected = !this.selected; selectFile()"
+      >
       <div class="col s10">
         <img
             draggable="false"
@@ -19,6 +20,7 @@
             :src="this.getTypeImage()"
             v-bind:id="this.fileType"/>
         <input
+          style="width: 100%"
           v-on:keyup.enter="renameFile()"
           class="fileName"
           v-model="fileName"
@@ -184,6 +186,7 @@ export default {
         });
     },
     recoverBackupFile() {
+      alert(this.path)
       FilestorageService.recoverFile(this.projectID, this.path)
       .then((response) => {
         AlertService.handleSuccess(response)
@@ -290,7 +293,7 @@ export default {
   margin: 0 auto;
   display: block;
   overflow: hidden;
-  width: min(80%, 150px);
+  width: min(50%, 150px);
 }
 .projectFile:hover {
   background: white;
