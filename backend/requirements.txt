@@ -1,0 +1,12 @@
+python-jose[cryptography]
+connexion[swagger-ui]
+flask-login
+flask-sqlalchemy
+sqlalchemy
+flask-jwt-extended == 4.3.1
+flask-bcrypt
+itsdangerous
+pyotp
+qrcode[pil]
+flask_mail
+mariadb

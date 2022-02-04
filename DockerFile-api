@@ -1,0 +1,21 @@
+FROM python:3.7-alpine
+
+
+
+COPY /backend/ /backend/
+
+WORKDIR /backend/src
+
+
+RUN apk add --no-cache musl-dev gcc libffi-dev g++ jpeg-dev zlib-dev mariadb-dev
+
+
+RUN pip install --upgrade pip
+RUN pip install -r ../requirements.txt
+
+ENV PYTHONPATH "${PYTHONPATH}:/backend/"
+
+EXPOSE 5000
+
+ENTRYPOINT [ "python" ]
+CMD [ "run.py" ]
