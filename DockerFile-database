@@ -1,6 +1,3 @@
 FROM mariadb:latest
 
-
-EXPOSE 3306
-
-CMD ["docker run -p 3306:3306 -d --name mariadb -eMARIADB_ROOT_PASSWORD=Password123! mariadb/server:latest "]
+ADD ./backend/database/innovatiehuis1.sql /docker-entrypoint-initdb.d/ddl.sql
