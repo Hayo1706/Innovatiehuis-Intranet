@@ -1,5 +1,5 @@
 <template>
-  <div @mouseleave="moveMenu = false; unsetMenus()">
+  <div @mouseleave="moveMenu = false; unsetMenus();">
     <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <div
       class="projectFolder hover"
@@ -7,7 +7,7 @@
       @long-press="setViewMenu(this.getCoordinates())"
       @touchstart="goToFolder()"
       @dblclick="goToFolder()"
-      @click.shift="this.selected = !this.selected; selectFolder()"
+      @click.ctrl="this.selected = !this.selected; selectFolder()"
       v-bind:id="this.folderPath + 2"
     >
       <div class="container" style="padding: 0px 12px 0px 12px;pointer-events: none;">
@@ -36,7 +36,7 @@
             <div style="position:absolute; left:0; right:0; top:0; bottom:0;z-index: 10" />
             <div style="display:flex;align-items:center;width:100%;height:100%;">
               <textarea
-                maxlength="16"
+                maxlength="36"
                 rows="2"
                 v-on:keyup.enter="renameFolder()"
                 class="folderName"

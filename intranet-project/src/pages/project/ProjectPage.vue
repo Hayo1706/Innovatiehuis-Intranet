@@ -2,7 +2,7 @@
   <div>
     <div id="ProjectPage" class="container-fluid">
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-9">
           <div class="component-container">
             <div class="component-header" style="overflow: visible;">
               <text
@@ -33,8 +33,12 @@
                 :selectedFolders="this.selectedFolders"
                 :selectedFiles="this.selectedFiles"
                 :droppedFiles="this.droppedFiles"
+                :currentFolders="this.currentFolders"
+                :projectID="this.projectID"
+
                 @newFolderAdded="currentFoldersChanged()"
                 @newFilesUploaded="currentFilesChanged()"
+                @elementsMoved="currentFilesChanged(); currentFoldersChanged();"
                 @showOlderFiles="togglePreviousFilesMenu()"
                 @deleteSelectedElements="deleteSelectedElements()"
                 @moveSelectedElements="moveSelectedElements()"
@@ -43,43 +47,48 @@
                 @searchBarChanged="setSearchTerm"
               ></ProjectPageHeader>
             </div>
-            <FoldersView
-              :previousPath="this.previousPath"
-              :currentPath="this.currentPath"
-              :projectID="this.projectID"
-              :currentFolders="this.currentFolders"
-              :currentSharedFolders="this.currentSharedFolders"
-              :searchTerm="this.searchTerm"
-              @currentFoldersChanged="currentFoldersChanged"
-              @currentFilesChanged="currentFilesChanged"
-              @currentPathChanged="currentPathChanged"
-              @folderSelected="selectFolder"
-              @folderDeselected="deselectFolder"
-              @fileMoved="currentFilesChanged"
-            />
-            <FilesView
-              ref="child"
-              :currentPath="this.currentPath"
-              :projectID="this.projectID"
-              :currentFolders="this.currentFolders"
-              :currentFiles="this.currentFiles"
-              :olderFiles="this.olderFiles"
-              :previousFilesMenu="this.previousFilesMenu"
-              :sharedChilds="this.sharedChilds"
-              :searchTerm="this.searchTerm"
-              @sharedFilesChanged="sharedFilesChanged"
-              @currentFilesChanged="currentFilesChanged"
-              @fileSelected="selectFile"
-              @fileDeselected="deselectFile"
-              @filesDropUpload="setFilesDropUpload"
-            />
+            <div class="scrollable">
+              <FoldersView
+                  :previousPath="this.previousPath"
+                  :currentPath="this.currentPath"
+                  :projectID="this.projectID"
+                  :currentFolders="this.currentFolders"
+                  :currentSharedFolders="this.currentSharedFolders"
+                  :searchTerm="this.searchTerm"
+
+                  @currentFoldersChanged="currentFoldersChanged"
+                  @currentFilesChanged="currentFilesChanged"
+                  @currentPathChanged="currentPathChanged"
+                  @folderSelected="selectFolder"
+                  @folderDeselected="deselectFolder"
+                  @fileMoved="currentFilesChanged"
+               />
+               <FilesView 
+                ref="child" 
+                :currentPath="this.currentPath"
+                :projectID="this.projectID"
+                :currentFolders="this.currentFolders"
+                :currentFiles="this.currentFiles"
+                :olderFiles="this.olderFiles"
+                :previousFilesMenu="this.previousFilesMenu"
+                :sharedChilds="this.sharedChilds"
+                :searchTerm="this.searchTerm"
+
+                @sharedFilesChanged="sharedFilesChanged"
+                @currentFilesChanged="currentFilesChanged"
+                @fileSelected="selectFile"
+                @fileDeselected="deselectFile"
+                @filesDropUpload="setFilesDropUpload"
+              />
+            </div>
           </div>
         </div>
-        <div class="col-sm-4">
-          <AnnouncementWindow
-            @reload="reloadAnnouncementWindow()"
-            :key="this.announcementWindowKey"
-          >Mededelingen</AnnouncementWindow>
+        <div class="col-sm-3">
+            <AnnouncementWindow
+              @reload="reloadAnnouncementWindow()"
+              :key="this.announcementWindowKey"
+              >Mededelingen</AnnouncementWindow
+            >
         </div>
       </div>
     </div>
@@ -361,7 +370,9 @@ export default {
       this.selectedFolders = [];
     },
     currentFilesChanged() {
+      alert();
       this.setChildProjects();
+      this.togglePreviousFilesMenu();
       this.setParentProjects();
       this.setCurrentFiles();
       this.selectedFiles = [];
@@ -579,4 +590,9 @@ export default {
 .directory:hover {
   color:var(--gold1);
 }
+.scrollable {
+  overflow: scroll;
+  height: 70vh;
+}
+
 </style>

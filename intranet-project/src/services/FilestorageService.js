@@ -25,8 +25,8 @@ var FilestorageService = function () {
         const response = await axiosClient.get(`/projects/${projectid}/files?path=` + path, { timeout: 2000 });
         return response;
     }
-    async function uploadFile(projectid, path, file, may_overwrite=false) {
-        const response = await axiosClient.post(`/projects/${projectid}/files?path=` + path + `&may_overwrite=` + may_overwrite, file , { timeout: 2000 })
+    async function uploadFile(projectid, path, file, may_overwrite=false, config) {
+        const response = await axiosClient.post(`/projects/${projectid}/files?path=` + path + `&may_overwrite=` + may_overwrite, file , config)
         return response;
     }
     async function moveFile(projectid, from, to){
@@ -53,7 +53,6 @@ var FilestorageService = function () {
         const response = await axiosClient.get(`/projects/${projectid}/files/deleted`, {timeout: 2000 })
         return response
     }
-
 
     return {
         getFilesOfPath,

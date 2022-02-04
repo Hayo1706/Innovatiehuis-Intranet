@@ -8,10 +8,11 @@
     @long-press="setViewMenu(this.getCoordinates())"
     @mouseleave="moveMenu = false; unsetMenus();
     moveMenu = false;
-    shareMenu = false"
+    shareMenu = false;"
   >
     <div class="row"
-      @click.shift="this.selected = !this.selected; selectFile()">
+      @click.ctrl="this.selected = !this.selected; selectFile()"
+      >
       <div class="col s10">
         <img
             draggable="false"
@@ -19,7 +20,8 @@
             :src="this.getTypeImage()"
             v-bind:id="this.fileType"/>
         <input
-          v-on:keyup.enter="renameFile()"
+          style="width: 100%"
+          v-on:keydown.enter="renameFile()"
           class="fileName"
           v-model="fileName"
           v-bind:id="this.name"
@@ -186,6 +188,7 @@ export default {
     recoverBackupFile() {
       FilestorageService.recoverFile(this.projectID, this.path)
       .then((response) => {
+        this.$emit("fileMoved");
         AlertService.handleSuccess(response)
       })
       .catch((err) => {
@@ -290,7 +293,7 @@ export default {
   margin: 0 auto;
   display: block;
   overflow: hidden;
-  width: min(80%, 150px);
+  width: min(50%, 150px);
 }
 .projectFile:hover {
   background: white;
