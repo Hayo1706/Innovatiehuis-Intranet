@@ -216,12 +216,10 @@ export default {
 
       ProjectService.updateSharedFilesOfProject(this.projectID, childID, project)
       .then((response) => {
-        console.log(response)
         AlertService.handleSuccess(response);
         this.$emit("currentFilesChanged")
       })
       .catch((err) => {
-        console.log(err)
         AlertService.handleError(err);
       })
     },
@@ -273,36 +271,31 @@ export default {
         var name = files[i].name
         
         let iv = new Uint8Array([99, 99, 99, 99]);
-        console.log(iv)
+        
         let algorithm = {
             name: "AES-GCM",
             iv: iv
         }
 
         let newKey = await crypto.subtle.importKey(
-            "jwk", //can be "jwk" or "raw"
-            {   //this is an example jwk key, "raw" would be an ArrayBuffer
+            "jwk", 
+            {   
                 kty: "oct",
                 k: "Y0zt37HgOx-BY7SQjYVmrqhPkO44Ii2Jcb9yydUDPfE",
                 alg: "A256GCM",
                 ext: true,
             },
-            {   //this is the algorithm options
+            {   
                 name: "AES-GCM",
             },
-            true, //whether the key is extractable (i.e. can be used in exportKey)
-            ["encrypt", "decrypt"] //can "encrypt", "decrypt", "wrapKey", or "unwrapKey"
+            true, 
+            ["encrypt", "decrypt"] 
         )
 
         let data = await blob.arrayBuffer();
         const result = await crypto.subtle.encrypt(algorithm, newKey, data)
         var fileBlob = new Blob([result])
         var encryptedFile = new File([fileBlob], name)
-
-        console.log(encryptedFile)
-
-
-
 
         amountOfFiles--; 
         if(amountOfFiles == 0){
@@ -317,7 +310,6 @@ export default {
         var config = { 
           onUploadProgress: function(progressEvent) {
              var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            console.log(percentCompleted, progressEvent)
             this.uploadingFiles[i]['percentage'] = percentCompleted
           }.bind(this)
         }
@@ -341,7 +333,6 @@ export default {
               return;
             }
             else if(err.response.status === 409){
-              console.log(err.response.data.message)
               this.confirmAction(err.response.data.message).then((confirmation) => {
               FilestorageService.uploadFile(
                 this.$route.params.id,

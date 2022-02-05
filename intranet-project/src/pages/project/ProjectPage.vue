@@ -370,7 +370,6 @@ export default {
       this.selectedFolders = [];
     },
     currentFilesChanged() {
-      alert();
       this.setChildProjects();
       this.togglePreviousFilesMenu();
       this.setParentProjects();
