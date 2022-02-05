@@ -11,7 +11,8 @@ from .. import config
 app = create_app()
 app.app.backup = False
 
-DB_HOST = 'localhost'
+# in docker change to 172.28.1.3
+DB_HOST = '172.28.1.3'
 DB_USER = 'root@innovatieplatform'
 DB_USER_PASSWORD = 'admin'
 DB_NAME = 'innovatieplatform'
@@ -31,7 +32,7 @@ def backup():
     # TODO when in docker, store correctly
     if not path.exists(config.BACKUP_ROOT_PATH+"sql/"):
         os.mkdir(config.BACKUP_ROOT_PATH+"sql/")
-    dumpcmd = "mysqldump -P 3306 -h 172.28.1.3 -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + DB_NAME + " > " + config.BACKUP_ROOT_PATH+"sql/" +DB_NAME + ".sql"
+    dumpcmd = "mysqldump -P 3306 -h "+DB_HOST+" -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + DB_NAME + " > " + config.BACKUP_ROOT_PATH+"sql/" +DB_NAME + ".sql"
     os.system(dumpcmd)
 
     app.app.backup = False
