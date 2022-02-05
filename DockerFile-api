@@ -7,7 +7,7 @@ COPY /backend/ /backend/
 WORKDIR /backend/src
 
 
-RUN apk add --no-cache musl-dev gcc libffi-dev g++ jpeg-dev zlib-dev mariadb-dev
+RUN apk add --no-cache musl-dev gcc libffi-dev g++ jpeg-dev zlib-dev mariadb-dev mysql-client
 
 
 RUN pip install --upgrade pip

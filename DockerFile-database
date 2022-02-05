@@ -1,3 +1,5 @@
 FROM mariadb:latest
 
+EXPOSE 3306
+
 ADD ./backend/database/innovatiehuis1.sql /docker-entrypoint-initdb.d/ddl.sql
