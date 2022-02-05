@@ -1,5 +1,8 @@
+import contextlib
 import os
 import shutil
+import subprocess
+import sys
 import time
 
 from os import path
@@ -12,7 +15,7 @@ app = create_app()
 app.app.backup = False
 
 # in docker change to 172.28.1.3
-DB_HOST = '172.28.1.3'
+DB_HOST = '127.0.0.1'
 DB_USER = 'root@innovatieplatform'
 DB_USER_PASSWORD = 'admin'
 DB_NAME = 'innovatieplatform'
@@ -29,11 +32,13 @@ def backup():
     shutil.copytree(config.FILE_STORAGE_ROOT, config.BACKUP_ROOT_PATH + "data")
 
     # generate sql
-    # TODO when in docker, store correctly
-    if not path.exists(config.BACKUP_ROOT_PATH+"sql/"):
-        os.mkdir(config.BACKUP_ROOT_PATH+"sql/")
-    dumpcmd = "mysqldump -P 3306 -h "+DB_HOST+" -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + DB_NAME + " > " + config.BACKUP_ROOT_PATH+"sql/" +DB_NAME + ".sql"
-    os.system(dumpcmd)
+
+    if not path.exists(config.BACKUP_ROOT_PATH + "sql/"):
+        os.mkdir(config.BACKUP_ROOT_PATH + "sql/")
+
+    dumpcmd = "services\mysqldump\mysqldump.exe --column-statistics=0 -P 3306 -h " + DB_HOST + " -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + DB_NAME + " > " + config.BACKUP_ROOT_PATH + "sql/" + DB_NAME + ".sql"
+
+    syscmd(dumpcmd, "utf8")
 
     app.app.backup = False
     print("Backup complete. "
@@ -50,3 +55,22 @@ def run_backup():
 
 
 Thread(target=run_backup).start()
+
+
+def syscmd(cmd, encoding=''):
+    """
+    source: stackoverflow
+    Runs a command on the system, waits for the command to finish, and then
+    returns the text output of the command. If the command produces no text
+    output, the command's return code will be returned instead.
+    """
+    p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                         close_fds=True)
+    p.wait()
+    output = p.stdout.read()
+    if len(output) > 1:
+        if encoding:
+            return output.decode(encoding)
+        else:
+            return output
+    return p.returncode
