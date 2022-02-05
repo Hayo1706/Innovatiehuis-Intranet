@@ -8,7 +8,7 @@ TWO_FACTOR = False
 FILE_STORAGE_ROOT = '../filestorage/root/'
 
 # Unit: every ... minutes
-BACKUP_FREQUENCY = 1
+BACKUP_FREQUENCY = 30
 BACKUP_ROOT_PATH = '../filestorage/backup/'
 
 # When deployed in docker change ip to 172.28.1.3
