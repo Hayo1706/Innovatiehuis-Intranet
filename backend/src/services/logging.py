@@ -23,8 +23,11 @@ def log_response_and_request(request, response):
     # if response is no file
     if not response.direct_passthrough:
         response_str = response.data.decode("utf-8")
-        response_obj = json.loads(response_str)
-
+        try:
+            response_obj = json.loads(response_str)
+        except:
+            response_obj = {}
+        
     response_message = ""
     if type(response_obj) == dict and "message" in response_obj.keys():
         response_message = response_obj["message"]
