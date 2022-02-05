@@ -51,11 +51,11 @@
       <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="setRecoverMenu()">Vorige versie</a>
       <div class="dropdown-menu dropdown-menu-sm" v-if="this.type == 'normal'" v-bind:id="this.path+'recoverMenu'">
         <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="recoverBackupFile">Herstellen</a>
-        <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="downloadFile('backup')">Downloaden</a>
+        <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="downloadFile('archive')">Downloaden</a>
       </div>
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</a>
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDownloadFile()" @click="downloadFile('active')">Download</a>
-      <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canDownloadFile()" @click="downloadFile('backup')">Download</a>
+      <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canDownloadFile()" @click="downloadFile('archive')">Download</a>
       <a class="dropdown-item" v-show="this.type == 'backup' && canMoveFile()" @click="recoverBackupFile">Herstellen</a>
     </div>
   </div>
@@ -119,16 +119,56 @@ export default {
     addSharingFile(childID){
       this.$emit("addSharingFile", this.path, this.projectID, childID)
     },
-    downloadFile(version){
+    async decryptFile(file){
+      var encryptedBlob = new Blob([file])
+      var encryptedFile = new File([encryptedBlob], name)
+      console.log(encryptedFile)
+
+      let iv = new Uint8Array([99, 99, 99, 99]);
+
+      let algorithm = {
+          name: "AES-GCM",
+          iv: iv
+      }
+
+      let key = await crypto.subtle.importKey(
+          "jwk", 
+          {   
+              kty: "oct",
+              k: "Y0zt37HgOx-BY7SQjYVmrqhPkO44Ii2Jcb9yydUDPfE",
+              alg: "A256GCM",
+              ext: true,
+          },
+          {   
+              name: "AES-GCM",
+          },
+          true, 
+          ["encrypt", "decrypt"]
+      )
+
+      let data = await encryptedBlob.arrayBuffer();
+      const result = await crypto.subtle.decrypt(algorithm, key, data)
+      var decryptedBlob = new Blob([result])
+      //var decryptedFile = new File([decryptedBlob], name)
+
+      return decryptedBlob
+    },
+    async downloadFile(version){
       FilestorageService.downloadFile(this.projectID, this.path, version)
       .then((response) => { 
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url;
-        link.setAttribute('download', this.name);
-        document.body.appendChild(link);
-        link.click();
-        link.href = window.URL.createObjectURL(new Blob());
+        this.decryptFile(response.data)
+        .then((decryptedFile) => {
+          const url = window.URL.createObjectURL(decryptedFile)
+          const link = document.createElement('a')
+          link.href = url;
+          link.setAttribute('download', this.name);
+          document.body.appendChild(link);
+          link.click();
+          link.href = window.URL.createObjectURL(new Blob());
+        })
+        .catch(() => {
+          AlertService.alert("Er is iets fout gegaan bij het downloaden van dit bestand, probeer het opnieuw of contacteer een medewerker.", "error")
+        })
       })
       .catch((err) => {
         AlertService.handleError(err);

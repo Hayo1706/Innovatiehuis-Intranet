@@ -264,10 +264,45 @@ export default {
       });
       return confirmation
     },
-    uploadFiles(files) {
+    async uploadFiles(files) {
       this.uploadMenu = false;
       var amountOfFiles = files.length;
       for (let i = 0; i < files.length; i++) {
+
+        var blob = files[i]
+        var name = files[i].name
+        
+        let iv = new Uint8Array([99, 99, 99, 99]);
+        console.log(iv)
+        let algorithm = {
+            name: "AES-GCM",
+            iv: iv
+        }
+
+        let newKey = await crypto.subtle.importKey(
+            "jwk", //can be "jwk" or "raw"
+            {   //this is an example jwk key, "raw" would be an ArrayBuffer
+                kty: "oct",
+                k: "Y0zt37HgOx-BY7SQjYVmrqhPkO44Ii2Jcb9yydUDPfE",
+                alg: "A256GCM",
+                ext: true,
+            },
+            {   //this is the algorithm options
+                name: "AES-GCM",
+            },
+            true, //whether the key is extractable (i.e. can be used in exportKey)
+            ["encrypt", "decrypt"] //can "encrypt", "decrypt", "wrapKey", or "unwrapKey"
+        )
+
+        let data = await blob.arrayBuffer();
+        const result = await crypto.subtle.encrypt(algorithm, newKey, data)
+        var fileBlob = new Blob([result])
+        var encryptedFile = new File([fileBlob], name)
+
+        console.log(encryptedFile)
+
+
+
 
         amountOfFiles--; 
         if(amountOfFiles == 0){
@@ -275,9 +310,9 @@ export default {
           this.uploadingFiles = []
         }
 
-        this.uploadingFiles.push({"name": files[i].name, "percentage": 0})
+        this.uploadingFiles.push({"name": name, "percentage": 0})
         var formData = new FormData();
-        formData.append(files[i].name, files[i]);
+        formData.append(name, encryptedFile);
         
         var config = { 
           onUploadProgress: function(progressEvent) {
