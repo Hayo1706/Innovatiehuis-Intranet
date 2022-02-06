@@ -34,6 +34,7 @@
                 :selectedFiles="this.selectedFiles"
                 :droppedFiles="this.droppedFiles"
                 :currentFolders="this.currentFolders"
+                :currentFiles="this.currentFiles"
                 :projectID="this.projectID"
 
                 @newFolderAdded="currentFoldersChanged()"

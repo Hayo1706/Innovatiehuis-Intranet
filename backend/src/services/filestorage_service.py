@@ -115,6 +115,7 @@ def move_folder(source_path, target_path):
                     subdir = root.replace(source_path, "")
                     for dir_to_move in dirs:
                         path = pathify(target_path, folder_name, subdir, dir_to_move)
+                        print(path)
                         if dir_exists(path):
                             path = get_unique_folder_path(path, 0)
                         os.makedirs(path)
@@ -185,7 +186,6 @@ def move_file_to_archive(source_path, remove_references=False):
 
 
 def move_file(source_path, target_path, update_references=False):
-    print(target_path)
     if not dir_exists(target_path):
         os.makedirs(target_path)
 
@@ -195,8 +195,6 @@ def move_file(source_path, target_path, update_references=False):
         target_sub_path = target_path.replace(config.FILE_STORAGE_ROOT, "")
         index = sub_path.find("/")
         update_shared_files_entries(sub_path[:index], sub_path[index:], pathify(target_sub_path[index:], file_name))
-
-    print(target_path)
 
     shutil.move(source_path, target_path)
 
@@ -231,7 +229,7 @@ def upload_file(file, full_path, may_overwrite):
                 f"{str(config.MAX_FILE_SIZE/1000/1000)}MB", 406)
     if file_exists(file_path):
         # REPLACE FILE?
-        print(may_overwrite)
+
         if may_overwrite == 'true':
             if not file_replace_valid(file, file_path):
                 return response(f"Er ging iets fout bij het overschrijven van {file_name}", 424)
