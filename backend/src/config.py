@@ -4,6 +4,13 @@ DEBUG_MODE = False
 # IF TRUE, TWO FACTOR AUTHENTICATION IS REQUIRED AT LOGIN
 TWO_FACTOR = False
 
+ON_DOCKER = False
+
+DOMAIN_NAME = 'http://localhost:8080'
+if ON_DOCKER:
+    DOMAIN_NAME = 'http://127.0.0.1/'
+
+
 # ROOT DIRECTORY FOR ALL DATA FILES - MUST ALWAYS END IN A '/'!
 FILE_STORAGE_ROOT = '../filestorage/root/'
 
@@ -12,12 +19,15 @@ BACKUP_FREQUENCY = 30
 BACKUP_ROOT_PATH = '../filestorage/backup/'
 
 # When deployed in docker change ip to 172.28.1.3
-DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
+if ON_DOCKER:
+    DATABASE_URL = 'mariadb+mariadbconnector://root:admin@172.28.1.3:3306/innovatieplatform'
+else:
+    DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
 
 JWT_ISSUER = 'innovatieplatform'
 JWT_SECRET = 'kiZn04wb0XEPfpnkTbgmFtHtNElRThM2nWNdD51KaosfRT8HzVLqPB3UMnKPwb1'  # TODO Change This? Moet Secret om de zo veel tijd gerefreshed worden?
-JWT_LIFETIME_SECONDS = 2400     # USERS WILL BE REQUIRED TO RE-AUTHENTICATE (LOGIN) AFTER THIS NUMBER OF SECONDS
-JWT_REFRESH_TIME_SECONDS = JWT_LIFETIME_SECONDS/4
+JWT_LIFETIME_SECONDS = 2400  # USERS WILL BE REQUIRED TO RE-AUTHENTICATE (LOGIN) AFTER THIS NUMBER OF SECONDS
+JWT_REFRESH_TIME_SECONDS = JWT_LIFETIME_SECONDS / 4
 JWT_ALGORITHM = 'HS256'
 
 # COOLDOWN WILL START AFTER THIS NUMBER OF FAILED LOGIN ATTEMPTS
@@ -42,9 +52,10 @@ MAIL_PASSWORD = '2SvNyLGPqeEkJ57'
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
 
-MAX_NAME_LENGTH = 48            # AMOUNT OF SAFE CHARS ALLOWED IN FOLDER AND FILE NAMES
-ALLOWED_FILE_TYPES = ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'csv', 'xlsx', 'pptx', 'txt', 'json']  #HAS TO BE CONNECTED TO FRONTEND
-MAX_FILE_SIZE = 100000000000       # AMOUNT OF BYTES ALLOWED PER FILE
+MAX_NAME_LENGTH = 48  # AMOUNT OF SAFE CHARS ALLOWED IN FOLDER AND FILE NAMES
+ALLOWED_FILE_TYPES = ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'csv', 'xlsx', 'pptx', 'txt',
+                      'json']  # HAS TO BE CONNECTED TO FRONTEND
+MAX_FILE_SIZE = 100000000000  # AMOUNT OF BYTES ALLOWED PER FILE
 
 PASSWORD_CHANGE_SECRET_KEY = "{sPnF[{/Zn-U,&{3KsW\dk*+L%}M'/NW"
-DOMAIN_NAME = 'http://localhost:8080'
+
