@@ -14,12 +14,15 @@ from .helper_functions import response
 
 from .setup import create_app
 from .. import config
+from ..config import ON_DOCKER
 
 app = create_app()
 app.app.backup = False
 
 # in docker change to 172.28.1.3
 DB_HOST = '127.0.0.1'
+if ON_DOCKER:
+    DB_HOST = '172.28.1.3'
 DB_USER = 'root@innovatieplatform'
 DB_USER_PASSWORD = 'admin'
 DB_NAME = 'innovatieplatform'
