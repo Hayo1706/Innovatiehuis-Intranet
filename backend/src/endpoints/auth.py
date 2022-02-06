@@ -24,7 +24,7 @@ def login():
     except KeyError:
         return response("Een verzoek aan de server miste belangrijke informatie; neem contact op met de beheerder!",
                         400)
-
+    
     user = query("SELECT * FROM users WHERE email =%(email)s",
                  {'email': email})
     if len(user) == 0:

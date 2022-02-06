@@ -27,6 +27,8 @@ DB_NAME = 'innovatieplatform'
 
 @app.app.errorhandler(Exception)
 def handle_error(e):
+    print("An Exception occurred!")
+    print(traceback.format_exc())
     return response(traceback.format_exc(), 500)
 
 
