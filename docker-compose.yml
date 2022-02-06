@@ -40,6 +40,15 @@ services:
     networks:
       innovatie_net:
         ipv4_address: 172.28.1.3
+  nginx:
+    build:
+      context: .
+      dockerfile: DockerFile-proxy
+    ports:
+      - "127.0.0.1:80:80"
+    networks:
+      innovatie_net:
+        ipv4_address: 172.28.1.4
 networks:
   innovatie_net:
     ipam:

@@ -4,6 +4,7 @@ import router from '../main';
 import LoginService from "@/services/LoginService";
 
 const axiosClient = axios.create({
+    //when in docker change to 'http://127.0.0.1:80/api' 
     baseURL: 'http://localhost:8080/api' //TODO Change when in production
 });
 
@@ -26,7 +27,7 @@ axiosClient.interceptors.response.use((config) => {
             return Promise.reject(error);
         }
         // catch JWT auth expiring
-        if (error.response.status == 401 && localStorage.getItem("loggedIn")  && !router.currentRoute.value.fullPath.includes('/login')) {
+        if (error.response.status == 401 && localStorage.getItem("loggedIn") && !router.currentRoute.value.fullPath.includes('/login')) {
             LoginService.logout();
             window.location.reload();
         }
