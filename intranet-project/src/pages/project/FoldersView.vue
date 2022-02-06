@@ -3,8 +3,8 @@
 
     <div>
       <div class="row">
-        <h5 class="directory-view-title" v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h5>
-        <div v-for="folder in searchedSharedFolders" :key="folder.name" class="col-sm-3">
+        <h5 v-show="canSeeSharedFolders()" class="directory-view-title" v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h5>
+        <div v-show="canSeeSharedFolders()" v-for="folder in searchedSharedFolders" :key="folder.name" class="col-sm-3">
           <ProjectFolder
             :folderName="folder.name"
             :folderType="folder.type"
@@ -54,6 +54,7 @@
 import FilestorageService from "@/services/FilestorageService.js";
 import ProjectFolder from "./ProjectFolder.vue";
 import AlertService from "../../services/AlertService";
+import PermissionService from "@/services/PermissionService.js";
 
 export default {
   setup(){
@@ -162,7 +163,10 @@ export default {
     },
     currentPathChanged(newPath, projectID){
       this.$emit("currentPathChanged", newPath, projectID);
-    }
+    },
+    canSeeSharedFolders() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
   },
 };
 </script>

@@ -15,6 +15,7 @@ def file_exists(requested_path):
 
 
 def move_valid(source_path, target_path, dir_path):
+    print(source_path, target_path, dir_path)
     return dir_exists(source_path) and dir_exists(target_path) and not dir_exists(target_path + dir_path)
 
 
@@ -84,26 +85,52 @@ def sanitize_name(name, object_type):
 
 def move_folder(source_path, target_path):
     folder_name = source_path.rsplit("/", 1)[1]
-    if move_valid(source_path, target_path, folder_name):
-        try:
-            for root, dirs, files in os.walk(source_path, topdown=True):
-                subdir = root.replace(source_path, "")
-                for dir_to_move in dirs:
-                    path = pathify(target_path, folder_name, subdir, dir_to_move)
-                    if dir_exists(path):
-                        path = get_unique_folder_path(path, 0)
-                    os.makedirs(path)
-                for file_to_move in files:
-                    file_name = get_unique_file_name(file_to_move, pathify(target_path, folder_name, subdir), 0)
-                    move_file(pathify(root, file_name), pathify(target_path, folder_name, subdir), update_references=True)
-            shutil.rmtree(source_path)
-            return response("Map gewijzigd", 200)
-        except:
+    if dir_exists(target_path):
+        if move_valid(source_path, target_path, folder_name):
+            try:
+                for root, dirs, files in os.walk(source_path, topdown=True):
+                    subdir = root.replace(source_path, "")
+                    for dir_to_move in dirs:
+                        path = pathify(target_path, folder_name, subdir, dir_to_move)
+                        if dir_exists(path):
+                            path = get_unique_folder_path(path, 0)
+                        os.makedirs(path)
+                    for file_to_move in files:
+                        file_name = get_unique_file_name(file_to_move, pathify(target_path, folder_name, subdir), 0)
+                        move_file(pathify(root, file_name), pathify(target_path, folder_name, subdir), update_references=True)
+                shutil.rmtree(source_path)
+                return response("Map gewijzigd", 200)
+            except:
+                return response(
+                    "Er ging iets mis tijdens de operatie; controleer of er bestanden zijn achtergebleven in de oorspronkelijke map!",
+                    500)
+        else:
             return response(
-                "Er ging iets mis tijdens de operatie; controleer of er bestanden zijn achtergebleven in de oorspronkelijke map!",
-                500)
-    return response(
-        "De map of locatie bestaat niet meer, of er is al een map met dezelfde naam op de gekozen locatie.", 400)
+                "De map of locatie bestaat niet meer, of er is al een map met dezelfde naam op de gekozen locatie.", 400)
+    else:
+        os.makedirs(pathify(target_path))
+        if move_valid(source_path, target_path, folder_name):
+            try:
+                for root, dirs, files in os.walk(source_path, topdown=True):
+                    subdir = root.replace(source_path, "")
+                    for dir_to_move in dirs:
+                        path = pathify(target_path, folder_name, subdir, dir_to_move)
+                        if dir_exists(path):
+                            path = get_unique_folder_path(path, 0)
+                        os.makedirs(path)
+                    for file_to_move in files:
+                        file_name = get_unique_file_name(file_to_move, pathify(target_path, folder_name, subdir), 0)
+                        move_file(pathify(root, file_name), pathify(target_path, folder_name, subdir), update_references=True)
+                shutil.rmtree(source_path)
+                return response("Map gewijzigd", 200)
+            except:
+                return response(
+                    "Er ging iets mis tijdens de operatie; controleer of er bestanden zijn achtergebleven in de oorspronkelijke map!",
+                    500)
+        else:
+            return response(
+                "De map of locatie bestaat niet meer, of er is al een map met dezelfde naam op de gekozen locatie.", 400)
+
 
 
 def switch_files(path1, path2):

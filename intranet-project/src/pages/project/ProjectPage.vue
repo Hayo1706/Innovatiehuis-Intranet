@@ -580,9 +580,6 @@ export default {
 </script>
 
 <style>
-#ProjectPage {
-  
-}
 .directory {
   cursor: pointer;
 }

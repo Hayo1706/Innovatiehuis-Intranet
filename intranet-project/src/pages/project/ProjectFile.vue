@@ -32,31 +32,31 @@
     </div>
     
     <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.projectID+this.path">
-      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canRenameFile()" @click="enableInput()">Wijzig Naam</a>
-      <a class="dropdown-item" v-if="this.type == 'owned'" @click="stopSharingFile()">Stoppen met delen</a>
-      <a class="dropdown-item" v-show="canMoveFile() && this.type == 'normal'" v-if="this.currentFolders.length > 1" @click="setMoveMenu(this.getCoordinates())">Verplaatsen naar:</a>
-      <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+1">
+      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="enableInput()">Wijzig Naam</a>
+      <a class="dropdown-item" v-if="this.type == 'owned'" v-show="canUpdateFile()" @click="stopSharingFile()">Stoppen met delen</a>
+      <a class="dropdown-item" v-if="this.currentFolders.length > 1 && this.type == 'normal'" v-show="canUpdateFile()" @click="setMoveMenu(this.getCoordinates())">Verplaatsen naar:</a>
+      <div v-show="canUpdateFile()" class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+1">
         <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
           <a class="dropdown-item" v-if="folder.type == 'normal'">{{ folder.name }}</a>
         </span>
       </div>
 
-      <a class="dropdown-item" v-if="this.currentFolders.length > 1 && this.type == 'normal'" @click="setShareMenu()">Delen met:</a>
+      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile() && this.sharedChilds.length > 0" @click="setShareMenu()">  Delen met:</a>
       <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+'shareMenu'">
-        <span v-for="child of this.sharedChilds" :key="child"  @click="addSharingFile(child.projectid); unsetMenus()">
-          <a class="dropdown-item">{{ child.project_name }}</a>
+        <span v-for="child of this.sharedChilds" :key="child">
+          <a class="dropdown-item" @click="addSharingFile(child.projectid); unsetMenus()">{{ child.project_name }}</a>
         </span>
       </div>
 
-      <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="setRecoverMenu()">Vorige versie</a>
+      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="setRecoverMenu()">         Vorige versie</a>
       <div class="dropdown-menu dropdown-menu-sm" v-if="this.type == 'normal'" v-bind:id="this.path+'recoverMenu'">
-        <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="recoverBackupFile">Herstellen</a>
-        <a class="dropdown-item" v-show="this.type == 'normal' && canMoveFile()" @click="downloadFile('archive')">Downloaden</a>
+        <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="recoverBackupFile">      Herstellen</a>
+        <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="downloadFile('archive')">Downloaden</a>
       </div>
-      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDeleteFile()" @click="deleteFile()">Verwijder</a>
-      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canDownloadFile()" @click="downloadFile('active')">Download</a>
-      <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canDownloadFile()" @click="downloadFile('archive')">Download</a>
-      <a class="dropdown-item" v-show="this.type == 'backup' && canMoveFile()" @click="recoverBackupFile">Herstellen</a>
+      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="deleteFile()">             Verwijder</a>
+      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canSeeFile()" @click="downloadFile('active')">      Download</a>
+      <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canUpdateFile()" @click="downloadFile('archive')">  Download</a>
+      <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canUpdateFile()" @click="recoverBackupFile">        Herstellen</a>
     </div>
   </div>
 </template>
@@ -290,21 +290,12 @@ export default {
       var posY = e.clientY;
       return {'top':posX, 'left':posY}
     },
-    canDeleteFile() {
+    canUpdateFile() {
       return PermissionService.userHasPermission("may_update_file_in_own_project");
     },
-    canMoveFile() {
-      return PermissionService.userHasPermission("may_update_file_in_own_project");
-    },
-    canRenameFile() {
-      return PermissionService.userHasPermission("may_update_file_in_own_project");
-    },
-    canDownloadFile() {
+    canSeeFile() {
       return PermissionService.userHasPermission("may_read_own_project");
     },
-    canSeeMenu(){
-        return PermissionService.userHasPermission("may_update_file_in_own_project");
-    }
   },
 };
 </script>

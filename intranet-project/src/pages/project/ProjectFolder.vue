@@ -38,7 +38,7 @@
               <textarea
                 maxlength="36"
                 rows="2"
-                v-on:keyup.enter="renameFolder()"
+                v-on:keydown.enter="renameFolder()"
                 class="folderName"
                 v-model="newName"
                 v-bind:id="this.folderName"
@@ -51,14 +51,14 @@
       </div>
     </div>
     <div
-      v-show="canSeeMenu() && this.folderType == 'normal'"
+      v-if="canUpdateFolder() && this.folderType == 'normal'"
       class="dropdown-menu dropdown-menu-sm"
       v-bind:id="this.projectID + this.folderPath"
     >
-      <a class="dropdown-item" v-show="canRenameFolder()" @click="enableInput()">Wijzig Naam</a>
+      <a class="dropdown-item" v-show="canUpdateFolder()" @click="enableInput()">Wijzig Naam</a>
       <a
         class="dropdown-item"
-        v-show="canMoveFolder()"
+        v-show="canUpdateFolder()"
         v-if="this.currentFolders.length > 1"
         @click="moveMenu = true; setMoveMenu(this.getCoordinates())"
       >Verplaatsen naar:</a>
@@ -70,7 +70,7 @@
           >{{ folder.name }}</a>
         </span>
       </div>
-      <a class="dropdown-item" v-show="canDeleteFolder()" @click="deleteFolder()">Verwijder</a>
+      <a class="dropdown-item" v-show="canUpdateFolder()" @click="deleteFolder()">Verwijder</a>
     </div>
   </div>
 </template>
@@ -234,16 +234,7 @@ export default {
       }
       this.$emit("currentPathChanged", this.folderPath, this.projectID);
     },
-    canDeleteFolder() {
-      return PermissionService.userHasPermission("may_update_file_in_own_project");
-    },
-    canMoveFolder() {
-      return PermissionService.userHasPermission("may_update_file_in_own_project");
-    },
-    canRenameFolder() {
-      return PermissionService.userHasPermission("may_update_file_in_own_project");
-    },
-    canSeeMenu() {
+    canUpdateFolder() {
       return PermissionService.userHasPermission("may_update_file_in_own_project");
     },
   },

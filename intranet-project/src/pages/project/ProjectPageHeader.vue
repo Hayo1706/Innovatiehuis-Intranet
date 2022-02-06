@@ -11,7 +11,7 @@
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
       </div>
-      <div class="col-sm-8">
+      <div class="col-sm-8" v-if="canUpdateFile()">
         <nav class="mb-1 navbar navbar-expand-lg btn-blue">
           <input
               @change="selectUpload"
@@ -84,6 +84,7 @@
           </div>
         </nav>
       </div>
+      <div class="col-sm-8" v-else/>
       <div class='row' v-for="file of this.uploadingFiles" :key='file'>
         <div class='col-sm-8'>
           <h5>{{ file.name }}</h5>
@@ -271,7 +272,7 @@ export default {
         var name = files[i].name
         
         let iv = new Uint8Array([99, 99, 99, 99]);
-        
+
         let algorithm = {
             name: "AES-GCM",
             iv: iv
@@ -368,10 +369,11 @@ export default {
           });
       }
     },
-    canUploadFile() {
-      return PermissionService.userHasPermission(
-        "may_update_file_in_own_project"
-      );
+    canUpdateFile() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canSeeFile() {
+      return PermissionService.userHasPermission("may_read_own_project");
     },
   },
 
