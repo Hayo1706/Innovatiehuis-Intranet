@@ -11,7 +11,7 @@
           v-bind:searchTerm="this.searchTerm"
         ></SearchBar>
       </div>
-      <div class="col-sm-8">
+      <div class="col-sm-8" v-if="canUpdateFile()">
         <nav class="mb-1 navbar navbar-expand-lg btn-blue">
           <input
               @change="selectUpload"
@@ -84,8 +84,9 @@
           </div>
         </nav>
       </div>
+      <div class="col-sm-8" v-else/>
       <div class='row' v-for="file of this.uploadingFiles" :key='file'>
-        <div class='col-sm-8'>
+        <div class='col-sm-8' >
           <h5>{{ file.name }}</h5>
         </div>
         <div class='col-sm-4'>
@@ -165,7 +166,7 @@ export default {
     SearchBar,
     ConfirmDialogue
   },
-  props: ["projectID", "currentPath", "currentFolders", "sharedChilds", "selectedFolders", "selectedFiles", "droppedFiles"],
+  props: ["projectID", "currentPath", "currentFolders", "currentFiles", "sharedChilds", "selectedFolders", "selectedFiles", "droppedFiles"],
   data: function () {
     return {
       newFolderName: null,
@@ -175,6 +176,9 @@ export default {
     };
   },
   watch: {
+    currentFolders: function() {
+      this.uploadingFiles = []
+    },
     droppedFiles: function(newFiles) {
       this.uploadFiles(newFiles)
     }
@@ -262,16 +266,9 @@ export default {
       });
       return confirmation
     },
-    async uploadFiles(files) {
-      this.uploadMenu = false;
-      var amountOfFiles = files.length;
-      for (let i = 0; i < files.length; i++) {
-
-        var blob = files[i]
-        var name = files[i].name
-        
+    async encryptFile(file){
+        var name = file.name
         let iv = new Uint8Array([99, 99, 99, 99]);
-        
         let algorithm = {
             name: "AES-GCM",
             iv: iv
@@ -292,20 +289,24 @@ export default {
             ["encrypt", "decrypt"] 
         )
 
-        let data = await blob.arrayBuffer();
+        let data = await file.arrayBuffer();
         const result = await crypto.subtle.encrypt(algorithm, newKey, data)
         var fileBlob = new Blob([result])
         var encryptedFile = new File([fileBlob], name)
+        return encryptedFile
+    },
+    async uploadFiles(files) {
+      //this.uploadMenu = false;
+      for (let i = 0; i < files.length; i++) {
 
-        amountOfFiles--; 
-        if(amountOfFiles == 0){
-          this.uploadMenu = true;
-          this.uploadingFiles = []
-        }
+        var file = files[i]
+        var fileName = file.name
 
-        this.uploadingFiles.push({"name": name, "percentage": 0})
+        var encryptedFile = await this.encryptFile(file)
+
+        this.uploadingFiles.push({"name": fileName, "percentage": 0})
         var formData = new FormData();
-        formData.append(name, encryptedFile);
+        formData.append(fileName, encryptedFile);
         
         var config = { 
           onUploadProgress: function(progressEvent) {
@@ -313,65 +314,41 @@ export default {
             this.uploadingFiles[i]['percentage'] = percentCompleted
           }.bind(this)
         }
-
-        FilestorageService.uploadFile(
-          this.$route.params.id,
-          this.currentPath,
-          formData,
-          null,
-          config
-        )
-          .then((response) => {
-            AlertService.handleSuccess(response);
-            this.$emit("newFilesUploaded");
-          })
-          .catch((err) => {
-            if(err instanceof TypeError){
-              this.uploadMenu = true;
-              this.uploadingFiles = []
-              AlertService.alert("Uw upload is mislukt! De server is weggevallen. Contacteer een van onze medewerkers.", "error")
-              return;
-            }
-            else if(err.response.status === 409){
-              this.confirmAction(err.response.data.message).then((confirmation) => {
-              FilestorageService.uploadFile(
-                this.$route.params.id,
-                this.currentPath,
-                formData,
-                confirmation,
-                config
-              )
-                .then((response) => {
-                  if(amountOfFiles == 0){
-                    this.uploadingFiles = []
-                  }
-                  AlertService.handleSuccess(response);
-                  this.$emit("newFilesUploaded");
-                })
-                .catch((err) => {
-                  if(amountOfFiles == 0){
-                    this.uploadingFiles = []
-                  }
-                  else if(err instanceof TypeError){
-                    this.uploadMenu = true;
-                    this.uploadingFiles = []
-                    AlertService.alert("Uw upload is mislukt! De server is weggevallen. Contacteer een van onze medewerkers.", "error")
-                    return;
-                  }
-                  AlertService.handleError(err);
-                });
-              })
-            }
-            else{
-              AlertService.handleError(err);
-            }
-          });
+        
+        await this.handleUpload(this.$route.params.id, this.currentPath, formData, null, config)
       }
     },
-    canUploadFile() {
-      return PermissionService.userHasPermission(
-        "may_update_file_in_own_project"
-      );
+    async handleUpload(projectID, currentPath, formData, confirmation, config){
+      FilestorageService.uploadFile(
+        projectID,
+        currentPath,
+        formData,
+        confirmation,
+        config
+      )
+      .then((response) => {
+        AlertService.handleSuccess(response);
+        this.$emit("newFilesUploaded");
+      })
+      .catch((err) => {
+        if(err instanceof TypeError){
+          AlertService.alert("Uw upload is mislukt! De server is weggevallen. Contacteer een van onze medewerkers.", "error");
+        }
+        else if(err.response.status === 409){
+          this.confirmAction(err.response.data.message).then((newConfirmation) => {
+            this.handleUpload(projectID, currentPath, formData, newConfirmation, config)
+          });
+        }
+        else{
+          AlertService.handleError(err);
+        }
+      });
+    },
+    canUpdateFile() {
+      return PermissionService.userHasPermission("may_update_file_in_own_project");
+    },
+    canSeeFile() {
+      return PermissionService.userHasPermission("may_read_own_project");
     },
   },
 

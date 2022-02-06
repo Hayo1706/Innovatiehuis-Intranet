@@ -11,7 +11,7 @@
             :type="file.type"
             :currentFolders="this.currentFolders"
             :currentFiles="this.currentFiles"
-            :sharedChilds="this.sharedChilds"
+            :sharedChilds="this.sharedChildProjects"
 
             @fileDeleted="currentFilesChanged"
             @nameChanged="currentFilesChanged"
@@ -50,6 +50,7 @@
 import ProjectFile from "./ProjectFile.vue";
 import AlertService from "../../services/AlertService";
 import ProjectService from "../../services/ProjectService";
+import PermissionService from "@/services/PermissionService.js";
 
 export default {
   setup(){
@@ -70,6 +71,9 @@ export default {
   name: "FilesView",
   props: ['projectID', 'currentPath', 'sharedChilds', 'currentFolders', 'currentFiles', 'olderFiles', 'searchTerm', 'previousFilesMenu'],
   computed: {
+    sharedChildProjects: function(){
+      return this.sharedChilds
+    },
     showOldFiles: function() {
       return this.previousFilesMenu
     },
@@ -135,7 +139,7 @@ export default {
     },
     addSharingFile(path, projectID, childID){
       var sharedFiles = ""
-      for(var child of this.sharedChilds){
+      for(var child of this.sharedChildProjects){
         if(child.projectid == childID){
           sharedFiles = child.shared_files;
         }
@@ -182,6 +186,12 @@ export default {
     test() {
       alert();
     }
+  },
+  canUpdateFile() {
+    return PermissionService.userHasPermission("may_update_file_in_own_project");
+  },
+  canSeeFile() {
+    return PermissionService.userHasPermission("may_read_own_project");
   },
 };
 </script>
