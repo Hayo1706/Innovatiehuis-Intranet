@@ -40,7 +40,7 @@ def create_app():
     app.app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.app.config['JWT_COOKIE_CSRF_PROTECT'] = True
     app.app.config['JWT_CSRF_CHECK_FORM'] = True
-    app.app.config['JWT_COOKIE_SECURE'] = False  # TODO Change in production
+    app.app.config['JWT_COOKIE_SECURE'] = True  # TODO Change in production
 
     app.app.config['SQLALCHEMY_POOL_SIZE'] = 20
     app.app.config['SQLALCHEMY_POOL_RECYCLE'] = 14400  # every 4 hours reset connection
