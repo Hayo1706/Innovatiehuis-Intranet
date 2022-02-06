@@ -10,7 +10,7 @@ services:
       args:
         - NODE_ENV=local
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     networks:
       innovatie_net:
         ipv4_address: 172.28.1.1
@@ -21,7 +21,7 @@ services:
       args:
         - NODE_ENV=local
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     networks:
       innovatie_net:
         ipv4_address: 172.28.1.2
@@ -36,7 +36,7 @@ services:
       MYSQL_USER: root@innovatieplatform
       MYSQL_PASSWORD: admin
     ports:
-      - 3306:3306
+      - "127.0.0.1:3306:3306"
     networks:
       innovatie_net:
         ipv4_address: 172.28.1.3
