@@ -216,12 +216,10 @@ export default {
 
       ProjectService.updateSharedFilesOfProject(this.projectID, childID, project)
       .then((response) => {
-        console.log(response)
         AlertService.handleSuccess(response);
         this.$emit("currentFilesChanged")
       })
       .catch((err) => {
-        console.log(err)
         AlertService.handleError(err);
       })
     },
@@ -264,10 +262,40 @@ export default {
       });
       return confirmation
     },
-    uploadFiles(files) {
+    async uploadFiles(files) {
       this.uploadMenu = false;
       var amountOfFiles = files.length;
       for (let i = 0; i < files.length; i++) {
+
+        var blob = files[i]
+        var name = files[i].name
+        
+        let iv = new Uint8Array([99, 99, 99, 99]);
+        
+        let algorithm = {
+            name: "AES-GCM",
+            iv: iv
+        }
+
+        let newKey = await crypto.subtle.importKey(
+            "jwk", 
+            {   
+                kty: "oct",
+                k: "Y0zt37HgOx-BY7SQjYVmrqhPkO44Ii2Jcb9yydUDPfE",
+                alg: "A256GCM",
+                ext: true,
+            },
+            {   
+                name: "AES-GCM",
+            },
+            true, 
+            ["encrypt", "decrypt"] 
+        )
+
+        let data = await blob.arrayBuffer();
+        const result = await crypto.subtle.encrypt(algorithm, newKey, data)
+        var fileBlob = new Blob([result])
+        var encryptedFile = new File([fileBlob], name)
 
         amountOfFiles--; 
         if(amountOfFiles == 0){
@@ -275,14 +303,13 @@ export default {
           this.uploadingFiles = []
         }
 
-        this.uploadingFiles.push({"name": files[i].name, "percentage": 0})
+        this.uploadingFiles.push({"name": name, "percentage": 0})
         var formData = new FormData();
-        formData.append(files[i].name, files[i]);
+        formData.append(name, encryptedFile);
         
         var config = { 
           onUploadProgress: function(progressEvent) {
              var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            console.log(percentCompleted, progressEvent)
             this.uploadingFiles[i]['percentage'] = percentCompleted
           }.bind(this)
         }
@@ -306,7 +333,6 @@ export default {
               return;
             }
             else if(err.response.status === 409){
-              console.log(err.response.data.message)
               this.confirmAction(err.response.data.message).then((confirmation) => {
               FilestorageService.uploadFile(
                 this.$route.params.id,
