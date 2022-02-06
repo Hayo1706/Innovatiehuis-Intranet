@@ -1,11 +1,13 @@
+import json
 from datetime import timezone, datetime, timedelta
 from threading import Thread
 
 import connexion
 import os
 
-from flask import request
+from flask import request, Response
 
+from . import helper_functions
 from .extensions import db, jwt, bcrypt, mail
 import src.config as config
 import src.services.filestorage_service as fs_service
@@ -71,6 +73,11 @@ def create_app():
     def handle_after_request(response):
         response = refresh_expiring_jwts(response)
         log_response_and_request(request, response)
+        if response.status_code == 500:
+            d = response.get_json()
+            d['message'] = "Er ging iets mis op de server; neem contact op met de beheerder!"
+            response.data = json.dumps(d)
+
         return response
 
     def refresh_expiring_jwts(response):

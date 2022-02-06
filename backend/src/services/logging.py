@@ -1,4 +1,5 @@
 import json
+import traceback
 from datetime import datetime, timezone
 
 import connexion
@@ -6,9 +7,10 @@ from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from flask_jwt_extended.exceptions import NoAuthorizationError
 from jwt import ExpiredSignatureError
 
-# TODO Niels has to send the logging message to ElasticStack, maybe change it to his liking a bit first
 from src.services.helper_functions import query
 
+
+# TODO Niels has to send the logging message to ElasticStack, maybe change it to his liking a bit first
 
 def log_response_and_request(request, response):
     try:
@@ -27,7 +29,7 @@ def log_response_and_request(request, response):
             response_obj = json.loads(response_str)
         except:
             response_obj = {}
-        
+
     response_message = ""
     if type(response_obj) == dict and "message" in response_obj.keys():
         response_message = response_obj["message"]
@@ -51,7 +53,13 @@ def log_response_and_request(request, response):
     log_object["Action"] = request.method + " " + request.path
     log_object["IP Address"] = request.remote_addr
     log_object["Request"] = request_str + request_username
-    log_object["Response"] = response.status + " " + response_message
+
+    if response.status_code == 500:
+        log_object["Response"] = response.status
+        log_object["Traceback"] = response_message
+    else:
+        log_object["Response"] = response.status + " " + response_message
+
     log_message = json.dumps(log_object)
 
     print(log_message)

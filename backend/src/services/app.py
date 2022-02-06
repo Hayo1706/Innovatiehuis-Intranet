@@ -4,12 +4,19 @@ import shutil
 import subprocess
 import sys
 import time
+import traceback
 
 from os import path
 from threading import Thread
 
+
+
+
+from .helper_functions import response
+
 from .setup import create_app
 from .. import config
+
 
 app = create_app()
 app.app.backup = False
@@ -19,6 +26,11 @@ DB_HOST = '127.0.0.1'
 DB_USER = 'root@innovatieplatform'
 DB_USER_PASSWORD = 'admin'
 DB_NAME = 'innovatieplatform'
+
+
+@app.app.errorhandler(Exception)
+def handle_error(e):
+    return response(traceback.format_exc(), 500)
 
 
 def backup():
