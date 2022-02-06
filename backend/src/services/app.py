@@ -4,9 +4,13 @@ import shutil
 import subprocess
 import sys
 import time
+import traceback
+from datetime import datetime
 
 from os import path
 from threading import Thread
+
+from .helper_functions import response
 
 from .setup import create_app
 from .. import config
@@ -19,6 +23,13 @@ DB_HOST = '127.0.0.1'
 DB_USER = 'root@innovatieplatform'
 DB_USER_PASSWORD = 'admin'
 DB_NAME = 'innovatieplatform'
+
+
+@app.app.errorhandler(Exception)
+def handle_error(e):
+    print("An Exception occurred!")
+    print(traceback.format_exc())
+    return response(traceback.format_exc(), 500)
 
 
 def backup():
@@ -36,7 +47,10 @@ def backup():
     if not path.exists(config.BACKUP_ROOT_PATH + "sql/"):
         os.mkdir(config.BACKUP_ROOT_PATH + "sql/")
 
-    dumpcmd = "services\mysqldump\mysqldump.exe --column-statistics=0 -P 3306 -h " + DB_HOST + " -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + DB_NAME + " > " + config.BACKUP_ROOT_PATH + "sql/" + DB_NAME + ".sql"
+    date = datetime.now().strftime("%d-%m-%Y__%H_%M-")
+
+    filename = date+DB_NAME+".sql"
+    dumpcmd = "services\mysqldump\mysqldump.exe --column-statistics=0 -P 3306 -h " + DB_HOST + " -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + DB_NAME + " > " + config.BACKUP_ROOT_PATH + "sql/"+filename
 
     syscmd(dumpcmd, "utf8")
 
