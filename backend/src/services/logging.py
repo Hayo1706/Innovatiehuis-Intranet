@@ -38,7 +38,7 @@ def log_response_and_request(request, response):
     if "username" in connexion.request.form.keys():
         request_username = " , username=" + connexion.request.form["username"]
 
-    log_date = datetime.now().strftime("%Y-%m-%d")
+    log_date = datetime.now().strftime("%d-%m-%Y")
 
     if not uid:
         user = None
