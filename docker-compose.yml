@@ -31,6 +31,8 @@ services:
       MYSQL_DATABASE: innovatieplatform
       MYSQL_USER: root@innovatieplatform
       MYSQL_PASSWORD: admin
+    ports:
+      - "127.0.0.1:3306:3306"
     networks:
       innovatie_net:
         ipv4_address: 172.28.1.3
