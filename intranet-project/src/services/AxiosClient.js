@@ -4,7 +4,7 @@ import router from '../main';
 import LoginService from "@/services/LoginService";
 
 const axiosClient = axios.create({
-    //when in docker change to 'http://127.0.0.1:80/api' 
+    //when in docker change to 'http://localhost:80/api' 
     baseURL: 'http://localhost:8080/api' //TODO Change when in production
 });
 
