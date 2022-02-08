@@ -28,7 +28,10 @@ def backup():
     app.app.backup = True
     print("Backup started, don't stop the API.")
 
-    time.sleep(10)
+    try:
+        time.sleep(10)
+    except KeyboardInterrupt:
+        pass
 
     if path.exists(config.BACKUP_ROOT_PATH + "data"):
         shutil.rmtree(config.BACKUP_ROOT_PATH + "data")
