@@ -56,7 +56,7 @@ table {
 .directory-view-title:after, .directory-view-title:before{
   content: "";
   flex: 1 1;
-  border-bottom: 1px solid;
+  border-bottom: 1px solid #80808091;;
   margin: auto;
 }
 .directory-view-title:before {

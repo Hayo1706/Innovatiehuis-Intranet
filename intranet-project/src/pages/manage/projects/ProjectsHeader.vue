@@ -9,7 +9,7 @@
         type="button"
         v-show="canCreateProject()"
       >
-      <img class="plus-icon">
+      <img src="@/assets/images/plus2.png">
         Project toevoegen
       </button>
       <ProjectsShowArchivedCheckbox
@@ -100,28 +100,27 @@ export default {
   color: white;
   font-size: 1.6vh;
   padding: 11px 0 0 0;
-  border-bottom: 2px solid #3b3b3b;
+  border-bottom: 2px solid hsl(225deg 7% 89%);
 }
 #search-input {
-  margin-right: 4px;
   font-family: AddeleThin;
+  border-style: solid;
 }
 .column-title {
   font-size: 16pt;
   text-align: center;
-  background: rgb(204, 204, 204);
-  border-radius: 2vh 2vh 0 0;
-  border: 1px solid #646464;
+  background: rgb(224 224 224);
+  border: 1px solid #d4d4d4;
   border-bottom: 0px;
 }
 .column-title:hover {
   cursor: pointer;
-  background: rgb(224, 224, 224);
+  background: rgb(216, 216, 216);
 }
 img {
-  width: calc(2vw + 3vh);
-  padding-bottom: 10px;
-  padding-left: 10px;
+  filter: invert(1);
+  width: 3vh;
+  margin: 0 8px 4px 0;
   cursor: pointer;
 }
 .bi-caret-down-fill {
@@ -133,9 +132,6 @@ img {
 .col {
   font-family: AddeleSemiBold;
 }
-.search-col {
-  padding: 0 4px;
-}
 #projectsHeader .full-button {
   margin: 0;
 }
@@ -145,6 +141,7 @@ img {
   display: inline-block;
   left: 0px;
   margin-left: 13px;
+  padding-bottom: 3px;
 }
 #addProject div{
   color: white;
@@ -158,12 +155,7 @@ img {
   display: flex;
   align-items: flex-end;
 }
-.plus-icon{
-  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no' %3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='500' height='500' viewBox='0 0 500 500' xml:space='preserve'%3E%3Cdesc%3ECreated with Fabric.js 4.6.0%3C/desc%3E%3Cdefs%3E%3C/defs%3E%3Cg transform='matrix(1 0 0 1 250 250)' id='Z2y7PqTuZ6nO58Ds8PCRy' %3E%3Cpath style='stroke: rgb(209,11,249); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;' vector-effect='non-scaling-stroke' transform=' translate(-250, -250)' d='M 202.93837 0 L 297.06164 0 L 297.06164 202.5 L 500 202.5 L 500 297.5 L 297.06164 297.5 L 297.06164 500 L 202.93837000000002 500 L 202.93837000000002 297.5 L 2.842170943040401e-14 297.5 L 2.842170943040401e-14 202.5 L 202.93837000000002 202.5 z' stroke-linecap='round' /%3E%3C/g%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100%;
+.input-group{
+  margin: 0 !important;
 }
-
 </style>

@@ -67,7 +67,7 @@
               "
             />
           </div>
-          <div v-else>
+          <div class="iconHolder" v-else>
             <img
               src="@\assets\images\screening1.png"
               v-if="access_state == 'Geblokkeerd'"
@@ -82,14 +82,15 @@
 
       <!-- large screens-->
       <div
-        class="col-3 d-none d-lg-flex align-items-center justify-content-start"
+        class="
+          name-wrapper
+          col-3
+          d-none d-lg-flex
+          align-items-center
+          justify-content-center
+        "
       >
-        <router-link
-          title="Naar profiel"
-          :to="'/user/' + this.user.userid"
-          class="name-button"
-          >{{ user.first_name + " " + user.last_name }}</router-link
-        >
+        {{ user.first_name + " " + user.last_name }}
       </div>
       <div
         class="col d-none d-lg-flex align-items-center justify-content-center"
@@ -139,7 +140,7 @@
         class="col d-none d-lg-flex align-items-center justify-content-center"
         id="access justify-content-center"
       >
-        <div class="iconHolder">
+        <div class="iconHolder accessIconHolder">
           <div v-if="canCUDUser() && canUpdateUserAccess()">
             <img
               style="cursor: pointer"
@@ -366,74 +367,68 @@ export default {
 </script>
 
 <style scoped>
-.name-button {
-  background-color: var(--blue2);
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  display: flex;
-  cursor: pointer;
-  font-size: 14pt;
-  color: white;
-  padding: 6px;
-  text-decoration: none;
-}
-.name-button:hover {
-  background-color: var(--blue1);
-  color: white;
-}
-
 .user-listing {
   box-sizing: border-box;
   color: var(--blue1);
   overflow: visible;
   background-color: rgb(234, 234, 234);
-  border-radius: 0 0.2rem 0.2rem 0;
   /* margin-bottom: 0.3rem; */
   font-size: 1.6vh;
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 1px solid hsl(0deg 0% 86%);
+}
+.user-listing:last-child {
+  border-bottom: none;
+}
+.user-listing:hover {
+  background-color: rgb(230, 230, 230);
+}
+.archived {
+  background-color: rgb(223, 223, 223);
+}
+.archived:hover {
+  background-color: rgb(227, 227, 227);
 }
 .mobileRow {
-  min-height: 50px;
+  height: 50px;
 }
-.extraLarge {
-  height: 70px;
+#archivedText {
+  color: purple;
 }
-img {
-  height: 40px;
-}
-.link {
-  cursor: pointer;
-  color: var(--gold1);
-  display: block;
-  margin-bottom: 10px;
-  text-decoration: none;
-}
-select {
-  border-radius: 0.25rem;
-  width: fit-content;
-}
-.dropdown-toggle {
-  padding: 0px;
-  margin: 0px;
-}
-.dropdown-item {
-  margin-right: 10px;
-  margin-left: 10px;
-}
-.iconHolder {
-  border-radius: 10%;
-  border-style: none;
-}
-.row select {
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0.8),
-    rgba(225, 225, 225, 0.9)
-  );
-}
-
 .button-span-right {
   margin-left: auto;
+}
+.iconHolder {
+  padding: 5px;
+}
+.name-wrapper {
+  padding-right: 0;
+}
+.openUserButton img {
+  margin-right: 6px;
+  height: 1em;
+  filter: invert(100%);
+  opacity: 87%;
+}
+.openUserButton {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.col {
+  border-left: none;
+}
+.listing-icon img{
+  opacity: 40%;
+}
+.accessIconHolder img{
+  height: 2em;
+  cursor: pointer;
+  opacity: 40%;
+}
+.accessIconHolder img:hover {
+  opacity: 55%;
+}
+.userIcon{
+  opacity: 27%;
+  border: 1px solid red;
 }
 </style>
