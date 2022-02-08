@@ -2,7 +2,6 @@ import contextlib
 import os
 import shutil
 import subprocess
-import sys
 import time
 import traceback
 from datetime import datetime
@@ -11,21 +10,11 @@ from os import path
 from threading import Thread
 
 from .helper_functions import response
-
 from .setup import create_app
-from .. import config
-from ..config import ON_DOCKER
+import src.config as config
 
 app = create_app()
 app.app.backup = False
-
-# in docker change to 172.28.1.3
-DB_HOST = '127.0.0.1'
-if ON_DOCKER:
-    DB_HOST = '172.28.1.3'
-DB_USER = 'root@innovatieplatform'
-DB_USER_PASSWORD = 'admin'
-DB_NAME = 'innovatieplatform'
 
 
 @app.app.errorhandler(Exception)
@@ -52,8 +41,9 @@ def backup():
 
     date = datetime.now().strftime("%d-%m-%Y__%H_%M-")
 
-    filename = date+DB_NAME+".sql"
-    dumpcmd = "services\mysqldump\mysqldump.exe --column-statistics=0 -P 3306 -h " + DB_HOST + " -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + DB_NAME + " > " + config.BACKUP_ROOT_PATH + "sql/"+filename
+    filename = f"{date}{config.DB_NAME}.sql"
+    dumpcmd = f"services\mysqldump\mysqldump.exe --column-statistics=0 -P 3306 -h {config.DB_HOST} -u {config.DB_USER} -p{config.DB_USER_PASSWORD} " \
+              f" {config.DB_NAME} > {config.BACKUP_ROOT_PATH}sql/{filename}"
 
     syscmd(dumpcmd, "utf8")
 

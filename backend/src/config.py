@@ -6,6 +6,19 @@ TWO_FACTOR = False
 
 ON_DOCKER = False
 
+if ON_DOCKER:
+    DATABASE_URL = 'mariadb+mariadbconnector://root:admin@172.28.1.3:3306/innovatieplatform'
+else:
+    DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
+
+DB_HOST = '127.0.0.1'
+if ON_DOCKER:
+    DB_HOST = '172.28.1.3'
+DB_USER = 'root@innovatieplatform'
+DB_USER_PASSWORD = 'admin'
+DB_NAME = 'innovatieplatform'
+
+
 DOMAIN_NAME = 'http://localhost:8080'
 if ON_DOCKER:
     DOMAIN_NAME = 'http://127.0.0.1/'
@@ -15,20 +28,17 @@ if ON_DOCKER:
 FILE_STORAGE_ROOT = '../filestorage/root/'
 
 # Unit: every ... minutes
-BACKUP_FREQUENCY = 30
+
+BACKUP_FREQUENCY = 1440
 BACKUP_ROOT_PATH = '../filestorage/backup/'
 
-# When deployed in docker change ip to 172.28.1.3
-if ON_DOCKER:
-    DATABASE_URL = 'mariadb+mariadbconnector://root:admin@172.28.1.3:3306/innovatieplatform'
-else:
-    DATABASE_URL = 'mariadb+mariadbconnector://root:admin@127.0.0.1:3306/innovatieplatform'
 
 JWT_ISSUER = 'innovatieplatform'
 JWT_SECRET = 'kiZn04wb0XEPfpnkTbgmFtHtNElRThM2nWNdD51KaosfRT8HzVLqPB3UMnKPwb1'  # TODO Change This? Moet Secret om de zo veel tijd gerefreshed worden?
 JWT_LIFETIME_SECONDS = 2400  # USERS WILL BE REQUIRED TO RE-AUTHENTICATE (LOGIN) AFTER THIS NUMBER OF SECONDS
 JWT_REFRESH_TIME_SECONDS = JWT_LIFETIME_SECONDS / 4
 JWT_ALGORITHM = 'HS256'
+JWT_COOKIE_SECURE = False  # IMPORTANT: Set to TRUE in production!
 
 # COOLDOWN WILL START AFTER THIS NUMBER OF FAILED LOGIN ATTEMPTS
 ATTEMPTS_BEFORE_COOLDOWN = 6
