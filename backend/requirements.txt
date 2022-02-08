@@ -10,3 +10,4 @@ pyotp
 qrcode[pil]
 flask_mail
 mariadb
+waitress
