@@ -159,7 +159,7 @@ def update_shared_files_entries(project_id, path_to_replace, new_path):
                  {'projectid': project_id})
     for entry in data:
         if entry["shared_files"] is not None:
-            shared_files_list = entry["shared_files"].split(' ')
+            shared_files_list = entry["shared_files"].split(';')
             updated_list = [new_path if file == path_to_replace else file for file in shared_files_list]
             culled_list = [file for file in updated_list if file != '']
             new_shared_files_string = ' '.join(culled_list)
