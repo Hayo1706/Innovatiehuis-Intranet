@@ -67,10 +67,10 @@
               />
               <div class="dropdown-content">
                 <a>Delen met:</a>
-                <a v-for="child in this.sharedChilds" :key="child" @click="shareSelectedFiles(child.projectid, child.shared_files)">{{ child.project_name }}</a>
+                <a v-for="child in this.sharedChilds" :key="child" @click="shareSelectedFiles(child.projectid, child.project_name, child.shared_files)">{{ child.project_name }}</a>
               </div>
             </div>
-            <div class="dropdown">
+            <div class="dropdown" v-show="this.currentFolders > 0">
               <img
                 title="Geselecteerde elementen verplaatsen"
                 class="component-header-button"
@@ -204,7 +204,7 @@ export default {
         })
       }
     },
-    shareSelectedFiles(childID, sharedFiles){
+    shareSelectedFiles(childID, childName, sharedFiles){
       var newSharedFiles = sharedFiles
       for(var file of this.selectedFiles){
         if(newSharedFiles == null){
@@ -219,9 +219,9 @@ export default {
       }
 
       ProjectService.updateSharedFilesOfProject(this.projectID, childID, project)
-      .then((response) => {
-        AlertService.handleSuccess(response);
+      .then(() => {
         this.$emit("currentFilesChanged")
+        AlertService.alert("Geselecteerde bestanden zijn succesvol gedeeld met " + childName, "success");
       })
       .catch((err) => {
         AlertService.handleError(err);

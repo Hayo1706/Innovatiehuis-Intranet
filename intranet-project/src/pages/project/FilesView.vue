@@ -161,7 +161,7 @@ export default {
       ProjectService.updateSharedFilesOfProject(projectID, childID, project)
       .then((response) => {
         console.log(response)
-        AlertService.alert('Bestand wordt nu gedeeld met ' + projectName, 'succes');
+        AlertService.alert('Bestand wordt nu gedeeld met ' + projectName, 'success');
         this.$emit("currentFilesChanged")
       })
       .catch((err) => {

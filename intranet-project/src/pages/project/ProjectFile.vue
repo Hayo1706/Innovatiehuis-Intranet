@@ -124,7 +124,7 @@ export default {
     },
     async decryptFile(file){
       var encryptedBlob = new Blob([file])
-      var encryptedFile = new File([encryptedBlob], name)
+      var encryptedFile = new File([encryptedBlob])
       console.log(encryptedFile)
 
       let iv = new Uint8Array([99, 99, 99, 99]);

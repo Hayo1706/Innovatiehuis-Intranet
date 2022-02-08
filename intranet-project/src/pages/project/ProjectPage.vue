@@ -46,6 +46,7 @@
 
                 @newFolderAdded="currentFoldersChanged()"
                 @newFilesUploaded="currentFilesChanged()"
+                @currentFilesChanged="currentFilesChanged()"
                 @elementsMoved="currentFilesChanged(); currentFoldersChanged();"
                 @showOlderFiles="togglePreviousFilesMenu()"
                 @deleteSelectedElements="deleteSelectedElements()"
@@ -229,6 +230,8 @@ export default {
     resetSelectedElements() {
       this.selectedFolders = []
       this.selectedFiles = []
+      this.setCurrentFolders();
+      this.setCurrentFiles();
     },
     getPreviousPath(currentPath) {
       var previousPath = "/" + currentPath.split("/project/" + this.projectID)[1].split("/").slice(1, -1).join("/")
@@ -379,7 +382,6 @@ export default {
     },
     currentFilesChanged() {
       this.setChildProjects();
-      this.togglePreviousFilesMenu();
       this.setParentProjects();
       this.setCurrentFiles();
       this.selectedFiles = [];
