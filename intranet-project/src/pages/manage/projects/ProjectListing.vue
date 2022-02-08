@@ -186,22 +186,6 @@ export default {
   background-color: rgb(227, 227, 227);
 }
 
-.name-button {
-  background-color: var(--blue2);
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  display: flex;
-  cursor: pointer;
-  font-size: 14pt;
-  color: white;
-  padding: 6px;
-  text-decoration: none;
-}
-.name-button:hover {
-  background-color: var(--blue1);
-  color: white;
-}
 .mobileRow {
   height: 50px;
 }
@@ -220,6 +204,8 @@ export default {
 .openProjectButton img {
   margin-right: 6px;
   height: 1em;
+  filter: invert(100%);
+  opacity: 87%;
 }
 .openProjectButton {
   padding-right: 10px;
@@ -227,5 +213,8 @@ export default {
 }
 .col {
   border-left: 1px solid hsl(0deg 0% 89%);
+}
+.listing-icon img{
+  opacity: 40%;
 }
 </style>

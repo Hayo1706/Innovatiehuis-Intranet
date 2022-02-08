@@ -98,12 +98,12 @@ export default {
   padding: 0;
 }
 img {
-  height: 3em;
+  height: 2.5em;
   cursor: pointer;
-  opacity: 60%;
+  opacity: 40%;
 }
 img:hover {
-  opacity: 80%;
+  opacity: 55%;
 }
 .rotate {
   transform: rotate(180deg);

@@ -3,21 +3,28 @@
     <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
 
     <div class="row" style="margin-right: 8px">
-      <div class="col">
+      <div class="col" title="Naar profiel" >
+        <router-link :to="'/user/' + this.user.userid" title="Naar profiel">
+          <div class="iconHolder">
+            <img class="userIcon" src="@\assets\images\user.png" />
+          </div>
+        </router-link>
+      </div>
+      <div class="col" title="Mail sturen">
         <a :href="'mailto:' + user.email">
           <div class="iconHolder">
             <img src="@\assets\images\mail.png" />
           </div>
         </a>
       </div>
-      <div class="col">
+      <div class="col" title="Gebruiker bellen">
         <a :href="'tel:' + user.phone_number">
           <div class="iconHolder">
             <img src="@\assets\images\phone.png" />
           </div>
         </a>
       </div>
-      <div class="col">
+      <div class="col" title="Verwijder gebruiker">
         <div @click="handleDeleteUser()" v-if="canDelete() && showRemove">
           <div class="iconHolder">
             <img src="@\assets\images\delete.png" />
@@ -58,12 +65,18 @@ export default {
   float: left;
 }
 img {
-  height: 3em;
-  opacity: 60%;
+  height: 2.5em;
+  opacity: 40%;
   cursor: pointer;
 }
 img:hover {
-  opacity: 80%;
+  opacity: 55%;
+}
+.userIcon{
+  opacity: 28%;
+}
+.userIcon:hover{
+  opacity: 38%;
 }
 .rotate {
   transform: rotate(180deg);

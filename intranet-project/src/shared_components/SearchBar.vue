@@ -53,6 +53,6 @@ export default {
   padding: 12px 20px 12px 40px;
   outline: none;
   margin-right: 4px;
-  border-style: ridge;
+  border-style: solid;
 }
 </style>

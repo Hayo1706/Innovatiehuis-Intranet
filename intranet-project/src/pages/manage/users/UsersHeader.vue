@@ -2,25 +2,26 @@
   <div id="usersHeader" class="container-fluid d-none d-lg-block">
     <div id="users-header-top" class="row">
       <button
-        id="actionButton"
+        id="addUser"
         class="full btn pmd-btn-fab pmd-ripple-effect btn-primary"
         data-bs-toggle="modal"
         data-bs-target="#createUserModal"
         type="button"
         v-show="canCreateUser()"
       >
+        <img src="@/assets/images/plus2.png">
         <i class="material-icons pmd-sm">Gebruiker toevoegen</i>
       </button>
     </div>
     <div class="row">
-      <div class="full-button col-3" @click="this.$emit('sortEvent', 'name')">
+      <div class="column-title col-3" @click="this.$emit('sortEvent', 'name')">
         Gebruiker
         <span v-if="sortingMethod == 'name'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
           <i v-else class="bi-caret-up-fill"></i>
         </span>
       </div>
-      <div class="full-button col" @click="this.$emit('sortEvent', 'created')">
+      <div class="column-title col" @click="this.$emit('sortEvent', 'created')">
         Geregistreerd
         <span v-if="sortingMethod == 'created'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
@@ -28,7 +29,7 @@
         </span>
       </div>
       <div
-        class="full-button col"
+        class="column-title col"
         @click="this.$emit('sortEvent', 'last_seen')"
       >
         Laatst gezien
@@ -37,7 +38,7 @@
           <i v-else class="bi-caret-up-fill"></i>
         </span>
       </div>
-      <div class="full-button col" @click="this.$emit('sortEvent', 'role')">
+      <div class="column-title col" @click="this.$emit('sortEvent', 'role')">
         Rol
         <span v-if="sortingMethod == 'role'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
@@ -45,7 +46,7 @@
         </span>
       </div>
       <div
-        class="full-button col"
+        class="column-title col"
         @click="this.$emit('sortEvent', 'amountprojects')"
       >
         Projecten
@@ -54,7 +55,7 @@
           <i v-else class="bi-caret-up-fill"></i>
         </span>
       </div>
-      <div class="full-button col" @click="this.$emit('sortEvent', 'access')">
+      <div class="column-title col" @click="this.$emit('sortEvent', 'access')">
         Toegang
         <span v-if="sortingMethod == 'access'">
           <i v-if="this.ascending" class="bi-caret-down-fill"></i>
@@ -97,9 +98,32 @@ export default {
   width: 100%;
   box-sizing: border-box;
   min-height: 5vh;
-  background-color: var(--blue1);
+  background: hsl(0deg 0% 98% / 90%);
   color: white;
   font-size: 1.6vh;
+  padding: 11px 0 0 0;
+  border-bottom: 2px solid hsl(225deg 7% 89%);
+}
+#search-input {
+  font-family: AddeleThin;
+  border-style: solid;
+}
+.column-title {
+  font-size: 16pt;
+  text-align: center;
+  background: rgb(224 224 224);
+  border: 1px solid #d4d4d4;
+  border-bottom: 0px;
+}
+.column-title:hover {
+  cursor: pointer;
+  background: rgb(216, 216, 216);
+}
+img {
+  filter: invert(1);
+  width: 3vh;
+  margin: 0 8px 4px 0;
+  cursor: pointer;
 }
 .bi-caret-down-fill {
   margin-left: 5px;
@@ -110,15 +134,30 @@ export default {
 .col {
   font-family: AddeleSemiBold;
 }
-#search-input {
-  font-family: AddeleSemiBold;
+#usersHeader .full-button {
+  margin: 0;
 }
-#actionButton {
+#addUser {
+  background-color: var(--blue2);
   width: fit-content;
   display: inline-block;
   left: 0px;
+  margin-left: 13px;
+  padding-bottom: 3px;
 }
-.last-column {
-  width: 16em;
+#addUser div{
+  color: white;
+}
+#users-header-top{
+  padding-bottom: 11px;
+  margin: 0;
+}
+.form-switch{
+  margin-left: auto;
+  display: flex;
+  align-items: flex-end;
+}
+.input-group{
+  margin: 0 !important;
 }
 </style>
