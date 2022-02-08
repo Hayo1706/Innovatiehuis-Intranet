@@ -516,7 +516,7 @@ paths:
     get:
       operationId: src.endpoints.announcements.read_global
       tags:
-        - Global Announcements
+        - Announcements
       summary: Reads all global announcements (those not tied to any project)
       responses:
         200:
@@ -524,7 +524,7 @@ paths:
     post:
       operationId: src.endpoints.announcements.create_global
       tags:
-        - Global Announcements
+        - Announcements
       summary: Create a new global announcement (not tied to any project)
       requestBody:
         required: true

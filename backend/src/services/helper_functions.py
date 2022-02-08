@@ -1,6 +1,3 @@
-import json
-import connexion
-
 from flask import request
 from .extensions import db
 
