@@ -168,7 +168,7 @@ def restore_file(project_id):
 
     if not fs_service.file_exists(active_path):
         # restore a deleted file
-        fs_service.move_file(backup_path, active_path.rsplit('/', 1)[0])
+        fs_service.move_file(archive_path, active_path.rsplit('/', 1)[0])
         return response("Verwijderd bestand is teruggeplaatst", 200)
     else:
         if not fs_service.file_exists(archive_path):
