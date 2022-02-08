@@ -55,7 +55,7 @@
         <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="downloadFile('archive')">Downloaden</a>
       </div>
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="confirmDelete()">             Verwijder</a>
-      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canSeeFile()" @click="downloadFile('active')">      Download</a>
+      <a class="dropdown-item" v-if="this.type == 'normal' || this.type == 'shared'" v-show="canSeeFile()" @click="downloadFile('active')">      Download</a>
       <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canUpdateFile()" @click="downloadFile('archive')">  Download</a>
       <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canUpdateFile()" @click="this.confirmRecover()">        Herstellen</a>
     </div>

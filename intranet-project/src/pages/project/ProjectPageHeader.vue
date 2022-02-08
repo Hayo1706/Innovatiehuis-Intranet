@@ -85,11 +85,11 @@
         </nav>
       </div>
       <div class="col-sm-8" v-else/>
-      <div class='row' v-for="file of this.uploadingFiles" :key='file'>
-        <div class='col-sm-8' >
+      <div class='row' v-for="file, index of this.uploadingFiles" :key='file' @click="this.uploadingFiles[index]['percentage'] = 101">
+        <div v-show="this.uploadingFiles[index]['percentage'] < 101" class='col-sm-8'>
           <h5>{{ file.name }}</h5>
         </div>
-        <div class='col-sm-4'>
+        <div v-show="this.uploadingFiles[index]['percentage'] < 101" class='col-sm-4'>
           <div class="progress">
             <div class="progress-bar" role="progressbar" :style="{width: file.percentage + '%'}" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
