@@ -139,9 +139,11 @@ export default {
     },
     addSharingFile(path, projectID, childID){
       var sharedFiles = ""
+      var projectName = ''
       for(var child of this.sharedChildProjects){
         if(child.projectid == childID){
           sharedFiles = child.shared_files;
+          projectName = child.project_name
         }
       }
       
@@ -159,7 +161,7 @@ export default {
       ProjectService.updateSharedFilesOfProject(projectID, childID, project)
       .then((response) => {
         console.log(response)
-        AlertService.handleSuccess(response);
+        AlertService.alert('Bestand wordt nu gedeeld met ' + projectName, 'succes');
         this.$emit("currentFilesChanged")
       })
       .catch((err) => {

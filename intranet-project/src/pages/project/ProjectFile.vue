@@ -10,6 +10,7 @@
     moveMenu = false;
     shareMenu = false;"
   >
+    <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <div class="row"
       @click.ctrl="this.selected = !this.selected; selectFile()"
       >
@@ -34,7 +35,7 @@
     <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.projectID+this.path">
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="enableInput()">Wijzig Naam</a>
       <a class="dropdown-item" v-if="this.type == 'owned'" v-show="canUpdateFile()" @click="stopSharingFile()">Stoppen met delen</a>
-      <a class="dropdown-item" v-if="this.currentFolders.length > 1 && this.type == 'normal'" v-show="canUpdateFile()" @click="setMoveMenu()">Verplaatsen naar:</a>
+      <a class="dropdown-item" v-show="canUpdateFile() && this.currentFolders.length > 1 && this.type == 'normal'" @click="setMoveMenu()">Verplaatsen naar:</a>
       <div v-show="canUpdateFile()" class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+1">
         <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
           <a class="dropdown-item" v-if="folder.type == 'normal'">{{ folder.name }}</a>
@@ -44,25 +45,26 @@
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile() && this.sharedChilds.length > 0" @click="setShareMenu()">  Delen met:</a>
       <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+'shareMenu'">
         <span v-for="child of this.sharedChilds" :key="child">
-          <a class="dropdown-item" @click="addSharingFile(child.projectid); unsetMenus()">{{ child.project_name }}</a>
+          <a class="dropdown-item" @click="this.confirmShare(child.project_name, child.projectid)">{{ child.project_name }}</a>
         </span>
       </div>
 
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="setRecoverMenu()">         Vorige versie</a>
       <div class="dropdown-menu dropdown-menu-sm" v-if="this.type == 'normal'" v-bind:id="this.path+'recoverMenu'">
-        <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="recoverBackupFile">      Herstellen</a>
+        <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="this.confirmRecover()">      Herstellen</a>
         <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="downloadFile('archive')">Downloaden</a>
       </div>
-      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="deleteFile()">             Verwijder</a>
+      <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="confirmDelete()">             Verwijder</a>
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canSeeFile()" @click="downloadFile('active')">      Download</a>
       <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canUpdateFile()" @click="downloadFile('archive')">  Download</a>
-      <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canUpdateFile()" @click="recoverBackupFile">        Herstellen</a>
+      <a class="dropdown-item" v-if="this.type == 'backup'" v-show="canUpdateFile()" @click="this.confirmRecover()">        Herstellen</a>
     </div>
   </div>
 </template>
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
+import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 import PermissionService from "@/services/PermissionService.js";
 import AlertService from "../../services/AlertService";
 
@@ -78,6 +80,7 @@ export default {
     currentFiles: { type: Array, required: true },
     sharedChilds: { type: Array, required: false }
   },
+  components: { ConfirmDialogue },
   data: function () {
     return {
       selected: false,
@@ -193,6 +196,14 @@ export default {
         this.fileName = this.name
       }
     },
+    async confirmAction(title, message){
+      this.unsetMenus();
+      const confirmation = await this.$refs.confirmDialogue.show({
+        title: title,
+        message: message,
+      });
+      return confirmation
+    },
     enableInput(){
       this.unsetMenus();
       this.fileName = this.name.split(".")[0]
@@ -240,14 +251,24 @@ export default {
       result = (typeof result !== "undefined") ? result : this.fileTypes["unknown"];
       return result
     },
-    confirmMove(targetFolder){
-      if(confirm("Are you sure you want to move " + this.name + " to " + targetFolder.name + "?")){
+    async confirmMove(targetFolder){
+      if(await this.confirmAction('Verplaats bestand', "Weet je zeker dat je " + this.name + " wilt verplaatsen naar " + targetFolder.name + "?")){
         this.moveFile(targetFolder)
       }
     },
-    confirmDelete(file_name){
-      if(confirm("Are you sure you want to delete " + file_name + "?")){
+    async confirmDelete(){
+      if(await this.confirmAction('Verwijder bestand', "Weet je zeker dat je " + this.name + " wilt verwijderen?")){
         this.deleteFile()
+      }
+    },
+    async confirmShare(childName, childID){
+      if(await this.confirmAction('Deel bestand', 'Weet je zeker dat je ' + this.name + ' wilt delen met ' + childName + '?')){
+        this.addSharingFile(childID)
+      }
+    },
+    async confirmRecover(){
+      if(await this.confirmAction('Bestand herstellen', 'Weet je zeker dat je een vorige versie van ' + this.name + ' wilt herstellen?')){
+        this.recoverBackupFile();
       }
     },
     setMoveMenu() {

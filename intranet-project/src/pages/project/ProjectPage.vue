@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-sm-9">
           <div class="component-container">
-            <div class="component-header" style="overflow: visible;">
+            <div class="component-header" style="overflow: visible; ">
               <text
                 class="directory"
                 @dragenter.prevent
@@ -20,6 +20,13 @@
                 /
                 <text
                   class="directory"
+                  @dragenter.prevent
+                  @dragover.prevent
+                  @drop="onDrop($event, '/')"
+                  @dragenter="addClass"
+                  @dragleave="removeClass"
+                  @mouseleave.self="removeClass"
+                  
                   @click="currentPathChanged('/' + this.currentPath.split('/').slice(1, index + 2).join('/'), this.projectID)"
                   v-if="path != ''"
                 >{{ path }}</text>
