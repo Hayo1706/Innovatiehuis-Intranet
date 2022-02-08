@@ -34,7 +34,7 @@
     <div class="dropdown-menu dropdown-menu-sm" v-bind:id="this.projectID+this.path">
       <a class="dropdown-item" v-if="this.type == 'normal'" v-show="canUpdateFile()" @click="enableInput()">Wijzig Naam</a>
       <a class="dropdown-item" v-if="this.type == 'owned'" v-show="canUpdateFile()" @click="stopSharingFile()">Stoppen met delen</a>
-      <a class="dropdown-item" v-if="this.currentFolders.length > 1 && this.type == 'normal'" v-show="canUpdateFile()" @click="setMoveMenu(this.getCoordinates())">Verplaatsen naar:</a>
+      <a class="dropdown-item" v-if="this.currentFolders.length > 1 && this.type == 'normal'" v-show="canUpdateFile()" @click="setMoveMenu()">Verplaatsen naar:</a>
       <div v-show="canUpdateFile()" class="dropdown-menu dropdown-menu-sm" v-bind:id="this.path+1">
         <span v-for="folder in this.currentFolders" :key="folder"  @click="confirmMove(folder)">
           <a class="dropdown-item" v-if="folder.type == 'normal'">{{ folder.name }}</a>
@@ -253,13 +253,23 @@ export default {
     setMoveMenu() {
       if(this.type == 'normal'){
         var element = document.getElementById(this.path+1)
-        element.style['display'] = 'block'
+        if(element.style['display'] == 'block'){
+          element.style['display'] = 'none'
+        }
+        else{
+          element.style['display'] = 'block'
+        }
       }
     },
     setShareMenu() {
       if(this.type == 'normal'){
         var element = document.getElementById(this.path+'shareMenu')
-        element.style['display'] = 'block'
+        if(element.style['display'] == 'block'){
+          element.style['display'] = 'none'
+        }
+        else{
+          element.style['display'] = 'block'
+        }
       }
     },
     setViewMenu(e) {
