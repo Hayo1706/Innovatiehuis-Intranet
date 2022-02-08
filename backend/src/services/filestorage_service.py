@@ -221,9 +221,9 @@ def upload_file(file, full_path, may_overwrite):
     file_name = sanitize_name(file.filename, "file")
     file_type = file_name.split('.')[1]
     file_path = pathify(full_path, file_name)
-    if file_type.lower() not in config.ALLOWED_FILE_TYPES:
-        return response(f"Bestand {file_name} is van een verboden bestandstype, de toegestaande bestandstypes zijn: "
-                        f"{str(config.ALLOWED_FILE_TYPES)}", 406)
+    if file_type.lower() in config.FILE_TYPE_BLACKLIST:
+        return response(f"Bestand {file_name} is van een verboden bestandstype: "
+                        f"{str(config.FILE_TYPE_BLACKLIST)}", 406)
     if os.fstat(file.fileno()).st_size > config.MAX_FILE_SIZE:
         return (f"Bestand {file_name} is te groot, de maximaal toegestane bestandsomvang is "
                 f"{str(config.MAX_FILE_SIZE/1000/1000)}MB", 406)
