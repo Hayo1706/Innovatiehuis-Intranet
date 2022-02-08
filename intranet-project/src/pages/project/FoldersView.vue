@@ -1,6 +1,6 @@
 <template>
   <div oncontextmenu="return false;">
-
+    <ConfirmDialogue ref="confirmDialogue"></ConfirmDialogue>
     <div>
       <div class="row">
         <h5 v-show="canSeeSharedFolders()" class="directory-view-title" v-if="this.searchedSharedFolders.length > 0">Gedeelde Mappen</h5>
@@ -52,6 +52,7 @@
 
 <script>
 import FilestorageService from "@/services/FilestorageService.js";
+import ConfirmDialogue from "@/shared_components/ConfirmDialogue.vue";
 import ProjectFolder from "./ProjectFolder.vue";
 import AlertService from "../../services/AlertService";
 import PermissionService from "@/services/PermissionService.js";
@@ -71,6 +72,7 @@ export default {
   },
   components: {
     ProjectFolder,
+    ConfirmDialogue
   },
   name: "FoldersView",
   props: ['projectID', 'currentPath', 'previousPath', 'currentSharedFolders', 'currentFolders', 'searchTerm'],
@@ -148,6 +150,13 @@ export default {
               AlertService.handleError(err);
             });
       }
+    },
+    async confirmAction(title, message){
+      const confirmation = await this.$refs.confirmDialogue.show({
+        title: title,
+        message: message,
+      });
+      return confirmation
     },
     folderNameInSearchTerm(folderName, searchTerm) {
       return folderName.includes(searchTerm) || searchTerm == null;
