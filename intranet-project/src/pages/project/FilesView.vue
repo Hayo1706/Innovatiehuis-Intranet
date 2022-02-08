@@ -131,7 +131,7 @@ export default {
         }
       }
       if(sharedFiles.length > 0){
-        this.$emit("sharedFilesChanged", sharedFiles.join(" "))
+        this.$emit("sharedFilesChanged", sharedFiles.join(";"))
       }
       else{
         this.$emit("sharedFilesChanged", null)
@@ -150,8 +150,8 @@ export default {
       if(sharedFiles == null){
         sharedFiles = path;
       }
-      else if(!sharedFiles.split(" ").includes(path)){
-        sharedFiles += " " + path;
+      else if(!sharedFiles.split(";").includes(path)){
+        sharedFiles += ";" + path;
       }
 
       const project = {

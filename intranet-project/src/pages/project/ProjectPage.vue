@@ -58,6 +58,7 @@
             </div>
             <div class="scrollable">
               <FoldersView
+                  :key="this.foldersViewKey"
                   :previousPath="this.previousPath"
                   :currentPath="this.currentPath"
                   :projectID="this.projectID"
@@ -73,6 +74,7 @@
                   @fileMoved="currentFilesChanged"
                />
                <FilesView 
+                :key="this.filesViewKey"
                 ref="child" 
                 :currentPath="this.currentPath"
                 :projectID="this.projectID"
@@ -119,6 +121,8 @@ export default {
   data: function () {
     return {
       announcementWindowKey: 0,
+      filesViewKey: 0,
+      foldersViewKey: 0,
 
       projectID: this.getProjectId(),
       projectName: "",
@@ -227,11 +231,14 @@ export default {
           });
       }
     },
+    forceRerender(){
+      this.filesViewKey += 1;
+      this.foldersViewKey += 1;
+    },
     resetSelectedElements() {
+      this.forceRerender();
       this.selectedFolders = []
       this.selectedFiles = []
-      this.setCurrentFolders();
-      this.setCurrentFiles();
     },
     getPreviousPath(currentPath) {
       var previousPath = "/" + currentPath.split("/project/" + this.projectID)[1].split("/").slice(1, -1).join("/")
@@ -349,7 +356,7 @@ export default {
         }
       }
       for (var file of this.selectedFiles) {
-        newSharedFiles += " " + file.path
+        newSharedFiles += ";" + file.path
       }
       newSharedFiles
     },
@@ -510,7 +517,7 @@ export default {
           for (var parent of response.data.result) {
             var parentID = parent.projectid
             if (this.parentID == parentID) {
-              var sharedFiles = parent.shared_files.split(" ")
+              var sharedFiles = parent.shared_files.split(";")
               for (var file in sharedFiles) {
                 var fileName = sharedFiles[file].split("/").pop()
                 this.currentFiles.push({ 'name': fileName, 'path': sharedFiles[file], 'projectID': parentID, 'type': 'shared' })
@@ -541,7 +548,7 @@ export default {
           for (var child of response.data.result) {
             var childID = child.projectid
             if (childID == this.childID) {
-              var sharedFiles = child.shared_files.split(" ")
+              var sharedFiles = child.shared_files.split(";")
               for (var file of sharedFiles) {
                 var fileName = file.split("/").pop()
                 this.currentFiles.push({ 'name': fileName, 'path': file, 'projectID': this.projectID, 'type': 'owned' })
