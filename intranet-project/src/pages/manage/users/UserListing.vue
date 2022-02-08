@@ -249,7 +249,7 @@ export default {
               this.access_states = this.previous_access_state;
             });
         } else {
-          this.access_states = this.previous_access_state;
+          this.access_state = this.previous_access_state;
         }
       }
     },
