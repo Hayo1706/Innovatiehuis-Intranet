@@ -124,16 +124,13 @@ export default {
     },
     async decryptFile(file){
       var encryptedBlob = new Blob([file])
-      var encryptedFile = new File([encryptedBlob])
+      var encryptedFile = new File([encryptedBlob], name)
       console.log(encryptedFile)
-
       let iv = new Uint8Array([99, 99, 99, 99]);
-
       let algorithm = {
           name: "AES-GCM",
           iv: iv
       }
-
       let key = await crypto.subtle.importKey(
           "jwk", 
           {   
@@ -148,12 +145,9 @@ export default {
           true, 
           ["encrypt", "decrypt"]
       )
-
       let data = await encryptedBlob.arrayBuffer();
       const result = await crypto.subtle.decrypt(algorithm, key, data)
       var decryptedBlob = new Blob([result])
-      //var decryptedFile = new File([decryptedBlob], name)
-
       return decryptedBlob
     },
     async downloadFile(version){
@@ -197,7 +191,6 @@ export default {
       }
     },
     async confirmAction(title, message){
-      this.unsetMenus();
       const confirmation = await this.$refs.confirmDialogue.show({
         title: title,
         message: message,
@@ -205,7 +198,6 @@ export default {
       return confirmation
     },
     enableInput(){
-      this.unsetMenus();
       this.fileName = this.name.split(".")[0]
       var inputName = document.getElementById(this.name)
       inputName.removeAttribute("disabled")
@@ -219,8 +211,8 @@ export default {
       var target_path = target_folder.path
       FilestorageService.moveFile(this.projectID, this.path, target_path)
         .then((response) => {
-          AlertService.handleSuccess(response);
           this.$emit("fileMoved");
+          AlertService.handleSuccess(response);
         })
         .catch((err) => {
           AlertService.handleError(err);
@@ -267,6 +259,8 @@ export default {
       }
     },
     async confirmRecover(){
+      var element = document.getElementById(this.projectID+this.path)
+      element.style['display'] = 'none'
       if(await this.confirmAction('Bestand herstellen', 'Weet je zeker dat je een vorige versie van ' + this.name + ' wilt herstellen?')){
         this.recoverBackupFile();
       }
@@ -302,8 +296,13 @@ export default {
       element.style['left'] = String(top) + 'px'
     },
     setRecoverMenu() {
-      var recoverMenu = document.getElementById(this.path+"recoverMenu")
-      recoverMenu.style['display'] = 'block'
+      var element = document.getElementById(this.path+"recoverMenu")
+      if(element.style['display'] == 'block'){
+          element.style['display'] = 'none'
+        }
+        else{
+          element.style['display'] = 'block'
+        }
     },
     unsetMenus(){
       var shareMenu = document.getElementById(this.path+"shareMenu")

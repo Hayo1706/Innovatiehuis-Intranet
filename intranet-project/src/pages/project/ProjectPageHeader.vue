@@ -176,6 +176,11 @@ export default {
     };
   },
   watch: {
+    $route() {
+      if (this.$route.fullPath.includes("/project/")) {
+        this.uploadingFiles = []
+      }
+    },
     currentFolders: function() {
       this.uploadingFiles = []
     },
